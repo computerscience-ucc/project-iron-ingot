@@ -10,11 +10,21 @@ const Footer = (e) => {
 
           {/* links */}
           <div className="w-full flex justify-around px-10 mt-16 mb-4">
-            <p>Blog</p>
-            <p>Bulletin</p>
-            <p>CAPSTONE</p>
-            <p>About</p>
-            <p>Contact</p>
+            <Link href={'/blog'}>
+              <p className="cursor-pointer">Blog</p>
+            </Link>
+            <Link href={'/bulletin'}>
+              <p className="cursor-pointer">Bulletin</p>
+            </Link>
+            <Link href={'/capstone'}>
+              <p className="cursor-pointer">CAPSTONE</p>
+            </Link>
+            <Link href={'/about'}>
+              <p className="cursor-pointer">About</p>
+            </Link>
+            <Link href={'/contact'}>
+              <p className="cursor-pointer">Contact</p>
+            </Link>
           </div>
           <div className="w-full flex justify-around px-10">
             <p>Privacy Statement</p>
