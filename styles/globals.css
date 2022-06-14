@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  font-family: 'Quicksand', sans-serif;
+}
+
+/* Custom Scrollbar */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #dca54c #09090b;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #dca54c;
+  border-radius: 10px;
+  border: 0px none #ffffff;
+}
