@@ -9,7 +9,7 @@ const Footer = (e) => {
           <p className=" text-lg">Your CS Information Board on the go</p>
 
           {/* links */}
-          <div className="w-full flex justify-around px-10 mt-16 mb-4">
+          <div className="w-full flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-around px-10 mt-16 mb-4">
             <Link href={'/blog'}>
               <p className="cursor-pointer">Blog</p>
             </Link>
@@ -26,13 +26,13 @@ const Footer = (e) => {
               <p className="cursor-pointer">Contact</p>
             </Link>
           </div>
-          <div className="w-full flex justify-around px-10">
+          <div className="w-full flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-around px-10">
             <p>Privacy Statement</p>
             <p>Terms and Conditions</p>
           </div>
           <div className="divider" />
           <p className=" mb-4">Other UCC Links</p>
-          <div className="w-full flex justify-around px-10 underline-offset-4">
+          <div className="w-full flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-around px-10 underline-offset-4">
             <p className="link">Escord</p>
             <Link href="https://ucc-alumnus.vercel.app" passHref>
               <p className="link">Alumnus</p>
