@@ -2,10 +2,14 @@ import Card from '../components/Card';
 import { useState } from 'react';
 import { AnimateSharedLayout, motion } from 'framer-motion';
 import { _Transition_Page } from '../components/_Animations';
+import Head from 'next/head';
 
 const Home = (e) => {
   return (
     <>
+      <Head>
+        <title>Home | Ingo</title>
+      </Head>
       <motion.section
         variants={_Transition_Page}
         initial="initial"
