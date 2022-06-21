@@ -1,9 +1,13 @@
 import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../components/_Animations';
+import Head from 'next/head';
 
 const Bulletin = (e) => {
   return (
     <>
+      <Head>
+        <title>Bulletin | Ingo</title>
+      </Head>
       <motion.section
         variants={_Transition_Page}
         initial="initial"

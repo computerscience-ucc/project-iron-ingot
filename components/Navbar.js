@@ -1,8 +1,9 @@
 import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const SideMenu = ({ closeHandler, isOpen }) => {
   return (
@@ -81,6 +82,18 @@ const SideMenu = ({ closeHandler, isOpen }) => {
 
 const Navbar = (e) => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
+  const router = useRouter();
+  const [route, setRoute] = useState(router.pathname);
+
+  useEffect((e) => {
+    setRoute(router.pathname);
+  }, []);
+  useEffect(
+    (e) => {
+      setRoute(router.pathname);
+    },
+    [router]
+  );
 
   return (
     <>
@@ -101,15 +114,42 @@ const Navbar = (e) => {
             </Link>
           </div>
           {/* desktop links */}
-          <div className="navbar-end gap-10 hidden md:flex">
+          <div className="navbar-end gap-3 hidden md:flex">
             <Link href={'/blog'}>
-              <p className="btn btn-link text-base-content">Blog</p>
+              <p
+                className={`btn  text-base-content ${
+                  route == '/blog' ? 'btn-secondary' : 'btn-link'
+                }`}
+              >
+                Blog
+              </p>
             </Link>
             <Link href={'/bulletin'}>
-              <p className="btn btn-link text-base-content">Bulletin</p>
+              <p
+                className={`btn  text-base-content ${
+                  route == '/bulletin' ? 'btn-secondary' : 'btn-link'
+                }`}
+              >
+                Bulletin
+              </p>
             </Link>
             <Link href={'/capstone'}>
-              <p className="btn btn-link text-base-content">CAPSTONE</p>
+              <p
+                className={`btn text-base-content ${
+                  route == '/capstone' ? 'btn-secondary' : 'btn-link'
+                }`}
+              >
+                CAPSTONE
+              </p>
+            </Link>
+            <Link href={'/about'}>
+              <p
+                className={`btn text-base-content ${
+                  route == '/about' ? 'btn-secondary' : 'btn-link'
+                }`}
+              >
+                About
+              </p>
             </Link>
           </div>
           {/* mobile dropdown */}

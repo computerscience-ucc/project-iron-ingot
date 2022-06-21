@@ -1,10 +1,42 @@
 import { motion } from 'framer-motion';
-import { _Transition_Page } from '../../components/_Animations';
+import {
+  _Transition_Card,
+  _Transition_Page,
+} from '../../components/_Animations';
 import { AiOutlineSearch } from 'react-icons/ai';
-
-const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+import { usePrefetcherContext } from '../../components/Prefetcher';
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import Card from '../../components/Card';
 
 const Blog = ({}) => {
+  const { blogPosts } = usePrefetcherContext();
+  const [searchValue, setSearchValue] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [sortBy, setSortBy] = useState('_createdAt');
+
+  const handleSearch = (term) => {
+    setSearchValue(term);
+    const results = blogPosts.filter((post) => {
+      return (
+        post.blogTitle.toLowerCase().includes(term.toLowerCase()) ||
+        // check if it matches any of the tags
+        post.tags.some((tag) => tag.toLowerCase().includes(term.toLowerCase()))
+      );
+    });
+
+    // sort by sortBy value
+    results.sort((a, b) => {
+      return dayjs(b[sortBy]) - dayjs(a[sortBy]);
+    });
+
+    setSearchResults(results);
+    setIsSearching(true);
+    console.log(results);
+  };
+
   return (
     <>
       <motion.section
@@ -22,6 +54,7 @@ const Blog = ({}) => {
           </p>
         </div>
         {/* search and content */}
+
         <div className="flex flex-col gap-2 justify-center my-28">
           {/* search bar */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -31,41 +64,69 @@ const Blog = ({}) => {
                   type="text"
                   className="input input-primary w-full"
                   placeholder="Search for something"
+                  onChange={(e) => {
+                    if (e.target.value < 1) {
+                      setIsSearching(false);
+                      setSearchValue('');
+                      setSearchResults([]);
+                    } else {
+                      setSearchValue(e.target.value);
+                    }
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch(e.currentTarget.value);
+                    }
+                  }}
                 />
-                <div className="btn btn-primary btn-square">
+                <div
+                  onClick={(e) => {
+                    handleSearch(searchValue);
+                  }}
+                  className="btn btn-primary btn-square"
+                >
                   <AiOutlineSearch />
                 </div>
               </div>
             </div>
             <div className="md:col-span-2 flex gap-2">
-              <select className="select">
-                <option>Creation Time</option>
-                <option>Update Time</option>
-                <option>Author</option>
+              <select disabled className="select">
+                <option>Sorting Unavailable</option>
+                <option value={'_createdAt'}>Creation Time</option>
+                <option value={'_updatedAt'}>Update Time</option>
+                <option value={'blogTitle'}>Title</option>
               </select>
             </div>
           </div>
 
           {/* content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-16">
-            {items.map((e, i) => (
-              <div key={i} className="card bg-base-200">
-                <div className="card-body p-7">
-                  <p className="card-title">
-                    This is some long title made for clout
-                  </p>
-                  <p>June 17, 2022</p>
-                  <div className="flex gap-2 flex-wrap mt-5">
-                    {/* tags */}
-                    <div className="badge badge-secondary">Tag 1</div>
-                    <div className="badge badge-secondary">Tag 2</div>
-                    <div className="badge badge-secondary">Tag 3</div>
-                    <div className="badge badge-secondary">Tag 4</div>
-                  </div>
+          {!isSearching && blogPosts && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
+              {blogPosts.map((blog) => (
+                <div key={blog._id}>
+                  <Card blog={blog} />
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+          {isSearching && searchResults && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
+              {searchResults.map((blog) => (
+                <div key={blog._id}>
+                  <Card blog={blog} />
+                </div>
+              ))}
+            </div>
+          )}
+          {isSearching && searchResults.length < 1 && (
+            <motion.div
+              variants={_Transition_Page}
+              initial="initial"
+              animate="animate"
+            >
+              <p className="text-center">No results found</p>
+            </motion.div>
+          )}
         </div>
       </motion.section>
     </>
