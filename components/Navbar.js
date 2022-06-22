@@ -1,7 +1,7 @@
 import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -16,29 +16,17 @@ const SideMenu = ({ closeHandler, isOpen }) => {
         exit={{
           opacity: 0,
         }}
-        className="fixed top-0 left-0 w-full h-full bg-base-200 items-center justify-center z-50 md:hidden"
+        className="fixed top-0 left-0 w-full h-full bg-base-100 items-center justify-center z-50 md:hidden"
       >
         <motion.div
+          layoutId="menuButton"
           className="btn btn-circle absolute right-5 top-10"
           onClick={closeHandler}
         >
           <CgClose />
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, translateY: -20 }}
-          animate={{
-            opacity: 1,
-            translateY: 0,
-            transition: { duration: 0.15, ease: 'circOut' },
-          }}
-          exit={{
-            opacity: 0,
-            translateY: 20,
-            transition: { duration: 0.15, ease: 'circIn' },
-          }}
-          className="flex flex-col w-full h-full items-center justify-center px-5"
-        >
-          <Link href={'/'}>
+        <motion.div className="flex flex-col w-full h-full items-center justify-center px-5">
+          <Link href={'/'} scroll={false}>
             <p
               onClick={closeHandler}
               className="btn btn-ghost no-animation btn-xl w-full  text-base-content"
@@ -46,7 +34,7 @@ const SideMenu = ({ closeHandler, isOpen }) => {
               Home
             </p>
           </Link>
-          <Link href={'/blog'}>
+          <Link href={'/blog'} scroll={false}>
             <p
               onClick={closeHandler}
               className="btn btn-ghost no-animation btn-xl w-full mt-10  text-base-content"
@@ -54,7 +42,7 @@ const SideMenu = ({ closeHandler, isOpen }) => {
               Blog
             </p>
           </Link>
-          <Link href={'/bulletin'}>
+          <Link href={'/bulletin'} scroll={false}>
             <p
               onClick={closeHandler}
               className="btn btn-ghost no-animation btn-xl w-full  text-base-content"
@@ -62,18 +50,22 @@ const SideMenu = ({ closeHandler, isOpen }) => {
               Bulletin
             </p>
           </Link>
-          <p
-            onClick={closeHandler}
-            className="btn btn-ghost no-animation btn-xl w-full  text-base-content"
-          >
-            CAPSTONE
-          </p>
-          <p
-            onClick={closeHandler}
-            className="btn btn-ghost no-animation btn-xl w-full  text-base-content mt-10"
-          >
-            about us
-          </p>
+          <Link href={'/capstone'} scroll={false}>
+            <p
+              onClick={closeHandler}
+              className="btn btn-ghost no-animation btn-xl w-full  text-base-content"
+            >
+              CAPSTONE
+            </p>
+          </Link>
+          <Link href={'/about'} scroll={false}>
+            <p
+              onClick={closeHandler}
+              className="btn btn-ghost no-animation btn-xl w-full  text-base-content mt-10"
+            >
+              about us
+            </p>
+          </Link>
         </motion.div>
       </motion.main>
     </>
@@ -83,17 +75,30 @@ const SideMenu = ({ closeHandler, isOpen }) => {
 const Navbar = (e) => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const router = useRouter();
+  const [scrollYValue, setScrollYValue] = useState(0);
   const [route, setRoute] = useState(router.pathname);
 
   useEffect((e) => {
     setRoute(router.pathname);
   }, []);
+
   useEffect(
     (e) => {
       setRoute(router.pathname);
     },
     [router]
   );
+
+  const handleScroll = (e) => {
+    setScrollYValue(window.scrollY);
+  };
+
+  useEffect((e) => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -106,16 +111,20 @@ const Navbar = (e) => {
         )}
       </AnimatePresence>
 
-      <div className="flex justify-center fixed w-full z-40 select-none bg-base-100">
-        <nav className="navbar w-full max-w-2xl py-10 items-center px-5 md:px-0">
+      <div
+        className={`flex justify-center fixed w-full z-40 select-none transition-all ${
+          scrollYValue < 100 ? 'bg-transparent py-10' : 'bg-base-100 py-5'
+        }`}
+      >
+        <nav className="navbar w-full max-w-2xl items-center px-5 md:px-0">
           <div className="navbar-start">
-            <Link href={'/'}>
+            <Link href={'/'} scroll={false}>
               <p className="text-2xl">Ingo</p>
             </Link>
           </div>
           {/* desktop links */}
           <div className="navbar-end gap-3 hidden md:flex">
-            <Link href={'/blog'}>
+            <Link href={'/blog'} scroll={false}>
               <p
                 className={`btn  text-base-content ${
                   route == '/blog' ? 'btn-secondary' : 'btn-link'
@@ -124,7 +133,7 @@ const Navbar = (e) => {
                 Blog
               </p>
             </Link>
-            <Link href={'/bulletin'}>
+            <Link href={'/bulletin'} scroll={false}>
               <p
                 className={`btn  text-base-content ${
                   route == '/bulletin' ? 'btn-secondary' : 'btn-link'
@@ -133,7 +142,7 @@ const Navbar = (e) => {
                 Bulletin
               </p>
             </Link>
-            <Link href={'/capstone'}>
+            <Link href={'/capstone'} scroll={false}>
               <p
                 className={`btn text-base-content ${
                   route == '/capstone' ? 'btn-secondary' : 'btn-link'
@@ -142,7 +151,7 @@ const Navbar = (e) => {
                 CAPSTONE
               </p>
             </Link>
-            <Link href={'/about'}>
+            <Link href={'/about'} scroll={false}>
               <p
                 className={`btn text-base-content ${
                   route == '/about' ? 'btn-secondary' : 'btn-link'
@@ -166,4 +175,5 @@ const Navbar = (e) => {
     </>
   );
 };
+
 export default Navbar;

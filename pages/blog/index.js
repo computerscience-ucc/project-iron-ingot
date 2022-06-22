@@ -8,7 +8,8 @@ import { usePrefetcherContext } from '../../components/Prefetcher';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import Card from '../../components/Card';
+import BlogCard from '../../components/BlogCard';
+import TopGradient from '../../components/TopGradient';
 
 const Blog = ({}) => {
   const { blogPosts } = usePrefetcherContext();
@@ -16,6 +17,11 @@ const Blog = ({}) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [sortBy, setSortBy] = useState('_createdAt');
+
+  // scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSearch = (term) => {
     setSearchValue(term);
@@ -39,6 +45,7 @@ const Blog = ({}) => {
 
   return (
     <>
+      <TopGradient colorLeft={'#349ede'} colorRight={'#cea570'} />
       <motion.section
         variants={_Transition_Page}
         initial="initial"
@@ -104,7 +111,7 @@ const Blog = ({}) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
               {blogPosts.map((blog) => (
                 <div key={blog._id}>
-                  <Card blog={blog} />
+                  <BlogCard blog={blog} />
                 </div>
               ))}
             </div>
@@ -113,7 +120,7 @@ const Blog = ({}) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
               {searchResults.map((blog) => (
                 <div key={blog._id}>
-                  <Card blog={blog} />
+                  <BlogCard blog={blog} />
                 </div>
               ))}
             </div>
