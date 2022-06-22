@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../components/_Animations';
+import { useRouter } from 'next/router';
 import { client } from '../../components/Prefetcher';
 import dayjs from 'dayjs';
 import { AiOutlineArrowLeft, AiOutlineUser } from 'react-icons/ai';
@@ -39,21 +40,21 @@ const blockComponents = {
 
 export const getServerSideProps = async (e) => {
   const { slug } = e.query;
-  const blogPost = await client.fetch(
-    `*[_type == "blog" && slug.current == "${slug}"]{
-      _id,
-      _createdAt,
-      _updatedAt,
-      blogTitle,
-      slug,
-      blogContent,
-      "blogAuthor": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
-      tags
+  const data = await client.fetch(
+    `*[_type == "bulletin" && slug.current == "${slug}"]{
+        _id,
+        _createdAt,
+        _updatedAt,
+        bulletinTitle,
+        bulletinContent,
+        slug,
+        "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
+        tags
     }`
   );
   return {
     props: {
-      blogPost,
+      data,
     },
   };
 };
@@ -67,22 +68,20 @@ const capitalize = (s) => {
   return words.join(' ');
 };
 
-const BlogPage = ({ blogPost }) => {
-  const [post, setPost] = useState(blogPost[0]);
+const BulletinPage = ({ data }) => {
+  const router = useRouter();
+  const [bulletinPost, setBulletinPost] = useState(false);
 
   useEffect(
     (e) => {
-      setPost(blogPost[0]);
+      setBulletinPost(data[0]);
       window.scrollTo(0, 0);
     },
-    [blogPost]
+    [data]
   );
 
   return (
     <>
-      <Head>
-        <title>{post.blogTitle} | Ingo</title>
-      </Head>
       <motion.section
         variants={_Transition_Page}
         initial="initial"
@@ -90,10 +89,13 @@ const BlogPage = ({ blogPost }) => {
         exit="exit"
         className="py-36 select-none"
       >
-        {post && (
+        {bulletinPost && (
           <>
+            <Head>
+              <title>{bulletinPost.bulletinTitle} | Ingo</title>
+            </Head>
             <div className="flex flex-col gap-2 justify-center mt-16">
-              <Link href={'/blog'}>
+              <Link href={'/bulletin'}>
                 <motion.p
                   whileHover={{ x: -10 }}
                   className="flex gap-4 items-center font-bold cursor-pointer"
@@ -102,15 +104,16 @@ const BlogPage = ({ blogPost }) => {
                   <span>Go Back</span>
                 </motion.p>
               </Link>
-              <p className="text-4xl font-semibold mt-5">{post.blogTitle}</p>
-
+              <p className="text-4xl font-semibold mt-5">
+                {bulletinPost.bulletinTitle}
+              </p>
               <div className="grid grid-cols-1 md:grid-cols-2 mt-5">
                 <p className="flex flex-col gap-2 ">
                   <span>Posted By</span>
-                  {post.blogAuthor.map((author) => (
+                  {bulletinPost.bulletinAuthor.map((author) => (
                     <span
                       key={author.fullName.lastName}
-                      className=" flex items-center gap-5 font-semibold"
+                      className=" flex items-center gap-5"
                     >
                       <span
                         className={
@@ -120,9 +123,9 @@ const BlogPage = ({ blogPost }) => {
                         }
                       >
                         {author.authorPhoto ? (
-                          <span className="w-10 h-10 mask mask-squircle ">
+                          <div className="w-10 h-10 mask mask-squircle ">
                             <img src={author.authorPhoto} />
-                          </span>
+                          </div>
                         ) : (
                           <AiOutlineUser className="w-5 h-5" />
                         )}
@@ -136,18 +139,22 @@ const BlogPage = ({ blogPost }) => {
                   <p className="flex flex-col ">
                     Updated at{' '}
                     <span className="ml-5 text-primary">
-                      {dayjs(post._updatedAt).format('MMMM D, YYYY h:mm a')}
+                      {dayjs(bulletinPost._updatedAt).format(
+                        'MMMM D, YYYY h:mm a'
+                      )}
                     </span>
                   </p>
                   <p className="flex flex-col">
                     Posted at{' '}
                     <span className="ml-5 text-primary">
-                      {dayjs(post._createdAt).format('MMMM D, YYYY h:mm a')}
+                      {dayjs(bulletinPost._createdAt).format(
+                        'MMMM D, YYYY h:mm a'
+                      )}
                     </span>
                   </p>
                   <p className="flex flex-col gap-2 ">
                     Posted under
-                    {post.tags.map((tag) => (
+                    {bulletinPost.tags.map((tag) => (
                       <span
                         key={tag}
                         className="badge badge-secondary font-semibold ml-5"
@@ -164,7 +171,7 @@ const BlogPage = ({ blogPost }) => {
 
             <div className="mt-5 flex flex-col gap-5">
               <PortableText
-                value={post.blogContent}
+                value={bulletinPost.bulletinContent}
                 components={blockComponents}
               />
             </div>
@@ -175,4 +182,4 @@ const BlogPage = ({ blogPost }) => {
   );
 };
 
-export default BlogPage;
+export default BulletinPage;

@@ -12,7 +12,7 @@ const titleCase = (str) => {
   return split.join(' ');
 };
 
-const Card = (props) => {
+const BlogCard = (props) => {
   const { blog } = props;
   const { blogTitle, blogAuthor, _updatedAt, tags, _id, slug } = blog;
 
@@ -33,6 +33,7 @@ const Card = (props) => {
           className="card bg-base-200 select-none cursor-pointer items-start"
         >
           <div className="card-body p-7 items-start">
+            <p className="text-sm opacity-25">Blog</p>
             <p className="card-title">{blogTitle}</p>
             <p className="text-sm opacity-50">
               {dayjs(_updatedAt).format('MMMM DD, YYYY h:mma')}
@@ -40,8 +41,12 @@ const Card = (props) => {
             <div className="flex flex-col mt-4">
               <p>Posted By:</p>
               {blogAuthor.map((author, index) => (
-                <blockquote key={author.lastName} className="italic font-thin ">
-                  {author.firstName} {author.lastName}
+                <blockquote
+                  key={author.fullName.lastName}
+                  className="italic font-thin "
+                >
+                  {author.fullName.firstName} {author.fullName.lastName}{' '}
+                  {author.pronouns ? `(${author.pronouns})` : ''}
                 </blockquote>
               ))}
             </div>
@@ -68,4 +73,4 @@ const Card = (props) => {
   );
 };
 
-export default Card;
+export default BlogCard;

@@ -1,10 +1,13 @@
-import Card from '../components/Card';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimateSharedLayout, motion } from 'framer-motion';
 import { _Transition_Page } from '../components/_Animations';
 import Head from 'next/head';
 
 const Home = (e) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <Head>

@@ -1,4 +1,4 @@
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -16,7 +16,9 @@ function MyApp({ Component, pageProps }) {
         <title>Blog | Ingo</title>
       </Head>
 
-      <Navbar />
+      <LayoutGroup>
+        <Navbar />
+      </LayoutGroup>
       <PrefetcherWrapper>
         <main className="flex flex-col items-center px-5 md:px-0 min-h-screen">
           <div className=" w-full max-w-2xl">
