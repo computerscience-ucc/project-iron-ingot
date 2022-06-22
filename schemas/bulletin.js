@@ -1,58 +1,58 @@
 export default {
-  type: "document",
-  name: "bulletin",
-  title: "Bulletin",
+  type: 'document',
+  name: 'bulletin',
+  title: 'Bulletin',
   fields: [
     {
-      title: "Bulletin Title",
-      name: "bulletinTitle",
-      type: "string",
+      title: 'Bulletin Title',
+      name: 'bulletinTitle',
+      type: 'string',
     },
     {
-      title: "Slug",
-      name: "slug",
-      type: "slug",
+      title: 'Slug',
+      name: 'slug',
+      type: 'slug',
       options: {
-        source: "bulletinTitle",
+        source: 'bulletinTitle',
         maxLength: 100,
       },
     },
     {
-      title: "Bulletin Author",
-      name: "bulletinAuthor",
-      type: "array",
+      title: 'Bulletin Author',
+      name: 'bulletinAuthor',
+      type: 'array',
       of: [
         {
-          type: "reference",
+          type: 'reference',
           to: [
             {
-              type: "author",
+              type: 'author',
             },
           ],
         },
       ],
     },
     {
-      name: "tags",
-      title: "Tags",
-      type: "array",
-      description: "Enter searcheable keywords for the bulletin",
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      description: 'Enter searcheable keywords for the bulletin',
       of: [
         {
-          type: "string",
+          type: 'string',
         },
       ],
     },
     {
-      title: "Bulletin Content",
-      name: "bulletinContent",
-      type: "array",
+      title: 'Bulletin Content',
+      name: 'bulletinContent',
+      type: 'array',
       of: [
         {
-          type: "block",
+          type: 'block',
         },
         {
-          type: "image",
+          type: 'image',
           options: {
             hotspot: true,
           },

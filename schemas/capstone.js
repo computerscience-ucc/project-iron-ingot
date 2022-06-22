@@ -1,67 +1,66 @@
 export default {
-  type: "document",
-  name: "capstone",
-  title: "Capstone",
+  type: 'document',
+  name: 'capstone',
+  title: 'Capstone',
   fields: [
     {
-      type: "image",
-      name: "headerImage",
-      title: "Capstone Image Header",
+      type: 'image',
+      name: 'headerImage',
+      title: 'Capstone Image Header',
       options: {
         hotspot: true,
       },
     },
-
     {
-      title: "Capstone Title",
-      name: "capstoneTitle",
-      type: "string",
+      title: 'Capstone Title',
+      name: 'capstoneTitle',
+      type: 'string',
     },
     {
-      title: "Slug",
-      name: "slug",
-      type: "slug",
+      title: 'Slug',
+      name: 'slug',
+      type: 'slug',
       options: {
-        source: "capstoneTitle",
+        source: 'capstoneTitle',
         maxLength: 100,
       },
     },
     {
-      title: "Capstone Author",
-      name: "capstoneAuthor",
-      type: "array",
+      title: 'Capstone Author',
+      name: 'capstoneAuthor',
+      type: 'array',
       of: [
         {
-          type: "reference",
+          type: 'reference',
           to: [
             {
-              type: "author",
+              type: 'author',
             },
           ],
         },
       ],
     },
     {
-      name: "tags",
-      title: "Tags",
-      type: "array",
-      description: "Enter searcheable keywords for the capstone",
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      description: 'Enter searcheable keywords for the capstone',
       of: [
         {
-          type: "string",
+          type: 'string',
         },
       ],
     },
     {
-      title: "Capstone Content",
-      name: "capstoneContent",
-      type: "array",
+      title: 'Capstone Content',
+      name: 'capstoneContent',
+      type: 'array',
       of: [
         {
-          type: "block",
+          type: 'block',
         },
         {
-          type: "image",
+          type: 'image',
           options: {
             hotspot: true,
           },
