@@ -20,8 +20,8 @@ function MyApp({ Component, pageProps }) {
         <Navbar />
       </LayoutGroup>
       <PrefetcherWrapper>
-        <main className="flex flex-col items-center px-5 md:px-0 min-h-screen">
-          <div className=" w-full max-w-2xl">
+        <main className="flex flex-col items-center px-5 md:px-0 min-h-screen relative">
+          <div className=" w-full max-w-3xl relative">
             <AnimatePresence exitBeforeEnter>
               <Component {...pageProps} key={router.route} />
             </AnimatePresence>
