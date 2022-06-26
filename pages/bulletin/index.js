@@ -156,18 +156,24 @@ const Bulletin = (e) => {
           </div>
           {/* content */}
           {!isSearching && bulletinPosts && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
+            <motion.div
+              animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+            >
               {bulletinPosts.map((post) => (
                 <BulletinCard key={post._id} bulletin={post} />
               ))}
-            </div>
+            </motion.div>
           )}
           {isSearching && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
+            <motion.div
+              animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+            >
               {searchResults.map((post) => (
                 <BulletinCard key={post._id} bulletin={post} />
               ))}
-            </div>
+            </motion.div>
           )}
           {isSearching && searchResults.length < 1 && (
             <motion.div

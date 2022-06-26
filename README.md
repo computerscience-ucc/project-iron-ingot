@@ -14,6 +14,6 @@ TODOs
 ❌ Fix typographical errors
 ❌ Update CTA redirects
 ✔️ Fix proper iconography
-❌ Implement autosuggest on search bars
+✔️ Implement autosuggest on search bars
 ❌ Fix footer link arrangements
 ❌ Implement spam click/tap protection
