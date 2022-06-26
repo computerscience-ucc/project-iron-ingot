@@ -61,8 +61,37 @@ const blockComponents = {
   },
 };
 
-export const getServerSideProps = async (e) => {
-  const { slug } = e.query;
+export const getStaticPaths = async (e) => {
+  const data = await client.fetch(
+    `*[_type == "capstone"]{
+        _id,
+        _createdAt,
+        _updatedAt,
+        capstoneTitle,
+        capstoneContent,
+        slug,
+        "headerImage": headerImage.asset->url,
+        "capstoneAuthor": capstoneAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
+        tags
+    }`
+  );
+
+  const paths = data.map((item) => {
+    return {
+      params: {
+        slug: item.slug.current,
+      },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async (context) => {
+  const { slug } = context.params;
   const data = await client.fetch(
     `*[_type == "capstone" && slug.current == "${slug}"]{
         _id,
@@ -76,6 +105,7 @@ export const getServerSideProps = async (e) => {
         tags
     }`
   );
+
   return {
     props: {
       data,
@@ -99,7 +129,6 @@ const CapstonePage = ({ data }) => {
   useEffect(
     (e) => {
       setCasptonePost(data[0]);
-      console.log(data[0]);
       window.scrollTo(0, 0);
     },
     [data]

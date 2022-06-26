@@ -61,8 +61,51 @@ const blockComponents = {
   },
 };
 
-export const getServerSideProps = async (e) => {
-  const { slug } = e.query;
+// export const getServerSideProps = async (e) => {
+//   const { slug } = e.query;
+//   const data = await client.fetch(
+//     `*[_type == "bulletin" && slug.current == "${slug}"]{
+//         _id,
+//         _createdAt,
+//         _updatedAt,
+//         bulletinTitle,
+//         bulletinContent,
+//         slug,
+//         "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
+//         tags
+//     }`
+//   );
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// };
+
+export const getStaticPaths = async (e) => {
+  const data = await client.fetch(
+    `*[_type == "bulletin"]{
+        _id,
+        _createdAt,
+        _updatedAt,
+        bulletinTitle,
+        bulletinContent,
+        slug,
+        "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
+        tags
+    }`
+  );
+  const paths = data.map((item) => ({
+    params: { slug: item.slug.current },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async (e) => {
+  const { slug } = e.params;
   const data = await client.fetch(
     `*[_type == "bulletin" && slug.current == "${slug}"]{
         _id,

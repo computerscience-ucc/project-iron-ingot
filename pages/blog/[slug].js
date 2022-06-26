@@ -60,8 +60,51 @@ const blockComponents = {
   },
 };
 
-export const getServerSideProps = async (e) => {
-  const { slug } = e.query;
+// export const getServerSideProps = async (e) => {
+//   const { slug } = e.query;
+//   const blogPost = await client.fetch(
+//     `*[_type == "blog" && slug.current == "${slug}"]{
+//       _id,
+//       _createdAt,
+//       _updatedAt,
+//       blogTitle,
+//       slug,
+//       blogContent,
+//       "blogAuthor": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
+//       tags
+//     }`
+//   );
+//   return {
+//     props: {
+//       blogPost,
+//     },
+//   };
+// };
+
+export const getStaticPaths = async () => {
+  const blogPosts = await client.fetch(
+    `*[_type == "blog"]{  
+      _id,
+      _createdAt,
+      _updatedAt,
+      blogTitle,
+      slug,
+      blogContent,
+      "blogAuthor": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
+      tags
+    }`
+  );
+  const paths = blogPosts.map((post) => ({
+    params: { slug: post.slug.current },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async (e) => {
+  const { slug } = e.params;
   const blogPost = await client.fetch(
     `*[_type == "blog" && slug.current == "${slug}"]{
       _id,
