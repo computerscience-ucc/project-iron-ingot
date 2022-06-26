@@ -96,18 +96,25 @@ const Home = (e) => {
 
           {/* arrow down */}
           <motion.div
+            className="self-center"
             animate={{
-              opacity: [0, 1, 0],
-              translateY: [0, 10, 10],
-              transition: {
-                duration: 1,
-                ease: 'easeInOut',
-                repeat: Infinity,
-              },
+              opacity: isVisible ? 1 : 0,
             }}
-            className="self-center mt-16"
           >
-            <AiOutlineArrowDown size={30} />
+            <motion.div
+              animate={{
+                opacity: [0, 1, 0],
+                translateY: [0, 10, 10],
+                transition: {
+                  duration: 1,
+                  ease: 'easeInOut',
+                  repeat: Infinity,
+                },
+              }}
+              className="self-center mt-16"
+            >
+              <AiOutlineArrowDown size={30} />
+            </motion.div>
           </motion.div>
         </div>
 

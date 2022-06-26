@@ -8,8 +8,28 @@ import { PortableText } from '@portabletext/react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
+import Image from 'next/image';
+import urlBuilder from '@sanity/image-url';
+
+const urlFor = (source) =>
+  urlBuilder({
+    projectId: 'gjvp776o',
+    dataset: 'production',
+  }).image(source);
 
 const blockComponents = {
+  types: {
+    image: ({ value }) => (
+      <div className="relative w-full h-[500px]">
+        <Image
+          className="w-full h-full"
+          src={urlFor(value.asset).url()}
+          layout="fill"
+          objectFit="contain"
+        />
+      </div>
+    ),
+  },
   block: {
     h1: ({ children }) => <h1 className="text-4xl font-bold">{children}</h1>,
     h2: ({ children }) => <h2 className="text-3xl font-bold">{children}</h2>,
@@ -28,10 +48,13 @@ const blockComponents = {
   },
   marks: {
     em: ({ children }) => (
-      <em className="text-pink-700 font-bold">{children}</em>
+      <em className="text-yellow-400  font-bold">{children}</em>
     ),
-    link: ({ children, href }) => (
-      <a href={href} className="underline underline-offset-4 cursor-pointer">
+    link: ({ children, value }) => (
+      <a
+        href={value.href}
+        className="underline underline-offset-4 cursor-pointer text-blue-400"
+      >
         {children}
       </a>
     ),
