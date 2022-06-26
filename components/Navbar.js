@@ -1,4 +1,5 @@
 import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
+import { AiOutlineMenu } from 'react-icons/ai';
 import { CgClose } from 'react-icons/cg';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
@@ -167,7 +168,7 @@ const Navbar = (e) => {
               onClick={(e) => setSideMenuOpen(true)}
               className="btn btn-square rounded-full"
             >
-              <FaArrowDown />
+              <AiOutlineMenu />
             </motion.div>
           </div>
         </nav>

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   _Transition_Card,
   _Transition_Page,
@@ -17,6 +17,7 @@ const Blog = ({}) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [sortBy, setSortBy] = useState('_createdAt');
+  const [autoSuggestions, setAutoSuggestions] = useState([]);
 
   // scroll to top on mount
   useEffect(() => {
@@ -43,6 +44,21 @@ const Blog = ({}) => {
     console.log(results);
   };
 
+  // auto suggest
+  const handleAutoSuggest = (term) => {
+    const results = blogPosts.filter((post) => {
+      if (post.blogTitle.toLowerCase().includes(term.toLowerCase())) {
+        return post;
+      }
+      // check if it matches any of the tags
+      return post.tags.some((tag) =>
+        tag.toLowerCase().includes(term.toLowerCase())
+      );
+    });
+    // limit to 5 results
+    setAutoSuggestions(results.slice(0, 5));
+  };
+
   return (
     <>
       <TopGradient colorLeft={'#349ede'} colorRight={'#cea570'} />
@@ -66,18 +82,22 @@ const Blog = ({}) => {
           {/* search bar */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
-              <div className="input-group">
+              <div className="input-group relative">
                 <input
                   type="text"
                   className="input input-primary w-full"
                   placeholder="Search for something"
+                  // check if not focused
+                  value={searchValue}
                   onChange={(e) => {
                     if (e.target.value < 1) {
                       setIsSearching(false);
                       setSearchValue('');
                       setSearchResults([]);
+                      setAutoSuggestions([]);
                     } else {
                       setSearchValue(e.target.value);
+                      handleAutoSuggest(e.target.value);
                     }
                   }}
                   onKeyUp={(e) => {
@@ -86,6 +106,41 @@ const Blog = ({}) => {
                     }
                   }}
                 />
+
+                <AnimatePresence>
+                  {autoSuggestions.length > 0 && (
+                    <motion.ul
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                      className="menu bg-base-300 p-2 rounded-md absolute z-10 w-full top-16"
+                    >
+                      {autoSuggestions.map((post) => {
+                        return (
+                          <Link
+                            key={post._id}
+                            href={`/blog/${post.slug.current}`}
+                          >
+                            <li>
+                              <span>{post.blogTitle}</span>
+                            </li>
+                          </Link>
+                        );
+                      })}
+                      {/* toggle suggestion box */}
+                      <li
+                        className="mt-10"
+                        onClick={(e) => setAutoSuggestions([])}
+                      >
+                        <span className="text-sm bg-error">
+                          Toggle off Suggestions
+                        </span>
+                      </li>
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+
                 <div
                   onClick={(e) => {
                     handleSearch(searchValue);
@@ -108,22 +163,28 @@ const Blog = ({}) => {
 
           {/* content */}
           {!isSearching && blogPosts && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
+            <motion.div
+              animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+            >
               {blogPosts.map((blog) => (
                 <div key={blog._id}>
                   <BlogCard blog={blog} />
                 </div>
               ))}
-            </div>
+            </motion.div>
           )}
           {isSearching && searchResults && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16">
+            <motion.div
+              animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+            >
               {searchResults.map((blog) => (
                 <div key={blog._id}>
                   <BlogCard blog={blog} />
                 </div>
               ))}
-            </div>
+            </motion.div>
           )}
           {isSearching && searchResults.length < 1 && (
             <motion.div

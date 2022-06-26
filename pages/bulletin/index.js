@@ -1,11 +1,12 @@
 import { AiOutlineSearch } from 'react-icons/ai';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { _Transition_Page } from '../../components/_Animations';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { usePrefetcherContext } from '../../components/Prefetcher';
 import BulletinCard from '../../components/BulletinCard';
 import TopGradient from '../../components/TopGradient';
+import Link from 'next/link';
 
 const Bulletin = (e) => {
   const { bulletinPosts } = usePrefetcherContext();
@@ -13,6 +14,7 @@ const Bulletin = (e) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [sortBy, setSortBy] = useState('_createdAt');
+  const [autoSuggestions, setAutoSuggestions] = useState([]);
 
   const handleSearch = (term) => {
     setSearchValue(term);
@@ -29,6 +31,20 @@ const Bulletin = (e) => {
     setSearchResults(results);
     setIsSearching(true);
     console.log(results);
+  };
+
+  // auto suggest
+  const handleAutoSuggest = (term) => {
+    const results = bulletinPosts.filter((post) => {
+      if (post.bulletinTitle.toLowerCase().includes(term.toLowerCase())) {
+        return post;
+      }
+      // check if it matches any of the tags
+      return post.tags.some((tag) =>
+        tag.toLowerCase().includes(term.toLowerCase())
+      );
+    });
+    setAutoSuggestions(results);
   };
 
   useEffect(() => {
@@ -62,18 +78,21 @@ const Bulletin = (e) => {
           {/* search */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
-              <div className="input-group">
+              <div className="input-group relative">
                 <input
                   type="text"
-                  className="input input-primary w-full"
+                  className="input input-primary w-full "
                   placeholder="Search for something"
+                  value={searchValue}
                   onChange={(e) => {
                     if (e.target.value < 1) {
                       setIsSearching(false);
                       setSearchValue('');
                       setSearchResults([]);
+                      setAutoSuggestions([]);
                     } else {
                       setSearchValue(e.target.value);
+                      handleAutoSuggest(e.target.value);
                     }
                   }}
                   onKeyUp={(e) => {
@@ -82,6 +101,40 @@ const Bulletin = (e) => {
                     }
                   }}
                 />
+                <AnimatePresence>
+                  {autoSuggestions.length > 0 && (
+                    <motion.ul
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                      className="menu bg-base-300 p-2 rounded-md absolute z-10 w-full top-16"
+                    >
+                      {autoSuggestions.map((post) => {
+                        return (
+                          <Link
+                            key={post._id}
+                            href={`/bulletin/${post.slug.current}`}
+                          >
+                            <li>
+                              <span>{post.bulletinTitle}</span>
+                            </li>
+                          </Link>
+                        );
+                      })}
+                      {/* toggle suggestion box */}
+                      <li
+                        className="mt-10"
+                        onClick={(e) => setAutoSuggestions([])}
+                      >
+                        <span className="text-sm bg-error">
+                          Toggle off Suggestions
+                        </span>
+                      </li>
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+
                 <div
                   onClick={(e) => {
                     handleSearch(searchValue);
