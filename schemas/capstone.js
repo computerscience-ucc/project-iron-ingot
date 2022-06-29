@@ -41,31 +41,31 @@ export default {
       ],
     },
     {
-      type: 'object',
-      name: 'ownersInformation',
+      type: "object",
+      name: "ownersInformation",
       title: "Owner's Information",
       options: {
         collapsible: true,
       },
       fields: [
-    {
-      name: "ownerFirstname",
-      title: "Owner's Fullname",
-      type: "array",
-      description: "Enter Owners Name for this capstone project",
-      of: [
         {
+          name: "ownerFullname",
+          title: "Owner's Fullname",
+          type: "array",
+          description: "Enter Owners Fullname for this capstone project",
+          of: [
+            {
+              type: "string",
+            },
+          ],
+        },
+        {
+          title: "Owner's Section",
+          name: "ownerSection",
           type: "string",
         },
       ],
     },
-    {
-      title: "Owner's Section",
-      name: 'owner_section',
-      type: 'string',
-    },
-  ],
-},
     {
       name: "tags",
       title: "Tags",
