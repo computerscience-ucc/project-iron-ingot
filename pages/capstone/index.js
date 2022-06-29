@@ -96,6 +96,7 @@ const Capstone = (e) => {
                   onKeyUp={(e) => {
                     if (e.key === 'Enter') {
                       handleSearch(e.currentTarget.value);
+                      setAutoSuggestions([]);
                     }
                   }}
                 />
@@ -137,6 +138,7 @@ const Capstone = (e) => {
                 <div
                   onClick={(e) => {
                     handleSearch(searchValue);
+                    setAutoSuggestions([]);
                   }}
                   className="btn btn-primary btn-square"
                 >
@@ -158,7 +160,7 @@ const Capstone = (e) => {
           {!isSearching && capstonePosts && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16 "
             >
               {capstonePosts.map((post) => (
                 <CapstoneCard key={post._id} capstone={post} />

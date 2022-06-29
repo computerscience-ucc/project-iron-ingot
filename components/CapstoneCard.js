@@ -14,14 +14,13 @@ const titleCase = (str) => {
 
 const CapstoneCard = (props) => {
   const { capstone } = props;
-  const { capstoneTitle, capstoneAuthor, _updatedAt, tags, _id, slug } =
-    capstone;
+  const { capstoneTitle, postAuthor, _updatedAt, tags, _id, slug } = capstone;
 
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
-      <Link href={`/capstone/${slug.current}`} scroll={false}>
+      <Link href={`/capstone/${slug}`} scroll={false}>
         <motion.div
           key={_id}
           variants={_Transition_Card}
@@ -31,7 +30,7 @@ const CapstoneCard = (props) => {
             y: -5,
           }}
           onClick={() => setIsLoading(true)}
-          className="card bg-base-200 select-none cursor-pointer items-start"
+          className="card bg-base-200 select-none cursor-pointer items-start break-inside"
         >
           <div className="card-body p-7 items-start">
             <p className="text-sm opacity-25">Capstone</p>
@@ -41,7 +40,7 @@ const CapstoneCard = (props) => {
             </p>
             <div className="flex flex-col mt-4">
               <p>Posted By:</p>
-              {capstoneAuthor.map((author, index) => (
+              {postAuthor.map((author, index) => (
                 <blockquote
                   key={author.fullName.lastName}
                   className="italic font-thin "

@@ -33,13 +33,20 @@ const bulletinQuery = `
 `;
 
 const capstoneQuery = `
-  *[_type == "capstone"] | order(_createdAt desc) {
-    _id,
+  *[_type == 'capstone'] {
     _createdAt,
+    _id,
     _updatedAt,
+    capstoneContent,
     capstoneTitle,
-    slug,
-    "capstoneAuthor": capstoneAuthor[] -> {fullName, pronouns},
+    "headerImage": headerImage.asset -> url,
+    ownersInformation,
+    "postAuthor": postAuthor[] -> {
+      "authorPhoto": authorPhoto.asset -> url,
+      fullName,
+      pronouns
+    },
+    "slug": slug.current,
     tags
   }
 `;

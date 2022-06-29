@@ -20,7 +20,7 @@ const urlFor = (source) =>
 const blockComponents = {
   types: {
     image: ({ value }) => (
-      <div className="relative w-full h-[500px]">
+      <div className="relative w-full h-[300px]">
         <Image
           className="w-full h-full"
           src={urlFor(value.asset).url()}
@@ -31,7 +31,7 @@ const blockComponents = {
     ),
   },
   block: {
-    h1: ({ children }) => <h1 className="text-4xl font-bold">{children}</h1>,
+    h1: ({ children }) => <h1 className="text-4xl font-bo ld">{children}</h1>,
     h2: ({ children }) => <h2 className="text-3xl font-bold">{children}</h2>,
     h3: ({ children }) => <h3 className="text-2xl font-bold">{children}</h3>,
     h4: ({ children }) => <h4 className="text-xl font-bold">{children}</h4>,
@@ -39,7 +39,12 @@ const blockComponents = {
     h6: ({ children }) => <h6 className="text-md font-bold">{children}</h6>,
     p: ({ children }) => <p className="">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="text-base">{children}</blockquote>
+      <blockquote className="text-base p-10 relative ">
+        <span className="absolute text-white text-6xl left-2 top-2">
+          &ldquo;
+        </span>
+        {children}
+      </blockquote>
     ),
     span: ({ children }) => <span className="text-light">{children}</span>,
     image: ({ node }) => (
@@ -86,23 +91,28 @@ export const getStaticPaths = async (e) => {
 
   return {
     paths,
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
 export const getStaticProps = async (context) => {
   const { slug } = context.params;
   const data = await client.fetch(
-    `*[_type == "capstone" && slug.current == "${slug}"]{
-        _id,
-        _createdAt,
-        _updatedAt,
-        capstoneTitle,
-        capstoneContent,
-        slug,
-        "headerImage": headerImage.asset->url,
-        "capstoneAuthor": capstoneAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
-        tags
+    `*[_type == 'capstone' && slug.current == '${slug}'] {
+      _createdAt,
+      _id,
+      _updatedAt,
+      capstoneContent,
+      capstoneTitle,
+      "headerImage": headerImage.asset -> url,
+      ownersInformation,
+      "postAuthor": postAuthor[] -> {
+        "authorPhoto": authorPhoto.asset -> url,
+        fullName,
+        pronouns
+      },
+      tags
+    
     }`
   );
 
@@ -110,6 +120,7 @@ export const getStaticProps = async (context) => {
     props: {
       data,
     },
+    revalidate: 10,
   };
 };
 
@@ -123,7 +134,6 @@ const capitalize = (s) => {
 };
 
 const CapstonePage = ({ data }) => {
-  const router = useRouter();
   const [capstonePost, setCasptonePost] = useState(false);
 
   useEffect(
@@ -173,8 +183,8 @@ const CapstonePage = ({ data }) => {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 mt-5">
                 <p className="flex flex-col gap-2 ">
-                  <span>Posted By</span>
-                  {capstonePost.capstoneAuthor.map((author) => (
+                  <span className="text-lg">Posted By</span>
+                  {capstonePost.postAuthor.map((author) => (
                     <span
                       key={author.fullName.lastName}
                       className=" flex items-center gap-5"
@@ -187,9 +197,9 @@ const CapstonePage = ({ data }) => {
                         }
                       >
                         {author.authorPhoto ? (
-                          <div className="w-10 h-10 mask mask-squircle ">
+                          <span className="w-10 h-10 mask mask-squircle ">
                             <img src={author.authorPhoto} />
-                          </div>
+                          </span>
                         ) : (
                           <AiOutlineUser className="w-5 h-5" />
                         )}
@@ -227,6 +237,16 @@ const CapstonePage = ({ data }) => {
                       </span>
                     ))}
                   </p>
+                </div>
+                <div className="flex flex-col gap-1 mt-0 md:mt-5">
+                  <p className="text-lg">Project Owners</p>
+                  {capstonePost.ownersInformation.ownerFullname.map(
+                    (owner, index) => (
+                      <p className="ml-5" key={`${owner}-${index}`}>
+                        {capstonePost.ownersInformation.ownerSection} - {owner}
+                      </p>
+                    )
+                  )}
                 </div>
               </div>
             </div>
