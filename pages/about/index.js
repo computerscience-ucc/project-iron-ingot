@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Page_Council from './page/council';
 import Page_MIS from './page/mis';
 import Head from 'next/head';
+import Page_Team from './page/team';
 
 const AboutPage = (e) => {
   const [selected, setSelected] = useState(1);
@@ -27,19 +28,27 @@ const AboutPage = (e) => {
         </div>
 
         {/* selector */}
-        <div className="flex mt-14 justify-around gap-2 w-full ">
+        <div className="flex flex-col md:flex-row mt-14 justify-around gap-2 w-full ">
           <div
             onClick={(e) => setSelected(1)}
             className={`cursor-pointer text-center p-3 w-full transition-colors rounded-lg ${
               selected == 1 && 'bg-base-300'
             }`}
           >
-            <p>Computer Science Council</p>
+            <p>Ingo Development Team</p>
           </div>
           <div
             onClick={(e) => setSelected(2)}
             className={`cursor-pointer text-center p-3 w-full transition-colors rounded-lg ${
               selected == 2 && 'bg-base-300'
+            }`}
+          >
+            <p>Computer Science Council</p>
+          </div>
+          <div
+            onClick={(e) => setSelected(3)}
+            className={`cursor-pointer text-center p-3 w-full transition-colors rounded-lg ${
+              selected == 3 && 'bg-base-300'
             }`}
           >
             <p>MIS</p>
@@ -49,8 +58,9 @@ const AboutPage = (e) => {
         {/* content */}
         <div className="mt-16">
           <AnimatePresence>
-            {(selected == 1 && <Page_Council />) ||
-              (selected == 2 && <Page_MIS />)}
+            {(selected == 1 && <Page_Team />) ||
+              (selected == 2 && <Page_Council />) ||
+              (selected == 3 && <Page_MIS />)}
           </AnimatePresence>
         </div>
       </motion.section>

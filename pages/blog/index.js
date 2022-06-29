@@ -103,6 +103,7 @@ const Blog = ({}) => {
                   onKeyUp={(e) => {
                     if (e.key === 'Enter') {
                       handleSearch(e.currentTarget.value);
+                      setAutoSuggestions([]);
                     }
                   }}
                 />
@@ -144,6 +145,7 @@ const Blog = ({}) => {
                 <div
                   onClick={(e) => {
                     handleSearch(searchValue);
+                    setAutoSuggestions([]);
                   }}
                   className="btn btn-primary btn-square"
                 >

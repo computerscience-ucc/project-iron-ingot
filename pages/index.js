@@ -8,12 +8,17 @@ import {
   AiOutlineLink,
   AiOutlineEye,
 } from 'react-icons/ai';
+import Link from 'next/link';
+import { usePrefetcherContext } from '../components/Prefetcher';
 
 const Home = (e) => {
   const [isVisible, setIsVisible] = useState(true);
+  const { capstonePosts } = usePrefetcherContext();
 
   useEffect(() => {
     // window.scrollTo(0, 0);
+
+    console.log(capstonePosts);
 
     window.addEventListener('scroll', (e) => {
       if (window.scrollY < 100) {
@@ -87,12 +92,14 @@ const Home = (e) => {
             Board on the <span className="text-pink-600 font-bold">Go</span>
           </p>
           <p className="text-lg font-semibold text-gray-500">
-            See and learn what is happening in the CS department
+            See and learn what is happening in the CS Department
           </p>
 
-          <div className="btn btn-primary w-fit px-10 mt-16 self-center">
-            See what&apos;s new on the board
-          </div>
+          <Link href={'/bulletin'}>
+            <div className="btn btn-primary w-fit px-10 mt-16 self-center">
+              See what&apos;s new on the board
+            </div>
+          </Link>
 
           {/* arrow down */}
           <motion.div

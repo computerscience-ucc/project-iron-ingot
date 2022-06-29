@@ -98,6 +98,7 @@ const Bulletin = (e) => {
                   onKeyUp={(e) => {
                     if (e.key === 'Enter') {
                       handleSearch(e.currentTarget.value);
+                      setAutoSuggestions([]);
                     }
                   }}
                 />
@@ -138,6 +139,7 @@ const Bulletin = (e) => {
                 <div
                   onClick={(e) => {
                     handleSearch(searchValue);
+                    setAutoSuggestions([]);
                   }}
                   className="btn btn-primary btn-square"
                 >

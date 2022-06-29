@@ -20,7 +20,7 @@ const urlFor = (source) =>
 const blockComponents = {
   types: {
     image: ({ value }) => (
-      <div className="relative w-full h-[500px]">
+      <div className="relative w-full h-[300px]">
         <Image
           className="w-full h-full"
           src={urlFor(value.asset).url()}
@@ -31,7 +31,7 @@ const blockComponents = {
     ),
   },
   block: {
-    h1: ({ children }) => <h1 className="text-4xl font-bold">{children}</h1>,
+    h1: ({ children }) => <h1 className="text-4xl font-bo ld">{children}</h1>,
     h2: ({ children }) => <h2 className="text-3xl font-bold">{children}</h2>,
     h3: ({ children }) => <h3 className="text-2xl font-bold">{children}</h3>,
     h4: ({ children }) => <h4 className="text-xl font-bold">{children}</h4>,
@@ -39,7 +39,12 @@ const blockComponents = {
     h6: ({ children }) => <h6 className="text-md font-bold">{children}</h6>,
     p: ({ children }) => <p className="">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="text-base">{children}</blockquote>
+      <blockquote className="text-base p-10 relative ">
+        <span className="absolute text-white text-6xl left-2 top-2">
+          &ldquo;
+        </span>
+        {children}
+      </blockquote>
     ),
     span: ({ children }) => <span className="text-light">{children}</span>,
     image: ({ node }) => (
@@ -61,27 +66,6 @@ const blockComponents = {
   },
 };
 
-// export const getServerSideProps = async (e) => {
-//   const { slug } = e.query;
-//   const data = await client.fetch(
-//     `*[_type == "bulletin" && slug.current == "${slug}"]{
-//         _id,
-//         _createdAt,
-//         _updatedAt,
-//         bulletinTitle,
-//         bulletinContent,
-//         slug,
-//         "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
-//         tags
-//     }`
-//   );
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// };
-
 export const getStaticPaths = async (e) => {
   const data = await client.fetch(
     `*[_type == "bulletin"]{
@@ -100,7 +84,7 @@ export const getStaticPaths = async (e) => {
   }));
   return {
     paths,
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
@@ -122,6 +106,7 @@ export const getStaticProps = async (e) => {
     props: {
       data,
     },
+    revalidate: 10,
   };
 };
 
@@ -135,7 +120,6 @@ const capitalize = (s) => {
 };
 
 const BulletinPage = ({ data }) => {
-  const router = useRouter();
   const [bulletinPost, setBulletinPost] = useState(false);
 
   useEffect(
