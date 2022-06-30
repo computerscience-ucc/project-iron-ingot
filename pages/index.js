@@ -16,7 +16,7 @@ const Home = (e) => {
   const { capstonePosts } = usePrefetcherContext();
 
   useEffect(() => {
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
     console.log(capstonePosts);
 
@@ -82,11 +82,13 @@ const Home = (e) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="py-36 relative"
+        className="relative"
       >
         {/* landing */}
-        <div className="flex flex-col gap-2 justify-center mt-16 text-center">
-          <p className="text-6xl font-semibold mb-10">Ingo</p>
+        <div className="flex flex-col gap-2 justify-center mt-16 text-center min-h-screen">
+          <p className="text-6xl font-semibold mb-10">
+            <motion.span>Ingo</motion.span>
+          </p>
           <p className="text-lg font-semibold text-gray-500">
             Your CS <span className="text-pink-600 font-bold">In</span>formation
             Board on the <span className="text-pink-600 font-bold">Go</span>
@@ -96,9 +98,28 @@ const Home = (e) => {
           </p>
 
           <Link href={'/bulletin'}>
-            <div className="btn btn-primary w-fit px-10 mt-16 self-center">
+            <motion.div
+              animate={{
+                backgroundPosition: [
+                  '0% 0%',
+                  '100% 0%',
+                  '100% 100%',
+                  '0% 100%',
+                  '0% 0%',
+                ],
+              }}
+              transition={{
+                duration: 5,
+                ease: 'linear',
+                loop: Infinity,
+              }}
+              style={{
+                backgroundSize: '200%',
+              }}
+              className="btn btn-primary bg-transparent bg-[url('/meshgradient2.jpg')] text-primary-content w-fit px-10 mt-16 self-center border-0"
+            >
               See what&apos;s new on the board
-            </div>
+            </motion.div>
           </Link>
 
           {/* arrow down */}
