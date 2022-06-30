@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/globals.css';
-import { useState, useEffect } from 'react';
 import { PrefetcherWrapper } from '../components/Prefetcher';
 import Head from 'next/head';
 
@@ -20,7 +19,7 @@ function MyApp({ Component, pageProps }) {
         <Navbar />
       </LayoutGroup>
       <PrefetcherWrapper>
-        <main className="flex flex-col items-center px-5 md:px-0 min-h-screen relative">
+        <main className="flex flex-col items-center px-5 md:px-0 min-h-screen relative mb-16">
           <div className=" w-full max-w-3xl relative">
             <AnimatePresence exitBeforeEnter>
               <Component {...pageProps} key={router.route} />

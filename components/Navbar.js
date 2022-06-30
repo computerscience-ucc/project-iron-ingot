@@ -120,7 +120,7 @@ const Navbar = (e) => {
         <nav className="navbar w-full max-w-3xl items-center px-5 md:px-0">
           <div className="navbar-start">
             <Link href={'/'} scroll={false}>
-              <div className="flex items-center text-xl gap-4 font-semibold cursor-pointer">
+              {/* <div className="flex items-center text-xl gap-4 font-semibold cursor-pointer">
                 <motion.div
                   animate={{ width: scrollYValue > 100 ? '2rem' : '8rem' }}
                   transition={{ duration: 0.2, ease: 'easeOut' }}
@@ -141,23 +141,41 @@ const Navbar = (e) => {
                     </motion.span>
                   </motion.div>
                 </motion.div>
-                {/* <motion.p
+              </div> */}
+              <p className="text-2xl relative font-extrabold text-transparent cursor-pointer">
+                <motion.span
                   animate={{
-                    opacity: scrollYValue > 100 ? 0 : 1,
+                    backgroundPosition: [
+                      '0% 0%',
+                      '100% 0%',
+                      '100% 100%',
+                      '0% 100%',
+                      '0% 0%',
+                    ],
                   }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  transition={{
+                    duration: 2,
+                    ease: 'linear',
+                    loop: Infinity,
+                  }}
+                  style={{
+                    backgroundSize: '500%',
+                  }}
+                  className="bg-clip-text bg-transparent bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
                 >
-                  NGO
-                </motion.p> */}
-              </div>
+                  ingo
+                </motion.span>
+              </p>
             </Link>
           </div>
           {/* desktop links */}
           <div className="navbar-end gap-3 hidden md:flex">
             <Link href={'/blog'} scroll={false}>
               <p
-                className={`btn  text-base-content ${
-                  route.includes('/blog') ? 'btn-primary' : 'btn-link'
+                className={`btn btn-sm   ${
+                  route.includes('/blog')
+                    ? 'btn-link underline underline-offset-4'
+                    : 'btn-ghost'
                 }`}
               >
                 Blog
@@ -165,8 +183,10 @@ const Navbar = (e) => {
             </Link>
             <Link href={'/bulletin'} scroll={false}>
               <p
-                className={`btn  text-base-content ${
-                  route.includes('/bulletin') ? 'btn-primary' : 'btn-link'
+                className={`btn btn-sm   ${
+                  route.includes('/bulletin')
+                    ? 'btn-link underline underline-offset-4'
+                    : 'btn-ghost'
                 }`}
               >
                 Bulletin
@@ -174,8 +194,10 @@ const Navbar = (e) => {
             </Link>
             <Link href={'/capstone'} scroll={false}>
               <p
-                className={`btn text-base-content ${
-                  route.includes('/capstone') ? 'btn-primary' : 'btn-link'
+                className={`btn btn-sm  ${
+                  route.includes('/capstone')
+                    ? 'btn-link underline underline-offset-4'
+                    : 'btn-ghost'
                 }`}
               >
                 CAPSTONE
@@ -183,8 +205,10 @@ const Navbar = (e) => {
             </Link>
             <Link href={'/about'} scroll={false}>
               <p
-                className={`btn text-base-content ${
-                  route.includes('/about') ? 'btn-primary' : 'btn-link'
+                className={`btn btn-sm  ${
+                  route.includes('/about')
+                    ? 'btn-link underline underline-offset-4'
+                    : 'btn-ghost'
                 }`}
               >
                 About
