@@ -15,10 +15,8 @@ function MyApp({ Component, pageProps }) {
         <title>Blog | Ingo</title>
       </Head>
 
-      <LayoutGroup>
-        <Navbar />
-      </LayoutGroup>
       <PrefetcherWrapper>
+        <Navbar />
         <main className="flex flex-col items-center px-5 md:px-0 min-h-screen relative mb-16">
           <div className=" w-full max-w-3xl relative">
             <AnimatePresence exitBeforeEnter>

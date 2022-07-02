@@ -20,7 +20,7 @@ const BlogCard = (props) => {
 
   return (
     <>
-      <Link href={`/blog/${slug.current}`} scroll={false}>
+      <Link href={`/blog/${slug}`} scroll={false}>
         <motion.div
           key={_id}
           variants={_Transition_Card}

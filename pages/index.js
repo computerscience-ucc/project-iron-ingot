@@ -13,12 +13,9 @@ import { usePrefetcherContext } from '../components/Prefetcher';
 
 const Home = (e) => {
   const [isVisible, setIsVisible] = useState(true);
-  const { capstonePosts } = usePrefetcherContext();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    console.log(capstonePosts);
 
     window.addEventListener('scroll', (e) => {
       if (window.scrollY < 100) {
