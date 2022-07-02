@@ -1,5 +1,6 @@
 import { useContext, createContext, useEffect, useState } from 'react';
 import sanityClient from '@sanity/client';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const client = new sanityClient({
   projectId: 'gjvp776o',
@@ -13,8 +14,9 @@ const blogQuery = `
     _id,
     _createdAt,
     _updatedAt,
+    _type,
     blogTitle,
-    slug,
+    "slug": slug.current,
     "blogAuthor": blogAuthor[] -> {fullName, pronouns},
     tags
   }
@@ -25,8 +27,9 @@ const bulletinQuery = `
     _id,
     _createdAt,
     _updatedAt,
+    _type,
     bulletinTitle,
-    slug,
+    "slug": slug.current,
     "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns},
     tags
   }
@@ -37,6 +40,7 @@ const capstoneQuery = `
     _createdAt,
     _id,
     _updatedAt,
+    _type,
     capstoneContent,
     capstoneTitle,
     "headerImage": headerImage.asset -> url,
@@ -57,37 +61,82 @@ const PrefetcherWrapper = ({ children }) => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [bulletinPosts, setBulletinPosts] = useState([]);
   const [capstonePosts, setCapstonePosts] = useState([]);
+  const [globalSearchItems, setGlobalSearchItems] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
-  const fetchBlogPosts = async (e) => {
-    const blogPosts = await client.fetch(blogQuery);
-    setBlogPosts(blogPosts);
-  };
+  const fetchAllInitialData = async (e) => {
+    const req_blogPosts = await client.fetch(blogQuery);
+    const req_bulletinPosts = await client.fetch(bulletinQuery);
+    const req_capstonePosts = await client.fetch(capstoneQuery);
+    setBlogPosts(req_blogPosts);
+    setBulletinPosts(req_bulletinPosts);
+    setCapstonePosts(req_capstonePosts);
+    setGlobalSearchItems(
+      req_blogPosts.concat(req_bulletinPosts).concat(req_capstonePosts)
+    );
 
-  const fetchBulletinPosts = async (e) => {
-    const bulletinPosts = await client.fetch(bulletinQuery);
-    setBulletinPosts(bulletinPosts);
-  };
-
-  const fetchCapstonePosts = async (e) => {
-    const capstonePosts = await client.fetch(capstoneQuery);
-    setCapstonePosts(capstonePosts);
+    if (req_blogPosts && req_bulletinPosts && req_capstonePosts) {
+      setTimeout(() => {
+        setLoaded(true);
+      }, 200);
+    }
   };
 
   useEffect((e) => {
-    fetchBlogPosts();
-    fetchBulletinPosts();
-    fetchCapstonePosts();
+    fetchAllInitialData();
   }, []);
 
   let sharedState = {
     blogPosts,
     bulletinPosts,
     capstonePosts,
+    globalSearchItems,
   };
 
   return (
     <PrefetcherContext.Provider value={sharedState}>
-      {children}
+      <AnimatePresence>
+        {loaded && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {!loaded && (
+          <motion.main
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-base-100 flex justify-center items-center "
+          >
+            <p className="text-2xl relative font-extrabold text-transparent cursor-pointer">
+              <motion.span
+                animate={{
+                  backgroundPosition: [
+                    '0% 0%',
+                    '100% 0%',
+                    '100% 100%',
+                    '0% 100%',
+                    '0% 0%',
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  ease: 'linear',
+                  loop: Infinity,
+                }}
+                style={{
+                  backgroundSize: '500%',
+                }}
+                className="bg-clip-text bg-transparent bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
+              >
+                ingo
+              </motion.span>
+            </p>
+          </motion.main>
+        )}
+      </AnimatePresence>
     </PrefetcherContext.Provider>
   );
 };

@@ -1,14 +1,161 @@
-import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
+import {
+  FaArrowRight,
+  FaArrowDown,
+  FaSearch,
+  FaCross,
+  FaXbox,
+  FaWindowClose,
+} from 'react-icons/fa';
 import { AiOutlineMenu } from 'react-icons/ai';
-import { CgClose } from 'react-icons/cg';
+import { CgChevronRight, CgClose, CgSearch } from 'react-icons/cg';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useViewportScroll } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { usePrefetcherContext } from './Prefetcher';
 
 const SideMenu = ({ closeHandler, isOpen }) => {
+  useEffect((e) => {
+    if (globalSearchItems) {
+      // destructure globalSearchItems to get the _type, any fields with title on it, and the tags
+      const newArray = globalSearchItems.map((item) => {
+        return {
+          _type: item._type.replace(/_/g, ''),
+          title: item.blogTitle || item.bulletinTitle || item.capstoneTitle,
+          tags: item.tags,
+          slug: item.slug,
+        };
+      });
+      setGlobalSearchArray(newArray);
+    }
+  }, []);
+
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+  const [globalSearchArray, setGlobalSearchArray] = useState([]);
+  const [globalSearchResults, setGlobalSearchResults] = useState([]);
+  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
+  const [globalSearchIsEmpty, setGlobalSearchIsEmpty] = useState(false);
+  const { globalSearchItems } = usePrefetcherContext();
+
+  const toggleGlobalSearch = (e) => {
+    setGlobalSearchOpen(!globalSearchOpen);
+  };
+
+  const globalSearchHandler = (val) => {
+    setGlobalSearchResults([]);
+    let searchres = globalSearchArray.filter((item) => {
+      // search in title and in tags
+      return (
+        item.title.toLowerCase().includes(val.toLowerCase()) ||
+        item.tags.some((tag) => tag.toLowerCase().includes(val.toLowerCase()))
+      );
+    });
+
+    setGlobalSearchIsEmpty(searchres.length < 1);
+    setGlobalSearchResults(searchres);
+  };
+
   return (
     <>
+      <AnimatePresence exitBeforeEnter>
+        {globalSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="z-[88] fixed w-full h-full bg-base-100 flex justify-center select-none md:hidden"
+          >
+            <motion.div
+              initial={{ translateY: -20 }}
+              animate={{ translateY: 0 }}
+              exit={{ translateY: 20 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="w-full max-w-3xl flex flex-col gap-10 pt-24 px-10 md:px-0"
+            >
+              <div className="w-full flex gap-5 items-end">
+                <div className="w-full flex flex-col justify-end">
+                  <p className="mb-3">Global Search</p>
+                  <input
+                    onKeyUp={(e) => {
+                      if (e.key == 'Enter') {
+                        globalSearchHandler(e.target.value);
+                      }
+                      setGlobalSearchQuery(e.target.value);
+                    }}
+                    onChange={(e) => {
+                      if (e.currentTarget.value < 1) {
+                        setGlobalSearchResults([]);
+                      }
+                      setGlobalSearchIsEmpty(false);
+                    }}
+                    className="input input-primary input-bordered w-full"
+                    placeholder="Search for any page"
+                  />
+                </div>
+                <div
+                  onClick={(e) => globalSearchHandler(globalSearchQuery)}
+                  className="btn btn-primary btn-square"
+                >
+                  <CgSearch size={15} />
+                </div>
+                <div
+                  onClick={toggleGlobalSearch}
+                  className="btn btn-ghost btn-square"
+                >
+                  <CgClose size={15} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                {/* loop the globalSearchResuls and limit to 7 */}
+                {globalSearchResults.length > 0 &&
+                  globalSearchResults.slice(0, 7).map((item, index) => {
+                    return (
+                      <Link key={index} href={`/${item._type}/${item.slug}`}>
+                        <motion.p
+                          onClick={(e) => {
+                            setGlobalSearchResults([]);
+                            setGlobalSearchQuery('');
+                            setGlobalSearchOpen(false);
+                            closeHandler();
+                          }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.2,
+                            ease: 'easeOut',
+                            delay: index * 0.05,
+                          }}
+                          className="px-5 py-3 cursor-pointer bg-base-200 rounded flex justify-between items-center"
+                        >
+                          <span>{item.title}</span>
+                          <span>
+                            <CgChevronRight />
+                          </span>
+                        </motion.p>
+                      </Link>
+                    );
+                  })}
+                {globalSearchIsEmpty && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    className="text-center text-base-content"
+                  >
+                    No results found for &ldquo;{globalSearchQuery}&rdquo;
+                  </motion.p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.main
         initial={{ opacity: 0 }}
         animate={{
@@ -67,6 +214,12 @@ const SideMenu = ({ closeHandler, isOpen }) => {
               about us
             </p>
           </Link>
+          <div
+            onClick={toggleGlobalSearch}
+            className="btn btn-ghost no-animation btn-xl w-full  text-base-content mt-10"
+          >
+            Search Globally
+          </div>
         </motion.div>
       </motion.main>
     </>
@@ -78,9 +231,28 @@ const Navbar = (e) => {
   const router = useRouter();
   const [scrollYValue, setScrollYValue] = useState(0);
   const [route, setRoute] = useState(router.pathname);
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+  const [globalSearchArray, setGlobalSearchArray] = useState([]);
+  const [globalSearchResults, setGlobalSearchResults] = useState([]);
+  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
+  const [globalSearchIsEmpty, setGlobalSearchIsEmpty] = useState(false);
+  const { globalSearchItems } = usePrefetcherContext();
 
   useEffect((e) => {
     setRoute(router.pathname);
+
+    if (globalSearchItems) {
+      // destructure globalSearchItems to get the _type, any fields with title on it, and the tags
+      const newArray = globalSearchItems.map((item) => {
+        return {
+          _type: item._type.replace(/_/g, ''),
+          title: item.blogTitle || item.bulletinTitle || item.capstoneTitle,
+          tags: item.tags,
+          slug: item.slug,
+        };
+      });
+      setGlobalSearchArray(newArray);
+    }
   }, []);
 
   useEffect(
@@ -101,6 +273,24 @@ const Navbar = (e) => {
     };
   }, []);
 
+  const toggleGlobalSearch = (e) => {
+    setGlobalSearchOpen(!globalSearchOpen);
+  };
+
+  const globalSearchHandler = (val) => {
+    setGlobalSearchResults([]);
+    let searchres = globalSearchArray.filter((item) => {
+      // search in title and in tags
+      return (
+        item.title.toLowerCase().includes(val.toLowerCase()) ||
+        item.tags.some((tag) => tag.toLowerCase().includes(val.toLowerCase()))
+      );
+    });
+
+    setGlobalSearchIsEmpty(searchres.length < 1);
+    setGlobalSearchResults(searchres);
+  };
+
   return (
     <>
       <AnimatePresence exitBeforeEnter>
@@ -112,6 +302,104 @@ const Navbar = (e) => {
         )}
       </AnimatePresence>
 
+      <AnimatePresence exitBeforeEnter>
+        {globalSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="z-[88] fixed w-full h-full bg-base-100 flex justify-center select-none"
+          >
+            <motion.div
+              initial={{ translateY: -20 }}
+              animate={{ translateY: 0 }}
+              exit={{ translateY: 20 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="w-full max-w-3xl flex flex-col gap-10 pt-24 px-10 md:px-0"
+            >
+              <div className="w-full flex gap-5 items-end">
+                <div className="w-full flex flex-col justify-end">
+                  <p className="mb-3">Global Search</p>
+                  <input
+                    onKeyUp={(e) => {
+                      if (e.key == 'Enter') {
+                        globalSearchHandler(e.target.value);
+                      }
+                      setGlobalSearchQuery(e.target.value);
+                    }}
+                    onChange={(e) => {
+                      if (e.currentTarget.value < 1) {
+                        setGlobalSearchResults([]);
+                      }
+                      setGlobalSearchIsEmpty(false);
+                    }}
+                    className="input input-primary input-bordered w-full"
+                    placeholder="Search for any page"
+                  />
+                </div>
+                <div
+                  onClick={(e) => globalSearchHandler(globalSearchQuery)}
+                  className="btn btn-primary btn-square"
+                >
+                  <CgSearch size={15} />
+                </div>
+                <div
+                  onClick={toggleGlobalSearch}
+                  className="btn btn-ghost btn-square"
+                >
+                  <CgClose size={15} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                {/* loop the globalSearchResuls and limit to 7 */}
+                {globalSearchResults.length > 0 &&
+                  globalSearchResults.slice(0, 7).map((item, index) => {
+                    return (
+                      <Link key={index} href={`/${item._type}/${item.slug}`}>
+                        <motion.p
+                          onClick={(e) => {
+                            setGlobalSearchResults([]);
+                            setGlobalSearchQuery('');
+                            setGlobalSearchOpen(false);
+                          }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.2,
+                            ease: 'easeOut',
+                            delay: index * 0.05,
+                          }}
+                          className="px-5 py-3 cursor-pointer bg-base-200 rounded flex justify-between items-center"
+                        >
+                          <span>{item.title}</span>
+                          <span>
+                            <CgChevronRight />
+                          </span>
+                        </motion.p>
+                      </Link>
+                    );
+                  })}
+                {globalSearchIsEmpty && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    className="text-center text-base-content"
+                  >
+                    No results found for &ldquo;{globalSearchQuery}&rdquo;
+                  </motion.p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div
         className={`flex justify-center fixed w-full z-40 select-none transition-all ${
           scrollYValue < 100 ? 'bg-transparent py-10' : 'bg-base-100 py-5'
@@ -120,28 +408,6 @@ const Navbar = (e) => {
         <nav className="navbar w-full max-w-3xl items-center px-5 md:px-0">
           <div className="navbar-start">
             <Link href={'/'} scroll={false}>
-              {/* <div className="flex items-center text-xl gap-4 font-semibold cursor-pointer">
-                <motion.div
-                  animate={{ width: scrollYValue > 100 ? '2rem' : '8rem' }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
-                  className="h-8 relative flex items-center justify-end border-[3px] border-primary rounded-lg p-4"
-                >
-                  <motion.div className="min-h-[32px] min-w-[32px] flex items-center justify-center absolute right-0 text-center">
-                    <span className="text-center">i</span>
-                    <motion.span
-                      // hide on scroll
-                      animate={{
-                        opacity: scrollYValue > 100 ? 0 : 1,
-                        width: scrollYValue > 100 ? 0 : 'auto',
-                      }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="text-center"
-                    >
-                      ngo
-                    </motion.span>
-                  </motion.div>
-                </motion.div>
-              </div> */}
               <p className="text-2xl relative font-extrabold text-transparent cursor-pointer">
                 <motion.span
                   animate={{
@@ -214,6 +480,9 @@ const Navbar = (e) => {
                 About
               </p>
             </Link>
+            <div onClick={toggleGlobalSearch} className="btn btn-square btn-sm">
+              <FaSearch />
+            </div>
           </div>
           {/* mobile dropdown */}
           <div className="navbar-end gap-10 md:hidden">

@@ -21,7 +21,7 @@ const BulletinCard = (props) => {
 
   return (
     <>
-      <Link href={`/bulletin/${slug.current}`} scroll={false}>
+      <Link href={`/bulletin/${slug}`} scroll={false}>
         <motion.div
           key={_id}
           variants={_Transition_Card}
