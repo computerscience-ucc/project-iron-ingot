@@ -1,3 +1,8 @@
+/*
+  TODO: fix landing page ui inconsistencies
+  TODO: 
+*/
+
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
@@ -12,7 +17,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Blog | Ingo</title>
+        <title>Ingo</title>
       </Head>
 
       <PrefetcherWrapper>

@@ -17,7 +17,7 @@ const blogQuery = `
     _type,
     blogTitle,
     "slug": slug.current,
-    "blogAuthor": blogAuthor[] -> {fullName, pronouns},
+    "blogAuthor": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
     tags
   }
 `;
@@ -30,7 +30,7 @@ const bulletinQuery = `
     _type,
     bulletinTitle,
     "slug": slug.current,
-    "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns},
+    "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
     tags
   }
 `;
@@ -110,7 +110,7 @@ const PrefetcherWrapper = ({ children }) => {
             exit={{ opacity: 0 }}
             className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-base-100 flex justify-center items-center "
           >
-            <p className="text-2xl relative font-extrabold text-transparent cursor-pointer">
+            <p className="text-4xl relative font-extrabold text-transparent select-none">
               <motion.span
                 animate={{
                   backgroundPosition: [
@@ -122,14 +122,18 @@ const PrefetcherWrapper = ({ children }) => {
                   ],
                 }}
                 transition={{
-                  duration: 2,
+                  duration: 10,
                   ease: 'linear',
                   loop: Infinity,
                 }}
                 style={{
-                  backgroundSize: '500%',
+                  backgroundSize: '1000px 1000px',
+
+                  backgroundColor: 'rgb(6, 182, 212)',
+                  backgroundImage:
+                    'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
                 }}
-                className="bg-clip-text bg-transparent bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
+                className="bg-clip-text bg-transparent"
               >
                 ingo
               </motion.span>

@@ -6,7 +6,12 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require('daisyui')],
+  plugins: [
+    require('daisyui'),
+    ({ addVariant }) => {
+      addVariant('child', '& > *');
+    },
+  ],
   daisyui: {
     themes: [
       {

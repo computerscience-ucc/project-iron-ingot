@@ -7,6 +7,7 @@ import { usePrefetcherContext } from '../../components/Prefetcher';
 import BulletinCard from '../../components/BulletinCard';
 import TopGradient from '../../components/TopGradient';
 import Link from 'next/link';
+import Masonry from 'react-masonry-css';
 
 const Bulletin = (e) => {
   const { bulletinPosts } = usePrefetcherContext();
@@ -113,10 +114,7 @@ const Bulletin = (e) => {
                     >
                       {autoSuggestions.map((post) => {
                         return (
-                          <Link
-                            key={post._id}
-                            href={`/bulletin/${post.slug.current}`}
-                          >
+                          <Link key={post._id} href={`/bulletin/${post.slug}`}>
                             <li>
                               <span>{post.bulletinTitle}</span>
                             </li>
@@ -160,21 +158,40 @@ const Bulletin = (e) => {
           {!isSearching && bulletinPosts && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+              className="mt-16"
             >
-              {bulletinPosts.map((post) => (
-                <BulletinCard key={post._id} bulletin={post} />
-              ))}
+              <Masonry
+                breakpointCols={{
+                  default: 2,
+                  700: 1,
+                }}
+                className="flex w-auto gap-5"
+                columnClassName="bg-clip-border child:mb-5"
+              >
+                {bulletinPosts.map((post) => (
+                  <BulletinCard key={post._id} bulletin={post} />
+                ))}
+              </Masonry>
             </motion.div>
           )}
+
           {isSearching && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+              className="mt-16"
             >
-              {searchResults.map((post) => (
-                <BulletinCard key={post._id} bulletin={post} />
-              ))}
+              <Masonry
+                breakpointCols={{
+                  default: 2,
+                  700: 1,
+                }}
+                className="flex w-auto gap-5"
+                columnClassName="bg-clip-border child:mb-5"
+              >
+                {bulletinPosts.map((post) => (
+                  <BulletinCard key={post._id} bulletin={post} />
+                ))}
+              </Masonry>
             </motion.div>
           )}
           {isSearching && searchResults.length < 1 && (
