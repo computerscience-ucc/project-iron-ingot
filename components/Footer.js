@@ -1,62 +1,108 @@
+/*
+  TODO: [x] fix inaccessible links
+  TODO: [x] update footer links to open in a new tab
+  TODO: [x] implement motion to footer links
+
+  ? Todo #1 will be inquired to the developers of the 3rd party apps linked to this website
+*/
+
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 const Footer = (e) => {
   return (
     <>
-      <footer className="w-full relative py-10 flex flex-col items-center px-5 md:px-0">
-        <div className=" w-full max-w-2xl flex flex-col text-center">
-          <p className=" text-2xl font-bold">Ingo</p>
-          <p className=" text-lg font-medium">
-            Your CS Information Board on the go
-          </p>
-
-          {/* links */}
-          <div className="w-full font-medium flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-around px-10 mt-16 mb-4 underline-offset-4">
-            <Link href={'/blog'}>
-              <p className="cursor-pointer link">Blog</p>
+      <div className="divider" />
+      {/* new footer layout */}
+      <footer className="w-full relative py-10 flex justify-center select-none">
+        <div className="w-full flex flex-col md:flex-row md:justify-between max-w-6xl px-5 md:px-10 xl:px-0 gap-10 md:gap-0">
+          <div>
+            <Link href={'/'} scroll={false}>
+              <p className="text-2xl font-bold text-transparent cursor-pointer text-center md:text-left">
+                <motion.span
+                  animate={{
+                    backgroundPosition: [
+                      '0% 0%',
+                      '100% 0%',
+                      '100% 100%',
+                      '0% 100%',
+                      '0% 0%',
+                    ],
+                  }}
+                  transition={{
+                    duration: 10,
+                    ease: 'linear',
+                    loop: Infinity,
+                  }}
+                  style={{
+                    backgroundSize: '1000px 1000px',
+                    backgroundColor: 'rgb(6, 182, 212)',
+                    backgroundImage:
+                      'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
+                  }}
+                  className="bg-clip-text bg-transparent"
+                >
+                  ingo
+                </motion.span>
+              </p>
             </Link>
-            <Link href={'/bulletin'}>
-              <p className="cursor-pointer link">Bulletin</p>
-            </Link>
-            <Link href={'/capstone'}>
-              <p className="cursor-pointer link">CAPSTONE</p>
-            </Link>
-            <Link href={'/about'}>
-              <p className="cursor-pointer link">About</p>
-            </Link>
+            <p className="text-center md:text-left">
+              Your CS information on the go.
+            </p>
           </div>
-          <div className="w-full font-medium flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-around px-10 underline-offset-4 mt-5">
-            <p className="cursor-pointer">Contact Us</p>
-            <p className="cursor-pointer">Privacy Statement</p>
-            <p className="cursor-pointer">Terms and Conditions</p>
+          <div className="grid grid-cols-1 text-center gap-6 md:flex md:flex-row md:gap-14 lg:gap-16 md:text-right">
+            <div>
+              <p className="text-xl font-semibold mb-5">Main Links</p>
+              <Link scroll={false} href={'./blog'}>
+                <p className="cursor-pointer hover:underline hover:underline-offset-2">
+                  Blog
+                </p>
+              </Link>
+              <Link scroll={false} href={'./bulletin'}>
+                <p className="cursor-pointer hover:underline hover:underline-offset-2">
+                  Bulletin
+                </p>
+              </Link>
+              <Link scroll={false} href={'./capstone'}>
+                <p className="cursor-pointer hover:underline hover:underline-offset-2">
+                  CAPSTONE
+                </p>
+              </Link>
+              <Link scroll={false} href={'./about'}>
+                <p className="cursor-pointer hover:underline hover:underline-offset-2">
+                  About
+                </p>
+              </Link>
+              <Link scroll={false} href={'./about'}>
+                <p className="cursor-pointer hover:underline hover:underline-offset-2">
+                  Contact
+                </p>
+              </Link>
+            </div>
+            <div>
+              <p className="text-xl font-semibold mb-5">Social Links</p>
+              <p className="opacity-10">Facebook</p>
+            </div>
+            <div>
+              <p className="text-xl font-semibold mb-5">External Links</p>
+              <p className="opacity-10">Official UCC Website</p>
+              <p className="opacity-10">UCC - Registrar</p>
+              <p className="opacity-10">UCC - SSC</p>
+              <p className="opacity-10">UCC - CS Council</p>
+              <p className="opacity-10">UCC - TNC of the North</p>
+            </div>
           </div>
-          <div className="divider" />
-          <p className=" mb-4 font-bold">Other UCC Links</p>
-          <div className="w-full flex font-medium flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-around px-10 underline-offset-4">
-            <Link
-              href="https://ucc-enrollmentmanagementsystem.epizy.com"
-              passHref
-            >
-              <p className="link">Enrollment</p>
-            </Link>
-            <p className="">Escord</p>
-            <p className="">ACES</p>
-
-            <Link href="http://www.ucc-thesis.ml/" passHref>
-              <p className="link">Thesis</p>
-            </Link>
-            <Link href="https://ucc-alumnus.vercel.app" passHref>
-              <p className="link">Alumnus</p>
-            </Link>
-          </div>
-          <div className="divider" />
+        </div>
+      </footer>
+      <div className="w-full relative py-10 flex justify-center select-none">
+        <div className="flex flex-col justify-center text-center">
           <p className="font-light">
             Under the management of University of Caloocan City - Computer
             Science Council
           </p>
           <p className="font-light"> Project Iron Ingot &copy; 2022</p>
         </div>
-      </footer>
+      </div>
     </>
   );
 };

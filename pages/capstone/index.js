@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { usePrefetcherContext } from '../../components/Prefetcher';
 import CapstoneCard from '../../components/CapstoneCard';
 import TopGradient from '../../components/TopGradient';
+import Masonry from 'react-masonry-css';
 
 const Capstone = (e) => {
   const { capstonePosts } = usePrefetcherContext();
@@ -112,10 +113,7 @@ const Capstone = (e) => {
                     >
                       {autoSuggestions.map((post) => {
                         return (
-                          <Link
-                            key={post._id}
-                            href={`/blog/${post.slug.current}`}
-                          >
+                          <Link key={post._id} href={`/capstone/${post.slug}`}>
                             <li>
                               <span>{post.capstoneTitle}</span>
                             </li>
@@ -160,21 +158,40 @@ const Capstone = (e) => {
           {!isSearching && capstonePosts && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16 "
+              className="mt-16"
             >
-              {capstonePosts.map((post) => (
-                <CapstoneCard key={post._id} capstone={post} />
-              ))}
+              <Masonry
+                breakpointCols={{
+                  default: 2,
+                  700: 1,
+                }}
+                className="flex w-auto gap-5"
+                columnClassName="bg-clip-border child:mb-5"
+              >
+                {capstonePosts.map((post) => (
+                  <CapstoneCard key={post._id} capstone={post} />
+                ))}
+              </Masonry>
             </motion.div>
           )}
+
           {isSearching && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+              className="mt-16"
             >
-              {searchResults.map((post) => (
-                <CapstoneCard key={post._id} capstone={post} />
-              ))}
+              <Masonry
+                breakpointCols={{
+                  default: 2,
+                  700: 1,
+                }}
+                className="flex w-auto gap-5"
+                columnClassName="bg-clip-border child:mb-5"
+              >
+                {capstonePosts.map((post) => (
+                  <CapstoneCard key={post._id} capstone={post} />
+                ))}
+              </Masonry>
             </motion.div>
           )}
           {isSearching && searchResults.length < 1 && (

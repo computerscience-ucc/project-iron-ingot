@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import BlogCard from '../../components/BlogCard';
 import TopGradient from '../../components/TopGradient';
+import Masonry from 'react-masonry-css';
 
 const Blog = ({}) => {
   const { blogPosts } = usePrefetcherContext();
@@ -119,10 +120,7 @@ const Blog = ({}) => {
                     >
                       {autoSuggestions.map((post) => {
                         return (
-                          <Link
-                            key={post._id}
-                            href={`/blog/${post.slug.current}`}
-                          >
+                          <Link key={post._id} href={`/blog/${post.slug}`}>
                             <li>
                               <span>{post.blogTitle}</span>
                             </li>
@@ -167,25 +165,43 @@ const Blog = ({}) => {
           {!isSearching && blogPosts && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+              className="mt-16"
             >
-              {blogPosts.map((blog) => (
-                <div key={blog._id}>
-                  <BlogCard blog={blog} />
-                </div>
-              ))}
+              <Masonry
+                breakpointCols={{
+                  default: 2,
+                  700: 1,
+                }}
+                className="flex w-auto gap-5"
+                columnClassName="bg-clip-border child:mb-5"
+              >
+                {blogPosts.map((blog) => (
+                  <div key={blog._id}>
+                    <BlogCard blog={blog} />
+                  </div>
+                ))}
+              </Masonry>
             </motion.div>
           )}
           {isSearching && searchResults && (
             <motion.div
               animate={{ opacity: autoSuggestions.length > 0 ? 0.2 : 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-16"
+              className="mt-16"
             >
-              {searchResults.map((blog) => (
-                <div key={blog._id}>
-                  <BlogCard blog={blog} />
-                </div>
-              ))}
+              <Masonry
+                breakpointCols={{
+                  default: 2,
+                  700: 1,
+                }}
+                className="flex w-auto gap-5"
+                columnClassName="bg-clip-border child:mb-5"
+              >
+                {searchResults.map((blog) => (
+                  <div key={blog._id}>
+                    <BlogCard blog={blog} />
+                  </div>
+                ))}
+              </Masonry>
             </motion.div>
           )}
           {isSearching && searchResults.length < 1 && (

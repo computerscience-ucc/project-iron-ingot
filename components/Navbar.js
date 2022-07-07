@@ -1,3 +1,10 @@
+/*
+  TODO: [-] implement global search result to include a dynamic page content
+  TODO: [x] implement global search autosuggestion
+
+  ! Due to network traffic todo #1 cannot be implemented
+*/
+
 import {
   FaArrowRight,
   FaArrowDown,
@@ -15,6 +22,14 @@ import { useRouter } from 'next/router';
 import { usePrefetcherContext } from './Prefetcher';
 
 const SideMenu = ({ closeHandler, isOpen }) => {
+  const { globalSearchItems } = usePrefetcherContext();
+  const [mb_globalSearchOpen, mb_setGlobalSearchOpen] = useState(false);
+  const [mb_globalSearchArray, mb_setGlobalSearchArray] = useState([]);
+  const [mb_globalSearchResults, mb_setGlobalSearchResults] = useState([]);
+  const [mb_globalSearchQuery, mb_setGlobalSearchQuery] = useState('');
+  const [mb_globalSearchIsEmpty, mb_setGlobalSearchIsEmpty] = useState(false);
+  const { scrollY } = useViewportScroll();
+
   useEffect((e) => {
     if (globalSearchItems) {
       // destructure globalSearchItems to get the _type, any fields with title on it, and the tags
@@ -26,24 +41,17 @@ const SideMenu = ({ closeHandler, isOpen }) => {
           slug: item.slug,
         };
       });
-      setGlobalSearchArray(newArray);
+      mb_setGlobalSearchArray(newArray);
     }
   }, []);
 
-  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
-  const [globalSearchArray, setGlobalSearchArray] = useState([]);
-  const [globalSearchResults, setGlobalSearchResults] = useState([]);
-  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
-  const [globalSearchIsEmpty, setGlobalSearchIsEmpty] = useState(false);
-  const { globalSearchItems } = usePrefetcherContext();
-
   const toggleGlobalSearch = (e) => {
-    setGlobalSearchOpen(!globalSearchOpen);
+    mb_setGlobalSearchOpen(!mb_globalSearchOpen);
   };
 
   const globalSearchHandler = (val) => {
-    setGlobalSearchResults([]);
-    let searchres = globalSearchArray.filter((item) => {
+    mb_setGlobalSearchResults([]);
+    let searchRes = mb_globalSearchArray.filter((item) => {
       // search in title and in tags
       return (
         item.title.toLowerCase().includes(val.toLowerCase()) ||
@@ -51,14 +59,14 @@ const SideMenu = ({ closeHandler, isOpen }) => {
       );
     });
 
-    setGlobalSearchIsEmpty(searchres.length < 1);
-    setGlobalSearchResults(searchres);
+    mb_setGlobalSearchIsEmpty(searchRes.length < 1);
+    mb_setGlobalSearchResults(searchRes);
   };
 
   return (
     <>
       <AnimatePresence exitBeforeEnter>
-        {globalSearchOpen && (
+        {mb_globalSearchOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{
@@ -79,29 +87,19 @@ const SideMenu = ({ closeHandler, isOpen }) => {
             >
               <div className="w-full flex gap-5 items-end">
                 <div className="w-full flex flex-col justify-end">
-                  <p className="mb-3">Global Search</p>
                   <input
-                    onKeyUp={(e) => {
-                      if (e.key == 'Enter') {
-                        globalSearchHandler(e.target.value);
-                      }
-                      setGlobalSearchQuery(e.target.value);
-                    }}
                     onChange={(e) => {
-                      if (e.currentTarget.value < 1) {
-                        setGlobalSearchResults([]);
+                      if (e.currentTarget.value.length < 3) {
+                        mb_setGlobalSearchResults([]);
+                        mb_setGlobalSearchIsEmpty(false);
+                      } else {
+                        mb_setGlobalSearchQuery(e.target.value);
+                        globalSearchHandler(e.currentTarget.value);
                       }
-                      setGlobalSearchIsEmpty(false);
                     }}
                     className="input input-primary input-bordered w-full"
-                    placeholder="Search for any page"
+                    placeholder="Search for any page with 3 or more characters"
                   />
-                </div>
-                <div
-                  onClick={(e) => globalSearchHandler(globalSearchQuery)}
-                  className="btn btn-primary btn-square"
-                >
-                  <CgSearch size={15} />
                 </div>
                 <div
                   onClick={toggleGlobalSearch}
@@ -112,15 +110,15 @@ const SideMenu = ({ closeHandler, isOpen }) => {
               </div>
               <div className="flex flex-col gap-5">
                 {/* loop the globalSearchResuls and limit to 7 */}
-                {globalSearchResults.length > 0 &&
-                  globalSearchResults.slice(0, 7).map((item, index) => {
+                {mb_globalSearchResults.length > 0 &&
+                  mb_globalSearchResults.slice(0, 5).map((item, index) => {
                     return (
                       <Link key={index} href={`/${item._type}/${item.slug}`}>
                         <motion.p
                           onClick={(e) => {
-                            setGlobalSearchResults([]);
-                            setGlobalSearchQuery('');
-                            setGlobalSearchOpen(false);
+                            mb_setGlobalSearchResults([]);
+                            mb_setGlobalSearchQuery('');
+                            mb_setGlobalSearchOpen(false);
                             closeHandler();
                           }}
                           initial={{ opacity: 0, y: 20 }}
@@ -140,14 +138,14 @@ const SideMenu = ({ closeHandler, isOpen }) => {
                       </Link>
                     );
                   })}
-                {globalSearchIsEmpty && (
+                {mb_globalSearchIsEmpty && (
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, ease: 'easeOut' }}
                     className="text-center text-base-content"
                   >
-                    No results found for &ldquo;{globalSearchQuery}&rdquo;
+                    No results found for &ldquo;{mb_globalSearchQuery}&rdquo;
                   </motion.p>
                 )}
               </div>
@@ -164,16 +162,57 @@ const SideMenu = ({ closeHandler, isOpen }) => {
         exit={{
           opacity: 0,
         }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         className="fixed top-0 left-0 w-full h-full bg-base-100 items-center justify-center z-50 md:hidden"
       >
-        <motion.div
-          layoutId="menuButton"
-          className="btn btn-circle absolute right-5 top-10"
-          onClick={closeHandler}
+        <div
+          className={`absolute w-full px-5 flex justify-between items-center transition-all ${
+            scrollY.get() > 100 ? 'py-7' : 'py-12'
+          }`}
         >
-          <CgClose />
-        </motion.div>
-        <motion.div className="flex flex-col w-full h-full items-center justify-center px-5">
+          <p className="text-2xl font-bold mb-2 text-transparent cursor-pointer">
+            <motion.span
+              animate={{
+                backgroundPosition: [
+                  '0% 0%',
+                  '100% 0%',
+                  '100% 100%',
+                  '0% 100%',
+                  '0% 0%',
+                ],
+              }}
+              transition={{
+                duration: 10,
+                ease: 'linear',
+                loop: Infinity,
+              }}
+              style={{
+                backgroundSize: '1000px 1000px',
+                backgroundColor: 'rgb(6, 182, 212)',
+                backgroundImage:
+                  'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
+              }}
+              className="bg-clip-text bg-transparent"
+            >
+              ingo
+            </motion.span>
+          </p>
+          <motion.div
+            layoutId="menuButton"
+            className="btn btn-circle"
+            onClick={closeHandler}
+          >
+            <CgClose />
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ translateY: -20 }}
+          animate={{ translateY: 0 }}
+          exit={{ translateY: 20 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          className="flex flex-col w-full h-full items-center justify-center px-5"
+        >
           <Link href={'/'} scroll={false}>
             <p
               onClick={closeHandler}
@@ -324,29 +363,19 @@ const Navbar = (e) => {
             >
               <div className="w-full flex gap-5 items-end">
                 <div className="w-full flex flex-col justify-end">
-                  <p className="mb-3">Global Search</p>
                   <input
-                    onKeyUp={(e) => {
-                      if (e.key == 'Enter') {
+                    onChange={(e) => {
+                      if (e.currentTarget.value.length < 3) {
+                        setGlobalSearchResults([]);
+                      } else {
+                        setGlobalSearchQuery(e.target.value);
+                        setGlobalSearchIsEmpty(false);
                         globalSearchHandler(e.target.value);
                       }
-                      setGlobalSearchQuery(e.target.value);
-                    }}
-                    onChange={(e) => {
-                      if (e.currentTarget.value < 1) {
-                        setGlobalSearchResults([]);
-                      }
-                      setGlobalSearchIsEmpty(false);
                     }}
                     className="input input-primary input-bordered w-full"
-                    placeholder="Search for any page"
+                    placeholder="Search for any page with 3 or more characters"
                   />
-                </div>
-                <div
-                  onClick={(e) => globalSearchHandler(globalSearchQuery)}
-                  className="btn btn-primary btn-square"
-                >
-                  <CgSearch size={15} />
                 </div>
                 <div
                   onClick={toggleGlobalSearch}
@@ -356,9 +385,8 @@ const Navbar = (e) => {
                 </div>
               </div>
               <div className="flex flex-col gap-5">
-                {/* loop the globalSearchResuls and limit to 7 */}
                 {globalSearchResults.length > 0 &&
-                  globalSearchResults.slice(0, 7).map((item, index) => {
+                  globalSearchResults.slice(0, 5).map((item, index) => {
                     return (
                       <Link key={index} href={`/${item._type}/${item.slug}`}>
                         <motion.p
@@ -405,10 +433,10 @@ const Navbar = (e) => {
           scrollYValue < 100 ? 'bg-transparent py-10' : 'bg-base-100 py-5'
         }`}
       >
-        <nav className="navbar w-full max-w-3xl items-center px-5 md:px-0">
+        <nav className="navbar w-full items-center max-w-6xl px-5 md:px-10 xl:px-0">
           <div className="navbar-start">
             <Link href={'/'} scroll={false}>
-              <p className="text-2xl relative font-extrabold text-transparent cursor-pointer">
+              <p className="text-2xl font-bold mb-2 text-transparent cursor-pointer">
                 <motion.span
                   animate={{
                     backgroundPosition: [
@@ -420,14 +448,17 @@ const Navbar = (e) => {
                     ],
                   }}
                   transition={{
-                    duration: 2,
+                    duration: 10,
                     ease: 'linear',
                     loop: Infinity,
                   }}
                   style={{
-                    backgroundSize: '500%',
+                    backgroundSize: '1000px 1000px',
+                    backgroundColor: 'rgb(6, 182, 212)',
+                    backgroundImage:
+                      'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
                   }}
-                  className="bg-clip-text bg-transparent bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
+                  className="bg-clip-text bg-transparent"
                 >
                   ingo
                 </motion.span>
