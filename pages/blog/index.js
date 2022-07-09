@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import BlogCard from '../../components/BlogCard';
 import TopGradient from '../../components/TopGradient';
 import Masonry from 'react-masonry-css';
+import Head from 'next/head';
 
 const Blog = ({}) => {
   const { blogPosts } = usePrefetcherContext();
@@ -63,6 +64,9 @@ const Blog = ({}) => {
   return (
     <>
       <TopGradient colorLeft={'#349ede'} colorRight={'#cea570'} />
+      <Head>
+        <title>Blog | Ingo</title>
+      </Head>
       <motion.section
         variants={_Transition_Page}
         initial="initial"
