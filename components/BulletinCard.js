@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CgUser } from 'react-icons/cg';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { _Transition_Card } from './_Animations';
@@ -33,25 +34,53 @@ const BulletinCard = (props) => {
           onClick={() => setIsLoading(true)}
           className="card bg-base-200 select-none cursor-pointer items-start"
         >
-          <div className="card-body p-7 items-start">
-            <p className="text-sm opacity-25">Bulletin</p>
-            <p className="card-title">{bulletinTitle}</p>
-            <p className="text-sm opacity-50">
-              {dayjs(_updatedAt).format('MMMM DD, YYYY h:mma')}
+          <div className="card-body p-7 items-start w-full">
+            <p className="text-sm opacity-25">
+              Bulletin | {dayjs(_updatedAt).format('MMMM DD, YYYY h:mma')}
             </p>
+            <p className="card-title">{bulletinTitle}</p>
             <div className="flex flex-col mt-4">
-              <p>Posted By:</p>
-              {bulletinAuthor.map((author, index) => (
-                <blockquote
-                  key={author.fullName.lastName}
-                  className="italic font-thin "
-                >
-                  {author.fullName.firstName} {author.fullName.lastName}{' '}
-                  {author.pronouns ? `(${author.pronouns})` : ''}
-                </blockquote>
-              ))}
+              <div className="avatar-group -space-x-2">
+                {bulletinAuthor.map((author, index) => {
+                  if (bulletinAuthor.length < 2) {
+                    return (
+                      <div className="flex items-center gap-2">
+                        <div className="avatar">
+                          <div className="w-8 ">
+                            <img src={author.authorPhoto} />
+                          </div>
+                        </div>
+                        <p className="text-sm">
+                          {author.fullName.firstName} {author.fullName.lastName}
+                        </p>
+                      </div>
+                    );
+                  } else {
+                    if (author.authorPhoto) {
+                      return (
+                        <div className="avatar">
+                          <div className="w-8 ">
+                            <img
+                              src={author.authorPhoto}
+                              alt={`${author.fullName.firstName} ${author.fullName.lastName}`}
+                            />
+                          </div>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className="avatar">
+                          <div className="w-8 flex items-center justify-center">
+                            <CgUser size={25} className="mt-1 mx-auto" />
+                          </div>
+                        </div>
+                      );
+                    }
+                  }
+                })}
+              </div>
             </div>
-            <div className="flex gap-2 flex-wrap mt-5">
+            <div className="flex justify-end gap-2 mt-2 w-full">
               {/* tags */}
               {tags &&
                 tags.map((tag, index) => (
