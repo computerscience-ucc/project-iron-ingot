@@ -173,134 +173,47 @@ const Home = (e) => {
         </div>
 
         {/* offers */}
-        <div className="flex flex-col gap-2 justify-center mb-32 mt-10 text-center">
-          <p className="text-3xl font-semibold mb-10">
+        <div className="flex flex-col gap-2 justify-center mb-64 mt-10">
+          <p className="text-3xl font-semibold mb-10 text-left md:text-center">
             See what Ingo has to offer
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="flex flex-col gap-5">
-              <p
-                onClick={(e) => setOfferTabCount(1)}
-                className={`hover:underline flex flex-row justify-center md:justify-start gap-4 underline-offset-4 cursor-pointer ${
-                  offerTabCount == 1 && 'text-primary underline'
-                }`}
-              >
-                <span className="hidden md:block">{'> '}</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="flex flex-col items-start">
+              <figure className="md:mb-4 text-primary">
+                <AiOutlineInfoCircle size={40} />
+              </figure>
+              <p className="text-xl text-left">
                 Online Public Information Board
               </p>
-              <p
-                onClick={(e) => setOfferTabCount(2)}
-                className={`hover:underline flex flex-row justify-center md:justify-start gap-4 underline-offset-4 cursor-pointer ${
-                  offerTabCount == 2 && 'text-primary underline'
-                }`}
-              >
-                <span className="hidden md:block">{'> '}</span>
+              <p className="opacity-50">
+                See what is happening in the CS department and learn more about
+                the people who are working there
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <figure className="md:mb-4 text-primary">
+                <AiOutlineEye size={40} />
+              </figure>
+              <p className="text-xl text-left">
                 Showcase what the seniors are doing
               </p>
-              <p
-                onClick={(e) => setOfferTabCount(3)}
-                className={`hover:underline flex flex-row justify-center md:justify-start gap-4 underline-offset-4 cursor-pointer ${
-                  offerTabCount == 3 && 'text-primary underline'
-                }`}
-              >
-                <span className="hidden md:block">{'> '}</span>
-                Connect with other students
+              <p className="opacity-50">
+                See what the seniors are doing in the CS department and learn
+                from them too while building their own CAPSTONE project
               </p>
             </div>
-            <div>
-              {offerTabCount == 1 && (
-                <motion.div
-                  initial={{ opacity: 0, translateX: -20 }}
-                  animate={{ opacity: 1, translateX: 0 }}
-                  className="flex flex-col gap-2 text-center md:text-right max-w-sm md:max-w-lg mx-auto"
-                >
-                  <figure className="self-center md:self-end">
-                    <AiOutlineInfoCircle size={100} />
-                  </figure>
-                  <p>
-                    See what is happening in the CS department and learn more
-                    about the people who are working there
-                  </p>
-                </motion.div>
-              )}
-              {offerTabCount == 2 && (
-                <motion.div
-                  initial={{ opacity: 0, translateX: -20 }}
-                  animate={{ opacity: 1, translateX: 0 }}
-                  className="flex flex-col gap-2 text-center md:text-right max-w-sm md:max-w-lg mx-auto"
-                >
-                  <figure className="self-center md:self-end">
-                    <AiOutlineEye size={100} />
-                  </figure>
-                  <p>
-                    See what the seniors are doing in the CS department and
-                    learn from them too while building their own CAPSTONE
-                    project
-                  </p>
-                </motion.div>
-              )}
-              {offerTabCount == 3 && (
-                <motion.div
-                  initial={{ opacity: 0, translateX: -20 }}
-                  animate={{ opacity: 1, translateX: 0 }}
-                  className="flex flex-col gap-2 text-center md:text-right max-w-sm md:max-w-lg mx-auto"
-                >
-                  <figure className="self-center md:self-end">
-                    <AiOutlineLink size={100} />
-                  </figure>
-                  <p>
-                    Connect with other students in the CS department and get to
-                    know them better
-                  </p>
-                </motion.div>
-              )}
+            <div className="flex flex-col items-start">
+              <figure className="md:mb-4 text-primary">
+                <AiOutlineLink size={40} />
+              </figure>
+              <p className="text-xl text-left">Connect with other students</p>
+              <p className="opacity-50">
+                Connect with other students in the CS department and get to know
+                them better
+              </p>
             </div>
           </div>
-
-          {/* <div className="grid grid-cols-1 md:grid-cols-3 w-full place-items-center ap-3 ">
-            <div className="flex flex-col max-w-sm self-center">
-              <div className="flex flex-col gap-2 p-2">
-                <figure className="self-center">
-                  <AiOutlineInfoCircle size={100} />
-                </figure>
-                <p className="card-title text-lg font-bold text-primary self-center">
-                  Online Public Information Board
-                </p>
-                <p className="font-light">
-                  See what is happening in the CS department and learn more
-                  about the people who are working there
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col max-w-sm self-center">
-              <div className="flex flex-col gap-2 p-2">
-                <figure className="self-center">
-                  <AiOutlineEye size={100} />
-                </figure>
-                <p className="card-title text-lg font-bold text-primary self-center">
-                  Showcase what the seniors are doing
-                </p>
-                <p>
-                  See what the seniors are doing in the CS department and learn
-                  from them too while building their own CAPSTONE project
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col max-w-sm self-center">
-              <div className="flex flex-col gap-2 p-2">
-                <figure className="self-center">
-                  <AiOutlineLink size={100} />
-                </figure>
-                <p className="card-title text-lg font-bold text-primary self-center">
-                  Connect with other students
-                </p>
-                <p>
-                  Connect with other students in the CS department and get to
-                  know them better
-                </p>
-              </div>
-            </div>
-          </div> */}
         </div>
       </motion.section>
     </>

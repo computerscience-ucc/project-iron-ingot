@@ -35,7 +35,7 @@ const CapstoneCard = (props) => {
         >
           <div className="card-body p-7 items-start w-full">
             <p className="text-sm opacity-25">
-              Capstone |{dayjs(_updatedAt).format('MMMM DD, YYYY h:mma')}
+              Capstone | {dayjs(_updatedAt).format('MMMM DD, YYYY h:mma')}
             </p>
             <p className="card-title">{capstoneTitle}</p>
             <div className="flex flex-col mt-4">
@@ -43,7 +43,7 @@ const CapstoneCard = (props) => {
                 {postAuthor.map((author, index) => {
                   if (postAuthor.length < 2) {
                     return (
-                      <div className="flex items-center gap-2">
+                      <div key={index} className="flex items-center gap-2">
                         <div className="avatar">
                           <div className="w-8 ">
                             <img src={author.authorPhoto} />

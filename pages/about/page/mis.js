@@ -9,9 +9,39 @@ const Page_MIS = (e) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="py-8"
+        className="py-8  text-center"
       >
-        <p>MIS</p>
+        <p className="text-2xl font-semibold mb-9">About MIS</p>
+
+        <p>
+          Management Information System helps the students in terms of data
+          encoding and enrollment, MIS help the student to{' '}
+          <span className="text-primary font-semibold">
+            see and gather their data in our Database
+          </span>
+          , MIS was built to help the University in terms of{' '}
+          <span className="text-primary font-semibold">
+            students data, enrolling, encoding, and even photocopying
+          </span>{' '}
+          their paper works.
+        </p>
+        <p className="mt-4">
+          <span className="text-primary font-semibold">
+            Prof. Joemen Barrios
+          </span>
+          , also an alumni of the University, is known as one of the{' '}
+          <span className="text-primary font-semibold">
+            pioneers of the said organization
+          </span>
+          . As of now together with the student volunteers from all over the CSD
+          or Computer Studies Department continously working to achieve its
+          goal.
+        </p>
+        <p className="mt-4">
+          MIS also teaching the other students under of its organization (ACES),
+          different things about Computers, programming, encoding, and even
+          technologies
+        </p>
       </motion.section>
     </>
   );
