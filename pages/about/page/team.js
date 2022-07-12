@@ -27,21 +27,17 @@ const Page_Team = (e) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 mt-16 text-center gap-10">
           <div className="col-span-full flex flex-col ">
-            <p className="text-sm font-bold text-primary">
+            <p className="text-sm  text-primary">
               Lead Project Developer &amp; Creative Director
             </p>
             <p className="text-xl">Gerald Chavez</p>
           </div>
           <div className="col-span-1 flex flex-col ">
-            <p className="text-sm font-bold text-primary">
-              Lead Project Manager
-            </p>
+            <p className="text-sm  text-primary">Lead Project Manager</p>
             <p className="text-xl">Jacqueline Porral</p>
           </div>
           <div className="col-span-1 flex flex-col ">
-            <p className="text-sm font-bold text-primary">
-              Assitant Project Manager
-            </p>
+            <p className="text-sm  text-primary">Assitant Project Manager</p>
             <p className="text-xl">Mark Rhicky Raby</p>
           </div>
         </div>
@@ -61,35 +57,33 @@ const Page_Team = (e) => {
             className="flex flex-nowrap w-max gap-7"
           >
             {/* <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
+              <p className="text-sm  text-primary ">
                 Project Management
               </p>
               <p className="text-xl">Jacqueline Porral</p>
               <p className="text-xl">Mark Rhicky Raby</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
+              <p className="text-sm  text-primary ">
                 Lead Project Developer &amp; Creative Director
               </p>
               <p className="text-xl">Gerald Chavez</p>
             </div> */}
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
+              <p className="text-sm  text-primary ">
                 Front-end Developers &amp; Designers
               </p>
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Danica Cabullo</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
-                Back-end Developers
-              </p>
+              <p className="text-sm  text-primary ">Back-end Developers</p>
               <p className="text-xl">Jacqueline Porral</p>
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Demverleen Espinola</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
+              <p className="text-sm  text-primary ">
                 Documentation &amp; Support
               </p>
               <p className="text-xl">Jessica Joy Gasupan</p>
@@ -99,7 +93,7 @@ const Page_Team = (e) => {
               <p className="text-xl">Joko Gadingan</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
+              <p className="text-sm  text-primary ">
                 Content Mangement &amp; Marketing
               </p>
               <p className="text-xl">Mark Neil Embile</p>
@@ -107,7 +101,7 @@ const Page_Team = (e) => {
               <p className="text-xl">Justine</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm font-bold text-primary ">
+              <p className="text-sm  text-primary ">
                 Quality Assurance &amp; Testing
               </p>
               <p className="text-xl">Gerald Chavez</p>
@@ -120,63 +114,7 @@ const Page_Team = (e) => {
           </motion.div>
         </motion.div>
 
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16 text-center gap-10">
-          <div className="col-span-full flex flex-col ">
-            <p className="text-sm font-bold text-primary">Project Management</p>
-            <p className="text-xl">Jacqueline Porral</p>
-            <p className="text-xl">Mark Rhicky Raby</p>
-          </div>
-          <div className="col-span-full flex flex-col ">
-            <p className="text-sm font-bold text-primary">
-              Lead Project Developer &amp; Creative Director
-            </p>
-            <p className="text-xl">Gerald Chavez</p>
-          </div>
-          <div className="col-span-full flex flex-col md:col-span-1">
-            <p className="text-sm font-bold text-primary">
-              Front-end Developers &amp; Designers
-            </p>
-            <p className="text-xl">Gerald Chavez</p>
-            <p className="text-xl">Danica Cabullo</p>
-          </div>
-          <div className="col-span-full flex flex-col md:col-span-1">
-            <p className="text-sm font-bold text-primary">
-              Documentation &amp; Support
-            </p>
-            <p className="text-xl">Jessica Joy Gasupan</p>
-            <p className="text-xl">Evehn</p>
-            <p className="text-xl">Hazel Jade</p>
-            <p className="text-xl">Jhude</p>
-            <p className="text-xl">Joko Gadingan</p>
-          </div>
-          <div className="col-span-full flex flex-col md:col-span-1">
-            <p className="text-sm font-bold text-primary">
-              Back-end Developers
-            </p>
-            <p className="text-xl">Jacqueline Porral</p>
-            <p className="text-xl">Gerald Chavez</p>
-            <p className="text-xl">Demverleen Espinola</p>
-          </div>
-          <div className="col-span-full flex flex-col md:col-span-1">
-            <p className="text-sm font-bold text-primary">
-              Content Mangement &amp; Marketing
-            </p>
-            <p className="text-xl">Mark Neil Embile</p>
-            <p className="text-xl">Isaac Gabrielle Domino</p>
-            <p className="text-xl">Justine</p>
-          </div>
-          <div className="col-span-full flex flex-col md:col-span-1">
-            <p className="text-sm font-bold text-primary">
-              Quality Assurance &amp; Testing
-            </p>
-            <p className="text-xl">Gerald Chavez</p>
-            <p className="text-xl">Gabrielle Napoto</p>
-            <p className="text-xl">Khate Crystal Bautista</p>
-            <p className="text-xl">Ivan</p>
-            <p className="text-xl">Leonard</p>
-            <p className="text-xl">Rosemarie</p>
-          </div>
-        </div> */}
+        <p className="text-right mt-5 opacity-50">Swipe Right</p>
       </motion.section>
     </>
   );
