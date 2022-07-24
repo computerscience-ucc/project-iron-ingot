@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import BulletinCard from '../../components/card/Bulletin';
 import Head from 'next/head';
+import ThesisCard from '../../components/card/Thesis';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion } from 'framer-motion';
 import { usePrefetcer } from '../../components/Prefetcher';
 
-const Bulletin = (e) => {
-  const { bulletins } = usePrefetcer();
-  const [bulletinList, setBulletinList] = useState([]);
+const Thesis = (e) => {
+  const { thesis } = usePrefetcer();
+  const [thesisList, setThesisList] = useState([]);
 
   useEffect(() => {
-    setBulletinList(bulletins);
-  }, [bulletins]);
+    setThesisList(thesis);
+  }, [thesis]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,9 +21,9 @@ const Bulletin = (e) => {
 
   return (
     <>
-      <TopGradient colorLeft={'#180ea4'} colorRight={'#E22837'} />
+      <TopGradient colorRight={'#0affff'} colorLeft={'#f0cd00'} />
       <Head>
-        <title>Bulletin | Ingo</title>
+        <title>Thesis | Ingo</title>
       </Head>
 
       <motion.main
@@ -34,19 +34,28 @@ const Bulletin = (e) => {
         className="py-36 z-10"
       >
         <div className="flex flex-col gap-2 justify-center mt-16">
-          <p className="text-4xl font-semibold">Bulletin</p>
+          <p className="text-4xl font-semibold">Thesis</p>
           <p className="text-lg font-semibold">
-            See what professors are up to in the CS department
+            See what graduating and graduate CS students made their projects
           </p>
         </div>
 
         <div className="flex flex-col gap-2 justify-center my-28">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {bulletinList.map((bulletin, index) => (
-              <div key={index}>
-                <BulletinCard bulletin={bulletin} />
+            {thesisList.length > 0 &&
+              thesisList.map((thesis, index) => (
+                <div key={index}>
+                  <ThesisCard thesis={thesis} />
+                </div>
+              ))}
+
+            {thesisList.length < 1 && (
+              <div className="flex flex-col gap-2 justify-center">
+                <p className="text-lg font-semibold">
+                  No thesis was uploaded yet. Check back later!
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </motion.main>
@@ -54,4 +63,4 @@ const Bulletin = (e) => {
   );
 };
 
-export default Bulletin;
+export default Thesis;

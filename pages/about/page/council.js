@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../../components/_Animations';
+import { motion } from 'framer-motion';
 
 const Page_Council = (e) => {
   return (
@@ -14,30 +14,30 @@ const Page_Council = (e) => {
         <p className="text-2xl font-semibold">
           Computer Science Council Members
         </p>
-        <div className="mt-9 grid grid-cols-1 md:grid-cols-6 gap-4">
+        <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full">
             <p className="text-xl">Jaqueline Porral</p>
-            <p className="text-sm text-primary">President</p>
+            <p className="text-sm text-yellow-600">President</p>
           </div>
           <div className="col-span-full">
             <p className="text-xl">Gerald Chavez</p>
-            <p className="text-sm text-primary">Vice-President</p>
+            <p className="text-sm text-yellow-600">Vice-President</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Mark Neil Embile</p>
-            <p className="text-sm text-primary">Council Secretary</p>
+            <p className="text-sm text-yellow-600">Council Secretary</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Jessica Joy Gapusan</p>
-            <p className="text-sm text-primary">Council Treasurer</p>
+            <p className="text-sm text-yellow-600">Council Treasurer</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Mark Rhicky Rabi</p>
-            <p className="text-sm text-primary">Business Manager</p>
+            <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Khate Crystal Bautista</p>
-            <p className="text-sm text-primary">Business Manager</p>
+            <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
         </div>
 

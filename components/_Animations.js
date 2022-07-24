@@ -3,12 +3,12 @@ export const _Transition_Page = {
   animate: {
     opacity: 1,
     translateY: 0,
-    transition: { duration: 0.25, ease: 'circOut' },
+    transition: { duration: 0.2, ease: 'circOut' },
   },
   exit: {
     opacity: 0,
-    translateY: 20,
-    transition: { duration: 0.25, ease: 'circIn' },
+    translateY: -20,
+    transition: { duration: 0.2, ease: 'circIn' },
   },
 };
 
@@ -17,6 +17,6 @@ export const _Transition_Card = {
   animate: {
     opacity: 1,
     translateY: 0,
-    transition: { duration: 0.25, ease: 'circOut', delay: 0.25 },
+    transition: { duration: 0.25, ease: 'circOut', delay: 0.2 },
   },
 };

@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { _Transition_Page } from '../components/_Animations';
-import Head from 'next/head';
 import {
   AiOutlineArrowDown,
+  AiOutlineEye,
   AiOutlineInfoCircle,
   AiOutlineLink,
-  AiOutlineEye,
 } from 'react-icons/ai';
+import { useEffect, useState } from 'react';
+
+import BlobBackgound from '../components/BlobBackground';
+import BlogCard from '../components/card/Blog';
+import Head from 'next/head';
 import Link from 'next/link';
-import { usePrefetcherContext } from '../components/Prefetcher';
+import { _Transition_Page } from '../components/_Animations';
+import { motion } from 'framer-motion';
+import { usePrefetcer } from '../components/Prefetcher';
 
 const Home = (e) => {
+  const { blogs } = usePrefetcer();
+
   const [isVisible, setIsVisible] = useState(true);
-  const [offerTabCount, setOfferTabCount] = useState(1);
 
   useEffect(() => {
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
     window.addEventListener('scroll', (e) => {
       if (window.scrollY < 100) {
@@ -33,7 +37,13 @@ const Home = (e) => {
 
   return (
     <>
-      {/* glow gradient */}
+      <Head>
+        <title>Home | Ingo</title>
+      </Head>
+
+      {/* blob background */}
+      <BlobBackgound />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.2 }}
@@ -42,7 +52,7 @@ const Home = (e) => {
           background:
             'radial-gradient(circle, #1EAC75 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
         }}
-        className="absolute w-[800px] h-[800px] top-[100px] -left-[50vw] z-0 opacity-25"
+        className="absolute w-[800px] h-[800px] top-[100px] -left-[40vw] z-0 opacity-25"
       />
       <motion.div
         initial={{ opacity: 0 }}
@@ -54,27 +64,7 @@ const Home = (e) => {
         }}
         className="absolute w-[800px] h-[800px] -top-[200px] left-[40vw] z-0 opacity-25"
       />
-      {/* solar system */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <motion.div
-          animate={{
-            opacity: isVisible ? 1 : 0,
-            translateY: isVisible ? 0 : -100,
-            transition: { duration: 0.2, ease: 'easeInOut' },
-          }}
-          className="fixed -z-10 right-0 w-[500px] h-[500px]"
-        >
-          <img src={'/solar_System.png'} />
-        </motion.div>
-      </motion.div>
 
-      <Head>
-        <title>Home | Ingo</title>
-      </Head>
       <motion.section
         variants={_Transition_Page}
         initial="initial"
@@ -83,7 +73,7 @@ const Home = (e) => {
         className="relative"
       >
         {/* landing */}
-        <div className="flex flex-col gap-2 justify-center mt-16 text-center min-h-screen">
+        <div className="flex flex-col gap-2 justify-center pt-16 text-center min-h-screen relative">
           <p className="text-6xl font-bold mb-2 text-transparent">
             <motion.span
               animate={{
@@ -142,7 +132,7 @@ const Home = (e) => {
                 backgroundImage:
                   'radial-gradient(at 17% 56%, rgb(244, 63, 94) 0, transparent 92%), radial-gradient(at 73% 7%, rgb(251, 146, 60) 0, transparent 45%), radial-gradient(at 73% 93%, rgb(185, 28, 28) 0, transparent 77%)',
               }}
-              className="btn btn-primary text-primary-content w-fit px-10 mt-16 self-center border-0"
+              className="hover:scale-110 duration-200 text-primary-content w-fit px-10 py-3 rounded-lg cursor-pointer mt-16 self-center border-0"
             >
               See what&apos;s new on the board
             </motion.div>
@@ -150,7 +140,7 @@ const Home = (e) => {
 
           {/* arrow down */}
           <motion.div
-            className="self-center"
+            className="self-center absolute bottom-7"
             animate={{
               opacity: isVisible ? 1 : 0,
             }}
@@ -180,7 +170,7 @@ const Home = (e) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="flex flex-col items-start">
-              <figure className="md:mb-4 text-primary">
+              <figure className="md:mb-4 text-yellow-600">
                 <AiOutlineInfoCircle size={40} />
               </figure>
               <p className="text-xl text-left">
@@ -192,7 +182,7 @@ const Home = (e) => {
               </p>
             </div>
             <div className="flex flex-col items-start">
-              <figure className="md:mb-4 text-primary">
+              <figure className="md:mb-4 text-yellow-600">
                 <AiOutlineEye size={40} />
               </figure>
               <p className="text-xl text-left">
@@ -200,11 +190,11 @@ const Home = (e) => {
               </p>
               <p className="opacity-50">
                 See what the seniors are doing in the CS department and learn
-                from them too while building their own CAPSTONE project
+                from them too while building their own Thesis project
               </p>
             </div>
             <div className="flex flex-col items-start">
-              <figure className="md:mb-4 text-primary">
+              <figure className="md:mb-4 text-yellow-600">
                 <AiOutlineLink size={40} />
               </figure>
               <p className="text-xl text-left">Connect with other students</p>
@@ -213,6 +203,51 @@ const Home = (e) => {
                 them better
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* latest blog */}
+        <div className="flex flex-col gap-2 justify-center mb-32 mt-10">
+          <p className="text-3xl font-semibold mb-10 text-left md:text-center">
+            Latest blog posts
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* display the 2 latest blog post */}
+            {blogs &&
+              blogs
+                .slice(0, 2)
+                .map((blog, i) => <BlogCard blog={blog} key={i} />)}
+          </div>
+        </div>
+
+        {/* latest bulletin */}
+        <div className="flex flex-col gap-2 justify-center mb-32 mt-10">
+          <p className="text-3xl font-semibold mb-10 text-left md:text-center">
+            Latest bulletin posts
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* display the 2 latest blog post */}
+            {blogs &&
+              blogs
+                .slice(0, 2)
+                .map((blog, i) => <BlogCard blog={blog} key={i} />)}
+          </div>
+        </div>
+
+        {/* latest thesis */}
+        <div className="flex flex-col gap-2 justify-center mb-64 mt-10">
+          <p className="text-3xl font-semibold mb-10 text-left md:text-center">
+            Latest thesis projects
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* display the 2 latest blog post */}
+            {blogs &&
+              blogs
+                .slice(0, 2)
+                .map((blog, i) => <BlogCard blog={blog} key={i} />)}
           </div>
         </div>
       </motion.section>
