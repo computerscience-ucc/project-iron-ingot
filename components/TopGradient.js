@@ -1,11 +1,11 @@
-import { motion, useViewportScroll } from 'framer-motion';
 import { useEffect, useState } from 'react';
+
+import { motion } from 'framer-motion';
 
 const TopGradient = ({ colorLeft, colorRight }) => {
   colorLeft = colorLeft || '#007ACC';
   colorRight = colorRight || '#F92450';
 
-  const { scrollY } = useViewportScroll();
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect((e) => {
@@ -29,7 +29,7 @@ const TopGradient = ({ colorLeft, colorRight }) => {
         transition: { duration: 0.5, easings: 'circOut' },
       }}
       exit={{ opacity: 0, transition: { duration: 0.2, easings: 'circIn' } }}
-      className="fixed top-0 left-0 -z-10 h-full w-full overflow-hidden"
+      className="fixed top-0 left-0  h-1/2 w-full overflow-hidden"
     >
       <motion.div
         animate={{
@@ -38,7 +38,7 @@ const TopGradient = ({ colorLeft, colorRight }) => {
         style={{
           background: `radial-gradient(at 30% 0%, ${colorLeft}58, transparent, transparent)`,
         }}
-        className="absolute top-0 left-0 z-0 h-1/2 w-screen"
+        className="absolute top-0 left-0 z-0 h-full w-screen"
       />
       <motion.div
         animate={{
@@ -47,7 +47,7 @@ const TopGradient = ({ colorLeft, colorRight }) => {
         style={{
           background: `radial-gradient(at 70% 0%, ${colorRight}58, transparent, transparent)`,
         }}
-        className="absolute top-0 left-0 z-0 h-1/2 w-screen"
+        className="absolute top-0 left-0 z-0 h-full w-screen"
       />
     </motion.div>
   );

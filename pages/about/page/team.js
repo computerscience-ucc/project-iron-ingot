@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+
 import { _Transition_Page } from '../../../components/_Animations';
+import { motion } from 'framer-motion';
 
 const Page_Team = (e) => {
   const [carouselWidth, setCarouselWidth] = useState(0);
@@ -27,18 +28,18 @@ const Page_Team = (e) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 mt-16 text-center gap-10">
           <div className="col-span-full flex flex-col ">
-            <p className="text-sm  text-primary">
+            <p className="text-xl">Gerald Chavez</p>
+            <p className="text-sm  text-yellow-600">
               Lead Project Developer &amp; Creative Director
             </p>
-            <p className="text-xl">Gerald Chavez</p>
           </div>
           <div className="col-span-1 flex flex-col ">
-            <p className="text-sm  text-primary">Lead Project Manager</p>
             <p className="text-xl">Jacqueline Porral</p>
+            <p className="text-sm  text-yellow-600">Lead Project Manager</p>
           </div>
           <div className="col-span-1 flex flex-col ">
-            <p className="text-sm  text-primary">Assitant Project Manager</p>
-            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-xl">Mark Rhicky Rabi</p>
+            <p className="text-sm  text-yellow-600">Assitant Project Manager</p>
           </div>
         </div>
 
@@ -56,34 +57,21 @@ const Page_Team = (e) => {
             whileTap={{ cursor: 'grabbing' }}
             className="flex flex-nowrap w-max gap-7"
           >
-            {/* <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">
-                Project Management
-              </p>
-              <p className="text-xl">Jacqueline Porral</p>
-              <p className="text-xl">Mark Rhicky Raby</p>
-            </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">
-                Lead Project Developer &amp; Creative Director
-              </p>
-              <p className="text-xl">Gerald Chavez</p>
-            </div> */}
-            <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">
+              <p className="text-sm  text-yellow-600 ">
                 Front-end Developers &amp; Designers
               </p>
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Danica Cabullo</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">Back-end Developers</p>
+              <p className="text-sm  text-yellow-600 ">Back-end Developers</p>
               <p className="text-xl">Jacqueline Porral</p>
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Demverleen Espinola</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">
+              <p className="text-sm  text-yellow-600 ">
                 Documentation &amp; Support
               </p>
               <p className="text-xl">Jessica Joy Gasupan</p>
@@ -93,15 +81,15 @@ const Page_Team = (e) => {
               <p className="text-xl">Joko Gadingan</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">
+              <p className="text-sm  text-yellow-600 ">
                 Content Mangement &amp; Marketing
               </p>
               <p className="text-xl">Mark Neil Embile</p>
               <p className="text-xl">Isaac Gabrielle Domino</p>
-              <p className="text-xl">Justine</p>
+              <p className="text-xl">Justine Consulta</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-primary ">
+              <p className="text-sm  text-yellow-600 ">
                 Quality Assurance &amp; Testing
               </p>
               <p className="text-xl">Gerald Chavez</p>

@@ -1,15 +1,21 @@
-import { motion } from 'framer-motion';
-import { _Transition_Page } from '../../components/_Animations';
-import { useRouter } from 'next/router';
-import { client } from '../../components/Prefetcher';
-import dayjs from 'dayjs';
-import { AiOutlineArrowLeft, AiOutlineUser } from 'react-icons/ai';
-import { PortableText } from '@portabletext/react';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Breadcrumbs,
+  Chip,
+  IconButton,
+  Tooltip,
+} from '@material-tailwind/react';
+import { CgChevronLeft, CgChevronUp } from 'react-icons/cg';
+import { useEffect, useRef, useState } from 'react';
+
 import Head from 'next/head';
 import Image from 'next/image';
-import urlBuilder from '@sanity/image-url/';
+import Link from 'next/link';
+import { PortableText } from '@portabletext/react';
+import { _Transition_Page } from '../../components/_Animations';
+import { client } from '../../components/Prefetcher';
+import dayjs from 'dayjs';
+import urlBuilder from '@sanity/image-url';
 
 const urlFor = (source) =>
   urlBuilder({
@@ -66,168 +72,173 @@ const blockComponents = {
   },
 };
 
-export const getStaticPaths = async (e) => {
-  const data = await client.fetch(
-    `*[_type == "bulletin"]{
-        _id,
-        _createdAt,
-        _updatedAt,
-        bulletinTitle,
-        bulletinContent,
-        slug,
-        "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
-        tags
+export const getStaticPaths = async () => {
+  const bulletinPosts = await client.fetch(
+    `*[_type == "bulletin"]{  
+      "slug": slug.current,
     }`
   );
-  const paths = data.map((item) => ({
-    params: { slug: item.slug.current },
+  const paths = bulletinPosts.map((post) => ({
+    params: { slug: post.slug },
   }));
   return {
     paths,
-    fallback: 'blocking',
+    fallback: 'blocking', // enable incremental static regeneration
   };
 };
 
 export const getStaticProps = async (e) => {
   const { slug } = e.params;
-  const data = await client.fetch(
+  const bulletinPost = await client.fetch(
     `*[_type == "bulletin" && slug.current == "${slug}"]{
-        _id,
-        _createdAt,
-        _updatedAt,
-        bulletinTitle,
-        bulletinContent,
-        slug,
-        "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns,"authorPhoto": authorPhoto.asset-> url},
-        tags
+      _id,
+      _createdAt,
+      _updatedAt,
+      "title": bulletinTitle,
+      "slug": slug.current,
+      "content": bulletinContent,
+      "authors": bulletinAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
+      tags
     }`
   );
   return {
     props: {
-      data,
+      bulletinPost: bulletinPost[0],
     },
     revalidate: 10,
   };
 };
 
-const capitalize = (s) => {
-  if (typeof s !== 'string') return '';
-  const words = s.split(' ');
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].slice(1);
-  }
-  return words.join(' ');
-};
-
-const BulletinPage = ({ data }) => {
-  const [bulletinPost, setBulletinPost] = useState(false);
+const BulletinPage = ({ bulletinPost }) => {
+  const [post, setPost] = useState(bulletinPost);
+  const mainDocument = useRef(null);
+  const [scrollToTopButtonShown, setScrollToTopButtonShown] = useState(false);
 
   useEffect(
     (e) => {
-      setBulletinPost(data[0]);
-      window.scrollTo(0, 0);
+      setPost(bulletinPost);
     },
-    [data]
+    [bulletinPost]
   );
+
+  // scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // listen for scroll events
+  useEffect(() => {
+    window.addEventListener('scroll', (e) => {
+      // show scroll to top button if user has scrolled down by 20% to 80% of the page
+      setScrollToTopButtonShown(
+        window.scrollY > mainDocument.current?.scrollHeight * 0.2 &&
+          window.scrollY < mainDocument.current?.scrollHeight - 700
+      );
+    });
+
+    return () => {
+      window.removeEventListener('scroll', () => {});
+    };
+  }, []);
 
   return (
     <>
-      <motion.section
+      <Head>
+        <title>{post ? `${post.title} | Ingo` : 'Bulletin'}</title>
+      </Head>
+
+      <motion.main
+        ref={mainDocument}
         variants={_Transition_Page}
         initial="initial"
         animate="animate"
         exit="exit"
-        className="py-36 select-none"
+        className="min-h-screen py-36"
       >
-        {bulletinPost && (
-          <>
-            <Head>
-              <title>{bulletinPost.bulletinTitle} | Ingo</title>
-            </Head>
-            <div className="flex flex-col gap-2 justify-center mt-16">
-              <Link href={'/bulletin'}>
-                <motion.p
-                  whileHover={{ x: -10 }}
-                  className="flex gap-4 items-center font-bold cursor-pointer"
-                >
-                  <AiOutlineArrowLeft />
-                  <span>Go Back</span>
-                </motion.p>
+        {/* title */}
+        <div className="flex flex-col gap-7">
+          <div className="flex flex-col lg:flex-row gap-3 lg:gap-7 lg:items-center lg:justify-between">
+            <p>{dayjs(post._updatedAt).format('MMMM D, YYYY')}</p>
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag, i) => (
+                <Chip className="bg-[#010409]" key={i} value={tag} />
+              ))}
+            </div>
+          </div>
+          <Link href="/bulletin" scroll={false}>
+            <p className="text-3xl md:text-4xl lg:text-6xl font-bold flex flex-col md:flex-row gap-2 cursor-pointer transition hover:-translate-x-3">
+              <>
+                <span className="flex items-center">
+                  <CgChevronLeft size={30} />
+                </span>
+                <span>{post.title}</span>
+              </>
+            </p>
+          </Link>
+          <div className="hidden md:block">
+            <Breadcrumbs className="bg-transparent px-0 ">
+              <Link href="/">
+                <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                  Home
+                </a>
               </Link>
-              <p className="text-4xl font-semibold mt-5">
-                {bulletinPost.bulletinTitle}
+              <Link href="/bulletin">
+                <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                  Bulletin
+                </a>
+              </Link>
+              <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                {post.title}
+              </a>
+            </Breadcrumbs>
+          </div>
+          <p className="flex flex-col">
+            Posted by:{' '}
+            {post.authors.map((author, i) => (
+              <p key={i} className="text-yellow-600 transition font-bold">
+                {author.fullName.firstName} {author.fullName.lastName}
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 mt-5">
-                <p className="flex flex-col gap-2 ">
-                  <span>Posted By</span>
-                  {bulletinPost.bulletinAuthor.map((author) => (
-                    <span
-                      key={author.fullName.lastName}
-                      className=" flex items-center gap-5"
-                    >
-                      <span
-                        className={
-                          author.authorPhoto
-                            ? 'avatar'
-                            : 'w-10 h-10 flex justify-center items-center'
-                        }
-                      >
-                        {author.authorPhoto ? (
-                          <div className="w-10 h-10 mask mask-squircle ">
-                            <img src={author.authorPhoto} />
-                          </div>
-                        ) : (
-                          <AiOutlineUser className="w-5 h-5" />
-                        )}
-                      </span>
-                      {author.fullName.firstName} {author.fullName.lastName}{' '}
-                      {author.pronouns ? `(${author.pronouns})` : ''}
-                    </span>
-                  ))}
-                </p>
-                <div className="flex flex-col gap-1 mt-5 md:mt-0">
-                  <p className="flex flex-col ">
-                    Updated at{' '}
-                    <span className="ml-5 text-primary">
-                      {dayjs(bulletinPost._updatedAt).format(
-                        'MMMM D, YYYY h:mm a'
-                      )}
-                    </span>
-                  </p>
-                  <p className="flex flex-col">
-                    Posted at{' '}
-                    <span className="ml-5 text-primary">
-                      {dayjs(bulletinPost._createdAt).format(
-                        'MMMM D, YYYY h:mm a'
-                      )}
-                    </span>
-                  </p>
-                  <p className="flex flex-col gap-2 ">
-                    Posted under
-                    {bulletinPost.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="badge badge-secondary font-semibold ml-5"
-                      >
-                        {capitalize(tag)}
-                      </span>
-                    ))}
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
+          </p>
+        </div>
 
-            <div className="divider py-10" />
+        <hr className="mb-16 mt-5 opacity-50" />
 
-            <div className="mt-5 flex flex-col gap-5">
-              <PortableText
-                value={bulletinPost.bulletinContent}
-                components={blockComponents}
-              />
-            </div>
-          </>
-        )}
-      </motion.section>
+        {/* content */}
+        <div className=" flex flex-col gap-5">
+          <PortableText value={post.content} components={blockComponents} />
+        </div>
+
+        {/* scroll to top button */}
+        <AnimatePresence>
+          {scrollToTopButtonShown && (
+            <motion.div
+              initial={{
+                opacity: 0,
+                x: 10,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.5, ease: 'circOut' },
+              }}
+              exit={{
+                opacity: 0,
+                x: 10,
+                transition: { duration: 0.3, ease: 'circIn' },
+              }}
+              className="fixed z-30 bottom-5 right-5 md:bottom-10 md:right-10"
+              onClick={() => window.scroll({ top: 0, behavior: 'smooth' })}
+            >
+              <Tooltip content="Scroll to top" placement="left">
+                <IconButton className="bg-grey-800">
+                  <CgChevronUp size={25} />
+                </IconButton>
+              </Tooltip>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.main>
     </>
   );
 };

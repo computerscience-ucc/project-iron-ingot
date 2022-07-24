@@ -5,32 +5,28 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
+* {
+  user-select: none;
+}
+
 body {
-  padding: 0;
-  margin: 0;
-  overflow-x: hidden;
+  background: #0a0c10;
   font-family: 'Quicksand', sans-serif;
 }
 
-/* Custom Scrollbar */
-/* Firefox */
+/* custom scrollbar */
 * {
   scrollbar-width: auto;
-  scrollbar-color: #dca54c #09090b;
+  scrollbar-color: #fae63a #0a0c10;
 }
-
-/* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
-
 *::-webkit-scrollbar-track {
   background: #09090b;
 }
-
 *::-webkit-scrollbar-thumb {
-  background-color: #dca54c;
+  background-color: #fae63a;
   border-radius: 10px;
   border: 0px none #ffffff;
 }

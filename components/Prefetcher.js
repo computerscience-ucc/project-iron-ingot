@@ -1,56 +1,49 @@
-import { useContext, createContext, useEffect, useState } from 'react';
-import sanityClient from '@sanity/client';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-export const client = new sanityClient({
+import sanityClient from '@sanity/client';
+
+export const client = sanityClient({
   projectId: 'gjvp776o',
   dataset: 'production',
   useCdn: true,
   apiVersion: '2022-06-22',
 });
 
-const blogQuery = `
-  *[_type == "blog"] | order(_createdAt desc) {
+// queries
+const query_blog = `
+  *[_type == 'blog'] | order(_createdAt desc) {
     _id,
     _createdAt,
     _updatedAt,
     _type,
-    blogTitle,
+    "title": blogTitle,
     "slug": slug.current,
-    "blogAuthor": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    "authors": blogAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
     tags
   }
 `;
-
-const bulletinQuery = `
-  *[_type == "bulletin"] | order(_createdAt desc) {
+const query_bulletin = `
+  *[_type == 'bulletin'] | order(_createdAt desc) {
     _id,
     _createdAt,
     _updatedAt,
     _type,
-    bulletinTitle,
+    "title": bulletinTitle,
     "slug": slug.current,
-    "bulletinAuthor": bulletinAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    "authors": bulletinAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
     tags
   }
 `;
-
-const capstoneQuery = `
-  *[_type == 'capstone'] {
-    _createdAt,
+const query_thesis = `
+  *[_type == 'capstone'] | order(_createdAt desc) {
     _id,
+    _createdAt,
     _updatedAt,
     _type,
-    capstoneContent,
-    capstoneTitle,
-    "headerImage": headerImage.asset -> url,
-    ownersInformation,
-    "postAuthor": postAuthor[] -> {
-      "authorPhoto": authorPhoto.asset -> url,
-      fullName,
-      pronouns
-    },
+    "title": capstoneTitle,
     "slug": slug.current,
+    "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
     tags
   }
 `;
@@ -58,24 +51,32 @@ const capstoneQuery = `
 const PrefetcherContext = createContext();
 
 const PrefetcherWrapper = ({ children }) => {
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [bulletinPosts, setBulletinPosts] = useState([]);
-  const [capstonePosts, setCapstonePosts] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [bulletins, setBulletins] = useState([]);
+  const [thesis, setThesis] = useState([]);
   const [globalSearchItems, setGlobalSearchItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  const fetchAllInitialData = async (e) => {
-    const req_blogPosts = await client.fetch(blogQuery);
-    const req_bulletinPosts = await client.fetch(bulletinQuery);
-    const req_capstonePosts = await client.fetch(capstoneQuery);
-    setBlogPosts(req_blogPosts);
-    setBulletinPosts(req_bulletinPosts);
-    setCapstonePosts(req_capstonePosts);
-    setGlobalSearchItems(
-      req_blogPosts.concat(req_bulletinPosts).concat(req_capstonePosts)
-    );
+  let sharedStates = {
+    blogs,
+    bulletins,
+    thesis,
+    globalSearchItems,
+  };
 
-    if (req_blogPosts && req_bulletinPosts && req_capstonePosts) {
+  const fetchInitalData = async () => {
+    const res_blog = await client.fetch(query_blog);
+    const res_bulletin = await client.fetch(query_bulletin);
+    const res_thesis = await client.fetch(query_thesis);
+
+    const globalItems = [...res_blog, ...res_bulletin, ...res_thesis];
+
+    setBlogs(res_blog);
+    setBulletins(res_bulletin);
+    setThesis(res_thesis);
+    setGlobalSearchItems(globalItems);
+
+    if (res_blog && res_thesis && res_bulletin) {
       setTimeout(() => {
         setLoaded(true);
       }, 200);
@@ -83,18 +84,11 @@ const PrefetcherWrapper = ({ children }) => {
   };
 
   useEffect((e) => {
-    fetchAllInitialData();
+    fetchInitalData();
   }, []);
 
-  let sharedState = {
-    blogPosts,
-    bulletinPosts,
-    capstonePosts,
-    globalSearchItems,
-  };
-
   return (
-    <PrefetcherContext.Provider value={sharedState}>
+    <PrefetcherContext.Provider value={sharedStates}>
       <AnimatePresence>
         {loaded && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -108,7 +102,7 @@ const PrefetcherWrapper = ({ children }) => {
           <motion.main
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-base-100 flex justify-center items-center "
+            className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-[#0A0C10] flex justify-center items-center "
           >
             <p className="text-4xl relative font-extrabold text-transparent select-none">
               <motion.span
@@ -145,8 +139,8 @@ const PrefetcherWrapper = ({ children }) => {
   );
 };
 
-const usePrefetcherContext = (e) => {
+const usePrefetcer = () => {
   return useContext(PrefetcherContext);
 };
 
-export { PrefetcherWrapper, usePrefetcherContext };
+export { PrefetcherWrapper, usePrefetcer };

@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../../components/_Animations';
+import { motion } from 'framer-motion';
 
 const Page_MIS = (e) => {
   return (
@@ -11,26 +11,26 @@ const Page_MIS = (e) => {
         exit="exit"
         className="py-8  text-center"
       >
-        <p className="text-2xl font-semibold mb-9">About MIS</p>
+        <p className="text-2xl font-semibold mb-16">About MIS</p>
 
         <p>
           Management Information System helps the students in terms of data
           encoding and enrollment, MIS help the student to{' '}
-          <span className="text-primary font-semibold">
+          <span className="text-yellow-600 font-semibold">
             see and gather their data in our Database
           </span>
           , MIS was built to help the University in terms of{' '}
-          <span className="text-primary font-semibold">
+          <span className="text-yellow-600 font-semibold">
             students data, enrolling, encoding, and even photocopying
           </span>{' '}
           their paper works.
         </p>
         <p className="mt-4">
-          <span className="text-primary font-semibold">
+          <span className="text-yellow-600 font-semibold">
             Prof. Joemen Barrios
           </span>
           , also an alumni of the University, is known as one of the{' '}
-          <span className="text-primary font-semibold">
+          <span className="text-yellow-600 font-semibold">
             pioneers of the said organization
           </span>
           . As of now together with the student volunteers from all over the CSD

@@ -1,36 +1,35 @@
-/*
-  TODO: fix landing page ui inconsistencies
-  TODO: 
-*/
-
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
-import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import '../styles/globals.css';
+
+import { AnimatePresence, motion } from 'framer-motion';
+
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 import { PrefetcherWrapper } from '../components/Prefetcher';
-import Head from 'next/head';
+import { ThemeProvider } from '@material-tailwind/react';
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
   return (
     <>
-      <Head>
-        <title>Ingo</title>
-      </Head>
-
-      <PrefetcherWrapper>
-        <Navbar />
-        <main className="flex flex-col items-center px-5 md:px-0 min-h-screen relative mb-16 select-none">
-          <div className=" w-full max-w-3xl relative">
-            <AnimatePresence exitBeforeEnter>
-              <Component {...pageProps} key={router.route} />
-            </AnimatePresence>
-          </div>
-        </main>
-      </PrefetcherWrapper>
-      <Footer />
+      <ThemeProvider>
+        <PrefetcherWrapper>
+          <>
+            <div className="text-blue-grey-100 relative">
+              <Navbar />
+              <main className="min-h-screen flex justify-center overflow-x-hidden relative">
+                <motion.div className="w-full relative max-w-4xl px-5 lg:px-0 ">
+                  <AnimatePresence exitBeforeEnter>
+                    <Component {...pageProps} key={router.route} />
+                  </AnimatePresence>
+                </motion.div>
+              </main>
+              <Footer />
+            </div>
+          </>
+        </PrefetcherWrapper>
+      </ThemeProvider>
     </>
   );
 }

@@ -73,12 +73,12 @@ const blockComponents = {
 };
 
 export const getStaticPaths = async () => {
-  const blogPosts = await client.fetch(
-    `*[_type == "blog"]{  
+  const thesisPosts = await client.fetch(
+    `*[_type == "capstone"]{  
       "slug": slug.current,
     }`
   );
-  const paths = blogPosts.map((post) => ({
+  const paths = thesisPosts.map((post) => ({
     params: { slug: post.slug },
   }));
   return {
@@ -89,36 +89,38 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (e) => {
   const { slug } = e.params;
-  const blogPost = await client.fetch(
-    `*[_type == "blog" && slug.current == "${slug}"]{
+  const thesisPost = await client.fetch(
+    `*[_type == "capstone" && slug.current == "${slug}"]{
       _id,
       _createdAt,
       _updatedAt,
-      "title": blogTitle,
+      _type,
+      "title": capstoneTitle,
       "slug": slug.current,
-      "content": blogContent,
-      "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
-      tags
+      "content": capstoneContent,
+      "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+      tags,
+      "owners": ownersInformation
     }`
   );
   return {
     props: {
-      blogPost: blogPost[0],
+      thesisPost: thesisPost[0],
     },
     revalidate: 10,
   };
 };
 
-const Blog = ({ blogPost }) => {
-  const [post, setPost] = useState(blogPost);
+const ThesisPage = ({ thesisPost }) => {
+  const [post, setPost] = useState(thesisPost);
   const mainDocument = useRef(null);
   const [scrollToTopButtonShown, setScrollToTopButtonShown] = useState(false);
 
   useEffect(
     (e) => {
-      setPost(blogPost);
+      setPost(thesisPost);
     },
-    [blogPost]
+    [thesisPost]
   );
 
   // scroll to top on page load
@@ -144,7 +146,7 @@ const Blog = ({ blogPost }) => {
   return (
     <>
       <Head>
-        <title>{post ? `${post.title} | Ingo` : 'Blog'}</title>
+        <title>{post ? `${post.title} | Ingo` : 'thesis'}</title>
       </Head>
 
       <motion.main
@@ -165,7 +167,7 @@ const Blog = ({ blogPost }) => {
               ))}
             </div>
           </div>
-          <Link href="/blog" scroll={false}>
+          <Link href="/thesis" scroll={false}>
             <p className="text-3xl md:text-4xl lg:text-6xl font-bold flex flex-col md:flex-row gap-2 cursor-pointer transition hover:-translate-x-3">
               <>
                 <span className="flex items-center">
@@ -182,9 +184,9 @@ const Blog = ({ blogPost }) => {
                   Home
                 </a>
               </Link>
-              <Link href="/blog">
+              <Link href="/thesis">
                 <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
-                  Blog
+                  Thesis
                 </a>
               </Link>
               <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
@@ -199,6 +201,15 @@ const Blog = ({ blogPost }) => {
                 {author.fullName.firstName} {author.fullName.lastName}
               </p>
             ))}
+          </p>
+          <p className="flex flex-col">
+            Thesis authored by:{' '}
+            {post.owners &&
+              post.owners.ownerFullname.map((owner, i) => (
+                <p key={i} className="text-yellow-600 transition font-bold">
+                  {owner}
+                </p>
+              ))}
           </p>
         </div>
 
@@ -243,4 +254,4 @@ const Blog = ({ blogPost }) => {
   );
 };
 
-export default Blog;
+export default ThesisPage;
