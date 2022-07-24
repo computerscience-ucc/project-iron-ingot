@@ -148,7 +148,11 @@ const Navbar = (e) => {
               <div className="flex flex-col gap-3 mt-5">
                 {/* only return whats on the search value */}
                 {searchResults.map((item) => (
-                  <Link href={`/${item._type}/${item.slug}`} scroll={false}>
+                  <Link
+                    href={`/${item._type}/${item.slug}`}
+                    scroll={false}
+                    key={item._id}
+                  >
                     <motion.div
                       onClick={() => setGlobalSearchMenuOpen(false)}
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -168,7 +172,7 @@ const Navbar = (e) => {
                 {/* if no results, show this */}
                 {searchResults.length === 0 && searchValue.length >= 4 && (
                   <p className="text-sm text-yellow-500">
-                    No results for "{searchValue}"
+                    No results for &quot;{searchValue}&quot;
                   </p>
                 )}
               </div>
