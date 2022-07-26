@@ -15,13 +15,22 @@ const Navbar = (e) => {
   const { globalSearchItems } = usePrefetcer();
 
   const searchItems = (e) => {
-    if (searchValue.length > 3) {
-      const results = globalSearchItems
-        .filter((item) => {
-          return item.title.toLowerCase().includes(searchValue.toLowerCase());
-        })
-        .slice(0, 5);
-      setSearchResults(results);
+    const thisSearchValue = e.target.value;
+    console.log(globalSearchItems);
+
+    if (thisSearchValue.length > 3) {
+      const results = globalSearchItems.filter((item) => {
+        if (
+          item.title.toLowerCase().includes(thisSearchValue.toLowerCase()) ||
+          item.tags.some((tag) =>
+            tag.toLowerCase().includes(thisSearchValue.toLowerCase())
+          )
+        ) {
+          // return 5 items
+          return item;
+        }
+      });
+      setSearchResults(results.slice(0, 4));
     } else {
       setSearchResults([]);
     }
@@ -105,6 +114,7 @@ const Navbar = (e) => {
           </motion.div>
         )}
       </AnimatePresence>
+
       {/* global search */}
       <AnimatePresence exitBeforeEnter>
         {globalSearchMenuOpen && (
@@ -136,7 +146,7 @@ const Navbar = (e) => {
                 onChange={(e) => {
                   setSearchValue(e.currentTarget.value);
                   if (e.currentTarget.value.length >= 3) {
-                    searchItems();
+                    searchItems(e);
                   } else {
                     setSearchResults([]);
                   }
@@ -147,8 +157,12 @@ const Navbar = (e) => {
               {/* results */}
               <div className="flex flex-col gap-3 mt-5">
                 {/* only return whats on the search value */}
-                {searchResults.map((item) => (
-                  <Link href={`/${item._type}/${item.slug}`} scroll={false}>
+                {searchResults.map((item, i) => (
+                  <Link
+                    key={i}
+                    href={`/${item._type}/${item.slug}`}
+                    scroll={false}
+                  >
                     <motion.div
                       onClick={() => setGlobalSearchMenuOpen(false)}
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -168,7 +182,7 @@ const Navbar = (e) => {
                 {/* if no results, show this */}
                 {searchResults.length === 0 && searchValue.length >= 4 && (
                   <p className="text-sm text-yellow-500">
-                    No results for "{searchValue}"
+                    No results for &quot;{searchValue}&quot;
                   </p>
                 )}
               </div>

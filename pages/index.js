@@ -8,19 +8,23 @@ import { useEffect, useState } from 'react';
 
 import BlobBackgound from '../components/BlobBackground';
 import BlogCard from '../components/card/Blog';
+import BulletinCard from '../components/card/Bulletin';
 import Head from 'next/head';
 import Link from 'next/link';
+import ThesisCard from '../components/card/Thesis';
 import { _Transition_Page } from '../components/_Animations';
 import { motion } from 'framer-motion';
 import { usePrefetcer } from '../components/Prefetcher';
 
 const Home = (e) => {
-  const { blogs } = usePrefetcer();
+  const { blogs, bulletins, thesis } = usePrefetcer();
 
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    console.log();
 
     window.addEventListener('scroll', (e) => {
       if (window.scrollY < 100) {
@@ -229,10 +233,10 @@ const Home = (e) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* display the 2 latest blog post */}
-            {blogs &&
-              blogs
+            {bulletins &&
+              bulletins
                 .slice(0, 2)
-                .map((blog, i) => <BlogCard blog={blog} key={i} />)}
+                .map((blog, i) => <BulletinCard bulletin={blog} key={i} />)}
           </div>
         </div>
 
@@ -244,10 +248,10 @@ const Home = (e) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* display the 2 latest blog post */}
-            {blogs &&
-              blogs
+            {thesis &&
+              thesis
                 .slice(0, 2)
-                .map((blog, i) => <BlogCard blog={blog} key={i} />)}
+                .map((blog, i) => <ThesisCard thesis={blog} key={i} />)}
           </div>
         </div>
       </motion.section>

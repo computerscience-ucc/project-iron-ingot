@@ -36,15 +36,16 @@ const query_bulletin = `
   }
 `;
 const query_thesis = `
-  *[_type == 'capstone'] | order(_createdAt desc) {
+  *[_type == 'thesis'] | order(_createdAt desc) {
     _id,
     _createdAt,
     _updatedAt,
     _type,
-    "title": capstoneTitle,
+    "headerImage": headerImage.asset -> url,
+    "title": thesisTitle,
     "slug": slug.current,
     "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
-    tags
+    tags,
   }
 `;
 

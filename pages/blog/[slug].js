@@ -97,7 +97,7 @@ export const getStaticProps = async (e) => {
       "title": blogTitle,
       "slug": slug.current,
       "content": blogContent,
-      "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
+      "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
       tags
     }`
   );
@@ -117,6 +117,7 @@ const Blog = ({ blogPost }) => {
   useEffect(
     (e) => {
       setPost(blogPost);
+      console.log(blogPost);
     },
     [blogPost]
   );
@@ -196,7 +197,14 @@ const Blog = ({ blogPost }) => {
             Posted by:{' '}
             {post.authors.map((author, i) => (
               <p key={i} className="text-yellow-600 transition font-bold">
-                {author.fullName.firstName} {author.fullName.lastName}
+                {author.fullName.firstName} {author.fullName.lastName} (
+                {author.pronouns})
+                {author.batchYear && author.yearLevel && (
+                  <span>
+                    {' '}
+                    / {author.batchYear} {author.yearLevel}
+                  </span>
+                )}
               </p>
             ))}
           </p>
