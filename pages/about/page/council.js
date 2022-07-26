@@ -16,12 +16,16 @@ const Page_Council = (e) => {
         </p>
         <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full">
+            <p className="text-xl">Prof. Joemen Barrios</p>
+            <p className="text-sm text-yellow-600">Program Coordinator</p>
+          </div>
+          <div className="col-span-full">
             <p className="text-xl">Jaqueline Porral</p>
-            <p className="text-sm text-yellow-600">President</p>
+            <p className="text-sm text-yellow-600">Council President</p>
           </div>
           <div className="col-span-full">
             <p className="text-xl">Gerald Chavez</p>
-            <p className="text-sm text-yellow-600">Vice-President</p>
+            <p className="text-sm text-yellow-600">Council Vice-President</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Mark Neil Embile</p>
@@ -32,16 +36,51 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Council Treasurer</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Rabi</p>
+            <p className="text-xl">Mark Rhicky Raby</p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Khate Crystal Bautista</p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Katherine Ocares</p>
+            <p className="text-sm text-yellow-600">Public Relation Officer</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Jhude Vergara</p>
+            <p className="text-sm text-yellow-600">Public Relation Officer</p>
+          </div>
+        </div>
+        <p className="text-2xl mt-16  font-semibold">Class Officers</p>
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
+          <div className="col-span-full md:col-span-2">
+            <p className="text-xl">Alexander Caberto</p>
+            <p className="text-sm text-yellow-600">BSCS 4A</p>
+          </div>
+          <div className="col-span-full md:col-span-2">
+            <p className="text-xl">Mark Neil Embile</p>
+            <p className="text-sm text-yellow-600">BSCS 4B</p>
+          </div>
+          <div className="col-span-full md:col-span-2">
+            <p className="text-xl">Carl Emmanuel Alvarado Sy</p>
+            <p className="text-sm text-yellow-600">BSCS 4C</p>
+          </div>
+          <div className="col-span-full md:col-span-full">
+            <p className="text-xl">Mauirene R. Fuentes</p>
+            <p className="text-sm text-yellow-600">BSCS 3A</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Khate Crystal Bautista</p>
+            <p className="text-sm text-yellow-600">BSCS 2A</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-sm text-yellow-600">BSCS 2B</p>
+          </div>
         </div>
 
-        <div className="divider max-w-xl mx-auto my-10" />
+        <div className="border-b-2 border-white max-w-xl mx-auto my-32" />
 
         <p className="text-xl mb-5">
           About Bachelor of Science in Computer Science{' '}
