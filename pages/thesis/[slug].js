@@ -98,7 +98,7 @@ export const getStaticProps = async (e) => {
       "title": thesisTitle,
       "slug": slug.current,
       "content": thesisContent,
-      "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
+      "authors": postAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
       tags,
       "owners": ownersInformation
     }`
