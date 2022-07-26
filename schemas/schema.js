@@ -6,10 +6,10 @@ import schemaTypes from 'all:part:@sanity/base/schema-type';
 import author from './documents/author';
 import blog from './blog';
 import bulletin from './bulletin';
-import capstone from './capstone';
+import thesis from './thesis';
 
 export default createSchema({
   name: 'default',
 
-  types: schemaTypes.concat([blog, author, bulletin, capstone]),
+  types: schemaTypes.concat([blog, author, bulletin, thesis]),
 });

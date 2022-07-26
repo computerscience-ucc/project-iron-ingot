@@ -1,19 +1,19 @@
 export default {
   type: "document",
-  name: "capstone",
-  title: "Capstone",
+  name: "thesis",
+  title: "Thesis",
   fields: [
     {
       type: "image",
       name: "headerImage",
-      title: "Capstone Image Header",
+      title: "Thesis Image Header",
       options: {
         hotspot: true,
       },
     },
     {
-      title: "Capstone Title",
-      name: "capstoneTitle",
+      title: "Thesis Title",
+      name: "thesisTitle",
       type: "string",
     },
     {
@@ -21,7 +21,7 @@ export default {
       name: "slug",
       type: "slug",
       options: {
-        source: "capstoneTitle",
+        source: "thesisTitle",
         maxLength: 100,
       },
     },
@@ -52,7 +52,7 @@ export default {
           name: "ownerFullname",
           title: "Owner's Fullname",
           type: "array",
-          description: "Enter Owners Fullname for this capstone project",
+          description: "Enter Owners Fullname for this Thesis project",
           of: [
             {
               type: "string",
@@ -70,7 +70,7 @@ export default {
       name: "tags",
       title: "Tags",
       type: "array",
-      description: "Enter searcheable keywords for the capstone",
+      description: "Enter searcheable keywords for the thesis",
       of: [
         {
           type: "string",
@@ -78,8 +78,8 @@ export default {
       ],
     },
     {
-      title: "Capstone Content",
-      name: "capstoneContent",
+      title: "Thesis Content",
+      name: "thesisContent",
       type: "array",
       of: [
         {
