@@ -15,6 +15,7 @@ export default {
           type: "string",
           name: "firstName",
           title: "First name",
+         validation: Rule => Rule.required(),
         },
         {
           type: "string",
@@ -28,6 +29,7 @@ export default {
           type: "string",
           name: "lastName",
           title: "Last name",
+          validation: Rule => Rule.required(),
         },
       ],
     },
@@ -61,6 +63,7 @@ export default {
       title: "Slug",
       name: "slug",
       type: "slug",
+      validation: Rule => Rule.required(),
       options: {
         source: (doc) => `${doc.fullName.lastName}-${doc.fullName.firstName}`,
         maxLength: 100,

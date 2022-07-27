@@ -7,11 +7,13 @@ export default {
       title: 'Blog Title',
       name: 'blogTitle',
       type: 'string',
+      validation: Rule => Rule.required(),
     },
     {
       title: 'Slug',
       name: 'slug',
       type: 'slug',
+      validation: Rule => Rule.required(),
       options: {
         source: 'blogTitle',
         maxLength: 100,
@@ -47,6 +49,7 @@ export default {
       name: 'blogContent',
       title: 'Blog Content',
       type: 'array',
+      validation: Rule => Rule.required(),
       of: [
         {
           type: 'block',

@@ -7,11 +7,13 @@ export default {
       title: 'Bulletin Title',
       name: 'bulletinTitle',
       type: 'string',
+      validation: Rule => Rule.required(),
     },
     {
       title: 'Slug',
       name: 'slug',
       type: 'slug',
+      validation: Rule => Rule.required(),
       options: {
         source: 'bulletinTitle',
         maxLength: 100,
@@ -47,6 +49,7 @@ export default {
       title: 'Bulletin Content',
       name: 'bulletinContent',
       type: 'array',
+      validation: Rule => Rule.required(),
       of: [
         {
           type: 'block',
