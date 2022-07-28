@@ -36,7 +36,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Council Treasurer</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-xl">Mark Rhicky Rabi</p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -52,7 +52,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Public Relation Officer</p>
           </div>
         </div>
-        <p className="text-2xl mt-16  font-semibold">Class Officers</p>
+        <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full md:col-span-2">
             <p className="text-xl">Alexander Caberto</p>
@@ -75,7 +75,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">BSCS 2A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-xl">Mark Rhicky Rabi</p>
             <p className="text-sm text-yellow-600">BSCS 2B</p>
           </div>
         </div>

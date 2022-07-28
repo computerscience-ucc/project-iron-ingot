@@ -38,7 +38,7 @@ const Page_Team = (e) => {
             <p className="text-sm  text-yellow-600">Lead Project Manager</p>
           </div>
           <div className="col-span-1 flex flex-col ">
-            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-xl">Mark Rhicky Rabi</p>
             <p className="text-sm  text-yellow-600">Assitant Project Manager</p>
           </div>
         </div>

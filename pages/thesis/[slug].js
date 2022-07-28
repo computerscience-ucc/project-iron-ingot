@@ -96,9 +96,10 @@ export const getStaticProps = async (e) => {
       _updatedAt,
       _type,
       "title": thesisTitle,
+      "headerImage": headerImage.asset -> url,
       "slug": slug.current,
       "content": thesisContent,
-      "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
+      "authors": postAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
       tags,
       "owners": ownersInformation
     }`
@@ -157,6 +158,7 @@ const ThesisPage = ({ thesisPost }) => {
         exit="exit"
         className="min-h-screen py-36"
       >
+        {/* header image background */}
         {/* title */}
         <div className="flex flex-col gap-7">
           <div className="flex flex-col lg:flex-row gap-3 lg:gap-7 lg:items-center lg:justify-between">
@@ -225,6 +227,15 @@ const ThesisPage = ({ thesisPost }) => {
                 ))}
             </p>
           </div>
+          {post.headerImage && (
+            <div className="relative w-full max-w-xl h-[200px] lg:h-[300px] -z-50 overflow-hidden">
+              <Image
+                src={post?.headerImage}
+                className="w-full h-full object-cover"
+                layout="fill"
+              />
+            </div>
+          )}
         </div>
 
         <hr className="mb-16 mt-5 opacity-50" />

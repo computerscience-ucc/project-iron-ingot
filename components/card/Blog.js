@@ -15,7 +15,7 @@ const titleCase = (str) => {
 };
 
 const BlogCard = ({ blog }) => {
-  const { _id, _updatedAt, authors, title, tags, slug } = blog;
+  const { _id, _createdAt, authors, title, tags, slug } = blog;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,6 +30,10 @@ const BlogCard = ({ blog }) => {
           whileHover={{
             y: -5,
           }}
+          whileTap={{
+            scale: 0.95,
+            y: -5,
+          }}
           onClick={() => setIsLoading(true)}
         >
           <Card className="bg-[#0f1218] text-grey-100 cursor-pointer">
@@ -40,13 +44,13 @@ const BlogCard = ({ blog }) => {
               <p className="text-sm mt-3 text-grey-600 font-semibold">
                 {authors
                   .map((author) => {
-                    return `${author.fullName.lastName}`;
+                    return `${author.fullName.firstName} ${author.fullName.lastName}`;
                   })
                   .join(', ')}
               </p>
 
               <p className="text-sm text-grey-700">
-                {dayjs(_updatedAt).format('MMM DD, YYYY')}
+                {dayjs(_createdAt).format('MMM DD, YYYY')}
               </p>
             </CardBody>
             <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">

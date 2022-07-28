@@ -11,7 +11,9 @@ const Page_MIS = (e) => {
         exit="exit"
         className="py-8  text-center"
       >
-        <p className="text-2xl font-semibold mb-16">About MIS</p>
+        <p className="text-2xl font-semibold mb-16">
+          About Management Information System
+        </p>
 
         <p>
           Management Information System helps the students in terms of data

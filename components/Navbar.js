@@ -64,17 +64,42 @@ const Navbar = (e) => {
         {sideMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'circOut' }}
+            animate={{
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: 'circOut',
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.3,
+                ease: 'circIn',
+              },
+            }}
             className="lg:hidden fixed z-[90] w-full bg-[#0A0C10] bg-opacity-60"
           >
             <motion.div
               initial={{ x: -50 }}
-              animate={{ x: 0 }}
-              exit={{ x: -50 }}
-              transition={{ duration: 0.3, ease: 'circOut' }}
-              className="w-10/12 sm:w-6/12 min-h-screen bg-grey-900 flex flex-col justify-center gap-2 px-4"
+              animate={{
+                x: 0,
+                transition: {
+                  duration: 0.3,
+                  ease: 'circOut',
+                },
+              }}
+              drag="x"
+              dragConstraints={{ left: -100, right: 0 }}
+              dragElastic={{
+                right: 0,
+              }}
+              onDrag={(e, info) => {
+                if (info.point.x !== 0) {
+                  setSideMenuOpen(false);
+                }
+              }}
+              className="w-10/12 sm:w-6/12 min-h-screen bg-[#161a22] flex flex-col justify-center gap-2 px-4"
             >
               <Link href="/blog">
                 <Button
@@ -103,13 +128,16 @@ const Navbar = (e) => {
                   thesis
                 </Button>
               </Link>
-              <Button
-                onClick={(e) => setSideMenuOpen(false)}
-                variant="text"
-                color="yellow"
-              >
-                about
-              </Button>
+
+              <Link href="/about">
+                <Button
+                  onClick={(e) => setSideMenuOpen(false)}
+                  variant="text"
+                  color="yellow"
+                >
+                  about
+                </Button>
+              </Link>
             </motion.div>
           </motion.div>
         )}

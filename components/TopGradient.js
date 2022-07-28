@@ -10,11 +10,7 @@ const TopGradient = ({ colorLeft, colorRight }) => {
 
   useEffect((e) => {
     window.addEventListener('scroll', (e) => {
-      if (window.scrollY < 150) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY < 75);
     });
     return (e) => {
       window.removeEventListener('scroll', e);
@@ -29,7 +25,7 @@ const TopGradient = ({ colorLeft, colorRight }) => {
         transition: { duration: 0.5, easings: 'circOut' },
       }}
       exit={{ opacity: 0, transition: { duration: 0.2, easings: 'circIn' } }}
-      className="fixed top-0 left-0  h-1/2 w-full overflow-hidden"
+      className="fixed top-0 left-0 h-[200px] scale-x-150 lg:h-[300px] w-full overflow-hidden -z-[1]"
     >
       <motion.div
         animate={{
