@@ -75,9 +75,9 @@ const Page_Team = (e) => {
                 Documentation &amp; Support
               </p>
               <p className="text-xl">Jessica Joy Gasupan</p>
-              <p className="text-xl">Evehn</p>
-              <p className="text-xl">Hazel Jade</p>
-              <p className="text-xl">Jhude</p>
+              <p className="text-xl">Evehn Kadusale</p>
+              <p className="text-xl">Hazel Jade Loberania</p>
+              <p className="text-xl">Jhude Vergara</p>
               <p className="text-xl">Joko Gadingan</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
@@ -95,9 +95,9 @@ const Page_Team = (e) => {
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Gabrielle Napoto</p>
               <p className="text-xl">Khate Crystal Bautista</p>
-              <p className="text-xl">Ivan</p>
-              <p className="text-xl">Leonard</p>
-              <p className="text-xl">Rosemarie</p>
+              <p className="text-xl">Ivan Guillermo</p>
+              <p className="text-xl">Leonard Leaño</p>
+              <p className="text-xl">Rosemarie Bullo</p>
             </div>
           </motion.div>
         </motion.div>

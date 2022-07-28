@@ -74,7 +74,7 @@ const blockComponents = {
 
 export const getStaticPaths = async () => {
   const thesisPosts = await client.fetch(
-    `*[_type == "capstone"]{  
+    `*[_type == "thesis"]{  
       "slug": slug.current,
     }`
   );
@@ -90,15 +90,16 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async (e) => {
   const { slug } = e.params;
   const thesisPost = await client.fetch(
-    `*[_type == "capstone" && slug.current == "${slug}"]{
+    `*[_type == "thesis" && slug.current == "${slug}"]{
       _id,
       _createdAt,
       _updatedAt,
       _type,
-      "title": capstoneTitle,
+      "title": thesisTitle,
+      "headerImage": headerImage.asset -> url,
       "slug": slug.current,
-      "content": capstoneContent,
-      "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+      "content": thesisContent,
+      "authors": postAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
       tags,
       "owners": ownersInformation
     }`
@@ -157,6 +158,7 @@ const ThesisPage = ({ thesisPost }) => {
         exit="exit"
         className="min-h-screen py-36"
       >
+        {/* header image background */}
         {/* title */}
         <div className="flex flex-col gap-7">
           <div className="flex flex-col lg:flex-row gap-3 lg:gap-7 lg:items-center lg:justify-between">
@@ -194,23 +196,46 @@ const ThesisPage = ({ thesisPost }) => {
               </a>
             </Breadcrumbs>
           </div>
-          <p className="flex flex-col">
-            Posted by:{' '}
-            {post.authors.map((author, i) => (
-              <p key={i} className="text-yellow-600 transition font-bold">
-                {author.fullName.firstName} {author.fullName.lastName}
-              </p>
-            ))}
-          </p>
-          <p className="flex flex-col">
-            Thesis authored by:{' '}
-            {post.owners &&
-              post.owners.ownerFullname.map((owner, i) => (
+          <div className="flex gap-4 flex-col md:flex-row">
+            <p className="flex flex-col">
+              Posted by:{' '}
+              {post.authors.map((author, i) => (
                 <p key={i} className="text-yellow-600 transition font-bold">
-                  {owner}
+                  {author.fullName.firstName} {author.fullName.lastName} (
+                  {author.pronouns})
+                  {author.batchYear && author.yearLevel && (
+                    <span>
+                      {' '}
+                      / {author.batchYear} {author.yearLevel}
+                    </span>
+                  )}
                 </p>
               ))}
-          </p>
+            </p>
+            <p className="flex flex-col">
+              Thesis Authors:{' '}
+              {post.owners.ownerFullname &&
+                post.owners.ownerFullname.map((owner, i) => (
+                  <p key={i} className="text-yellow-600 transition font-bold">
+                    {post.owners.ownerSection && (
+                      <span className="text-pink-800">
+                        ({post.owners.ownerSection})
+                      </span>
+                    )}{' '}
+                    {owner}
+                  </p>
+                ))}
+            </p>
+          </div>
+          {post.headerImage && (
+            <div className="relative w-full max-w-xl h-[200px] lg:h-[300px] -z-50 overflow-hidden">
+              <Image
+                src={post?.headerImage}
+                className="w-full h-full object-cover"
+                layout="fill"
+              />
+            </div>
+          )}
         </div>
 
         <hr className="mb-16 mt-5 opacity-50" />

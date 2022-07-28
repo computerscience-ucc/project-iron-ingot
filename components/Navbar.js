@@ -15,13 +15,22 @@ const Navbar = (e) => {
   const { globalSearchItems } = usePrefetcer();
 
   const searchItems = (e) => {
-    if (searchValue.length > 3) {
-      const results = globalSearchItems
-        .filter((item) => {
-          return item.title.toLowerCase().includes(searchValue.toLowerCase());
-        })
-        .slice(0, 5);
-      setSearchResults(results);
+    const thisSearchValue = e.target.value;
+    console.log(globalSearchItems);
+
+    if (thisSearchValue.length > 3) {
+      const results = globalSearchItems.filter((item) => {
+        if (
+          item.title.toLowerCase().includes(thisSearchValue.toLowerCase()) ||
+          item.tags.some((tag) =>
+            tag.toLowerCase().includes(thisSearchValue.toLowerCase())
+          )
+        ) {
+          // return 5 items
+          return item;
+        }
+      });
+      setSearchResults(results.slice(0, 4));
     } else {
       setSearchResults([]);
     }
@@ -55,17 +64,42 @@ const Navbar = (e) => {
         {sideMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'circOut' }}
+            animate={{
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: 'circOut',
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.3,
+                ease: 'circIn',
+              },
+            }}
             className="lg:hidden fixed z-[90] w-full bg-[#0A0C10] bg-opacity-60"
           >
             <motion.div
               initial={{ x: -50 }}
-              animate={{ x: 0 }}
-              exit={{ x: -50 }}
-              transition={{ duration: 0.3, ease: 'circOut' }}
-              className="w-10/12 sm:w-6/12 min-h-screen bg-grey-900 flex flex-col justify-center gap-2 px-4"
+              animate={{
+                x: 0,
+                transition: {
+                  duration: 0.3,
+                  ease: 'circOut',
+                },
+              }}
+              drag="x"
+              dragConstraints={{ left: -100, right: 0 }}
+              dragElastic={{
+                right: 0,
+              }}
+              onDrag={(e, info) => {
+                if (info.point.x !== 0) {
+                  setSideMenuOpen(false);
+                }
+              }}
+              className="w-10/12 sm:w-6/12 min-h-screen bg-[#161a22] flex flex-col justify-center gap-2 px-4"
             >
               <Link href="/blog">
                 <Button
@@ -94,17 +128,21 @@ const Navbar = (e) => {
                   thesis
                 </Button>
               </Link>
-              <Button
-                onClick={(e) => setSideMenuOpen(false)}
-                variant="text"
-                color="yellow"
-              >
-                about
-              </Button>
+
+              <Link href="/about">
+                <Button
+                  onClick={(e) => setSideMenuOpen(false)}
+                  variant="text"
+                  color="yellow"
+                >
+                  about
+                </Button>
+              </Link>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
       {/* global search */}
       <AnimatePresence exitBeforeEnter>
         {globalSearchMenuOpen && (
@@ -136,7 +174,7 @@ const Navbar = (e) => {
                 onChange={(e) => {
                   setSearchValue(e.currentTarget.value);
                   if (e.currentTarget.value.length >= 3) {
-                    searchItems();
+                    searchItems(e);
                   } else {
                     setSearchResults([]);
                   }
@@ -147,8 +185,12 @@ const Navbar = (e) => {
               {/* results */}
               <div className="flex flex-col gap-3 mt-5">
                 {/* only return whats on the search value */}
-                {searchResults.map((item) => (
-                  <Link href={`/${item._type}/${item.slug}`} scroll={false}>
+                {searchResults.map((item, i) => (
+                  <Link
+                    key={i}
+                    href={`/${item._type}/${item.slug}`}
+                    scroll={false}
+                  >
                     <motion.div
                       onClick={() => setGlobalSearchMenuOpen(false)}
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -168,7 +210,7 @@ const Navbar = (e) => {
                 {/* if no results, show this */}
                 {searchResults.length === 0 && searchValue.length >= 4 && (
                   <p className="text-sm text-yellow-500">
-                    No results for "{searchValue}"
+                    No results for &quot;{searchValue}&quot;
                   </p>
                 )}
               </div>

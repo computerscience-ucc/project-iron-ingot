@@ -97,7 +97,7 @@ export const getStaticProps = async (e) => {
       "title": bulletinTitle,
       "slug": slug.current,
       "content": bulletinContent,
-      "authors": bulletinAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url},
+      "authors": bulletinAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
       tags
     }`
   );
@@ -194,11 +194,19 @@ const BulletinPage = ({ bulletinPost }) => {
           </div>
           <p className="flex flex-col">
             Posted by:{' '}
-            {post.authors.map((author, i) => (
-              <p key={i} className="text-yellow-600 transition font-bold">
-                {author.fullName.firstName} {author.fullName.lastName}
-              </p>
-            ))}
+            {post.authors &&
+              post.authors.map((author, i) => (
+                <p key={i} className="text-yellow-600 transition font-bold">
+                  {author.fullName.firstName} {author.fullName.lastName} (
+                  {author.pronouns})
+                  {author.batchYear && author.yearLevel && (
+                    <span>
+                      {' '}
+                      / {author.batchYear} {author.yearLevel}
+                    </span>
+                  )}
+                </p>
+              ))}
           </p>
         </div>
 
