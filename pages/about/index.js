@@ -56,7 +56,7 @@ const AboutPage = (e) => {
             variant={`${selected == 3 ? 'filled' : 'text'}`}
             fullWidth
           >
-            MIS
+            MIS - ACES
           </Button>
         </div>
 

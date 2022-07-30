@@ -17,7 +17,9 @@ const Page_Council = (e) => {
         <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full">
             <p className="text-xl">Prof. Joemen Barrios</p>
-            <p className="text-sm text-yellow-600">Program Coordinator</p>
+            <p className="text-sm text-yellow-600">
+              BS Computer Science Coordinator
+            </p>
           </div>
           <div className="col-span-full">
             <p className="text-xl">Jaqueline Porral</p>
@@ -36,7 +38,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Council Treasurer</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Rabi</p>
+            <p className="text-xl">Mark Rhicky Raby</p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -75,7 +77,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">BSCS 2A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Rabi</p>
+            <p className="text-xl">Mark Rhicky Raby</p>
             <p className="text-sm text-yellow-600">BSCS 2B</p>
           </div>
         </div>
