@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { CgArrowRight } from 'react-icons/cg';
 import { _Transition_Page } from '../../../components/_Animations';
 import { motion } from 'framer-motion';
 
@@ -38,7 +39,7 @@ const Page_Team = (e) => {
             <p className="text-sm  text-yellow-600">Lead Project Manager</p>
           </div>
           <div className="col-span-1 flex flex-col ">
-            <p className="text-xl">Mark Rhicky Rabi</p>
+            <p className="text-xl">Mark Rhicky Raby</p>
             <p className="text-sm  text-yellow-600">Assitant Project Manager</p>
           </div>
         </div>
@@ -76,7 +77,7 @@ const Page_Team = (e) => {
               </p>
               <p className="text-xl">Jessica Joy Gasupan</p>
               <p className="text-xl">Evehn Kadusale</p>
-              <p className="text-xl">Hazel Jade Loberania</p>
+              <p className="text-xl">Hazel Jade Lobenaria</p>
               <p className="text-xl">Jhude Vergara</p>
               <p className="text-xl">Joko Gadingan</p>
             </div>
@@ -102,7 +103,12 @@ const Page_Team = (e) => {
           </motion.div>
         </motion.div>
 
-        <p className="text-right mt-5 opacity-50">Swipe Right</p>
+        <p className="text-right mt-5 opacity-50 flex gap-3 justify-end items-center">
+          <span>Swipe Right</span>
+          <span className="text-yellow-500">
+            <CgArrowRight size={20} />
+          </span>
+        </p>
       </motion.section>
     </>
   );

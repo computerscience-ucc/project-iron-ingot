@@ -54,22 +54,23 @@ const Footer = () => {
                     Thesis
                   </Typography>
                 </Link>
-                <Link href="/about" scroll={false}>
+                <Link href="/about" scroll>
                   <Typography className="hover:underline underline-offset-2 cursor-pointer">
                     About
                   </Typography>
                 </Link>
-                {/* <Link href="/contact" scroll={false}>
-                  <Typography className="hover:underline underline-offset-2 cursor-pointer">
-                    Contact
-                  </Typography>
-                </Link> */}
               </div>
               <div>
                 <p className="font-semibold mb-2">Social Links</p>
-                <Typography className="text-grey-900 hover:underline underline-offset-2 cursor-pointer">
-                  CS Council Facebook
-                </Typography>
+                <a
+                  href="https://www.facebook.com/UCCBSCS2022"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Typography className=" hover:underline underline-offset-2 cursor-pointer">
+                    CS Council Facebook
+                  </Typography>
+                </a>
                 <a
                   href="https://facebook.com/uccregistrarnorth"
                   target="_blank"
@@ -121,8 +122,8 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row lg:justify-between text-grey-400 mt-4  text-center lg:text-left">
-            <p className="flex gap-2">
+          <div className="flex flex-col items-center lg:flex-row lg:justify-between text-grey-400 mt-4 text-center lg:text-left">
+            <p className="flex gap-2 ">
               Questions &amp; Suggestions?{' '}
               <span>
                 <a
