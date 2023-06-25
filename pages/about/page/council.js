@@ -16,42 +16,46 @@ const Page_Council = (e) => {
         </p>
         <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full">
-            <p className="text-xl">Prof. Joemen Barrios</p>
+            <p className="text-xl">Prof. Joemen G. Barrios</p>
             <p className="text-sm text-yellow-600">
               BS Computer Science Coordinator
             </p>
           </div>
           <div className="col-span-full">
-            <p className="text-xl">Jaqueline Porral</p>
+            <p className="text-xl">Joko B. Gadingan</p>
             <p className="text-sm text-yellow-600">Council President</p>
           </div>
           <div className="col-span-full">
-            <p className="text-xl">Gerald Chavez</p>
+            <p className="text-xl">Mauirene R. Fuentes</p>
             <p className="text-sm text-yellow-600">Council Vice-President</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Neil Embile</p>
+            <p className="text-xl">Jacelyn A. Caratao/p>
             <p className="text-sm text-yellow-600">Council Secretary</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jessica Joy Gapusan</p>
+            <p className="text-xl">Oscar A. Chin III</p>
             <p className="text-sm text-yellow-600">Council Treasurer</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-xl">Joshua Gabriel P. Dantes </p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Khate Crystal Bautista</p>
+            <p className="text-xl">Rosemarie A. Bullo</p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Katherine Ocares</p>
-            <p className="text-sm text-yellow-600">Public Relation Officer</p>
+            <p className="text-xl">Glenn M. Ugay</p>
+            <p className="text-sm text-yellow-600">4th Year Representative</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jhude Vergara</p>
-            <p className="text-sm text-yellow-600">Public Relation Officer</p>
+            <p className="text-xl">Jhude A. Vergara</p>
+            <p className="text-sm text-yellow-600">3rd Year Representative</p>
+          </div>
+            <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Krisha Mae P. Alcaide</p>
+            <p className="text-sm text-yellow-600">2nd Year Representative</p>
           </div>
         </div>
         <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
