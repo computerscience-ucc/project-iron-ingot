@@ -57,6 +57,10 @@ const Page_Council = (e) => {
             <p className="text-xl">Krisha Mae P. Alcaide</p>
             <p className="text-sm text-yellow-600">2nd Year Representative</p>
           </div>
+            <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> - </p>
+            <p className="text-sm text-yellow-600">1st Year Representative</p>
+          </div>
         </div>
         <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
