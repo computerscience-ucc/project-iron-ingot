@@ -30,7 +30,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Council Vice-President</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jacelyn A. Caratao/p>
+            <p className="text-xl">Jacelyn A. Caratao</p>
             <p className="text-sm text-yellow-600">Council Secretary</p>
           </div>
           <div className="col-span-full md:col-span-3">
