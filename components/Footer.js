@@ -137,7 +137,7 @@ const Footer = () => {
           </div>
           <div className="flex flex-col lg:flex-row lg:justify-between text-grey-800 mt-10  text-center lg:text-left">
             <p>Under the management of UCC North Computer Science Council</p>
-            <p>Copyright &copy;2022</p>
+            <p>Copyright &copy;2023</p>
           </div>
         </section>
       </main>
