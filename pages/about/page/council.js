@@ -45,6 +45,10 @@ const Page_Council = (e) => {
             <p className="text-xl">Rosemarie A. Bullo</p>
             <p className="text-sm text-yellow-600">Business Manager</p>
           </div>
+           <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Daniel D. Bobis</p>
+            <p className="text-sm text-yellow-600">Public Relations Officer</p>
+          </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Glenn M. Ugay</p>
             <p className="text-sm text-yellow-600">4th Year Representative</p>
@@ -58,35 +62,47 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">2nd Year Representative</p>
           </div>
             <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> - </p>
+            <p className="text-xl"> Maxine B. Valdez </p>
             <p className="text-sm text-yellow-600">1st Year Representative</p>
           </div>
         </div>
         <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
-          <div className="col-span-full md:col-span-2">
-            <p className="text-xl">Alexander Caberto</p>
+            <div className="col-span-full md:col-span-2">
+            <p className="text-xl"> Mauirene Fuentes </p>
             <p className="text-sm text-yellow-600">BSCS 4A</p>
           </div>
           <div className="col-span-full md:col-span-2">
-            <p className="text-xl">Mark Neil Embile</p>
+            <p className="text-xl"> Glenn Ugay </p>
             <p className="text-sm text-yellow-600">BSCS 4B</p>
           </div>
           <div className="col-span-full md:col-span-2">
-            <p className="text-xl">Carl Emmanuel Alvarado Sy</p>
-            <p className="text-sm text-yellow-600">BSCS 4C</p>
-          </div>
-          <div className="col-span-full md:col-span-full">
-            <p className="text-xl">Mauirene R. Fuentes</p>
+            <p className="text-xl"> Isaac Gabriel  Domino </p>
             <p className="text-sm text-yellow-600">BSCS 3A</p>
           </div>
+          <div className="col-span-full md:col-span-full">
+            <p className="text-xl"> Mark Rhicky Raby </p>
+            <p className="text-sm text-yellow-600">BSCS 3B</p>
+          </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Khate Crystal Bautista</p>
+            <p className="text-xl"> Joshua Gabriel Dantes </p>
             <p className="text-sm text-yellow-600">BSCS 2A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mark Rhicky Raby</p>
+            <p className="text-xl"> Laurence John Clarete </p>
             <p className="text-sm text-yellow-600">BSCS 2B</p>
+          </div>
+           <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Laurence John Clarete </p>
+            <p className="text-sm text-yellow-600">BSCS 1B</p>
+          </div>
+           <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Sandra Agustin </p>
+            <p className="text-sm text-yellow-600">BSCS 1A</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Michael Angelo Baynosa </p>
+            <p className="text-sm text-yellow-600">BSCS 1B </p>
           </div>
         </div>
 
