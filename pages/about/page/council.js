@@ -68,19 +68,19 @@ const Page_Council = (e) => {
         </div>
         <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
-            <div className="col-span-full md:col-span-2">
+            <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Mauirene Fuentes </p>
             <p className="text-sm text-yellow-600">BSCS 4A</p>
           </div>
-          <div className="col-span-full md:col-span-2">
+          <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Glenn Ugay </p>
             <p className="text-sm text-yellow-600">BSCS 4B</p>
           </div>
-          <div className="col-span-full md:col-span-2">
+          <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Isaac Gabriel  Domino </p>
             <p className="text-sm text-yellow-600">BSCS 3A</p>
           </div>
-          <div className="col-span-full md:col-span-full">
+          <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Mark Rhicky Raby </p>
             <p className="text-sm text-yellow-600">BSCS 3B</p>
           </div>
