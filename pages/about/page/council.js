@@ -93,10 +93,6 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">BSCS 2B</p>
           </div>
            <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> Laurence John Clarete </p>
-            <p className="text-sm text-yellow-600">BSCS 1B</p>
-          </div>
-           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Sandra Agustin </p>
             <p className="text-sm text-yellow-600">BSCS 1A</p>
           </div>
