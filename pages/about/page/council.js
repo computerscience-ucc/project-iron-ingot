@@ -29,9 +29,9 @@ const Page_Council = (e) => {
             <p className="text-xl">Mauirene R. Fuentes</p>
             <p className="text-sm text-yellow-600">Council Vice-President</p>
           </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jacelyn A. Caratao</p>
-            <p className="text-sm text-yellow-600">Council Secretary</p>
+          <div className="col-span-full">
+            <p className="text-xl"> Jacelyn A. Caratao </p>
+            <p className="text-sm text-yellow-600"> Council Secretary </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Oscar A. Chin III</p>
