@@ -43,7 +43,7 @@ const Page_Council = (e) => {
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Rosemarie A. Bullo</p>
-            <p className="text-sm text-yellow-600">Business Manager</p>
+            <p className="text-sm text-yellow-600">Auditor</p>
           </div>
            <div className="col-span-full md:col-span-3">
             <p className="text-xl">Daniel D. Bobis</p>
