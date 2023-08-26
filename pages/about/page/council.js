@@ -23,19 +23,23 @@ const Page_Council = (e) => {
           </div>
           <div className="col-span-full">
             <p className="text-xl">Joko B. Gadingan</p>
-            <p className="text-sm text-yellow-600">Council President</p>
+            <p className="text-sm text-yellow-600">President</p>
           </div>
           <div className="col-span-full">
             <p className="text-xl">Mauirene R. Fuentes</p>
-            <p className="text-sm text-yellow-600">Council Vice-President</p>
+            <p className="text-sm text-yellow-600">Vice-President</p>
           </div>
           <div className="col-span-full">
             <p className="text-xl"> Jacelyn A. Caratao </p>
-            <p className="text-sm text-yellow-600"> Council Secretary </p>
+            <p className="text-sm text-yellow-600">Secretary</p>
+          </div>
+           <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Irheil Mae S. Antang</p>
+            <p className="text-sm text-yellow-600">Assistant Secretary</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Oscar A. Chin III</p>
-            <p className="text-sm text-yellow-600">Council Treasurer</p>
+            <p className="text-sm text-yellow-600">Treasurer</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Joshua Gabriel P. Dantes </p>
@@ -47,6 +51,10 @@ const Page_Council = (e) => {
           </div>
            <div className="col-span-full md:col-span-3">
             <p className="text-xl">Daniel D. Bobis</p>
+            <p className="text-sm text-yellow-600">Public Relations Officer</p>
+          </div>
+           <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Joshua Laurence T. Fabillon</p>
             <p className="text-sm text-yellow-600">Public Relations Officer</p>
           </div>
           <div className="col-span-full md:col-span-3">
