@@ -73,6 +73,30 @@ const Page_Council = (e) => {
             <p className="text-xl"> Maxine B. Valdez </p>
             <p className="text-sm text-yellow-600">1st Year Representative</p>
           </div>
+               <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Marianne Celest T. Jerez </p>
+            <p className="text-sm text-yellow-600">Creative Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Stephanie Cueto </p>
+            <p className="text-sm text-yellow-600">Creative Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Michael Angelo B. Baynosa </p>
+            <p className="text-sm text-yellow-600">Creative Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Ma. Catherine H. Bae </p>
+            <p className="text-sm text-yellow-600">Program Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Christian D. Perez </p>
+            <p className="text-sm text-yellow-600"> Program Committee</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Mark Relan Gercee Acedo </p>
+            <p className="text-sm text-yellow-600">Program Committee </p>
+          </div>
         </div>
         <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
