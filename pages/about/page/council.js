@@ -108,6 +108,30 @@ const Page_Council = (e) => {
             <p className="text-xl"> Michael Angelo Baynosa </p>
             <p className="text-sm text-yellow-600">BSCS 1B </p>
           </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Marianne Celest T. Jerez </p>
+            <p className="text-sm text-yellow-600">Creative Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Stephanie Cueto </p>
+            <p className="text-sm text-yellow-600">Creative Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Michael Angelo B. Baynosa </p>
+            <p className="text-sm text-yellow-600">Creative Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Ma. Catherine H. Bae </p>
+            <p className="text-sm text-yellow-600">Program Committee </p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Christian D. Perez </p>
+            <p className="text-sm text-yellow-600"> Program Committee</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl"> Mark Relan Gercee Acedo </p>
+            <p className="text-sm text-yellow-600">Program Committee </p>
+          </div>
         </div>
 
         <div className="border-b-2 border-white max-w-xl mx-auto my-32" />
