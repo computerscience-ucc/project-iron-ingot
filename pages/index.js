@@ -111,7 +111,7 @@ const Home = (e) => {
             Board on the <span className="text-pink-600 font-bold">Go</span>
           </p>
           <p className="text-lg font-semibold text-gray-500">
-            See and learn what is happening in the CS Department
+            See and learn what is happening in the CS Program
           </p>
 
           <Link href={'/bulletin'}>
