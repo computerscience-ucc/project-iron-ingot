@@ -36,7 +36,7 @@ const Bulletin = (e) => {
         <div className="flex flex-col gap-2 justify-center mt-16">
           <p className="text-4xl font-semibold">Bulletin</p>
           <p className="text-lg font-semibold">
-            See what professors are up to in the CS Program
+            See what professors are up to in the BSCS Program
           </p>
         </div>
 
