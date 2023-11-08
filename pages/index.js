@@ -111,7 +111,7 @@ const Home = (e) => {
             Board on the <span className="text-pink-600 font-bold">Go</span>
           </p>
           <p className="text-lg font-semibold text-gray-500">
-            See and learn what is happening in the CS Program
+            See and learn what is happening in the BSCS Program
           </p>
 
           <Link href={'/bulletin'}>
@@ -181,7 +181,7 @@ const Home = (e) => {
                 Online Public Information Board
               </p>
               <p className="opacity-50">
-                See what is happening in the CS department and learn more about
+                See what is happening in the BSCS Program and learn more about
                 the people who are working there
               </p>
             </div>
@@ -193,7 +193,7 @@ const Home = (e) => {
                 Showcase what the seniors are doing
               </p>
               <p className="opacity-50">
-                See what the seniors are doing in the CS department and learn
+                See what the seniors are doing in the BSCS Program and learn
                 from them too while building their own Thesis project
               </p>
             </div>
@@ -203,7 +203,7 @@ const Home = (e) => {
               </figure>
               <p className="text-xl text-left">Connect with other students</p>
               <p className="opacity-50">
-                Connect with other students in the CS department and get to know
+                Connect with other students in the BSCS Program and get to know
                 them better
               </p>
             </div>
