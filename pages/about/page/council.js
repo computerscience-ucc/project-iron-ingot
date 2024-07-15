@@ -22,7 +22,7 @@ const Page_Council = (e) => {
             </p>
           </div>
           <div className="col-span-full">
-            <p className="text-xl">Jhude A. Vergara</p>
+            <p className="text-xl">Juan Dela Cruz</p>
             <p className="text-sm text-yellow-600">President</p>
           </div>
           <div className="col-span-full">
