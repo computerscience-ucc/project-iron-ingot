@@ -15,7 +15,7 @@ const titleCase = (str) => {
 };
 
 const BulletinCard = ({ bulletin }) => {
-  const { _id, _createdAt, authors, title, tags, slug } = bulletin;
+  const { _id, _updatedAt, _createdAt, authors, title, tags, slug } = bulletin;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,7 +50,7 @@ const BulletinCard = ({ bulletin }) => {
               </p>
 
               <p className="text-sm text-grey-700">
-                {dayjs(_createdAt).format('MMM DD, YYYY')}
+                {dayjs(_updatedAt).format('MMM DD, YYYY')}
               </p>
             </CardBody>
             <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">

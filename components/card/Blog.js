@@ -15,7 +15,7 @@ const titleCase = (str) => {
 };
 
 const BlogCard = ({ blog }) => {
-  const { _id, _createdAt, authors, title, tags, slug } = blog;
+  const { _id, _updatedAt, _createdAt, authors, title, tags, slug } = blog;
 
   const [isLoading, setIsLoading] = useState(false);
 

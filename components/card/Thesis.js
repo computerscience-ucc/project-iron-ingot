@@ -15,7 +15,7 @@ const titleCase = (str) => {
 };
 
 const ThesisCard = ({ thesis }) => {
-  const { _id, _createdAt, authors, title, tags, slug, headerImage } = thesis;
+  const { _id, _updatedAt, _createdAt, authors, title, tags, slug, headerImage } = thesis;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,7 +59,7 @@ const ThesisCard = ({ thesis }) => {
               </p>
 
               <p className="z-10 text-sm text-grey-700">
-                {dayjs(_createdAt).format('MMM DD, YYYY')}
+                {dayjs(_updatedAt).format('MMM DD, YYYY')}
               </p>
             </CardBody>
             <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600 ">
