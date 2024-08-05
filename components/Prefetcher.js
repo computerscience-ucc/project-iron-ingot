@@ -12,7 +12,7 @@ export const client = sanityClient({
 
 // queries
 const query_blog = `
-  *[_type == 'blog'] | order(_createdAt desc) | order(_updatedAt desc)  {
+  *[_type == 'blog'] | order(_createdAt desc, _updatedAt desc)  {
     _id,
     _createdAt,
     _updatedAt,
@@ -24,7 +24,7 @@ const query_blog = `
   }
 `;
 const query_bulletin = `
-  *[_type == 'bulletin'] | order(_createdAt desc) | order(_updatedAt desc) {
+  *[_type == 'bulletin'] | order(_createdAt desc, _updatedAt desc) {
     _id,
     _createdAt,
     _updatedAt,
@@ -36,7 +36,7 @@ const query_bulletin = `
   }
 `;
 const query_thesis = `
-  *[_type == 'thesis'] | order(_createdAt desc) | order(_updatedAt desc){
+  *[_type == 'thesis'] | order(_createdAt desc, _updatedAt desc){
     _id,
     _createdAt,
     _updatedAt,
