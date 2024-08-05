@@ -16,7 +16,7 @@ const Page_Council = (e) => {
         </p>
         <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full">
-            <p className="text-xl">Prof. Joemen G. Barrios</p>
+            <p className="text-xl">Prof. Joemen G. Barrios, MIT</p>
             <p className="text-sm text-yellow-600">
               BS Computer Science Coordinator
             </p>
