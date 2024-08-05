@@ -90,7 +90,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600"> Program Committee</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> Marainne Celest T. Jerez </p>
+            <p className="text-xl"> Marianne Celest T. Jerez </p>
             <p className="text-sm text-yellow-600">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -102,7 +102,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> Catherine Bae </p>
+            <p className="text-xl"> Ma. Catherine Bae </p>
             <p className="text-sm text-yellow-600">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
