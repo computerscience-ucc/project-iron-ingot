@@ -126,7 +126,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-yellow-600">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> Denz Sabalbora </p>
+            <p className="text-xl"> Denz Sabalboro </p>
             <p className="text-sm text-yellow-600">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
