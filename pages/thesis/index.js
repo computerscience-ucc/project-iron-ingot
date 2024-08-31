@@ -21,7 +21,7 @@ const Thesis = (e) => {
 
   return (
     <>
-      <TopGradient colorRight={'#0affff'} colorLeft={'#f0cd00'} />
+      <TopGradient colorLeft={'#180ea4'} colorRight={'#E22837'} />
       <Head>
         <title>Thesis | Ingo</title>
       </Head>

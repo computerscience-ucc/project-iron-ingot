@@ -105,7 +105,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  color="yellow"
+                  className = "text-button-color"
                 >
                   blog
                 </Button>
@@ -114,7 +114,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  color="yellow"
+                  className = "text-button-color"
                 >
                   bulletin
                 </Button>
@@ -123,7 +123,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  color="yellow"
+                  className = "text-button-color"
                 >
                   thesis
                 </Button>
@@ -133,7 +133,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  color="yellow"
+                  className = "text-button-color"
                 >
                   about
                 </Button>
@@ -219,7 +219,7 @@ const Navbar = (e) => {
         )}
       </AnimatePresence>
 
-      <main
+      <main class = "gradient-background"
         className={`
           ${thresholdReached ? 'py-5 bg-[#0A0C10]' : 'py-10 bg-transparent'}
           fixed w-full  flex justify-center items-center px-5 lg:px-0 z-[99] transition-all duration-200
@@ -230,7 +230,7 @@ const Navbar = (e) => {
             <div className="flex gap-2 lg:hidden">
               <IconButton
                 onClick={() => setSideMenuOpen(!sideMenuOpen)}
-                color="yellow"
+                className = "text-button-color"
                 variant="text"
               >
                 {sideMenuOpen ? <CgClose size={20} /> : <CgMenu size={20} />}
@@ -249,15 +249,15 @@ const Navbar = (e) => {
                     ],
                   }}
                   transition={{
-                    duration: 10,
+                    duration: 7,
                     ease: 'linear',
                     loop: Infinity,
                   }}
                   style={{
                     backgroundSize: '1000px 1000px',
-                    backgroundColor: 'rgb(6, 182, 212)',
+                    backgroundColor: 'rgb(255, 50, 6)',
                     backgroundImage:
-                      'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
+                      'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(100, 50, 85) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
                   }}
                   className="bg-clip-text bg-transparent"
                 >
@@ -268,22 +268,22 @@ const Navbar = (e) => {
           </div>
           <div className="lg:flex gap-2 hidden">
             <Link href="/blog" scroll={false}>
-              <Button color="yellow" variant="text">
+              <Button className = "font-black text-button-color " variant="text">
                 blog
               </Button>
             </Link>
             <Link href="/bulletin" scroll={false}>
-              <Button color="yellow" variant="text">
+              <Button className = "font-black text-button-color" variant="text">
                 bulletin
               </Button>
             </Link>
             <Link href="/thesis" scroll={false}>
-              <Button color="yellow" variant="text">
+              <Button className = "font-black text-button-color" variant="text">
                 thesis
               </Button>
             </Link>
             <Link href="/about" scroll={false}>
-              <Button color="yellow" variant="text" scroll={false}>
+              <Button className = "font-black text-button-color" variant="text">
                 about
               </Button>
             </Link>
@@ -297,7 +297,7 @@ const Navbar = (e) => {
                   setSearchValue('');
                   setSearchResults([]);
                 }}
-                color="yellow"
+                className = "text-button-color"
                 variant="text"
               >
                 {globalSearchMenuOpen ? (
@@ -315,7 +315,7 @@ const Navbar = (e) => {
                 setSearchValue('');
                 setSearchResults([]);
               }}
-              color="yellow"
+              className = "text-button-color"
               variant="text"
             >
               {globalSearchMenuOpen ? (
