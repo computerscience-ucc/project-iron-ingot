@@ -268,22 +268,22 @@ const Navbar = (e) => {
           </div>
           <div className="lg:flex gap-2 hidden">
             <Link href="/blog" scroll={false}>
-              <Button className = "font-black text-button-color " variant="text">
+              <Button className = "font-black text-header-color " variant="text">
                 blog
               </Button>
             </Link>
             <Link href="/bulletin" scroll={false}>
-              <Button className = "font-black text-button-color" variant="text">
+              <Button className = "font-black text-header-color" variant="text">
                 bulletin
               </Button>
             </Link>
             <Link href="/thesis" scroll={false}>
-              <Button className = "font-black text-button-color" variant="text">
+              <Button className = "font-black text-header-color" variant="text">
                 thesis
               </Button>
             </Link>
             <Link href="/about" scroll={false}>
-              <Button className = "font-black text-button-color" variant="text">
+              <Button className = "font-black text-header-color" variant="text">
                 about
               </Button>
             </Link>

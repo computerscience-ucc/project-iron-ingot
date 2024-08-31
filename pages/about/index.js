@@ -14,7 +14,7 @@ const AboutPage = (e) => {
 
   return (
     <>
-      <TopGradient colorLeft={'#DB2777'} colorRight={'#A21CAF'} />
+      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
 
       <Head>
         <title>Blog | Ingo</title>
