@@ -6,6 +6,7 @@ module.exports = withMT({
     extend: {
       colors: {
         'button-color': '#a50000',
+        'nav-color': "#ffffff",
         'button-texts-color': '#ffffff',
         'header-color': '#fd0101'
       }

@@ -23,7 +23,7 @@ const BlogPage = (e) => {
 
   return (
     <>
-      <TopGradient colorLeft={'#000428'} colorRight={'#004e92'} />
+      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
 
       <Head>
         <title>Blog | Ingo</title>
