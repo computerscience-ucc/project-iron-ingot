@@ -32,6 +32,7 @@ const blockComponents = {
           src={urlFor(value.asset).url()}
           layout="fill"
           objectFit="contain"
+          alt={value.alt}
         />
       </div>
     ),
@@ -54,7 +55,7 @@ const blockComponents = {
     ),
     span: ({ children }) => <span className="text-light">{children}</span>,
     image: ({ node }) => (
-      <img src={urlFor(node.asset)} alt={node.alt} className="w-full" />
+      <Image src={urlFor(node.asset)} alt={node.alt} className="w-full" layout = "fill" />
     ),
   },
   marks: {
@@ -233,6 +234,7 @@ const ThesisPage = ({ thesisPost }) => {
                 src={post?.headerImage}
                 className="w-full h-full object-cover"
                 layout="fill"
+                alt = "header"
               />
             </div>
           )}

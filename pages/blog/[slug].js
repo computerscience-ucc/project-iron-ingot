@@ -32,6 +32,7 @@ const blockComponents = {
           src={urlFor(value.asset).url()}
           layout="fill"
           objectFit="contain"
+          alt={value.alt}
         />
       </div>
     ),
@@ -54,7 +55,7 @@ const blockComponents = {
     ),
     span: ({ children }) => <span className="text-light">{children}</span>,
     image: ({ node }) => (
-      <img src={urlFor(node.asset)} alt={node.alt} className="w-full" />
+      <Image src={urlFor(node.asset)} alt={node.alt} className="w-full" layout = "fill" />
     ),
   },
   marks: {
