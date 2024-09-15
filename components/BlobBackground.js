@@ -26,7 +26,7 @@ const BlobBackgound = (e) => {
       }}
       className="fixed w-full h-screen inset-0 -z-10"
     >
-      <Image className="absoute h-full w-full object-cover"  alt = "blob" src = "/public/Blob.svg" layout = "fill" />
+      <image className="absoute h-full w-full object-cover"  alt = "blob" src = "/public/Blob.svg" layout = "fill" />
     </motion.div>
   );
 };
