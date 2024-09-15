@@ -18,21 +18,21 @@ const Page_MIS = (e) => {
         <p>
           Management Information System helps the students in terms of data
           encoding and enrollment, MIS help the student to{' '}
-          <span className="text-yellow-600 font-semibold">
+          <span className="font-semibold text-header-color">
             see and gather their data in our Database
           </span>
           , MIS was built to help the University in terms of{' '}
-          <span className="text-yellow-600 font-semibold">
+          <span className="font-semibold text-header-color">
             students data, enrolling, encoding, and even photocopying
           </span>{' '}
           their paper works.
         </p>
         <p className="mt-4">
-          <span className="text-yellow-600 font-semibold">
+          <span className="font-semibold text-header-color">
             Prof. Joemen Barrios
           </span>
           , also an alumni of the University, is known as one of the{' '}
-          <span className="text-yellow-600 font-semibold">
+          <span className="font-semibold text-header-color">
             pioneers of the said organization
           </span>
           . As of now together with the student volunteers from all over the CSD

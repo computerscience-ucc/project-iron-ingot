@@ -32,6 +32,7 @@ const blockComponents = {
           src={urlFor(value.asset).url()}
           layout="fill"
           objectFit="contain"
+          alt={value.alt}
         />
       </div>
     ),
@@ -54,12 +55,12 @@ const blockComponents = {
     ),
     span: ({ children }) => <span className="text-light">{children}</span>,
     image: ({ node }) => (
-      <img src={urlFor(node.asset)} alt={node.alt} className="w-full" />
+      <Image src={urlFor(node.asset)} alt={node.alt} className="w-full" layout = "fill" />
     ),
   },
   marks: {
     em: ({ children }) => (
-      <em className="text-yellow-400  font-bold">{children}</em>
+      <em className="text-header-color  font-bold">{children}</em>
     ),
     link: ({ children, value }) => (
       <a
@@ -182,16 +183,16 @@ const ThesisPage = ({ thesisPost }) => {
           <div className="hidden md:block">
             <Breadcrumbs className="bg-transparent px-0 ">
               <Link href="/">
-                <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                <a className="text-grey-600 hover:text-header-color transition font-bold">
                   Home
                 </a>
               </Link>
               <Link href="/thesis">
-                <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                <a className="text-grey-600 hover:text-header-color transition font-bold">
                   Thesis
                 </a>
               </Link>
-              <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+              <a className="text-grey-600 hover:text-header-color transition font-bold">
                 {post.title}
               </a>
             </Breadcrumbs>
@@ -200,7 +201,7 @@ const ThesisPage = ({ thesisPost }) => {
             <p className="flex flex-col">
               Posted by:{' '}
               {post.authors.map((author, i) => (
-                <p key={i} className="text-yellow-600 transition font-bold">
+                <p key={i} className="text-header-color transition font-bold">
                   {author.fullName.firstName} {author.fullName.lastName} (
                   {author.pronouns})
                   {author.batchYear && author.yearLevel && (
@@ -216,7 +217,7 @@ const ThesisPage = ({ thesisPost }) => {
               Thesis Authors:{' '}
               {post.owners.ownerFullname &&
                 post.owners.ownerFullname.map((owner, i) => (
-                  <p key={i} className="text-yellow-600 transition font-bold">
+                  <p key={i} className="text-header-color transition font-bold">
                     {post.owners.ownerSection && (
                       <span className="text-pink-800">
                         ({post.owners.ownerSection})
@@ -233,6 +234,7 @@ const ThesisPage = ({ thesisPost }) => {
                 src={post?.headerImage}
                 className="w-full h-full object-cover"
                 layout="fill"
+                alt = "header"
               />
             </div>
           )}

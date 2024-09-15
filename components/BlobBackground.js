@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const BlobBackgound = (e) => {
   return (
@@ -25,7 +26,7 @@ const BlobBackgound = (e) => {
       }}
       className="fixed w-full h-screen inset-0 -z-10"
     >
-      <img className="absoute h-full w-full object-cover" src="./Blob.svg" />
+      <Image className="absoute h-full w-full object-cover"  alt = "blob" src = "/public/Blob.svg" layout = "fill" />
     </motion.div>
   );
 };

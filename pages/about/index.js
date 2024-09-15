@@ -14,7 +14,7 @@ const AboutPage = (e) => {
 
   return (
     <>
-      <TopGradient colorLeft={'#DB2777'} colorRight={'#A21CAF'} />
+      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
 
       <Head>
         <title>Blog | Ingo</title>
@@ -35,24 +35,33 @@ const AboutPage = (e) => {
         {/* tabs */}
         <div className="flex flex-col md:flex-row gap-4 mt-16">
           <Button
+            className={`${
+              selected === 1 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
+            }`}
             onClick={() => setSelected(1)}
-            color={`${selected == 1 && 'yellow'}`}
+            //color={`${selected == 1 && 'red'}`}
             variant={`${selected == 1 ? 'filled' : 'text'}`}
             fullWidth
           >
             Development Team
           </Button>
           <Button
+            className={`${
+              selected === 2 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
+            }`}
             onClick={() => setSelected(2)}
-            color={`${selected == 2 && 'yellow'}`}
+            //color={`${selected == 2 && 'red'}`}
             variant={`${selected == 2 ? 'filled' : 'text'}`}
             fullWidth
           >
             Computer Science Council
           </Button>
           <Button
+            className={`${
+              selected === 3 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
+            }`}
             onClick={() => setSelected(3)}
-            color={`${selected == 3 && 'yellow'}`}
+            //color={`${selected == 3 && 'red'}`}
             variant={`${selected == 3 ? 'filled' : 'text'}`}
             fullWidth
           >

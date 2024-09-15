@@ -5,6 +5,7 @@ import { _Transition_Card } from '../_Animations';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const titleCase = (str) => {
   let split = str.toLowerCase().split(' ');
@@ -42,9 +43,11 @@ const ThesisCard = ({ thesis }) => {
           <Card className="bg-[#0f1218] border border-[#0f1218] text-grey-100 cursor-pointer overflow-hidden group">
             <motion.div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
               <div className="absolute inset-0 w-[90%] transition-all duration-200 group-hover:w-[100%] h-full bg-gradient-to-r from-[#0f1218] via-[#0f1218] to-transparent z-10" />
-              <img
+              <Image
                 className="absolute w-3/4 transition-all duration-200 h-full top-0 right-0 object-cover object-center -z-10 opacity-40 group-hover:scale-[0.95] rounded-xl group-hover:opacity-90 "
                 src={headerImage}
+                alt={title}
+                layout="fill"
               />
             </motion.div>
             <CardBody className="relative overflow-hidden">
