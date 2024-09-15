@@ -54,7 +54,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-header-color">Public Relations Officer</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">--</p>
+            <p className="text-xl"> Dhan Renz D.R. Ellorinco </p>
             <p className="text-sm text-header-color">Public Relations Officer</p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -70,7 +70,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-header-color">2nd Year Representative</p>
           </div>
             <div className="col-span-full md:col-span-3">
-            <p className="text-xl">--</p>
+            <p className="text-xl"> Jamin M. Villareal </p>
             <p className="text-sm text-header-color">1st Year Representative</p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -114,7 +114,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
+            <p className="text-xl"> Reynaldo G. Abrigo Jr. </p>
             <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -122,7 +122,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
+            <p className="text-xl"> Villareal CJ </p>
             <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
@@ -130,19 +130,19 @@ const Page_Council = (e) => {
             <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
-            <p className="text-sm text-header-color">Creative Committee </p>
+            <p className="text-xl"> Eddion Derek R. Cagomoc </p>
+            <p className="text-sm text-header-color"> Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Red Ivan Igot </p>
             <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
-            <p className="text-sm text-header-color">Creative Committee </p>
+            <p className="text-xl"> Jj Nabong </p>
+            <p className="text-sm text-header-color"> Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
+            <p className="text-xl"> Aeon Sebastian Cruz </p>
             <p className="text-sm text-header-color">Program Committee </p>
           </div>
         </div>
@@ -152,35 +152,35 @@ const Page_Council = (e) => {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
             <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Rosemarie A. Bullo </p>
-            <p className="text-sm text-yellow-600">BSCS 4A</p>
+            <p className="text-sm text-header-color">BSCS 4A</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Jamaica Rose Grafil  </p>
-            <p className="text-sm text-yellow-600">BSCS 4B</p>
+            <p className="text-sm text-header-color">BSCS 4B</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Joshua Gabriel P. Dantes </p>
-            <p className="text-sm text-yellow-600">BSCS 3A</p>
+            <p className="text-sm text-header-color">BSCS 3A</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Laurence John Clarete </p>
-            <p className="text-sm text-yellow-600">BSCS 3B</p>
+            <p className="text-sm text-header-color">BSCS 3B</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Sandra Agustin </p>
-            <p className="text-sm text-yellow-600">BSCS 2A</p>
+            <p className="text-sm text-header-color">BSCS 2A</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Michael Baynosa </p>
-            <p className="text-sm text-yellow-600">BSCS 2B</p>
+            <p className="text-sm text-header-color">BSCS 2B</p>
           </div>
            <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">BSCS 1A</p>
+            <p className="text-xl"> Rodge Patrick Pangilinan </p>
+            <p className="text-sm text-header-color">BSCS 1A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">BSCS 1B </p>
+            <p className="text-xl"> Mary Sembrero </p>
+            <p className="text-sm text-header-color">BSCS 1B </p>
           </div>
         </div>
 
