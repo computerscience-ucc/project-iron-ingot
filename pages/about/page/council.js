@@ -16,134 +16,134 @@ const Page_Council = (e) => {
         </p>
         <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
           <div className="col-span-full">
-            <p className="text-xl">Prof. Joemen G. Barrios, MIT</p>
-            <p className="text-sm text-yellow-600">
+            <p className="text-xl">Prof. Joemen G. Barrios</p>
+            <p className="text-sm text-header-color">
               BS Computer Science Coordinator
             </p>
           </div>
           <div className="col-span-full">
             <p className="text-xl">Jhude A. Vergara</p>
-            <p className="text-sm text-yellow-600">President</p>
+            <p className="text-sm text-header-color">President</p>
           </div>
           <div className="col-span-full">
             <p className="text-xl">Rosemarie A. Bullo</p>
-            <p className="text-sm text-yellow-600">Vice-President</p>
+            <p className="text-sm text-header-color">Vice-President</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Jacelyn A. Caratao </p>
-            <p className="text-sm text-yellow-600">Secretary</p>
+            <p className="text-sm text-header-color">Secretary</p>
           </div>
            <div className="col-span-full md:col-span-3">
             <p className="text-xl">Heshekiah M. Tambago</p>
-            <p className="text-sm text-yellow-600">Assistant Secretary</p>
+            <p className="text-sm text-header-color">Assistant Secretary</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Karylle Dhoreign Daye E. de Torres</p>
-            <p className="text-sm text-yellow-600">Treasurer</p>
+            <p className="text-sm text-header-color">Treasurer</p>
           </div>
           {/* <div className="col-span-full md:col-span-3">
             <p className="text-xl">Joshua Gabriel P. Dantes </p>
-            <p className="text-sm text-yellow-600">Business Manager</p>
+            <p className="text-sm text-header-color">Business Manager</p>
           </div> */}
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Krisha Mae P. Alcaide</p>
-            <p className="text-sm text-yellow-600">Auditor</p>
+            <p className="text-sm text-header-color">Auditor</p>
           </div>
            <div className="col-span-full md:col-span-3">
             <p className="text-xl">Gero Earl S. Pereyra</p>
-            <p className="text-sm text-yellow-600">Public Relations Officer</p>
+            <p className="text-sm text-header-color">Public Relations Officer</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">--</p>
-            <p className="text-sm text-yellow-600">Public Relations Officer</p>
+            <p className="text-sm text-header-color">Public Relations Officer</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Jay Ann Rose B. Gerente</p>
-            <p className="text-sm text-yellow-600">4th Year Representative</p>
+            <p className="text-sm text-header-color">4th Year Representative</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl">Ralph Michael B. Rocabo</p>
-            <p className="text-sm text-yellow-600">3rd Year Representative</p>
+            <p className="text-sm text-header-color">3rd Year Representative</p>
           </div>
             <div className="col-span-full md:col-span-3">
             <p className="text-xl">Daniel D. Bobis</p>
-            <p className="text-sm text-yellow-600">2nd Year Representative</p>
+            <p className="text-sm text-header-color">2nd Year Representative</p>
           </div>
             <div className="col-span-full md:col-span-3">
             <p className="text-xl">--</p>
-            <p className="text-sm text-yellow-600">1st Year Representative</p>
+            <p className="text-sm text-header-color">1st Year Representative</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Gwyneth F. Uy </p>
-            <p className="text-sm text-yellow-600">Creative Committee Head </p>
+            <p className="text-sm text-header-color">Creative Committee Head </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Genrey O. Cristobal </p>
-            <p className="text-sm text-yellow-600">Program Committee Head </p>
+            <p className="text-sm text-header-color">Program Committee Head </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Stephanie Cueto </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Jhon Keneth Ryan B. Namias </p>
-            <p className="text-sm text-yellow-600"> Program Committee</p>
+            <p className="text-sm text-header-color"> Program Committee</p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Marianne Celest T. Jerez </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Gian Higino O. Fungo </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Mico Jake A. Lutiva </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Ma. Catherine Bae </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Mark Relan Gercee Acedo </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Irheil Mae Antang </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Rafael Salve </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> Denz Sabalboro </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">Creative Committee </p>
+            <p className="text-sm text-header-color">Creative Committee </p>
           </div>
           <div className="col-span-full md:col-span-3">
             <p className="text-xl"> -- </p>
-            <p className="text-sm text-yellow-600">Program Committee </p>
+            <p className="text-sm text-header-color">Program Committee </p>
           </div>
         </div>
 

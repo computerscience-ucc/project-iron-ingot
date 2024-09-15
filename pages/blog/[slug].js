@@ -59,7 +59,7 @@ const blockComponents = {
   },
   marks: {
     em: ({ children }) => (
-      <em className="text-yellow-400  font-bold">{children}</em>
+      <em className="text-header-color font-bold">{children}</em>
     ),
     link: ({ children, value }) => (
       <a
@@ -179,16 +179,16 @@ const Blog = ({ blogPost }) => {
           <div className="hidden md:block">
             <Breadcrumbs className="bg-transparent px-0 ">
               <Link href="/">
-                <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                <a className="text-grey-600 hover:text-header-color transition font-bold">
                   Home
                 </a>
               </Link>
               <Link href="/blog">
-                <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+                <a className="text-grey-600 hover:text-header-color transition font-bold">
                   Blog
                 </a>
               </Link>
-              <a className="text-grey-600 hover:text-yellow-600 transition font-bold">
+              <a className="text-grey-600 hover:text-header-color transition font-bold">
                 {post.title}
               </a>
             </Breadcrumbs>
@@ -196,7 +196,7 @@ const Blog = ({ blogPost }) => {
           <p className="flex flex-col">
             Posted by:{' '}
             {post.authors.map((author, i) => (
-              <p key={i} className="text-yellow-600 transition font-bold">
+              <p key={i} className="text-header-color transition font-bold">
                 {author.fullName.firstName} {author.fullName.lastName} (
                 {author.pronouns})
                 {author.batchYear && author.yearLevel && (

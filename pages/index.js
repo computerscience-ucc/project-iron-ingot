@@ -50,21 +50,21 @@ const Home = (e) => {
 
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
+        animate={{ opacity: 0.4 }}
         exit={{ opacity: 0 }}
         style={{
           background:
-            'radial-gradient(circle, #1EAC75 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
+            'radial-gradient(circle, #731010 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
         }}
         className="absolute w-[800px] h-[800px] top-[100px] -left-[40vw] z-0 opacity-25"
       />
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
+        animate={{ opacity: 0.3 }}
         exit={{ opacity: 0 }}
         style={{
           background:
-            'radial-gradient(circle, #7A1EAC 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
+            'radial-gradient(circle, #a80000 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
         }}
         className="absolute w-[800px] h-[800px] -top-[200px] left-[40vw] z-0 opacity-25"
       />
@@ -90,14 +90,15 @@ const Home = (e) => {
                 ],
               }}
               transition={{
-                duration: 10,
+                duration: 5,
                 ease: 'linear',
                 loop: Infinity,
               }}
               style={{
                 backgroundSize: '1000px 1000px',
 
-                backgroundColor: 'rgb(6, 182, 212)',
+                //backgroundColor: 'rgb(6, 182, 212)',
+                backgroundColor: 'rgb(212, 6, 100)',
                 backgroundImage:
                   'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
               }}
@@ -174,7 +175,7 @@ const Home = (e) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="flex flex-col items-start">
-              <figure className="md:mb-4 text-yellow-600">
+              <figure className="md:mb-4 text-red-600">
                 <AiOutlineInfoCircle size={40} />
               </figure>
               <p className="text-xl text-left">
@@ -186,7 +187,7 @@ const Home = (e) => {
               </p>
             </div>
             <div className="flex flex-col items-start">
-              <figure className="md:mb-4 text-yellow-600">
+              <figure className="md:mb-4 text-red-600">
                 <AiOutlineEye size={40} />
               </figure>
               <p className="text-xl text-left">
@@ -198,7 +199,7 @@ const Home = (e) => {
               </p>
             </div>
             <div className="flex flex-col items-start">
-              <figure className="md:mb-4 text-yellow-600">
+              <figure className="md:mb-4 text-red-600">
                 <AiOutlineLink size={40} />
               </figure>
               <p className="text-xl text-left">Connect with other students</p>

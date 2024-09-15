@@ -30,17 +30,17 @@ const Page_Team = (e) => {
         <div className="grid grid-cols-1 md:grid-cols-2 mt-16 text-center gap-10">
           <div className="col-span-full flex flex-col ">
             <p className="text-xl">Gerald Chavez</p>
-            <p className="text-sm  text-yellow-600">
+            <p className="text-sm text-header-color">
               Lead Project Developer &amp; Creative Director
             </p>
           </div>
           <div className="col-span-1 flex flex-col ">
             <p className="text-xl">Jacqueline Porral</p>
-            <p className="text-sm  text-yellow-600">Lead Project Manager</p>
+            <p className="text-sm text-header-color">Lead Project Manager</p>
           </div>
           <div className="col-span-1 flex flex-col ">
             <p className="text-xl">Mark Rhicky Raby</p>
-            <p className="text-sm  text-yellow-600">Assistant Project Manager</p>
+            <p className="text-sm text-header-color">Assistant Project Manager</p>
           </div>
         </div>
 
@@ -59,20 +59,20 @@ const Page_Team = (e) => {
             className="flex flex-nowrap w-max gap-7"
           >
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-yellow-600 ">
+              <p className="text-sm text-header-color">
                 Front-end Developers &amp; Designers
               </p>
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Danica Cabullo</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-yellow-600 ">Back-end Developers</p>
+              <p className="text-sm text-header-color">Back-end Developers</p>
               <p className="text-xl">Jacqueline Porral</p>
               <p className="text-xl">Gerald Chavez</p>
               <p className="text-xl">Demverleen Espinola</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-yellow-600 ">
+              <p className="text-sm text-header-color">
                 Documentation &amp; Support
               </p>
               <p className="text-xl">Jessica Joy Gasupan</p>
@@ -82,7 +82,7 @@ const Page_Team = (e) => {
               <p className="text-xl">Joko Gadingan</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-yellow-600 ">
+              <p className="text-sm text-header-color">
                 Content Mangement &amp; Marketing
               </p>
               <p className="text-xl">Mark Neil Embile</p>
@@ -90,7 +90,7 @@ const Page_Team = (e) => {
               <p className="text-xl">Justine Consulta</p>
             </div>
             <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm  text-yellow-600 ">
+              <p className="text-sm text-header-color">
                 Quality Assurance &amp; Testing
               </p>
               <p className="text-xl">Gerald Chavez</p>
