@@ -187,45 +187,45 @@ const Page_Council = (e) => {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
           {/* 4th Year - 3 sections */}
           <div className="col-span-full md:col-span-2">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Ralph Michael B. Rocabo</p>
             <p className="text-sm text-header-color">BSCS 4A</p>
           </div>
           <div className="col-span-full md:col-span-2">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Irheil Mae S. Antang</p>
             <p className="text-sm text-header-color">BSCS 4B</p>
           </div>
           <div className="col-span-full md:col-span-2">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Renalyn G. Giray</p>
             <p className="text-sm text-header-color">BSCS 4C</p>
           </div>
           
           {/* 3rd Year - 2 sections */}
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Sandra C. Agustin</p>
             <p className="text-sm text-header-color">BSCS 3A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Michael Angelo B. Baynosa</p>
             <p className="text-sm text-header-color">BSCS 3B</p>
           </div>
           
           {/* 2nd Year - 2 sections */}
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Rodge Patrick T. Pangilinan</p>
             <p className="text-sm text-header-color">BSCS 2A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Mary Joy L. Sembrero</p>
             <p className="text-sm text-header-color">BSCS 2B</p>
           </div>
           
           {/* 1st Year - 2 sections */}
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Nikki C. Liton</p>
             <p className="text-sm text-header-color">BSCS 1A</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">TBA</p>
+            <p className="text-xl">Ashby Shane D. Bagason</p>
             <p className="text-sm text-header-color">BSCS 1B</p>
           </div>
         </div>
