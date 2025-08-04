@@ -179,6 +179,10 @@ const Page_Council = (e) => {
             <p className="text-xl">Fritz Mckenzie V. Hernandez</p>
             <p className="text-sm text-header-color">Technical Committee</p>
           </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Daniel Z. Baladad</p>
+            <p className="text-sm text-header-color">Technical Committee</p>
+          </div>
         </div>
 
 
