@@ -101,6 +101,14 @@ const Page_Council = (e) => {
             <p className="text-xl">Maxine Joy B. Valdez</p>
             <p className="text-sm text-header-color">Creative Committee</p>
           </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Reynaldo G. Abrigo Jr.</p>
+            <p className="text-sm text-header-color">Creative Committee</p>
+          </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Denz Christian G. Sabalboro</p>
+            <p className="text-sm text-header-color">Creative Committee</p>
+          </div>
 
           {/* Program Committee */}
           <div className="col-span-full">
@@ -127,7 +135,7 @@ const Page_Council = (e) => {
             <p className="text-sm text-header-color">Program Committee</p>
           </div>
           <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Alberto Jr. B. Balante</p>
+            <p className="text-xl">Alberto B. Balante Jr.</p>
             <p className="text-sm text-header-color">Program Committee</p>
           </div>
           <div className="col-span-full md:col-span-3">
