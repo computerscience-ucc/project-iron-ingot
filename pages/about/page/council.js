@@ -146,6 +146,10 @@ const Page_Council = (e) => {
             <p className="text-xl">Jennelyn A. Tumbokon</p>
             <p className="text-sm text-header-color">Program Committee</p>
           </div>
+          <div className="col-span-full md:col-span-3">
+            <p className="text-xl">Lea Marie R. Bermudes</p>
+            <p className="text-sm text-header-color">Program Committee</p>
+          </div>
 
           {/* Technical Committee */}
           <div className="col-span-full">
