@@ -54,6 +54,11 @@ const Footer = () => {
                     Thesis
                   </Typography>
                 </Link>
+                <Link href="/awards" scroll={false}>
+                  <Typography className="hover:underline underline-offset-2 cursor-pointer">
+                    Awards
+                  </Typography>
+                </Link>
                 <Link href="/about" scroll>
                   <Typography className="hover:underline underline-offset-2 cursor-pointer">
                     About

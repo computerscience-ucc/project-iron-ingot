@@ -128,6 +128,15 @@ const Navbar = (e) => {
                   thesis
                 </Button>
               </Link>
+              <Link href="/awards">
+                <Button
+                  onClick={(e) => setSideMenuOpen(false)}
+                  variant="text"
+                  className = "text-button-color"
+                >
+                  awards
+                </Button>
+              </Link>
 
               <Link href="/about">
                 <Button
@@ -280,6 +289,11 @@ const Navbar = (e) => {
             <Link href="/thesis" scroll={false}>
               <Button className = "font-black text-nav-color" variant="text">
                 thesis
+              </Button>
+            </Link>
+            <Link href="/awards" scroll={false}>
+              <Button className = "font-black text-nav-color" variant="text">
+                awards
               </Button>
             </Link>
             <Link href="/about" scroll={false}>
