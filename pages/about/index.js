@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { Button } from '@material-tailwind/react';
-import Head from 'next/head';
+import Head from '../../components/Head';
 import Page_Council from './page/council';
 import Page_MIS from './page/mis';
 import Page_Team from './page/team';
@@ -16,9 +16,11 @@ const AboutPage = (e) => {
     <>
       <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
 
-      <Head>
-        <title>Blog | Ingo</title>
-      </Head>
+      <Head 
+        title="About | Ingo"
+        description="Learn about Ingo, the BSCS information board. Meet our team, council, and discover our mission."
+        url="/about"
+      />
 
       <motion.main
         variants={_Transition_Page}

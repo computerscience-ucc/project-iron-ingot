@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import BlogCard from '../../components/card/Blog';
 import Card from '../../components/card/Blog';
 import CardSkeleton from '../../components/CardSkeleton';
-import Head from 'next/head';
+import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion } from 'framer-motion';
@@ -25,9 +25,11 @@ const BlogPage = (e) => {
     <>
       <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
 
-      <Head>
-        <title>Blog | Ingo</title>
-      </Head>
+      <Head 
+        title="Blog | Ingo"
+        description="Latest blog posts from BSCS students and faculty. Computer science trends, tutorials, and insights."
+        url="/blog"
+      />
 
       <motion.main
         variants={_Transition_Page}

@@ -3,7 +3,6 @@ import '../styles/globals.css';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import Footer from '../components/Footer';
-import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import { PrefetcherWrapper } from '../components/Prefetcher';
 import { ThemeProvider } from '@material-tailwind/react';
@@ -14,10 +13,6 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <Head>
-        <link rel="icon" href="/logo.svg" />
-      </Head>
-
       <ThemeProvider>
         <PrefetcherWrapper>
           <>

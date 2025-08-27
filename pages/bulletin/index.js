@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import BulletinCard from '../../components/card/Bulletin';
-import Head from 'next/head';
+import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion } from 'framer-motion';
@@ -22,9 +22,11 @@ const Bulletin = (e) => {
   return (
     <>
       <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
-      <Head>
-        <title>Bulletin | Ingo</title>
-      </Head>
+      <Head 
+        title="Bulletin | Ingo"
+        description="Official BSCS program bulletins, announcements, and important updates from the Computer Science department."
+        url="/bulletin"
+      />
 
       <motion.main
         variants={_Transition_Page}
