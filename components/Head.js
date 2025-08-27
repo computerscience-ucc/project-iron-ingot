@@ -3,7 +3,7 @@ import NextHead from 'next/head';
 const Head = ({
   title = 'Ingo - BSCS Information Board | Your CS Information on the Go',
   description = 'Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects.',
-  keywords = 'BSCS, Computer Science, Information Board, Student Portal, Academic Blog, Thesis Projects, University Updates',
+  keywords = 'BSCS, Computer Science, Information Board, Student Portal, Academic Blog, Thesis Projects, University Updates, Ingo, UCC, University of Caloocan City',
   ogImage = '/uccingo.tech.png',
   url = 'https://uccingo.tech',
   type = 'website'
@@ -14,41 +14,46 @@ const Head = ({
 
   return (
     <NextHead>
+      {/* Essential Meta Tags */}
+      <meta charSet="utf-8" />
+      <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
       {/* Primary Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="title" content={fullTitle} />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
+      <meta name="author" content="Ingo Team" />
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
-      <meta name="author" content="Ingo Team" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta charSet="utf-8" />
       
       {/* Canonical URL */}
       <link rel="canonical" href={fullUrl} />
       
       {/* Favicon */}
-      <link rel="icon" href="/logo.svg" />
+      <link rel="icon" href="/logo.svg" type="image/svg+xml" />
       <link rel="apple-touch-icon" href="/uccingo.tech.png" />
       
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content={type} />
       <meta property="og:url" content={fullUrl} />
+      <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
       <meta property="og:image" content={fullImageUrl} />
+      <meta property="og:image:alt" content={fullTitle} />
+      <meta property="og:description" content={description} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:site_name" content="Ingo" />
       <meta property="og:locale" content="en_US" />
       
-      {/* Twitter */}
-      <meta property="twitter:card" content="summary_large_image" />
+      {/* Twitter Cards */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta property="twitter:domain" content="uccingo.tech" />
       <meta property="twitter:url" content={fullUrl} />
-      <meta property="twitter:title" content={fullTitle} />
-      <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={fullImageUrl} />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={fullImageUrl} />
       <meta property="twitter:site" content="@ingo_bscs" />
       <meta property="twitter:creator" content="@ingo_bscs" />
       
