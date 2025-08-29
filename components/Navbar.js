@@ -282,6 +282,11 @@ const Navbar = (e) => {
                 thesis
               </Button>
             </Link>
+            <Link href="/awards" scroll={false}>
+              <Button className = "font-black text-nav-color" variant="text">
+                awards
+              </Button>
+            </Link>
             <Link href="/about" scroll={false}>
               <Button className = "font-black text-nav-color" variant="text">
                 about
