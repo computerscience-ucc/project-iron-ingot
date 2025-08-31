@@ -29,6 +29,9 @@ export default function AwardsCarousel({ images }) {
            <Image
              src={src.src}
              alt=""
+             width={500}
+             height={300}
+             className="max-h-[500px] w-auto object-contain rounded-xl"
            />
 
          </div>
