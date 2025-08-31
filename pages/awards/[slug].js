@@ -262,7 +262,7 @@ const ThesisPage = ({ thesisPost }) => {
         
          
         <div className='flex flex-col mb-10'>
-          <p className='text-2xl font-extrabold mb-4'>Recipient/s' Information</p>
+          <p className='text-2xl font-extrabold mb-4'>Recipients Information</p>
           {/* Sample Content (Hardcoded) */}
           <div className=" flex gap-3 mb-3">
               <p > Recipient/s: </p>
