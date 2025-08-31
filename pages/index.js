@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import BlobBackgound from '../components/BlobBackground';
 import BlogCard from '../components/card/Blog';
 import BulletinCard from '../components/card/Bulletin';
-import Head from 'next/head';
+import Head from '../components/Head';
 import Link from 'next/link';
 import ThesisCard from '../components/card/Thesis';
 import { _Transition_Page } from '../components/_Animations';
@@ -41,9 +41,11 @@ const Home = (e) => {
 
   return (
     <>
-      <Head>
-        <title>Home | Ingo</title>
-      </Head>
+      <Head 
+        title="Home | Ingo"
+        description="Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects."
+        url="/"
+      />
 
       {/* blob background */}
       <BlobBackgound />

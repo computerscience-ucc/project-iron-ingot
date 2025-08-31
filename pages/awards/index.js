@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import Head from '../../components/Head';
 import Head from 'next/head';
 import AwardsCard from '../../components/card/Awards';
 import TopGradient from '../../components/TopGradient';
@@ -22,9 +23,11 @@ const Awards = (e) => {
   return (
     <>
       <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
-      <Head>
-        <title>Awards | Ingo</title>
-      </Head>
+     <Head 
+        title="Awards | Ingo"
+        description="Outstanding achievements and awards in the BSCS program. Celebrating student excellence in Computer Science."
+        url="/awards"
+      />
 
       <motion.main
         variants={_Transition_Page}
@@ -36,7 +39,7 @@ const Awards = (e) => {
         <div className="flex flex-col gap-2 justify-center mt-16">
           <p className="text-4xl font-semibold">Awards</p>
           <p className="text-lg font-semibold">
-          Recognizing CS program awardees and their projects
+          Celebrating excellence in the BSCS Program
           </p>
         </div>
 

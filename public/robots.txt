@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas if any
+# Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://uccingo.tech/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import Head from 'next/head';
+import Head from '../../components/Head';
 import ThesisCard from '../../components/card/Thesis';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
@@ -22,9 +22,11 @@ const Thesis = (e) => {
   return (
     <>
       <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
-      <Head>
-        <title>Thesis | Ingo</title>
-      </Head>
+      <Head 
+        title="Thesis | Ingo"
+        description="Innovative thesis projects by BSCS seniors. Explore cutting-edge research and connect with student developers."
+        url="/thesis"
+      />
 
       <motion.main
         variants={_Transition_Page}
