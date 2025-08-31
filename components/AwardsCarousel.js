@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import Image from 'next/image';
 
@@ -28,10 +29,8 @@ export default function AwardsCarousel({ images }) {
            <Image
              src={src.src}
              alt=""
-             width = {500}
-             height = {300}
-             className="max-h-[500px] w-auto object-contain rounded-xl"
            />
+
          </div>
         ))}
       </div>
