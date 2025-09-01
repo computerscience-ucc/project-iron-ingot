@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-
 import Head from '../../components/Head';
-import Head from 'next/head';
 import AwardsCard from '../../components/card/Awards';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';

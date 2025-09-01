@@ -3,12 +3,7 @@ import {
   Breadcrumbs,
   Chip,
   IconButton,
-  Tooltip,
-  Button,
-  Alert,
-  Card,
-  CardBody,
-  Typography
+  Tooltip
 } from '@material-tailwind/react';
 import { CgChevronLeft, CgChevronUp, CgInfo, CgWarning, CgDanger } from 'react-icons/cg';
 import { useEffect, useRef, useState } from 'react';
@@ -16,8 +11,6 @@ import { FaFacebook } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaDownload } from "react-icons/fa6";
-import Head from 'next/head';
-
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import Image from 'next/image';
