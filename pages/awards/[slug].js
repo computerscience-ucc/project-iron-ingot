@@ -3,16 +3,14 @@ import {
   Breadcrumbs,
   Chip,
   IconButton,
-  Tooltip,
-  Button,
-  Alert,
-  Card,
-  CardBody,
-  Typography
+  Tooltip
 } from '@material-tailwind/react';
 import { CgChevronLeft, CgChevronUp, CgInfo, CgWarning, CgDanger } from 'react-icons/cg';
 import { useEffect, useRef, useState } from 'react';
-
+import { FaFacebook } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
+import { FaSquareXTwitter } from "react-icons/fa6";
+import { FaDownload } from "react-icons/fa6";
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import Image from 'next/image';
@@ -22,6 +20,19 @@ import { _Transition_Page } from '../../components/_Animations';
 import { client } from '../../components/Prefetcher';
 import dayjs from 'dayjs';
 import urlBuilder from '@sanity/image-url';
+
+import AwardsCarousel from '../../components/AwardsCarousel'
+
+//Hardcoded sample images
+import img1 from '../.././public/awardsSampleImages/img1.jpg';
+import img2 from '../.././public/awardsSampleImages/img2.jpg';
+import img3 from '../.././public/awardsSampleImages/img3.jpg';
+import img4 from '../.././public/awardsSampleImages/img4.jpg';
+import img5 from '../.././public/awardsSampleImages/img5.jpg';
+import img6 from '../.././public/awardsSampleImages/img6.jpg';
+
+//Sample images for gallery carousel
+const images = [img1, img2, img3, img4, img5, img6];
 
 const urlFor = (source) =>
   urlBuilder({
@@ -60,6 +71,9 @@ const blockComponents = {
       </blockquote>
     ),
     span: ({ children }) => <span className="text-light">{children}</span>,
+    image: ({ node }) => (
+      <Image src={urlFor(node.asset)} alt={node.alt} className="w-full" layout = "fill" />
+    ),
   },
   marks: {
     em: ({ children }) => (
@@ -75,7 +89,6 @@ const blockComponents = {
     ),
   },
 };
-
 // Data validation utilities
 const ValidationError = {
   MISSING_REQUIRED_FIELD: 'MISSING_REQUIRED_FIELD',
@@ -605,6 +618,7 @@ const AwardPage = ({
     }
   }, [awardPost, debugInfo?.slug]);
 
+
   // scroll to top on page load
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -949,6 +963,7 @@ const AwardPage = ({
             </Tooltip>
           </a>
         </Link>
+
 
         {/* scroll to top button */}
         <AnimatePresence>
