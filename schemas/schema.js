@@ -7,9 +7,11 @@ import author from './documents/author';
 import blog from './blog';
 import bulletin from './bulletin';
 import thesis from './thesis';
+import award from './award';
+import recipient from './documents/recipient';
 
 export default createSchema({
   name: 'default',
 
-  types: schemaTypes.concat([blog, author, bulletin, thesis]),
+  types: schemaTypes.concat([blog, author, bulletin, thesis, award, recipient]),
 });
