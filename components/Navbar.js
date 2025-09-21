@@ -18,7 +18,7 @@ const Navbar = (e) => {
     const thisSearchValue = e.target.value;
     console.log(globalSearchItems);
 
-    if (thisSearchValue.length > 3) {
+    
       const results = globalSearchItems.filter((item) => {
         if (
           item.title.toLowerCase().includes(thisSearchValue.toLowerCase()) ||
@@ -30,10 +30,7 @@ const Navbar = (e) => {
           return item;
         }
       });
-      setSearchResults(results.slice(0, 4));
-    } else {
-      setSearchResults([]);
-    }
+      setSearchResults(results);   
   };
 
   useEffect((e) => {
@@ -182,7 +179,7 @@ const Navbar = (e) => {
                 className="text-lg"
                 onChange={(e) => {
                   setSearchValue(e.currentTarget.value);
-                  if (e.currentTarget.value.length >= 3) {
+                  if (e.currentTarget.value.length >= 2) {
                     searchItems(e);
                   } else {
                     setSearchResults([]);
