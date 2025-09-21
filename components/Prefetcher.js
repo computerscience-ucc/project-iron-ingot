@@ -48,6 +48,23 @@ const query_thesis = `
     tags,
   }
 `;
+const query_award = `
+  *[_type == 'award'] | order(_createdAt desc, _updatedAt desc){
+    _id,
+    _createdAt,
+    _updatedAt,
+    _type,
+    "headerImage": headerImage.asset -> url,
+    "title": awardTitle,
+    "slug": slug.current,
+    "category": awardCategory,
+    "badges": awardBadges,
+    "recipients": awardRecipients[] -> { fullName, pronouns, batchYear, yearLeve, program, "recipientPhoto": recipientPhoto.asset -> url },
+    "images": awardImages[].asset->url,
+    "content": awardContent,
+    tags,
+  }
+`;
 
 const PrefetcherContext = createContext();
 
@@ -55,6 +72,7 @@ const PrefetcherWrapper = ({ children }) => {
   const [blogs, setBlogs] = useState([]);
   const [bulletins, setBulletins] = useState([]);
   const [thesis, setThesis] = useState([]);
+  const [awards, setAwards] = useState([]);
   const [globalSearchItems, setGlobalSearchItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -62,6 +80,7 @@ const PrefetcherWrapper = ({ children }) => {
     blogs,
     bulletins,
     thesis,
+    awards,
     globalSearchItems,
   };
 
@@ -69,15 +88,16 @@ const PrefetcherWrapper = ({ children }) => {
     const res_blog = await client.fetch(query_blog);
     const res_bulletin = await client.fetch(query_bulletin);
     const res_thesis = await client.fetch(query_thesis);
-
-    const globalItems = [...res_blog, ...res_bulletin, ...res_thesis];
+    const res_awards = await client.fetch(query_award);
+    const globalItems = [...res_blog, ...res_bulletin, ...res_thesis, ...res_awards];
 
     setBlogs(res_blog);
     setBulletins(res_bulletin);
     setThesis(res_thesis);
+    setAwards(res_awards);
     setGlobalSearchItems(globalItems);
 
-    if (res_blog && res_thesis && res_bulletin) {
+    if (res_blog && res_thesis && res_bulletin && res_awards) {
       setTimeout(() => {
         setLoaded(true);
       }, 200);
