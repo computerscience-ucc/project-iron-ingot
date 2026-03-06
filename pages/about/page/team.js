@@ -1,116 +1,347 @@
 import { useEffect, useRef, useState } from 'react';
-
+import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { CgArrowRight } from 'react-icons/cg';
+import { client } from '../../../components/Prefetcher';
 import { _Transition_Page } from '../../../components/_Animations';
-import { motion } from 'framer-motion';
 
-const Page_Team = (e) => {
-  const [carouselWidth, setCarouselWidth] = useState(0);
-  const carousel = useRef();
+// ─── GROQ query ────────────────────────────────
+const TEAM_QUERY = `
+  *[_type == 'devTeam'] | order(academicYear desc) {
+    _id,
+    academicYear,
+    isCurrent,
+    leadership[] {
+      name, role,
+      "photo": photo.asset->url
+    },
+    departments[] {
+      departmentName,
+      members[] {
+        name, role,
+        "photo": photo.asset->url
+      }
+    }
+  }
+`;
 
-  useEffect((e) => {
-    setCarouselWidth(
-      carousel.current.scrollWidth - carousel.current.offsetWidth
-    );
-  }, []);
+// ─── Gradient palette for initials fallback ────
+const GRADIENTS = [
+  'from-rose-500/40 to-pink-600/30',
+  'from-violet-500/40 to-purple-600/30',
+  'from-blue-500/40 to-cyan-600/30',
+  'from-emerald-500/40 to-teal-600/30',
+  'from-amber-500/40 to-orange-600/30',
+  'from-fuchsia-500/40 to-pink-500/30',
+  'from-sky-500/40 to-indigo-600/30',
+  'from-lime-500/40 to-green-600/30',
+  'from-red-500/40 to-rose-600/30',
+  'from-cyan-500/40 to-blue-600/30',
+];
+
+const getGradient = (name) => {
+  const hash = (name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  return GRADIENTS[hash % GRADIENTS.length];
+};
+
+// ─── Animation variants ────────────────────────
+const fadeSlide = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: 'easeIn' } },
+};
+
+const stagger = {
+  animate: { transition: { staggerChildren: 0.08 } },
+};
+
+const cardPop = {
+  initial: { opacity: 0, scale: 0.85, y: 20 },
+  animate: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+};
+
+// ─── Portrait Card (rectangular, uniform size) ─
+const PersonCard = ({ name, subtitle, photo, highlight = false }) => {
+  const gradient = getGradient(name);
+  return (
+    <motion.div
+      variants={cardPop}
+      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''}`}
+    >
+      {highlight && (
+        <motion.div
+          className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-header-color/20 to-button-color/10 blur-md -z-10"
+          animate={{ opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
+      {photo ? (
+        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+          <img src={photo} alt={name} className="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+          <span className="text-5xl md:text-6xl font-bold opacity-70">{name?.charAt(0) || '?'}</span>
+        </div>
+      )}
+      <div className="mt-3 text-center px-1">
+        <p className="font-semibold leading-tight text-sm md:text-base">{name}</p>
+        <p className="text-[11px] text-header-color leading-tight mt-1">{subtitle}</p>
+      </div>
+    </motion.div>
+  );
+};
+
+// ─── Year Pill Selector ────────────────────────
+const YearSelector = ({ years, selected, onSelect }) => (
+  <div className="flex flex-wrap justify-center gap-2 mt-8">
+    {years.map((year) => (
+      <motion.button
+        key={year.academicYear}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => onSelect(year._id)}
+        className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${
+          selected === year._id
+            ? 'text-white'
+            : 'text-white/50 hover:text-white/80 bg-white/5 hover:bg-white/10'
+        }`}
+      >
+        {selected === year._id && (
+          <motion.div
+            layoutId="teamYearPill"
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-button-color to-header-color"
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            style={{ zIndex: -1 }}
+          />
+        )}
+        {year.academicYear}
+        {year.isCurrent && <span className="ml-1 text-yellow-400 text-[10px]">★</span>}
+      </motion.button>
+    ))}
+  </div>
+);
+
+// ─── Auto-scrolling Carousel ───────────────────
+const CAROUSEL_THRESHOLD = 5;
+const AUTO_SCROLL_THRESHOLD = 10;
+const SCROLL_SPEED = 0.4;
+
+const MemberCarousel = ({ members, renderItem }) => {
+  const containerRef = useRef();
+  const innerRef = useRef();
+  const x = useMotionValue(0);
+  const [constraint, setConstraint] = useState(0);
+  const isDragging = useRef(false);
+  const isHovering = useRef(false);
+  const autoScroll = members.length >= AUTO_SCROLL_THRESHOLD;
+
+  useEffect(() => {
+    const measure = () => {
+      if (innerRef.current && containerRef.current) {
+        setConstraint(innerRef.current.scrollWidth - containerRef.current.offsetWidth);
+      }
+    };
+    measure();
+    // Re-measure on resize
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [members]);
+
+  // Auto-scroll ping-pong
+  useEffect(() => {
+    if (!autoScroll || constraint <= 0) return;
+    let dir = -1;
+    let raf;
+    const step = () => {
+      if (!isDragging.current && !isHovering.current) {
+        const cur = x.get();
+        let next = cur + dir * SCROLL_SPEED;
+        if (next <= -constraint) { dir = 1; }
+        if (next >= 0) { dir = -1; }
+        x.set(next);
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [autoScroll, constraint, x]);
+
+  const defaultRender = (m, i) => (
+    <PersonCard key={i} name={m.name} subtitle={m.role || 'Member'} photo={m.photo} />
+  );
 
   return (
-    <>
-      <motion.section
-        variants={_Transition_Page}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className="py-8"
-      >
-        <p className="text-2xl font-semibold text-center">
-          Project Ingo Development Team
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 mt-16 text-center gap-10">
-          <div className="col-span-full flex flex-col ">
-            <p className="text-xl">Gerald Chavez</p>
-            <p className="text-sm text-header-color">
-              Lead Project Developer &amp; Creative Director
-            </p>
-          </div>
-          <div className="col-span-1 flex flex-col ">
-            <p className="text-xl">Jacqueline Porral</p>
-            <p className="text-sm text-header-color">Lead Project Manager</p>
-          </div>
-          <div className="col-span-1 flex flex-col ">
-            <p className="text-xl">Mark Rhicky Raby</p>
-            <p className="text-sm text-header-color">Assistant Project Manager</p>
-          </div>
-        </div>
-
-        {/* carousel with framer motion */}
+    <div
+      className="w-full"
+      onMouseEnter={() => { isHovering.current = true; }}
+      onMouseLeave={() => { isHovering.current = false; }}
+    >
+      <motion.div ref={containerRef} className="cursor-grab overflow-hidden">
         <motion.div
-          ref={carousel}
-          className="cursor-grab overflow-hidden w-full mt-16"
+          ref={innerRef}
+          style={{ x }}
+          drag="x"
+          dragConstraints={{ right: 0, left: -constraint }}
+          onDragStart={() => { isDragging.current = true; }}
+          onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 300); }}
+          whileTap={{ cursor: 'grabbing' }}
+          className="flex gap-5 py-2 w-max"
         >
-          <motion.div
-            drag="x"
-            dragConstraints={{
-              right: 0,
-              left: -carouselWidth,
-            }}
-            whileTap={{ cursor: 'grabbing' }}
-            className="flex flex-nowrap w-max gap-7"
-          >
-            <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm text-header-color">
-                Front-end Developers &amp; Designers
-              </p>
-              <p className="text-xl">Gerald Chavez</p>
-              <p className="text-xl">Danica Cabullo</p>
-            </div>
-            <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm text-header-color">Back-end Developers</p>
-              <p className="text-xl">Jacqueline Porral</p>
-              <p className="text-xl">Gerald Chavez</p>
-              <p className="text-xl">Demverleen Espinola</p>
-            </div>
-            <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm text-header-color">
-                Documentation &amp; Support
-              </p>
-              <p className="text-xl">Jessica Joy Gasupan</p>
-              <p className="text-xl">Evehn Kadusale</p>
-              <p className="text-xl">Hazel Jade Lobenaria</p>
-              <p className="text-xl">Jhude Vergara</p>
-              <p className="text-xl">Joko Gadingan</p>
-            </div>
-            <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm text-header-color">
-                Content Mangement &amp; Marketing
-              </p>
-              <p className="text-xl">Mark Neil Embile</p>
-              <p className="text-xl">Isaac Gabrielle Domino</p>
-              <p className="text-xl">Justine Consulta</p>
-            </div>
-            <div className="col-span-full flex flex-col w-56 hover:-translate-y-1 transition-transform">
-              <p className="text-sm text-header-color">
-                Quality Assurance &amp; Testing
-              </p>
-              <p className="text-xl">Gerald Chavez</p>
-              <p className="text-xl">Gabrielle Napoto</p>
-              <p className="text-xl">Khate Crystal Bautista</p>
-              <p className="text-xl">Ivan Guillermo</p>
-              <p className="text-xl">Leonard Leaño</p>
-              <p className="text-xl">Rosemarie Bullo</p>
-            </div>
-          </motion.div>
+          {members.map(renderItem || defaultRender)}
         </motion.div>
+      </motion.div>
+      <p className="flex items-center justify-end gap-2 mt-3 text-xs text-white/30">
+        {autoScroll && <span className="animate-pulse text-white/20">Auto-scrolling</span>}
+        <span>Drag to browse</span>
+        <CgArrowRight size={14} className="text-yellow-500/60" />
+      </p>
+    </div>
+  );
+};
 
-        <p className="text-right mt-5 opacity-50 flex gap-3 justify-end items-center">
-          <span>Swipe Right</span>
-          <span className="text-yellow-500">
-            <CgArrowRight size={20} />
-          </span>
-        </p>
+// ─── Department Section ────────────────────────
+const DepartmentSection = ({ dept }) => {
+  const count = dept.members?.length || 0;
+  const isCarousel = count >= CAROUSEL_THRESHOLD;
+
+  return (
+    <motion.div
+      variants={cardPop}
+      className="w-full bg-white/[0.03] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/10 hover:border-header-color/20 transition-colors"
+    >
+      {/* Department header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-1.5 h-6 rounded-full bg-gradient-to-b from-header-color to-button-color" />
+        <p className="text-base font-semibold text-header-color">{dept.departmentName}</p>
+        <span className="text-xs text-white/30 ml-auto">{count} members</span>
+      </div>
+
+      {isCarousel ? (
+        <MemberCarousel members={dept.members} />
+      ) : (
+        <motion.div variants={stagger} initial="initial" animate="animate" className="flex flex-wrap justify-center gap-6">
+          {dept.members?.map((m, i) => (
+            <PersonCard key={i} name={m.name} subtitle={m.role || 'Member'} photo={m.photo} />
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// ─── Team Content ──────────────────────────────
+const TeamContent = ({ team }) => {
+  if (!team) return null;
+
+  return (
+    <motion.div variants={stagger} initial="initial" animate="animate" className="mt-12 flex flex-col items-center gap-10">
+      {/* ── Leadership Pyramid ── */}
+      {team.leadership?.length > 0 && (
+        <motion.div variants={stagger} className="flex flex-col items-center gap-2">
+          <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Leadership</p>
+
+          <div className="flex flex-wrap justify-center gap-8">
+            {team.leadership.map((leader, i) => (
+              <PersonCard
+                key={i}
+                name={leader.name}
+                subtitle={leader.role}
+                photo={leader.photo}
+                highlight
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* ── Connector ── */}
+      {team.leadership?.length > 0 && team.departments?.length > 0 && (
+        <motion.div
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
+          className="w-px h-10 bg-gradient-to-b from-header-color/40 to-transparent origin-top"
+        />
+      )}
+
+      {/* ── Departments ── */}
+      {team.departments?.length > 0 && (
+        <motion.div variants={stagger} initial="initial" animate="animate" className="w-full flex flex-col gap-6">
+          <p className="text-xs uppercase tracking-widest text-white/40 text-center">Departments</p>
+
+          {team.departments.map((dept, i) => (
+            <DepartmentSection key={i} dept={dept} />
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// ─── Main Page Component ───────────────────────
+const Page_Team = () => {
+  const [teams, setTeams] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.fetch(TEAM_QUERY).then((data) => {
+      setTeams(data || []);
+      const current = data?.find((t) => t.isCurrent) || data?.[0];
+      if (current) setSelectedId(current._id);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const selectedTeam = teams.find((t) => t._id === selectedId);
+
+  if (!loading && teams.length === 0) {
+    return (
+      <motion.section variants={_Transition_Page} initial="initial" animate="animate" exit="exit" className="py-8 text-center">
+        <p className="text-2xl font-semibold">Project Ingo Development Team</p>
+        <p className="mt-8 text-white/40">No team data available yet.</p>
       </motion.section>
-    </>
+    );
+  }
+
+  return (
+    <motion.section
+      variants={_Transition_Page}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="py-8 text-center"
+    >
+      <p className="text-2xl font-semibold">Project Ingo Development Team</p>
+
+      {loading ? (
+        <div className="mt-16 flex justify-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
+          />
+        </div>
+      ) : (
+        <>
+          <YearSelector years={teams} selected={selectedId} onSelect={setSelectedId} />
+
+          <AnimatePresence exitBeforeEnter>
+            {selectedTeam && (
+              <motion.div
+                key={selectedTeam._id}
+                variants={fadeSlide}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <TeamContent team={selectedTeam} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+    </motion.section>
   );
 };
 

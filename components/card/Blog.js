@@ -3,7 +3,7 @@ import { Card, CardBody, CardFooter, Chip } from '@material-tailwind/react';
 import Link from 'next/link';
 import { _Transition_Card } from '../_Animations';
 import dayjs from 'dayjs';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 const titleCase = (str) => {
@@ -23,19 +23,32 @@ const BlogCard = ({ blog }) => {
     <>
       <Link href={`/blog/${slug}`} scroll={false}>
         <motion.div
-          // key={_id}
           variants={_Transition_Card}
           initial="initial"
           animate="animate"
-          whileHover={{
-            y: -5,
-          }}
-          whileTap={{
-            scale: 0.95,
-            y: -5,
-          }}
+          whileHover={{ y: -5 }}
+          whileTap={{ scale: 0.95, y: -5 }}
           onClick={() => setIsLoading(true)}
+          className="relative"
         >
+          {/* Loading overlay */}
+          <AnimatePresence>
+            {isLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-20 rounded-xl bg-[#0f1218]/80 backdrop-blur-sm flex items-center justify-center"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                  className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <Card className="bg-[#0f1218] text-grey-100 cursor-pointer">
             <CardBody>
               <p className="text-sm text-grey-700">Blog</p>
@@ -54,14 +67,6 @@ const BlogCard = ({ blog }) => {
               </p>
             </CardBody>
             <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">
-              {/* <p className="text-sm">
-                {authors
-                  .map((author) => {
-                    return `${author.fullName.lastName}`;
-                  })
-                  .join(', ')}
-              </p>*/}
-
               {tags.map((tag, i) => (
                 <div key={i}>
                   <Chip className="bg-[#27292D]" value={tag} />

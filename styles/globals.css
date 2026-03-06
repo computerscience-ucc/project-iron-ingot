@@ -5,20 +5,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── CMS-driven CSS custom properties (defaults match original hardcoded values) ─── */
+:root {
+  --color-background: #0a0c10;
+  --color-button: #a50000;
+  --color-button-text: #ffffff;
+  --color-nav: #ffffff;
+  --color-header: #fe4c4c;
+  --color-theme: #d44694;
+  --color-scrollbar: #fae63a;
+}
+
 * {
   user-select: none;
 }
 
 body {
-  background: #0a0c10;
+  background: var(--color-background);
   font-family: 'Quicksand', sans-serif;
 }
 
 /* custom scrollbar */
 * {
   scrollbar-width: auto;
-  /*scrollbar-color: #fae63a #0a0c10;*/
-  scrollbar-color: #707070 #09090b;
+  scrollbar-color: #707070 var(--color-background);
 }
 *::-webkit-scrollbar {
   width: 5px;
@@ -27,7 +37,7 @@ body {
   background: #09090b;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #fae63a;
+  background-color: var(--color-scrollbar);
   border-radius: 10px;
   border: 0px none #ffffff;
 }

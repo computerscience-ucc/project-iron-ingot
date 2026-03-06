@@ -1,272 +1,430 @@
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
+import { CgArrowRight } from 'react-icons/cg';
+import { client } from '../../../components/Prefetcher';
 import { _Transition_Page } from '../../../components/_Animations';
-import { motion } from 'framer-motion';
 
-const Page_Council = (e) => {
+// ─── GROQ query ────────────────────────────────
+const COUNCIL_QUERY = `
+  *[_type == 'council'] | order(academicYear desc) {
+    _id,
+    academicYear,
+    isCurrent,
+    "adviser": {
+      "name": adviser.name,
+      "photo": adviser.photo.asset->url
+    },
+    "president": {
+      "name": president.name,
+      "photo": president.photo.asset->url
+    },
+    "vicePresident": {
+      "name": vicePresident.name,
+      "photo": vicePresident.photo.asset->url
+    },
+    officers[] {
+      name, position,
+      "photo": photo.asset->url
+    },
+    yearRepresentatives[] {
+      name, yearLevel,
+      "photo": photo.asset->url
+    },
+    committees[] {
+      committeeName,
+      members[] {
+        name, role,
+        "photo": photo.asset->url
+      }
+    },
+    classPresidents[] {
+      name, section,
+      "photo": photo.asset->url
+    }
+  }
+`;
+
+// ─── Gradient palette ────
+const GRADIENTS = [
+  'from-rose-500/40 to-pink-600/30',
+  'from-violet-500/40 to-purple-600/30',
+  'from-blue-500/40 to-cyan-600/30',
+  'from-emerald-500/40 to-teal-600/30',
+  'from-amber-500/40 to-orange-600/30',
+  'from-fuchsia-500/40 to-pink-500/30',
+  'from-sky-500/40 to-indigo-600/30',
+  'from-lime-500/40 to-green-600/30',
+  'from-red-500/40 to-rose-600/30',
+  'from-cyan-500/40 to-blue-600/30',
+];
+
+const getGradient = (name) => {
+  const hash = (name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  return GRADIENTS[hash % GRADIENTS.length];
+};
+
+// ─── Animation variants ────────────────────────
+const fadeSlide = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: 'easeIn' } },
+};
+
+const stagger = {
+  animate: { transition: { staggerChildren: 0.08 } },
+};
+
+const cardPop = {
+  initial: { opacity: 0, scale: 0.85, y: 20 },
+  animate: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+};
+
+// ─── Portrait Card (rectangular, uniform size) ─
+const PersonCard = ({ name, subtitle, photo, highlight = false }) => {
+  const gradient = getGradient(name);
   return (
-    <>
-      <motion.section
-        variants={_Transition_Page}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className="py-8  text-center"
+    <motion.div
+      variants={cardPop}
+      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''}`}
+    >
+      {highlight && (
+        <motion.div
+          className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-header-color/20 to-button-color/10 blur-md -z-10"
+          animate={{ opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
+      {photo ? (
+        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+          <img src={photo} alt={name} className="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+          <span className="text-5xl md:text-6xl font-bold opacity-70">{name?.charAt(0) || '?'}</span>
+        </div>
+      )}
+      <div className="mt-3 text-center px-1">
+        <p className="font-semibold leading-tight text-sm md:text-base">{name}</p>
+        <p className="text-[11px] text-header-color leading-tight mt-1">{subtitle}</p>
+      </div>
+    </motion.div>
+  );
+};
+
+// ─── Year Pill Selector ────────────────────────
+const YearSelector = ({ years, selected, onSelect }) => (
+  <div className="flex flex-wrap justify-center gap-2 mt-8">
+    {years.map((year) => (
+      <motion.button
+        key={year.academicYear}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => onSelect(year._id)}
+        className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${
+          selected === year._id
+            ? 'text-white'
+            : 'text-white/50 hover:text-white/80 bg-white/5 hover:bg-white/10'
+        }`}
       >
-        <p className="text-2xl font-semibold">
-          Computer Science Council Members
-        </p>
-        <div className="mt-16  grid grid-cols-1 md:grid-cols-6 gap-4">
-          {/* Leadership */}
-          <div className="col-span-full">
-            <p className="text-xl">Prof. Joemen G. Barrios</p>
-            <p className="text-sm text-header-color">Adviser</p>
-          </div>
-          <div className="col-span-full">
-            <p className="text-xl">Gwyneth F. Uy</p>
-            <p className="text-sm text-header-color">President</p>
-          </div>
-          <div className="col-span-full">
-            <p className="text-xl">Marianne Celest T. Jerez</p>
-            <p className="text-sm text-header-color">Vice President</p>
-          </div>
-          
-          {/* Officers */}
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Crystal M. Florano</p>
-            <p className="text-sm text-header-color">Secretary</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jan Aryan C. Bebania</p>
-            <p className="text-sm text-header-color">Assistant Secretary</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Joshua V. Dayapera</p>
-            <p className="text-sm text-header-color">Treasurer</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Nathaniel C. Tarroza</p>
-            <p className="text-sm text-header-color">Auditor</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Dhan Renz D.C. Ellorinco</p>
-            <p className="text-sm text-header-color">Public Relations Officer</p>
-          </div>
+        {selected === year._id && (
+          <motion.div
+            layoutId="yearPill"
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-button-color to-header-color"
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            style={{ zIndex: -1 }}
+          />
+        )}
+        {year.academicYear}
+        {year.isCurrent && <span className="ml-1 text-yellow-400 text-[10px]">★</span>}
+      </motion.button>
+    ))}
+  </div>
+);
 
-          {/* Year Representatives */}
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Gian Higino O. Fungo</p>
-            <p className="text-sm text-header-color">4th Year Representative</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Red Evan I. Igot</p>
-            <p className="text-sm text-header-color">3rd Year Representative</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Rodge Patrick T. Pangilinan</p>
-            <p className="text-sm text-header-color">2nd Year Representative</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Daniel Z. Baladad</p>
-            <p className="text-sm text-header-color">1st Year Representative</p>
-          </div>
+// ─── Auto-scrolling Carousel ───────────────────
+const CAROUSEL_THRESHOLD = 5;
+const AUTO_SCROLL_THRESHOLD = 10;
+const SCROLL_SPEED = 0.4;
 
-          {/* Creative Committee */}
-          <div className="col-span-full">
-            <p className="text-lg font-semibold mt-8 mb-4 text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jella Anne M. Gonzales</p>
-            <p className="text-sm text-header-color">Creative Committee Head</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Allan V. Jabol Jr.</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Ma. Janine F. Bayot</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Chrizzon T. Villa-Abrille</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Michael Angelo B. Baynosa</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Justine Andrie C. Pelgone</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Maxine Joy B. Valdez</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Reynaldo G. Abrigo Jr.</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Denz Christian G. Sabalboro</p>
-            <p className="text-sm text-header-color">Creative Committee</p>
-          </div>
+const MemberCarousel = ({ members, renderItem }) => {
+  const containerRef = useRef();
+  const innerRef = useRef();
+  const x = useMotionValue(0);
+  const [constraint, setConstraint] = useState(0);
+  const isDragging = useRef(false);
+  const isHovering = useRef(false);
+  const autoScroll = members.length >= AUTO_SCROLL_THRESHOLD;
 
-          {/* Program Committee */}
-          <div className="col-span-full">
-            <p className="text-lg font-semibold mt-8 mb-4 text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Christian D. Perez</p>
-            <p className="text-sm text-header-color">Program Committee Head</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Gero Earl S. Pereyra</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Carl James A. Juliane</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Gabrielle Windser A. Gomez</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Reshell Kyla M. Turgo</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Alberto B. Balante Jr.</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Shaira Marie A. Sollano</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jennelyn A. Tumbokon</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Lea Marie R. Bermudes</p>
-            <p className="text-sm text-header-color">Program Committee</p>
-          </div>
+  useEffect(() => {
+    const measure = () => {
+      if (innerRef.current && containerRef.current) {
+        setConstraint(innerRef.current.scrollWidth - containerRef.current.offsetWidth);
+      }
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [members]);
 
-          {/* Technical Committee */}
-          <div className="col-span-full">
-            <p className="text-lg font-semibold mt-8 mb-4 text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Jhon Keneth B. Namias</p>
-            <p className="text-sm text-header-color">Technical Committee Head</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Ike Andrie N. Rosacay</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Shan Ricz M. Ilao</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">John Key Bird G. Bojos</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Michaelrey O. Cristobal</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Exequiel Lord S. Papina</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">John Leonard F. Chan</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mary Joy L. Sembrero</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Fritz Mckenzie V. Hernandez</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Daniel Z. Baladad</p>
-            <p className="text-sm text-header-color">Technical Committee</p>
-          </div>
+  // Auto-scroll ping-pong
+  useEffect(() => {
+    if (!autoScroll || constraint <= 0) return;
+    let dir = -1;
+    let raf;
+    const step = () => {
+      if (!isDragging.current && !isHovering.current) {
+        const cur = x.get();
+        let next = cur + dir * SCROLL_SPEED;
+        if (next <= -constraint) { dir = 1; }
+        if (next >= 0) { dir = -1; }
+        x.set(next);
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [autoScroll, constraint, x]);
+
+  const defaultRender = (m, i) => (
+    <PersonCard
+      key={i}
+      name={m.name}
+      subtitle={m.role || 'Member'}
+      photo={m.photo}
+      highlight={m.role?.toLowerCase().includes('head')}
+    />
+  );
+
+  return (
+    <div
+      className="w-full"
+      onMouseEnter={() => { isHovering.current = true; }}
+      onMouseLeave={() => { isHovering.current = false; }}
+    >
+      <motion.div ref={containerRef} className="cursor-grab overflow-hidden">
+        <motion.div
+          ref={innerRef}
+          style={{ x }}
+          drag="x"
+          dragConstraints={{ right: 0, left: -constraint }}
+          onDragStart={() => { isDragging.current = true; }}
+          onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 300); }}
+          whileTap={{ cursor: 'grabbing' }}
+          className="flex gap-5 py-2 w-max"
+        >
+          {members.map(renderItem || defaultRender)}
+        </motion.div>
+      </motion.div>
+      <p className="flex items-center justify-end gap-2 mt-3 text-xs text-white/30">
+        {autoScroll && <span className="animate-pulse text-white/20">Auto-scrolling</span>}
+        <span>Drag to browse</span>
+        <CgArrowRight size={14} className="text-yellow-500/60" />
+      </p>
+    </div>
+  );
+};
+
+// ─── Committee Section ─────────────────────────
+const CommitteeSection = ({ committee }) => {
+  const count = committee.members?.length || 0;
+  const isCarousel = count >= CAROUSEL_THRESHOLD;
+
+  return (
+    <motion.div
+      variants={cardPop}
+      className="w-full bg-white/[0.03] backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/10 hover:border-header-color/20 transition-colors"
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-1.5 h-6 rounded-full bg-gradient-to-b from-header-color to-button-color" />
+        <p className="text-base font-semibold text-header-color">{committee.committeeName}</p>
+        <span className="text-xs text-white/30 ml-auto">{count} members</span>
+      </div>
+
+      {isCarousel ? (
+        <MemberCarousel members={committee.members} />
+      ) : (
+        <motion.div variants={stagger} initial="initial" animate="animate" className="flex flex-wrap justify-center gap-6">
+          {committee.members?.map((m, i) => (
+            <PersonCard
+              key={i}
+              name={m.name}
+              subtitle={m.role || 'Member'}
+              photo={m.photo}
+              highlight={m.role?.toLowerCase().includes('head')}
+            />
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// ─── Pyramid Section ───────────────────────────
+const PyramidSection = ({ council }) => {
+  if (!council) return null;
+
+  return (
+    <motion.div variants={stagger} initial="initial" animate="animate" className="mt-12 flex flex-col items-center gap-10">
+      {/* Tier 1: Adviser */}
+      {council.adviser?.name && (
+        <motion.div variants={cardPop} className="flex flex-col items-center">
+          <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Adviser</p>
+          <PersonCard name={council.adviser.name} subtitle="Adviser" photo={council.adviser.photo} highlight />
+        </motion.div>
+      )}
+
+      {/* Tier 2: President & VP */}
+      <motion.div variants={stagger} className="flex flex-col items-center gap-2">
+        <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Executive</p>
+        <div className="flex flex-wrap justify-center gap-8">
+          {council.president?.name && (
+            <PersonCard name={council.president.name} subtitle="President" photo={council.president.photo} highlight />
+          )}
+          {council.vicePresident?.name && (
+            <PersonCard name={council.vicePresident.name} subtitle="Vice President" photo={council.vicePresident.photo} highlight />
+          )}
         </div>
+      </motion.div>
 
+      {/* Connector line */}
+      <motion.div
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        className="w-px h-8 bg-gradient-to-b from-header-color to-transparent origin-top"
+      />
 
-        <p className="text-2xl mt-24  font-semibold">Class Presidents</p>
-        {/* TODO: Add class president names once data is available */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
-          {/* 4th Year - 3 sections */}
-          <div className="col-span-full md:col-span-2">
-            <p className="text-xl">Ralph Michael B. Rocabo</p>
-            <p className="text-sm text-header-color">BSCS 4A</p>
+      {/* Tier 3: Officers */}
+      {council.officers?.length > 0 && (
+        <motion.div variants={stagger} className="flex flex-col items-center gap-2">
+          <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Officers</p>
+          <div className="flex flex-wrap justify-center gap-6 max-w-3xl">
+            {council.officers.map((o, i) => (
+              <PersonCard key={i} name={o.name} subtitle={o.position} photo={o.photo} />
+            ))}
           </div>
-          <div className="col-span-full md:col-span-2">
-            <p className="text-xl">Irheil Mae S. Antang</p>
-            <p className="text-sm text-header-color">BSCS 4B</p>
-          </div>
-          <div className="col-span-full md:col-span-2">
-            <p className="text-xl">Renalyn G. Giray</p>
-            <p className="text-sm text-header-color">BSCS 4C</p>
-          </div>
-          
-          {/* 3rd Year - 2 sections */}
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Sandra C. Agustin</p>
-            <p className="text-sm text-header-color">BSCS 3A</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Michael Angelo B. Baynosa</p>
-            <p className="text-sm text-header-color">BSCS 3B</p>
-          </div>
-          
-          {/* 2nd Year - 2 sections */}
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Rodge Patrick T. Pangilinan</p>
-            <p className="text-sm text-header-color">BSCS 2A</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Mary Joy L. Sembrero</p>
-            <p className="text-sm text-header-color">BSCS 2B</p>
-          </div>
-          
-          {/* 1st Year - 2 sections */}
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Nikki C. Liton</p>
-            <p className="text-sm text-header-color">BSCS 1A</p>
-          </div>
-          <div className="col-span-full md:col-span-3">
-            <p className="text-xl">Ashby Shane D. Bagason</p>
-            <p className="text-sm text-header-color">BSCS 1B</p>
-          </div>
-        </div>
+        </motion.div>
+      )}
 
-        <div className="border-b-2 border-white max-w-xl mx-auto my-32" />
+      {/* Tier 4: Year Representatives */}
+      {council.yearRepresentatives?.length > 0 && (
+        <motion.div variants={stagger} className="flex flex-col items-center gap-2 mt-6">
+          <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Year Representatives</p>
+          <div className="flex flex-wrap justify-center gap-6 max-w-3xl">
+            {council.yearRepresentatives.map((r, i) => (
+              <PersonCard key={i} name={r.name} subtitle={r.yearLevel} photo={r.photo} />
+            ))}
+          </div>
+        </motion.div>
+      )}
 
-        <p className="text-xl mb-5">
-          About Bachelor of Science in Computer Science{' '}
-        </p>
-        <p>
-          The study of computers and computing, encompassing their theoretical
-          and algorithmic underpinnings, hardware and software, and applications
-          for information processing. Computer science is the study of
-          algorithms and data structures, computer and network architecture,
-          data and information modelling, and artificial intelligence. Because
-          computer science has certain mathematical and technical basis, it
-          combines concepts from queueing theory, probability and statistics,
-          and electrical circuit design. During the conceptualization, creation,
-          measurement, and refining of novel algorithms, information structures,
-          and computer architectures, computer science makes extensive use of
-          hypothesis testing and experimentation. Computer science degree holder
-          can become Software Engineer, Web Developer, and Hardware Engineer.
-        </p>
+      {/* Connector */}
+      {council.committees?.length > 0 && (
+        <motion.div
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
+          className="w-px h-10 bg-gradient-to-b from-header-color/40 to-transparent origin-top"
+        />
+      )}
+
+      {/* Committees — now uses carousel when large */}
+      {council.committees?.length > 0 && (
+        <motion.div variants={stagger} initial="initial" animate="animate" className="w-full flex flex-col gap-6">
+          <p className="text-xs uppercase tracking-widest text-white/40 text-center">Committees</p>
+
+          {council.committees.map((committee, ci) => (
+            <CommitteeSection key={ci} committee={committee} />
+          ))}
+        </motion.div>
+      )}
+
+      {/* Class Presidents */}
+      {council.classPresidents?.length > 0 && (
+        <motion.div
+          variants={fadeSlide}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: '-50px' }}
+          className="w-full mt-10 flex flex-col items-center"
+        >
+          <div className="border-b border-white/10 w-full max-w-xl mb-10" />
+          <p className="text-xs uppercase tracking-widest text-white/40 mb-6">Class Presidents</p>
+          <motion.div variants={stagger} initial="initial" animate="animate" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {council.classPresidents.map((cp, i) => (
+              <PersonCard key={i} name={cp.name} subtitle={cp.section} photo={cp.photo} />
+            ))}
+          </motion.div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// ─── Main Page Component ───────────────────────
+const Page_Council = () => {
+  const [councils, setCouncils] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.fetch(COUNCIL_QUERY).then((data) => {
+      setCouncils(data || []);
+      const current = data?.find((c) => c.isCurrent) || data?.[0];
+      if (current) setSelectedId(current._id);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const selectedCouncil = councils.find((c) => c._id === selectedId);
+
+  if (!loading && councils.length === 0) {
+    return (
+      <motion.section variants={_Transition_Page} initial="initial" animate="animate" exit="exit" className="py-8 text-center">
+        <p className="text-2xl font-semibold">Computer Science Council</p>
+        <p className="mt-8 text-white/40">No council data available yet.</p>
       </motion.section>
-    </>
+    );
+  }
+
+  return (
+    <motion.section
+      variants={_Transition_Page}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="py-8 text-center"
+    >
+      <p className="text-2xl font-semibold">Computer Science Council</p>
+
+      {loading ? (
+        <div className="mt-16 flex justify-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
+          />
+        </div>
+      ) : (
+        <>
+          <YearSelector years={councils} selected={selectedId} onSelect={setSelectedId} />
+
+          <AnimatePresence exitBeforeEnter>
+            {selectedCouncil && (
+              <motion.div
+                key={selectedCouncil._id}
+                variants={fadeSlide}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <PyramidSection council={selectedCouncil} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+    </motion.section>
   );
 };
 
