@@ -195,6 +195,54 @@ export default {
       ],
     },
     {
+      title: 'Materials & Resources',
+      name: 'materials',
+      type: 'array',
+      description: 'Links to thesis documents, code repositories, datasets, etc. Shown in the Materials tab on the thesis page.',
+      options: { collapsible: true, collapsed: true },
+      of: [
+        {
+          type: 'object',
+          name: 'material',
+          title: 'Material',
+          fields: [
+            {
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'e.g. Full Paper, GitHub Repository, Dataset',
+              validation: Rule => Rule.required(),
+            },
+            {
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+              validation: Rule => Rule.required(),
+            },
+            {
+              name: 'icon',
+              title: 'Icon Type',
+              type: 'string',
+              description: 'Choose an icon to represent this material.',
+              options: {
+                list: [
+                  { title: '\uD83D\uDCC4 Document / Paper', value: 'document' },
+                  { title: '\uD83D\uDCBB Code / GitHub', value: 'github' },
+                  { title: '\uD83D\uDDC3\uFE0F Dataset', value: 'dataset' },
+                  { title: '\uD83C\uDFAC Video / Demo', value: 'video' },
+                  { title: '\uD83D\uDD17 Other', value: 'other' },
+                ],
+                layout: 'radio',
+              },
+            },
+          ],
+          preview: {
+            select: { title: 'label', subtitle: 'url' },
+          },
+        },
+      ],
+    },
+    {
       title: "Thesis Content",
       name: "thesisContent",
       type: "array",

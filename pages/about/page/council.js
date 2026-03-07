@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
-import { CgArrowRight } from 'react-icons/cg';
+import { CgArrowRight, CgClose } from 'react-icons/cg';
 import { client } from '../../../components/Prefetcher';
 import { _Transition_Page } from '../../../components/_Animations';
 
@@ -44,6 +44,63 @@ const COUNCIL_QUERY = `
   }
 `;
 
+// ─── Person Lightbox ─────────────────────────
+const PersonLightbox = ({ person, onClose }) => {
+  const gradient = getGradient(person.name);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+          aria-label="Close"
+        >
+          <CgClose size={18} />
+        </button>
+
+        {person.photo ? (
+          <div className="w-full overflow-hidden bg-black flex items-center justify-center" style={{ maxHeight: '75vh' }}>
+            <img src={person.photo} alt={person.name} className="w-full h-auto max-h-[75vh] object-contain" />
+          </div>
+        ) : (
+          <div
+            className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
+            style={{ height: '480px' }}
+          >
+            <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || '?'}</span>
+          </div>
+        )}
+
+        <div className="p-5">
+          <p className="text-lg font-bold text-white">{person.name}</p>
+          <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // ─── Gradient palette ────
 const GRADIENTS = [
   'from-rose-500/40 to-pink-600/30',
@@ -80,12 +137,13 @@ const cardPop = {
 };
 
 // ─── Portrait Card (rectangular, uniform size) ─
-const PersonCard = ({ name, subtitle, photo, highlight = false }) => {
+const PersonCard = ({ name, subtitle, photo, highlight = false, onClick }) => {
   const gradient = getGradient(name);
   return (
     <motion.div
       variants={cardPop}
-      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''}`}
+      onClick={onClick}
+      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''} ${onClick ? 'cursor-pointer group/card' : ''}`}
     >
       {highlight && (
         <motion.div
@@ -95,17 +153,18 @@ const PersonCard = ({ name, subtitle, photo, highlight = false }) => {
         />
       )}
       {photo ? (
-        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
           <img src={photo} alt={name} className="w-full h-full object-cover" />
         </div>
       ) : (
-        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color' : ''}`}>
           <span className="text-5xl md:text-6xl font-bold opacity-70">{name?.charAt(0) || '?'}</span>
         </div>
       )}
       <div className="mt-3 text-center px-1">
         <p className="font-semibold leading-tight text-sm md:text-base">{name}</p>
         <p className="text-[11px] text-header-color leading-tight mt-1">{subtitle}</p>
+        {onClick && <p className="text-[9px] text-white/20 mt-0.5 group-hover/card:text-white/40 transition-colors">Click to view</p>}
       </div>
     </motion.div>
   );
@@ -146,7 +205,7 @@ const CAROUSEL_THRESHOLD = 5;
 const AUTO_SCROLL_THRESHOLD = 10;
 const SCROLL_SPEED = 0.4;
 
-const MemberCarousel = ({ members, renderItem }) => {
+const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
   const containerRef = useRef();
   const innerRef = useRef();
   const x = useMotionValue(0);
@@ -192,6 +251,7 @@ const MemberCarousel = ({ members, renderItem }) => {
       subtitle={m.role || 'Member'}
       photo={m.photo}
       highlight={m.role?.toLowerCase().includes('head')}
+      onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
     />
   );
 
@@ -225,7 +285,7 @@ const MemberCarousel = ({ members, renderItem }) => {
 };
 
 // ─── Committee Section ─────────────────────────
-const CommitteeSection = ({ committee }) => {
+const CommitteeSection = ({ committee, onPersonClick }) => {
   const count = committee.members?.length || 0;
   const isCarousel = count >= CAROUSEL_THRESHOLD;
 
@@ -241,7 +301,7 @@ const CommitteeSection = ({ committee }) => {
       </div>
 
       {isCarousel ? (
-        <MemberCarousel members={committee.members} />
+        <MemberCarousel members={committee.members} onPersonClick={onPersonClick} />
       ) : (
         <motion.div variants={stagger} initial="initial" animate="animate" className="flex flex-wrap justify-center gap-6">
           {committee.members?.map((m, i) => (
@@ -251,6 +311,7 @@ const CommitteeSection = ({ committee }) => {
               subtitle={m.role || 'Member'}
               photo={m.photo}
               highlight={m.role?.toLowerCase().includes('head')}
+              onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
             />
           ))}
         </motion.div>
@@ -260,7 +321,7 @@ const CommitteeSection = ({ committee }) => {
 };
 
 // ─── Pyramid Section ───────────────────────────
-const PyramidSection = ({ council }) => {
+const PyramidSection = ({ council, onPersonClick }) => {
   if (!council) return null;
 
   return (
@@ -269,7 +330,7 @@ const PyramidSection = ({ council }) => {
       {council.adviser?.name && (
         <motion.div variants={cardPop} className="flex flex-col items-center">
           <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Adviser</p>
-          <PersonCard name={council.adviser.name} subtitle="Adviser" photo={council.adviser.photo} highlight />
+          <PersonCard name={council.adviser.name} subtitle="Adviser" photo={council.adviser.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.adviser.name, photo: council.adviser.photo, subtitle: 'Adviser' }) : undefined} />
         </motion.div>
       )}
 
@@ -278,10 +339,10 @@ const PyramidSection = ({ council }) => {
         <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Executive</p>
         <div className="flex flex-wrap justify-center gap-8">
           {council.president?.name && (
-            <PersonCard name={council.president.name} subtitle="President" photo={council.president.photo} highlight />
+            <PersonCard name={council.president.name} subtitle="President" photo={council.president.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.president.name, photo: council.president.photo, subtitle: 'President' }) : undefined} />
           )}
           {council.vicePresident?.name && (
-            <PersonCard name={council.vicePresident.name} subtitle="Vice President" photo={council.vicePresident.photo} highlight />
+            <PersonCard name={council.vicePresident.name} subtitle="Vice President" photo={council.vicePresident.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.vicePresident.name, photo: council.vicePresident.photo, subtitle: 'Vice President' }) : undefined} />
           )}
         </div>
       </motion.div>
@@ -300,7 +361,7 @@ const PyramidSection = ({ council }) => {
           <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Officers</p>
           <div className="flex flex-wrap justify-center gap-6 max-w-3xl">
             {council.officers.map((o, i) => (
-              <PersonCard key={i} name={o.name} subtitle={o.position} photo={o.photo} />
+              <PersonCard key={i} name={o.name} subtitle={o.position} photo={o.photo} onClick={onPersonClick ? () => onPersonClick({ name: o.name, photo: o.photo, subtitle: o.position }) : undefined} />
             ))}
           </div>
         </motion.div>
@@ -312,7 +373,7 @@ const PyramidSection = ({ council }) => {
           <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Year Representatives</p>
           <div className="flex flex-wrap justify-center gap-6 max-w-3xl">
             {council.yearRepresentatives.map((r, i) => (
-              <PersonCard key={i} name={r.name} subtitle={r.yearLevel} photo={r.photo} />
+              <PersonCard key={i} name={r.name} subtitle={r.yearLevel} photo={r.photo} onClick={onPersonClick ? () => onPersonClick({ name: r.name, photo: r.photo, subtitle: r.yearLevel }) : undefined} />
             ))}
           </div>
         </motion.div>
@@ -334,7 +395,7 @@ const PyramidSection = ({ council }) => {
           <p className="text-xs uppercase tracking-widest text-white/40 text-center">Committees</p>
 
           {council.committees.map((committee, ci) => (
-            <CommitteeSection key={ci} committee={committee} />
+            <CommitteeSection key={ci} committee={committee} onPersonClick={onPersonClick} />
           ))}
         </motion.div>
       )}
@@ -352,7 +413,7 @@ const PyramidSection = ({ council }) => {
           <p className="text-xs uppercase tracking-widest text-white/40 mb-6">Class Presidents</p>
           <motion.div variants={stagger} initial="initial" animate="animate" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
             {council.classPresidents.map((cp, i) => (
-              <PersonCard key={i} name={cp.name} subtitle={cp.section} photo={cp.photo} />
+              <PersonCard key={i} name={cp.name} subtitle={cp.section} photo={cp.photo} onClick={onPersonClick ? () => onPersonClick({ name: cp.name, photo: cp.photo, subtitle: cp.section }) : undefined} />
             ))}
           </motion.div>
         </motion.div>
@@ -366,6 +427,9 @@ const Page_Council = () => {
   const [councils, setCouncils] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [lightbox, setLightbox] = useState(null);
+
+  const handlePersonClick = (person) => setLightbox(person);
 
   useEffect(() => {
     client.fetch(COUNCIL_QUERY).then((data) => {
@@ -388,6 +452,11 @@ const Page_Council = () => {
   }
 
   return (
+    <>
+      <AnimatePresence>
+        {lightbox && <PersonLightbox person={lightbox} onClose={() => setLightbox(null)} />}
+      </AnimatePresence>
+
     <motion.section
       variants={_Transition_Page}
       initial="initial"
@@ -409,7 +478,7 @@ const Page_Council = () => {
         <>
           <YearSelector years={councils} selected={selectedId} onSelect={setSelectedId} />
 
-          <AnimatePresence exitBeforeEnter>
+          <AnimatePresence mode="wait">
             {selectedCouncil && (
               <motion.div
                 key={selectedCouncil._id}
@@ -418,13 +487,14 @@ const Page_Council = () => {
                 animate="animate"
                 exit="exit"
               >
-                <PyramidSection council={selectedCouncil} />
+                <PyramidSection council={selectedCouncil} onPersonClick={handlePersonClick} />
               </motion.div>
             )}
           </AnimatePresence>
         </>
       )}
     </motion.section>
+    </>
   );
 };
 

@@ -7,10 +7,18 @@ import Page_MIS from './page/mis';
 import Page_Team from './page/team';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const AboutPage = (e) => {
   const [selected, setSelected] = useState(1);
+  const contentRef = useRef(null);
+
+  const selectTab = (id) => {
+    setSelected(id);
+    setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
 
   return (
     <>
@@ -40,7 +48,7 @@ const AboutPage = (e) => {
             className={`${
               selected === 1 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
             }`}
-            onClick={() => setSelected(1)}
+            onClick={() => selectTab(1)}
             //color={`${selected == 1 && 'red'}`}
             variant={`${selected == 1 ? 'filled' : 'text'}`}
             fullWidth
@@ -51,7 +59,7 @@ const AboutPage = (e) => {
             className={`${
               selected === 2 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
             }`}
-            onClick={() => setSelected(2)}
+            onClick={() => selectTab(2)}
             //color={`${selected == 2 && 'red'}`}
             variant={`${selected == 2 ? 'filled' : 'text'}`}
             fullWidth
@@ -62,7 +70,7 @@ const AboutPage = (e) => {
             className={`${
               selected === 3 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
             }`}
-            onClick={() => setSelected(3)}
+            onClick={() => selectTab(3)}
             //color={`${selected == 3 && 'red'}`}
             variant={`${selected == 3 ? 'filled' : 'text'}`}
             fullWidth
@@ -72,8 +80,8 @@ const AboutPage = (e) => {
         </div>
 
         {/* content */}
-        <div className="mt-16">
-          <AnimatePresence exitBeforeEnter>
+        <div ref={contentRef} className="mt-16">
+          <AnimatePresence mode="wait">
             <div key={selected}>
               {(selected == 1 && <Page_Team />) ||
                 (selected == 2 && <Page_Council />) ||

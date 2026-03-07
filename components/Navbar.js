@@ -57,7 +57,7 @@ const Navbar = (e) => {
   return (
     <>
       {/* side nav */}
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence mode="wait">
         {sideMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -150,7 +150,7 @@ const Navbar = (e) => {
       </AnimatePresence>
 
       {/* global search */}
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence mode="wait">
         {globalSearchMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
-import { CgArrowRight } from 'react-icons/cg';
+import { CgArrowRight, CgClose } from 'react-icons/cg';
 import { client } from '../../../components/Prefetcher';
 import { _Transition_Page } from '../../../components/_Animations';
 
@@ -59,13 +59,71 @@ const cardPop = {
   animate: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
 };
 
+// ─── Person Lightbox ─────────────────────────
+const PersonLightbox = ({ person, onClose }) => {
+  const gradient = getGradient(person.name);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+          aria-label="Close"
+        >
+          <CgClose size={18} />
+        </button>
+
+        {person.photo ? (
+          <div className="w-full overflow-hidden bg-black flex items-center justify-center" style={{ maxHeight: '75vh' }}>
+            <img src={person.photo} alt={person.name} className="w-full h-auto max-h-[75vh] object-contain" />
+          </div>
+        ) : (
+          <div
+            className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
+            style={{ height: '480px' }}
+          >
+            <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || '?'}</span>
+          </div>
+        )}
+
+        <div className="p-5">
+          <p className="text-lg font-bold text-white">{person.name}</p>
+          <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // ─── Portrait Card (rectangular, uniform size) ─
-const PersonCard = ({ name, subtitle, photo, highlight = false }) => {
+const PersonCard = ({ name, subtitle, photo, highlight = false, onClick }) => {
   const gradient = getGradient(name);
   return (
     <motion.div
       variants={cardPop}
-      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''}`}
+      onClick={onClick}
+      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''} ${onClick ? 'cursor-pointer group/card' : ''}`}
     >
       {highlight && (
         <motion.div
@@ -75,17 +133,18 @@ const PersonCard = ({ name, subtitle, photo, highlight = false }) => {
         />
       )}
       {photo ? (
-        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
           <img src={photo} alt={name} className="w-full h-full object-cover" />
         </div>
       ) : (
-        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg`}>
+        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color' : ''}`}>
           <span className="text-5xl md:text-6xl font-bold opacity-70">{name?.charAt(0) || '?'}</span>
         </div>
       )}
       <div className="mt-3 text-center px-1">
         <p className="font-semibold leading-tight text-sm md:text-base">{name}</p>
         <p className="text-[11px] text-header-color leading-tight mt-1">{subtitle}</p>
+        {onClick && <p className="text-[9px] text-white/20 mt-0.5 group-hover/card:text-white/40 transition-colors">Click to view</p>}
       </div>
     </motion.div>
   );
@@ -126,7 +185,7 @@ const CAROUSEL_THRESHOLD = 5;
 const AUTO_SCROLL_THRESHOLD = 10;
 const SCROLL_SPEED = 0.4;
 
-const MemberCarousel = ({ members, renderItem }) => {
+const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
   const containerRef = useRef();
   const innerRef = useRef();
   const x = useMotionValue(0);
@@ -167,7 +226,13 @@ const MemberCarousel = ({ members, renderItem }) => {
   }, [autoScroll, constraint, x]);
 
   const defaultRender = (m, i) => (
-    <PersonCard key={i} name={m.name} subtitle={m.role || 'Member'} photo={m.photo} />
+    <PersonCard
+      key={i}
+      name={m.name}
+      subtitle={m.role || 'Member'}
+      photo={m.photo}
+      onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
+    />
   );
 
   return (
@@ -200,7 +265,7 @@ const MemberCarousel = ({ members, renderItem }) => {
 };
 
 // ─── Department Section ────────────────────────
-const DepartmentSection = ({ dept }) => {
+const DepartmentSection = ({ dept, onPersonClick }) => {
   const count = dept.members?.length || 0;
   const isCarousel = count >= CAROUSEL_THRESHOLD;
 
@@ -217,11 +282,17 @@ const DepartmentSection = ({ dept }) => {
       </div>
 
       {isCarousel ? (
-        <MemberCarousel members={dept.members} />
+        <MemberCarousel members={dept.members} onPersonClick={onPersonClick} />
       ) : (
         <motion.div variants={stagger} initial="initial" animate="animate" className="flex flex-wrap justify-center gap-6">
           {dept.members?.map((m, i) => (
-            <PersonCard key={i} name={m.name} subtitle={m.role || 'Member'} photo={m.photo} />
+            <PersonCard
+              key={i}
+              name={m.name}
+              subtitle={m.role || 'Member'}
+              photo={m.photo}
+              onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
+            />
           ))}
         </motion.div>
       )}
@@ -230,7 +301,7 @@ const DepartmentSection = ({ dept }) => {
 };
 
 // ─── Team Content ──────────────────────────────
-const TeamContent = ({ team }) => {
+const TeamContent = ({ team, onPersonClick }) => {
   if (!team) return null;
 
   return (
@@ -248,6 +319,7 @@ const TeamContent = ({ team }) => {
                 subtitle={leader.role}
                 photo={leader.photo}
                 highlight
+                onClick={onPersonClick ? () => onPersonClick({ name: leader.name, photo: leader.photo, subtitle: leader.role }) : undefined}
               />
             ))}
           </div>
@@ -270,7 +342,7 @@ const TeamContent = ({ team }) => {
           <p className="text-xs uppercase tracking-widest text-white/40 text-center">Departments</p>
 
           {team.departments.map((dept, i) => (
-            <DepartmentSection key={i} dept={dept} />
+            <DepartmentSection key={i} dept={dept} onPersonClick={onPersonClick} />
           ))}
         </motion.div>
       )}
@@ -283,6 +355,9 @@ const Page_Team = () => {
   const [teams, setTeams] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [lightbox, setLightbox] = useState(null);
+
+  const handlePersonClick = (person) => setLightbox(person);
 
   useEffect(() => {
     client.fetch(TEAM_QUERY).then((data) => {
@@ -305,6 +380,11 @@ const Page_Team = () => {
   }
 
   return (
+    <>
+      <AnimatePresence>
+        {lightbox && <PersonLightbox person={lightbox} onClose={() => setLightbox(null)} />}
+      </AnimatePresence>
+
     <motion.section
       variants={_Transition_Page}
       initial="initial"
@@ -326,7 +406,7 @@ const Page_Team = () => {
         <>
           <YearSelector years={teams} selected={selectedId} onSelect={setSelectedId} />
 
-          <AnimatePresence exitBeforeEnter>
+          <AnimatePresence mode="wait">
             {selectedTeam && (
               <motion.div
                 key={selectedTeam._id}
@@ -335,13 +415,14 @@ const Page_Team = () => {
                 animate="animate"
                 exit="exit"
               >
-                <TeamContent team={selectedTeam} />
+                <TeamContent team={selectedTeam} onPersonClick={handlePersonClick} />
               </motion.div>
             )}
           </AnimatePresence>
         </>
       )}
     </motion.section>
+    </>
   );
 };
 

@@ -135,27 +135,6 @@ export default {
       ],
     },
     {
-      title: "Award Recipients",
-      name: "awardRecipients",
-      type: "array",
-      of: [
-        {
-          type: "reference",
-          to: [
-            {
-              type: "recipient",
-            },
-          ],
-          validation: (Rule) => Rule.required().error("Recipients is required"),
-        },
-      ],
-      validation: (Rule) => [
-        Rule.min(1).error("At least one recipient must be specified"),
-        Rule.max(50).error("Maximum 50 recipients allowed"),
-        Rule.unique().error("Recipients must be unique"),
-      ],
-    },
-    {
       title: "Award Images",
       name: "awardImages",
       type: "array",

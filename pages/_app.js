@@ -37,7 +37,7 @@ function AppShell({ Component, pageProps }) {
       <Navbar />
       <main className="min-h-screen flex justify-center overflow-x-hidden relative">
         <motion.div className="w-full relative max-w-4xl px-5 lg:px-0 ">
-          <AnimatePresence exitBeforeEnter>
+          <AnimatePresence mode="wait">
             <Component {...pageProps} key={router.route} />
           </AnimatePresence>
         </motion.div>
