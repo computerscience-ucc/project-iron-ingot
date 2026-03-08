@@ -171,14 +171,6 @@ export default {
       initialValue: true,
     },
     {
-      name: 'chatbotApiKey',
-      title: 'AI API Key (Gemini)',
-      type: 'string',
-      fieldset: 'chatbot',
-      description: 'Google Gemini API key for the chatbot. This is stored securely in Sanity and fetched server-side only.',
-      // Hidden from non-admin roles if needed
-    },
-    {
       name: 'chatbotModel',
       title: 'AI Model',
       type: 'string',

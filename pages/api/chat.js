@@ -13,10 +13,13 @@ import { fetchSiteConfig } from '../../lib/siteConfig';
 // In-memory store (resets on cold-start; good enough for Edge/serverless pods)
 const ipStore = new Map();
 
-const RATE_WINDOW    = 60 * 1000;        // 1-minute sliding window
-const RATE_LIMIT     = 15;               // max messages per window per IP
-const BAN_THRESHOLD  = 40;              // messages in window before temp-ban
-const BAN_DURATION   = 60 * 60 * 1000; // 1-hour ban
+const RATE_WINDOW      = 60 * 1000;        // 1-minute sliding window
+const RATE_LIMIT       = 10;               // max messages per window per IP
+const WARN_THRESHOLD   = 7;               // warn (but allow) from this count onwards
+const BAN_THRESHOLD    = 20;              // auto-ban trigger inside window
+const BAN_DURATION     = 60 * 60 * 1000; // 1-hour ban
+const MIN_MSG_INTERVAL = 3 * 1000;        // minimum ms between any two messages per IP
+const MAX_MSG_LENGTH   = 600;             // hard cap on inbound message character length
 
 /** Extract best-guess client IP from the request */
 function getClientIp(req) {
@@ -29,43 +32,67 @@ function getClientIp(req) {
 }
 
 /**
- * Returns { allowed: true } or { allowed: false, banned: bool }
- * Side-effects: prunes expired timestamps, updates store.
+ * Returns:
+ *   { allowed: true, warning: false }
+ *   { allowed: true, warning: true, remaining: N }   ← nearing limit
+ *   { allowed: false, banned: false, retryAfter: N } ← rate-limited
+ *   { allowed: false, banned: true,  retryAfter: N } ← banned
  */
 function checkRateLimit(ip) {
   const now = Date.now();
 
   if (!ipStore.has(ip)) {
-    ipStore.set(ip, { requests: [], banned: false, banExpiry: 0 });
+    ipStore.set(ip, { requests: [], banned: false, banExpiry: 0, lastRequest: 0 });
   }
 
   const entry = ipStore.get(ip);
 
-  // Check active ban
+  // ── Active ban check ──
   if (entry.banned) {
-    if (now < entry.banExpiry) return { allowed: false, banned: true };
-    // Ban expired — clear it
+    if (now < entry.banExpiry) {
+      return { allowed: false, banned: true, retryAfter: Math.ceil((entry.banExpiry - now) / 1000) };
+    }
+    // Ban expired — reset
     entry.banned = false;
     entry.requests = [];
+    entry.lastRequest = 0;
   }
 
-  // Prune requests outside the sliding window
+  // ── Per-message minimum interval (anti-spam burst) ──
+  const sinceLastMsg = now - entry.lastRequest;
+  if (entry.lastRequest > 0 && sinceLastMsg < MIN_MSG_INTERVAL) {
+    const wait = Math.ceil((MIN_MSG_INTERVAL - sinceLastMsg) / 1000);
+    return { allowed: false, banned: false, retryAfter: wait, tooFast: true };
+  }
+
+  // ── Sliding window cleanup ──
   entry.requests = entry.requests.filter((t) => now - t < RATE_WINDOW);
   entry.requests.push(now);
+  entry.lastRequest = now;
 
-  // Escalate to ban if egregiously over limit
+  // ── Auto-ban for egregious abuse ──
   if (entry.requests.length > BAN_THRESHOLD) {
     entry.banned    = true;
     entry.banExpiry = now + BAN_DURATION;
     console.warn(`[chat] IP banned for 1 hour: ${ip}`);
-    return { allowed: false, banned: true };
+    return { allowed: false, banned: true, retryAfter: 3600 };
   }
 
+  // ── Hard rate limit ──
   if (entry.requests.length > RATE_LIMIT) {
-    return { allowed: false, banned: false };
+    // Find when the oldest request in the window will expire
+    const oldest = entry.requests[0];
+    const retryAfter = Math.ceil((RATE_WINDOW - (now - oldest)) / 1000);
+    return { allowed: false, banned: false, retryAfter };
   }
 
-  return { allowed: true };
+  // ── Soft warning (nearing limit) ──
+  const remaining = RATE_LIMIT - entry.requests.length;
+  if (entry.requests.length >= WARN_THRESHOLD) {
+    return { allowed: true, warning: true, remaining };
+  }
+
+  return { allowed: true, warning: false };
 }
 
 // Periodically evict old entries to prevent unbounded memory growth
@@ -147,28 +174,6 @@ function buildCards(theses) {
   }));
 }
 
-const SYSTEM_PROMPT = `You are the Ingo Assistant — a helpful, knowledgeable AI chatbot for the Ingo website.
-Ingo is the BSCS (Bachelor of Science in Computer Science) information board of the University of Caloocan City - Caloocan City (UCC).
-
-Your role:
-- Answer questions about thesis projects, blogs, bulletins, awards, and the CS program
-- Help users find specific thesis topics, authors, or tags
-- Explain what the website offers and how to navigate it
-- Be concise but informative
-- When discussing a specific thesis project, ALWAYS mention its exact title so it can be linked automatically
-- When a user asks about a specific thesis, provide: (1) a brief 2-3 sentence summary based on its IMRAD content, (2) the full list of thesis members/authors, (3) the academic year and department
-- When referring to content, mention the title and suggest the user can find it on the corresponding section
-- If you don't know the answer, say so honestly and direct the user to explore the relevant section
-
-Important:
-- You have access to real content data from the Ingo website provided below as context
-- Base your answers on this actual data
-- Do NOT make up thesis titles, blog posts, or author names
-- Keep responses short and helpful (2-4 sentences unless the user asks for detail)
-- When mentioning thesis projects, mention the exact title as it appears in the data so it can be linked automatically
-- Always list the thesis members (Thesis Authors field) when discussing a specific project
-`;
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -186,12 +191,17 @@ export default async function handler(req, res) {
   const clientIp = getClientIp(req);
   const rl = checkRateLimit(clientIp);
   if (!rl.allowed) {
-    const retryAfter = rl.banned ? 3600 : 60;
+    const retryAfter = rl.retryAfter ?? 60;
     res.setHeader('Retry-After', String(retryAfter));
-    const msg = rl.banned
-      ? 'Your IP has been temporarily blocked due to excessive requests. Please try again in an hour.'
-      : 'You are sending too many messages. Please wait a minute before trying again.';
-    return res.status(429).json({ reply: msg });
+    let msg;
+    if (rl.banned) {
+      msg = `Your IP has been temporarily blocked due to excessive requests. Please try again in ${Math.ceil(retryAfter / 60)} minute(s).`;
+    } else if (rl.tooFast) {
+      msg = `Please wait ${retryAfter} second(s) before sending another message.`;
+    } else {
+      msg = `You've reached the message limit. Please wait ${retryAfter} second(s) before trying again.`;
+    }
+    return res.status(429).json({ reply: msg, retryAfter });
   }
 
   // Fetch site config from Sanity — API key and model can be managed in the CMS
@@ -204,8 +214,8 @@ export default async function handler(req, res) {
     });
   }
 
-  // CMS API key takes priority, env var is the fallback
-  const apiKey = (siteConfig && siteConfig.chatbotApiKey) || process.env.GEMINI_API_KEY;
+  // API key is always sourced from the environment variable (never stored in CMS)
+  const apiKey = process.env.GEMINI_API_KEY;
   const aiModel = (siteConfig && siteConfig.chatbotModel) || 'gemini-2.5-flash';
 
   if (!apiKey) {
@@ -219,6 +229,13 @@ export default async function handler(req, res) {
   try {
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });
+    }
+
+    // ── Message length cap ──
+    if (message.length > MAX_MSG_LENGTH) {
+      return res.status(400).json({
+        reply: `Your message is too long (${message.length} chars). Please keep it under ${MAX_MSG_LENGTH} characters.`,
+      });
     }
 
     // Fetch live site content as context
@@ -256,8 +273,7 @@ export default async function handler(req, res) {
       userMessage = quickActionPrompts[quickAction] || message;
     }
 
-    // Use CMS-defined system prompt if set, otherwise fall back to the built-in one
-    const systemPrompt = (siteConfig && siteConfig.chatbotSystemPrompt?.trim()) || SYSTEM_PROMPT;
+    const systemPrompt = (siteConfig && siteConfig.chatbotSystemPrompt?.trim());
 
     // Start chat with system instruction and site context
     const chat = model.startChat({
@@ -279,7 +295,12 @@ export default async function handler(req, res) {
     const relevantTheses = findRelevantTheses(reply, theses);
     const cards = buildCards(relevantTheses);
 
-    return res.status(200).json({ reply, cards });
+    // Pass soft warning back to the client so it can show a nudge
+    const warningMsg = rl.warning
+      ? `You have ${rl.remaining} message(s) left this minute.`
+      : null;
+
+    return res.status(200).json({ reply, cards, warning: warningMsg });
   } catch (error) {
     console.error('Chat API error:', error);
 

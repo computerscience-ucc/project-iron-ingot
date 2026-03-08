@@ -15,34 +15,54 @@ import {
   AiOutlineUnorderedList,
 } from 'react-icons/ai';
 import Link from 'next/link';
+import { usePrefetcer } from './Prefetcher';
 
-// ────────────────────────────────────────────
-// Minimal markdown renderer for bot messages
-// Handles: **bold**, *italic*, `code`, # headings, ## headings, - lists, \n
-// ────────────────────────────────────────────
+// Character-scanner inline parser — reliably handles **bold**, *italic*, `code`
 function parseInline(text) {
-  const parts = [];
-  let remaining = String(text);
-  let key = 0;
-  while (remaining.length > 0) {
-    const boldMatch = remaining.match(/\*\*(.+?)\*\*/);
-    const italicMatch = remaining.match(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/);
-    const codeMatch = remaining.match(/`(.+?)`/);
-    const candidates = [
-      boldMatch   && { match: boldMatch,   type: 'bold' },
-      italicMatch && { match: italicMatch, type: 'italic' },
-      codeMatch   && { match: codeMatch,   type: 'code' },
-    ].filter(Boolean);
-    if (candidates.length === 0) { parts.push(remaining); break; }
-    const earliest = candidates.reduce((a, b) => a.match.index <= b.match.index ? a : b);
-    const { match, type } = earliest;
-    if (match.index > 0) parts.push(remaining.slice(0, match.index));
-    if (type === 'bold')   parts.push(<strong key={key++} className="font-semibold text-gray-100">{match[1]}</strong>);
-    else if (type === 'italic') parts.push(<em key={key++} className="italic text-gray-300">{match[1]}</em>);
-    else if (type === 'code')   parts.push(<code key={key++} className="text-[11px] bg-gray-800 text-red-300 px-1 py-0.5 rounded font-mono">{match[1]}</code>);
-    remaining = remaining.slice(match.index + match[0].length);
+  const tokens = [];
+  const s = String(text);
+  let i = 0;
+  let buf = '';
+  let k = 0;
+
+  const flush = () => { if (buf) { tokens.push(buf); buf = ''; } };
+
+  while (i < s.length) {
+    // **bold**
+    if (s[i] === '*' && s[i + 1] === '*') {
+      const end = s.indexOf('**', i + 2);
+      if (end !== -1) {
+        flush();
+        tokens.push(<strong key={k++} className="font-semibold text-gray-100">{s.slice(i + 2, end)}</strong>);
+        i = end + 2;
+        continue;
+      }
+    }
+    // *italic* (single star, not part of **)
+    if (s[i] === '*' && s[i + 1] !== '*' && s[i - 1] !== '*') {
+      const end = s.indexOf('*', i + 1);
+      if (end !== -1 && s[end + 1] !== '*') {
+        flush();
+        tokens.push(<em key={k++} className="italic text-gray-300">{s.slice(i + 1, end)}</em>);
+        i = end + 1;
+        continue;
+      }
+    }
+    // `code`
+    if (s[i] === '`') {
+      const end = s.indexOf('`', i + 1);
+      if (end !== -1) {
+        flush();
+        tokens.push(<code key={k++} className="text-[11px] bg-gray-800 text-red-300 px-1 py-0.5 rounded font-mono">{s.slice(i + 1, end)}</code>);
+        i = end + 1;
+        continue;
+      }
+    }
+    buf += s[i];
+    i++;
   }
-  return parts;
+  flush();
+  return tokens;
 }
 
 const MarkdownText = ({ text }) => {
@@ -66,6 +86,32 @@ const MarkdownText = ({ text }) => {
       })}
     </div>
   );
+};
+
+// ────────────────────────────────────────────
+// Typewriter / streaming text reveal
+// ────────────────────────────────────────────
+const StreamingMessage = ({ text, onDone }) => {
+  const [displayed, setDisplayed] = useState('');
+  const idxRef = useRef(0);
+
+  useEffect(() => {
+    idxRef.current = 0;
+    setDisplayed('');
+    const charsPerTick = Math.max(10, Math.ceil(text.length / 100));
+    const timer = setInterval(() => {
+      idxRef.current = Math.min(idxRef.current + charsPerTick, text.length);
+      setDisplayed(text.slice(0, idxRef.current));
+      if (idxRef.current >= text.length) {
+        clearInterval(timer);
+        onDone?.();
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
+
+  return <MarkdownText text={displayed} />;
 };
 
 // ────────────────────────────────────────────
@@ -224,9 +270,20 @@ const FLOW_TREE = {
 // Sub-components
 // ────────────────────────────────────────────
 
-const ChatThesisCard = ({ card }) => (
+const ChatThesisCard = ({ card, onNavigate }) => {
+  const [navigating, setNavigating] = useState(false);
+  return (
   <Link href={`/thesis/${card.slug}`} scroll={false}>
-    <a className="block mt-2 rounded-xl border border-white/10 bg-[#0f1218] hover:border-red-500/50 hover:bg-[#141720] transition-all group cursor-pointer overflow-hidden">
+    <a
+      onClick={() => { setNavigating(true); onNavigate?.(); }}
+      className="block mt-2 relative rounded-xl border border-white/10 bg-[#0f1218] hover:border-red-500/50 hover:bg-[#141720] transition-all group cursor-pointer overflow-hidden"
+    >
+      {/* Click-loading overlay */}
+      {navigating && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60 rounded-xl">
+          <div className="w-6 h-6 border-2 border-white/80 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
       {/* Banner image */}
       {card.headerImage && (
         <div className="relative w-full h-24 overflow-hidden">
@@ -293,17 +350,28 @@ const ChatThesisCard = ({ card }) => (
       </div>
     </a>
   </Link>
-);
+  );
+};
 
-const BotMessage = ({ text, cards, isFullscreen }) => (
+const BotMessage = ({ text, cards, isFullscreen, isStreaming, onStreamDone, onNavigate }) => (
   <div className="flex flex-col gap-1 w-full">
     <div className={`${isFullscreen ? 'max-w-2xl' : 'max-w-[85%]'} px-3 py-2 rounded-xl rounded-bl-sm bg-[#1a1d24] text-gray-200 text-sm leading-relaxed`}>
-      <MarkdownText text={text} />
+      {isStreaming
+        ? <StreamingMessage text={text} onDone={onStreamDone} />
+        : <MarkdownText text={text} />
+      }
     </div>
-    {cards && cards.length > 0 && (
-      <div className={isFullscreen && cards.length > 1 ? 'max-w-2xl grid grid-cols-2 gap-2' : 'max-w-[85%] flex flex-col gap-2'}>
+    {/* Cards reveal only after streaming finishes */}
+    {!isStreaming && cards && cards.length > 0 && (
+      <div className={
+        isFullscreen && cards.length > 1
+          ? 'max-w-2xl grid grid-cols-2 gap-2'
+          : isFullscreen
+          ? 'w-72 flex flex-col gap-2'
+          : 'max-w-[85%] flex flex-col gap-2'
+      }>
         {cards.map((card, i) => (
-          <ChatThesisCard key={i} card={card} />
+          <ChatThesisCard key={i} card={card} onNavigate={onNavigate} />
         ))}
       </div>
     )}
@@ -366,19 +434,53 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
 // ────────────────────────────────────────────
 
 const ChatBot = () => {
+  const { siteConfig } = usePrefetcer() || {};
+  const chatbotName = siteConfig?.chatbotName || 'Ingo Assistant';
+  const defaultWelcome = "Hi, I'm the Ingo Assistant. Use the buttons below to explore, or type a question directly.";
+
   const [isOpen, setIsOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      role: 'bot',
-      text: "Hi, I'm the Ingo Assistant. Use the buttons below to explore, or type a question directly.",
-      cards: [],
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [streamingMsgIdx, setStreamingMsgIdx] = useState(-1);
+  const welcomeSet = useRef(false);
+
+  // Set welcome message once siteConfig is available
+  useEffect(() => {
+    if (!welcomeSet.current && (siteConfig !== undefined)) {
+      welcomeSet.current = true;
+      setMessages([{
+        role: 'bot',
+        text: siteConfig?.chatbotWelcomeMessage?.trim() || defaultWelcome,
+        cards: [],
+      }]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteConfig]);
   const [input, setInput] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [cooldown, setCooldown] = useState(0); // seconds remaining before next send allowed
+  const cooldownRef = useRef(null);
+
+  // Start a cooldown timer (seconds). Clears any existing timer first.
+  const startCooldown = (seconds) => {
+    if (cooldownRef.current) clearInterval(cooldownRef.current);
+    setCooldown(seconds);
+    cooldownRef.current = setInterval(() => {
+      setCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(cooldownRef.current);
+          cooldownRef.current = null;
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  };
+
+  // Clean up timer on unmount
+  useEffect(() => () => { if (cooldownRef.current) clearInterval(cooldownRef.current); }, []);
 
   // Guided flow state
   const [flowPath, setFlowPath] = useState([]); // stack of node ids for back navigation
@@ -446,21 +548,32 @@ const ChatBot = () => {
 
       const data = await res.json();
 
-      if (res.ok) {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'bot', text: data.reply, cards: data.cards || [] },
-        ]);
+      if (res.status === 429) {
+        // Rate limited — lock out for the server-specified duration
+        const wait = data.retryAfter ?? 60;
+        startCooldown(wait);
+        setMessages((prev) => {
+          setStreamingMsgIdx(prev.length);
+          return [...prev, { role: 'bot', text: data.reply, cards: [], isError: true }];
+        });
+      } else if (res.ok) {
+        // Minimum 3s cooldown between every message
+        startCooldown(3);
+        setMessages((prev) => {
+          setStreamingMsgIdx(prev.length);
+          return [...prev, { role: 'bot', text: data.reply, cards: data.cards || [], warning: data.warning || null }];
+        });
       } else {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'bot', text: data.reply || 'Something went wrong. Please try again.', cards: [] },
-        ]);
+        startCooldown(3);
+        setMessages((prev) => {
+          setStreamingMsgIdx(prev.length);
+          return [...prev, { role: 'bot', text: data.reply || 'Something went wrong. Please try again.', cards: [], isError: true }];
+        });
       }
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'bot', text: 'Could not connect. Please try again later.', cards: [] },
+        { role: 'bot', text: 'Could not connect. Please try again later.', cards: [], isError: true },
       ]);
     } finally {
       setIsLoading(false);
@@ -505,7 +618,7 @@ const ChatBot = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || cooldown > 0) return;
 
     const userMessage = input.trim();
     setInput('');
@@ -573,10 +686,7 @@ const ChatBot = () => {
             <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-red-700 to-red-900 text-white shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="font-semibold text-sm tracking-wide">Ingo Assistant</span>
-                <span className="text-[9px] opacity-60 bg-white/10 px-1.5 py-0.5 rounded tracking-wider uppercase font-medium">
-                  Gemini
-                </span>
+                <span className="font-semibold text-sm tracking-wide">{chatbotName}</span>
               </div>
               <div className="flex items-center gap-1">
                 <button
@@ -608,7 +718,19 @@ const ChatBot = () => {
                       {msg.text}
                     </div>
                   ) : (
-                    <BotMessage text={msg.text} cards={msg.cards} isFullscreen={isFullscreen} />
+                    <div className="flex flex-col gap-0.5 w-full">
+                      <BotMessage
+                        text={msg.text}
+                        cards={msg.cards}
+                        isFullscreen={isFullscreen}
+                        isStreaming={i === streamingMsgIdx}
+                        onStreamDone={() => setStreamingMsgIdx(-1)}
+                        onNavigate={closeChat}
+                      />
+                      {msg.warning && i !== streamingMsgIdx && (
+                        <p className="text-[10px] text-amber-500/70 mt-0.5 px-1">{msg.warning}</p>
+                      )}
+                    </div>
                   )}
                 </div>
               ))}
@@ -655,11 +777,24 @@ const ChatBot = () => {
             {/* Input */}
             <form
               onSubmit={sendMessage}
-              className={`flex items-end gap-2 px-3 py-3 border-t shrink-0 transition-colors ${
+              className={`flex flex-col gap-1.5 px-3 pt-2 pb-3 border-t shrink-0 transition-colors ${
                 isInputFocused ? 'border-red-700/40' : 'border-gray-800'
               }`}
               style={{ background: '#0e1015' }}
             >
+              {/* Cooldown bar */}
+              {cooldown > 0 && (
+                <div className="flex items-center gap-2 px-1">
+                  <div className="flex-1 h-0.5 rounded-full bg-gray-800 overflow-hidden">
+                    <div
+                      className="h-full bg-red-600/60 transition-all duration-1000"
+                      style={{ width: `${(cooldown / (cooldown + 1)) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-gray-500 shrink-0">Wait {cooldown}s</span>
+                </div>
+              )}
+              <div className="flex items-end gap-2">
               {/* Honeypot — invisible to real users, bots fill it in */}
               <input
                 type="text"
@@ -685,22 +820,31 @@ const ChatBot = () => {
                   }
                 }}
                 placeholder={
-                  flowInputNode
+                  cooldown > 0
+                    ? `Please wait ${cooldown}s...`
+                    : flowInputNode
                     ? flowInputNode.placeholder
                     : 'Or type a question...'
                 }
-                className="flex-1 bg-[#1a1d24] text-gray-200 text-sm rounded-lg px-3 py-2.5 outline-none focus:ring-1 focus:ring-red-700/50 placeholder-gray-600 transition-shadow resize-none overflow-y-auto leading-relaxed"
+                className={`flex-1 bg-[#1a1d24] text-gray-200 text-sm rounded-lg px-3 py-2.5 outline-none focus:ring-1 focus:ring-red-700/50 placeholder-gray-600 transition-shadow resize-none overflow-y-auto leading-relaxed ${
+                  cooldown > 0 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
                 style={{ minHeight: '40px', maxHeight: '128px' }}
-                disabled={isLoading}
+                disabled={isLoading || cooldown > 0}
               />
               <button
                 type="submit"
-                disabled={isLoading || !input.trim()}
-                className="p-2.5 rounded-lg bg-gradient-to-br from-red-600 to-red-800 text-white disabled:opacity-30 hover:brightness-110 transition-all shrink-0"
+                disabled={isLoading || !input.trim() || cooldown > 0}
+                className="p-2.5 rounded-lg bg-gradient-to-br from-red-600 to-red-800 text-white disabled:opacity-30 hover:brightness-110 transition-all shrink-0 relative"
                 aria-label="Send message"
               >
-                <AiOutlineSend size={16} />
+                {cooldown > 0 ? (
+                  <span className="text-[11px] font-bold tabular-nums">{cooldown}</span>
+                ) : (
+                  <AiOutlineSend size={16} />
+                )}
               </button>
+              </div>
             </form>
           </motion.div>
         )}
