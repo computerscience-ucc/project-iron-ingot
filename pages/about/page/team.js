@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
-import { CgArrowRight, CgClose } from 'react-icons/cg';
+import { CgArrowRight, CgChevronLeft, CgChevronRight, CgClose } from 'react-icons/cg';
 import { client } from '../../../components/Prefetcher';
 import { _Transition_Page } from '../../../components/_Animations';
 
@@ -59,15 +59,33 @@ const cardPop = {
   animate: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
 };
 
+// ─── Lightbox slide variants ──────────────────
+const lightboxSlideVariants = {
+  enter: (d) => ({ opacity: 0, x: d > 0 ? 60 : -60 }),
+  center: { opacity: 1, x: 0 },
+  exit: (d) => ({ opacity: 0, x: d > 0 ? -60 : 60 }),
+};
+
 // ─── Person Lightbox ─────────────────────────
-const PersonLightbox = ({ person, onClose }) => {
-  const gradient = getGradient(person.name);
+const PersonLightbox = ({ people, initialIndex, onClose }) => {
+  const [idx, setIdx] = useState(initialIndex);
+  const [dir, setDir] = useState(1);
+  const person = people[idx];
+  const gradient = getGradient(person?.name);
+
+  const go = (d) => { setDir(d); setIdx((i) => (i + d + people.length) % people.length); };
 
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') { setDir(1);  setIdx((i) => (i + 1 + people.length) % people.length); }
+      if (e.key === 'ArrowLeft')  { setDir(-1); setIdx((i) => (i - 1 + people.length) % people.length); }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, people.length]);
+
+  if (!person) return null;
 
   return (
     <motion.div
@@ -86,6 +104,7 @@ const PersonLightbox = ({ person, onClose }) => {
         className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
@@ -94,27 +113,83 @@ const PersonLightbox = ({ person, onClose }) => {
           <CgClose size={18} />
         </button>
 
-        {person.photo ? (
-          <div className="w-full overflow-hidden bg-black flex items-center justify-center" style={{ maxHeight: '75vh' }}>
-            <img src={person.photo} alt={person.name} className="w-full h-auto max-h-[75vh] object-contain" />
-          </div>
-        ) : (
-          <div
-            className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
-            style={{ height: '480px' }}
+        {/* Prev */}
+        {people.length > 1 && (
+          <button
+            onClick={(e) => { e.stopPropagation(); go(-1); }}
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+            aria-label="Previous"
           >
-            <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || '?'}</span>
-          </div>
+            <CgChevronLeft size={22} />
+          </button>
         )}
 
-        <div className="p-5">
-          <p className="text-lg font-bold text-white">{person.name}</p>
-          <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
+        {/* Next */}
+        {people.length > 1 && (
+          <button
+            onClick={(e) => { e.stopPropagation(); go(1); }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+            aria-label="Next"
+          >
+            <CgChevronRight size={22} />
+          </button>
+        )}
+
+        {/* Grid-stack wrapper: entering + exiting overlap in the same cell, no height doubling or FLIP */}
+        <div style={{ display: 'grid', overflow: 'hidden' }}>
+          <AnimatePresence custom={dir} initial={false}>
+            <motion.div
+              key={idx}
+              custom={dir}
+              variants={lightboxSlideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.22, ease: 'easeInOut' }}
+              style={{ gridArea: '1 / 1' }}
+            >
+              {person.photo ? (
+                <div className="w-full overflow-hidden bg-black flex items-center justify-center" style={{ maxHeight: '70vh' }}>
+                  <img src={person.photo} alt={person.name} className="w-full h-auto max-h-[70vh] object-contain" />
+                </div>
+              ) : (
+                <div
+                  className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
+                  style={{ height: '400px' }}
+                >
+                  <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || '?'}</span>
+                </div>
+              )}
+
+              <div className="p-5">
+                <p className="text-lg font-bold text-white">{person.name}</p>
+                <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
+                {people.length > 1 && (
+                  <p className="text-[10px] text-white/20 mt-2">{idx + 1} / {people.length}</p>
+                )}
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </motion.div>
     </motion.div>
   );
 };
+
+// ─── Helpers ──────────────────────────────────
+const anyPhoto = (arr) => arr?.some((m) => !!m.photo) ?? false;
+
+// ─── Name-only list (no photos in section) ────
+const NameOnlyList = ({ items }) => (
+  <div className="flex flex-wrap justify-center gap-3 max-w-3xl m-auto">
+    {items.map((item, i) => (
+      <div key={i} className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center min-w-[130px]">
+        <p className="text-md font-semibold text-white leading-tight">{item.name}</p>
+        {item.subtitle && <p className="text-[11px] text-header-color mt-0.5 leading-tight">{item.subtitle}</p>}
+      </div>
+    ))}
+  </div>
+);
 
 // ─── Portrait Card (rectangular, uniform size) ─
 const PersonCard = ({ name, subtitle, photo, highlight = false, onClick }) => {
@@ -123,7 +198,7 @@ const PersonCard = ({ name, subtitle, photo, highlight = false, onClick }) => {
     <motion.div
       variants={cardPop}
       onClick={onClick}
-      className={`w-36 md:w-44 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''} ${onClick ? 'cursor-pointer group/card' : ''}`}
+      className={`w-52 md:w-64 flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''} ${onClick ? 'cursor-pointer group/card' : ''}`}
     >
       {highlight && (
         <motion.div
@@ -133,11 +208,11 @@ const PersonCard = ({ name, subtitle, photo, highlight = false, onClick }) => {
         />
       )}
       {photo ? (
-        <div className={`h-44 md:h-56 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
+        <div className={`h-64 md:h-80 w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
           <img src={photo} alt={name} className="w-full h-full object-cover" />
         </div>
       ) : (
-        <div className={`h-44 md:h-56 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color' : ''}`}>
+        <div className={`h-64 md:h-80 w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color' : ''}`}>
           <span className="text-5xl md:text-6xl font-bold opacity-70">{name?.charAt(0) || '?'}</span>
         </div>
       )}
@@ -174,7 +249,7 @@ const YearSelector = ({ years, selected, onSelect }) => (
           />
         )}
         {year.academicYear}
-        {year.isCurrent && <span className="ml-1 text-yellow-400 text-[10px]">★</span>}
+        {year.isCurrent && <span className="ml-1 text-yellow-400 text-[10px] align-bottom">★</span>}
       </motion.button>
     ))}
   </div>
@@ -182,7 +257,7 @@ const YearSelector = ({ years, selected, onSelect }) => (
 
 // ─── Auto-scrolling Carousel ───────────────────
 const CAROUSEL_THRESHOLD = 5;
-const AUTO_SCROLL_THRESHOLD = 10;
+const AUTO_SCROLL_THRESHOLD = CAROUSEL_THRESHOLD;
 const SCROLL_SPEED = 0.4;
 
 const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
@@ -192,6 +267,7 @@ const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
   const [constraint, setConstraint] = useState(0);
   const isDragging = useRef(false);
   const isHovering = useRef(false);
+  const isVisible = useRef(false);
   const autoScroll = members.length >= AUTO_SCROLL_THRESHOLD;
 
   useEffect(() => {
@@ -206,13 +282,24 @@ const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
     return () => window.removeEventListener('resize', measure);
   }, [members]);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisible.current = entry.isIntersecting; },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   // Auto-scroll ping-pong
   useEffect(() => {
     if (!autoScroll || constraint <= 0) return;
     let dir = -1;
     let raf;
     const step = () => {
-      if (!isDragging.current && !isHovering.current) {
+      if (!isDragging.current && !isHovering.current && isVisible.current) {
         const cur = x.get();
         let next = cur + dir * SCROLL_SPEED;
         if (next <= -constraint) { dir = 1; }
@@ -267,7 +354,8 @@ const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
 // ─── Department Section ────────────────────────
 const DepartmentSection = ({ dept, onPersonClick }) => {
   const count = dept.members?.length || 0;
-  const isCarousel = count >= CAROUSEL_THRESHOLD;
+  const hasPhotos = anyPhoto(dept.members);
+  const isCarousel = hasPhotos && count >= CAROUSEL_THRESHOLD;
 
   return (
     <motion.div
@@ -283,7 +371,7 @@ const DepartmentSection = ({ dept, onPersonClick }) => {
 
       {isCarousel ? (
         <MemberCarousel members={dept.members} onPersonClick={onPersonClick} />
-      ) : (
+      ) : hasPhotos ? (
         <motion.div variants={stagger} initial="initial" animate="animate" className="flex flex-wrap justify-center gap-6">
           {dept.members?.map((m, i) => (
             <PersonCard
@@ -295,6 +383,8 @@ const DepartmentSection = ({ dept, onPersonClick }) => {
             />
           ))}
         </motion.div>
+      ) : (
+        <NameOnlyList items={dept.members?.map((m) => ({ name: m.name, subtitle: m.role || 'Member' })) || []} />
       )}
     </motion.div>
   );
@@ -311,18 +401,22 @@ const TeamContent = ({ team, onPersonClick }) => {
         <motion.div variants={stagger} className="flex flex-col items-center gap-2">
           <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Leadership</p>
 
-          <div className="flex flex-wrap justify-center gap-8">
-            {team.leadership.map((leader, i) => (
-              <PersonCard
-                key={i}
-                name={leader.name}
-                subtitle={leader.role}
-                photo={leader.photo}
-                highlight
-                onClick={onPersonClick ? () => onPersonClick({ name: leader.name, photo: leader.photo, subtitle: leader.role }) : undefined}
-              />
-            ))}
-          </div>
+          {anyPhoto(team.leadership) ? (
+            <div className="flex flex-wrap justify-center gap-8">
+              {team.leadership.map((leader, i) => (
+                <PersonCard
+                  key={i}
+                  name={leader.name}
+                  subtitle={leader.role}
+                  photo={leader.photo}
+                  highlight
+                  onClick={onPersonClick ? () => onPersonClick({ name: leader.name, photo: leader.photo, subtitle: leader.role }) : undefined}
+                />
+              ))}
+            </div>
+          ) : (
+            <NameOnlyList items={team.leadership.map((l) => ({ name: l.name, subtitle: l.role }))} />
+          )}
         </motion.div>
       )}
 
@@ -350,14 +444,21 @@ const TeamContent = ({ team, onPersonClick }) => {
   );
 };
 
+// ─── Flatten team people for lightbox navigation ───
+const buildTeamPeople = (team) => {
+  if (!team) return [];
+  const list = [];
+  team.leadership?.forEach((l) => list.push({ name: l.name, photo: l.photo, subtitle: l.role }));
+  team.departments?.forEach((d) => d.members?.forEach((m) => list.push({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' })));
+  return list;
+};
+
 // ─── Main Page Component ───────────────────────
 const Page_Team = () => {
   const [teams, setTeams] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState(null);
-
-  const handlePersonClick = (person) => setLightbox(person);
 
   useEffect(() => {
     client.fetch(TEAM_QUERY).then((data) => {
@@ -369,6 +470,12 @@ const Page_Team = () => {
   }, []);
 
   const selectedTeam = teams.find((t) => t._id === selectedId);
+
+  const handlePersonClick = (person) => {
+    const people = buildTeamPeople(selectedTeam);
+    const index = people.findIndex((p) => p.name === person.name && p.subtitle === person.subtitle);
+    setLightbox({ people, index: index >= 0 ? index : 0 });
+  };
 
   if (!loading && teams.length === 0) {
     return (
@@ -382,7 +489,7 @@ const Page_Team = () => {
   return (
     <>
       <AnimatePresence>
-        {lightbox && <PersonLightbox person={lightbox} onClose={() => setLightbox(null)} />}
+        {lightbox && <PersonLightbox people={lightbox.people} initialIndex={lightbox.index} onClose={() => setLightbox(null)} />}
       </AnimatePresence>
 
     <motion.section
