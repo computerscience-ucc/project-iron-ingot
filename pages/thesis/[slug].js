@@ -334,7 +334,7 @@ const MemberStrip = ({ members }) => {
 // different URL and correctly bypasses the cache.
 const _modelSessionCache = new Map();
 
-const ModelViewer = memo(({ src }) => {
+const ModelViewer = memo(function ModelViewer({ src }) {
   const alreadyLoaded = _modelSessionCache.has(src);
   const [mounted, setMounted] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(alreadyLoaded);
