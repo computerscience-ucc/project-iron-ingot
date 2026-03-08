@@ -6,7 +6,7 @@ import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefetcer } from '../../components/Prefetcher';
-import { CgArrowUp, CgArrowDown } from 'react-icons/cg';
+import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
 
 // ─── helpers ───────────────────────────────────
 const ALL = 'All';
@@ -14,6 +14,12 @@ const ALL = 'All';
 function getYears(blogs) {
   const years = [...new Set(blogs.map((b) => b.academicYear || 'Unknown'))].sort().reverse();
   return [ALL, ...years];
+}
+
+function authorString(authors) {
+  return (authors || [])
+    .map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
+    .join(' ');
 }
 
 // ─── Year pill ─────────────────────────────────
@@ -40,7 +46,8 @@ const BlogPage = () => {
   const { blogs } = usePrefetcer();
   const [blogList, setBlogList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
-  const [sortAsc, setSortAsc] = useState(false); // newest first by default
+  const [sortAsc, setSortAsc] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     setBlogList(blogs || []);
@@ -53,14 +60,24 @@ const BlogPage = () => {
   const years = useMemo(() => getYears(blogList), [blogList]);
 
   const filtered = useMemo(() => {
+    const q = searchValue.trim().toLowerCase();
     let list = selectedYear === ALL
       ? blogList
       : blogList.filter((b) => (b.academicYear || 'Unknown') === selectedYear);
+    if (q) {
+      list = list.filter((b) => {
+        const titleMatch = (b.title || '').toLowerCase().includes(q);
+        const tagMatch = (b.tags || []).some((t) => (t || '').toLowerCase().includes(q));
+        const authorMatch = authorString(b.authors).toLowerCase().includes(q);
+        const yearMatch = (b.academicYear || '').toLowerCase().includes(q);
+        return titleMatch || tagMatch || authorMatch || yearMatch;
+      });
+    }
     return [...list].sort((a, b) => {
       const diff = new Date(a._createdAt) - new Date(b._createdAt);
       return sortAsc ? diff : -diff;
     });
-  }, [blogList, selectedYear, sortAsc]);
+  }, [blogList, selectedYear, sortAsc, searchValue]);
 
   return (
     <>
@@ -86,8 +103,31 @@ const BlogPage = () => {
           </p>
         </div>
 
+        {/* Search bar */}
+        <div className="mt-10 relative max-w-md">
+          <CgSearch
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none"
+          />
+          <input
+            type="text"
+            placeholder="Search by title, author, tag, or year…"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-full pl-9 pr-9 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/25 transition-colors"
+          />
+          {searchValue && (
+            <button
+              onClick={() => setSearchValue('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+            >
+              <CgClose size={14} />
+            </button>
+          )}
+        </div>
+
         {/* Controls */}
-        <div className="mt-10 flex flex-wrap items-center gap-3">
+        <div className="mt-4 flex flex-wrap items-center gap-3">
           {/* Year pills */}
           <div className="flex flex-wrap gap-1">
             {years.map((y) => (
@@ -111,7 +151,7 @@ const BlogPage = () => {
         </div>
 
         {/* Grid */}
-        <div className="mt-10">
+        <div className="mt-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedYear + sortAsc}
@@ -130,7 +170,7 @@ const BlogPage = () => {
                 </div>
               ) : (
                 <p className="text-white/40 text-lg">
-                  No blog posts found for {selectedYear === ALL ? 'any year' : selectedYear}.
+                  No blog posts found{searchValue ? ` for "${searchValue}"` : selectedYear !== ALL ? ` in ${selectedYear}` : ''}.
                 </p>
               )}
             </motion.div>

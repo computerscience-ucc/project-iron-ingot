@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { CgChevronLeft, CgChevronRight, CgChevronUp } from 'react-icons/cg';
 import { AiFillLinkedin, AiOutlineGlobal } from 'react-icons/ai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -327,10 +327,18 @@ const MemberStrip = ({ members }) => {
 // ─────────────────────────────────────────────────────
 // 3D Model Viewer  (client-only — <model-viewer> web component)
 // ─────────────────────────────────────────────────────
-const ModelViewer = ({ src }) => {
+
+// Module-level session cache: tracks which model URLs have already been fully
+// loaded this tab session. Keyed by the Sanity asset URL, which is content-
+// addressed (SHA1 hash in path), so a newly published model always has a
+// different URL and correctly bypasses the cache.
+const _modelSessionCache = new Map();
+
+const ModelViewer = memo(({ src }) => {
+  const alreadyLoaded = _modelSessionCache.has(src);
   const [mounted, setMounted] = useState(false);
-  const [modelLoaded, setModelLoaded] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [modelLoaded, setModelLoaded] = useState(alreadyLoaded);
+  const [progress, setProgress] = useState(alreadyLoaded ? 100 : 0);
   const viewerRef = useRef(null);
 
   useEffect(() => setMounted(true), []);
@@ -339,7 +347,10 @@ const ModelViewer = ({ src }) => {
     const el = viewerRef.current;
     if (!el) return;
 
-    const onLoad = () => setModelLoaded(true);
+    const onLoad = () => {
+      _modelSessionCache.set(src, true); // remember for this session
+      setModelLoaded(true);
+    };
     const onProgress = (e) => {
       const pct = Math.round((e.detail?.totalProgress ?? 0) * 100);
       setProgress(pct);
@@ -351,7 +362,7 @@ const ModelViewer = ({ src }) => {
       el.removeEventListener('load', onLoad);
       el.removeEventListener('progress', onProgress);
     };
-  }, [mounted]); // re-attach once mounted so viewerRef.current is the real element
+  }, [mounted, src]); // re-attach once mounted so viewerRef.current is the real element
 
   if (!mounted || !src) return null;
 
@@ -427,7 +438,7 @@ const ModelViewer = ({ src }) => {
       </p>
     </div>
   );
-};
+});
 
 // ─────────────────────────────────────────────────────
 // Showcase image gallery — right-panel fallback when no 3D model

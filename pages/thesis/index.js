@@ -6,7 +6,7 @@ import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefetcer } from '../../components/Prefetcher';
-import { CgArrowUp, CgArrowDown } from 'react-icons/cg';
+import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
 
 // ─── constants ─────────────────────────────────
 const ALL = 'All';
@@ -23,6 +23,12 @@ const DEPT_LABEL = {
 function getYears(list) {
   const years = [...new Set(list.map((t) => t.academicYear || 'Unknown'))].sort().reverse();
   return [ALL, ...years];
+}
+
+function authorString(authors) {
+  return (authors || [])
+    .map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
+    .join(' ');
 }
 
 // ─── Year pill ─────────────────────────────────
@@ -49,7 +55,6 @@ const DeptSection = ({ dept, items }) => {
   if (items.length === 0) return null;
   return (
     <div className="mt-12">
-      {/* Header — two-line layout to prevent overflow */}
       <div className="mb-6">
         <div className="flex items-center gap-3">
           <span className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase bg-header-color/20 text-header-color border border-header-color/30">
@@ -77,6 +82,7 @@ const Thesis = () => {
   const [thesisList, setThesisList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortAsc, setSortAsc] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     setThesisList(thesis || []);
@@ -88,17 +94,27 @@ const Thesis = () => {
 
   const years = useMemo(() => getYears(thesisList), [thesisList]);
 
-  // All items for the selected year, sorted by date
+  // All items for the selected year + search, sorted by date
   const yearFiltered = useMemo(() => {
+    const q = searchValue.trim().toLowerCase();
     let list =
       selectedYear === ALL
         ? thesisList
         : thesisList.filter((t) => (t.academicYear || 'Unknown') === selectedYear);
+    if (q) {
+      list = list.filter((t) => {
+        const titleMatch = (t.title || '').toLowerCase().includes(q);
+        const tagMatch = (t.tags || []).some((tag) => (tag || '').toLowerCase().includes(q));
+        const authorMatch = authorString(t.authors).toLowerCase().includes(q);
+        const yearMatch = (t.academicYear || '').toLowerCase().includes(q);
+        return titleMatch || tagMatch || authorMatch || yearMatch;
+      });
+    }
     return [...list].sort((a, b) => {
       const diff = new Date(a._createdAt) - new Date(b._createdAt);
       return sortAsc ? diff : -diff;
     });
-  }, [thesisList, selectedYear, sortAsc]);
+  }, [thesisList, selectedYear, sortAsc, searchValue]);
 
   // Split into department buckets
   const deptMap = useMemo(() => {
@@ -136,8 +152,31 @@ const Thesis = () => {
           </p>
         </div>
 
+        {/* Search bar */}
+        <div className="mt-10 relative max-w-md">
+          <CgSearch
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none"
+          />
+          <input
+            type="text"
+            placeholder="Search by title, author, tag, or year…"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-full pl-9 pr-9 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/25 transition-colors"
+          />
+          {searchValue && (
+            <button
+              onClick={() => setSearchValue('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+            >
+              <CgClose size={14} />
+            </button>
+          )}
+        </div>
+
         {/* Controls */}
-        <div className="mt-10 flex flex-wrap items-center gap-3">
+        <div className="mt-4 flex flex-wrap items-center gap-3">
           {/* Year pills */}
           <div className="flex flex-wrap gap-1">
             {years.map((y) => (
@@ -170,7 +209,7 @@ const Thesis = () => {
           >
             {yearFiltered.length === 0 ? (
               <p className="mt-16 text-white/40 text-lg">
-                No thesis projects found for {selectedYear === ALL ? 'any year' : selectedYear}.
+                No thesis projects found{searchValue ? ` for "${searchValue}"` : selectedYear !== ALL ? ` in ${selectedYear}` : ''}.
               </p>
             ) : (
               <>
