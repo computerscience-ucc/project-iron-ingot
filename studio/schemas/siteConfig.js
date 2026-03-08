@@ -202,6 +202,14 @@ export default {
       rows: 3,
       description: 'The initial greeting message the chatbot shows',
     },
+    {
+      name: 'chatbotIcon',
+      title: 'Chatbot Button Icon',
+      type: 'image',
+      fieldset: 'chatbot',
+      description: 'Custom icon for the floating chat button. Leave empty to use the default chat bubble icon. Recommended: square image, at least 56×56px.',
+      options: { hotspot: true },
+    },
 
     // ─── Social Links ─────────────────────────────────
     {

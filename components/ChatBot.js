@@ -436,6 +436,7 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
 const ChatBot = () => {
   const { siteConfig } = usePrefetcer() || {};
   const chatbotName = siteConfig?.chatbotName || 'Ingo Assistant';
+  const chatbotIcon = siteConfig?.chatbotIcon || null;
   const defaultWelcome = "Hi, I'm the Ingo Assistant. Use the buttons below to explore, or type a question directly.";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -657,12 +658,26 @@ const ChatBot = () => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 text-white flex items-center justify-center shadow-lg shadow-red-900/30 hover:shadow-xl hover:shadow-red-900/40 transition-shadow"
+            className={`fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg shadow-red-900/30 hover:shadow-xl hover:shadow-red-900/40 transition-shadow overflow-hidden ${
+                chatbotIcon ? '' : 'bg-gradient-to-br from-red-600 to-red-800'
+              }`}
             aria-label="Open chat"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
+            {chatbotIcon ? (
+              <>
+                <img src={chatbotIcon} alt={chatbotName} className="w-full h-full object-cover" />
+                {/* Green online indicator */}
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-[#0e1015] shadow" />
+              </>
+            ) : (
+              <>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                {/* Green online indicator */}
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-red-800 shadow" />
+              </>
+            )}
           </motion.button>
         )}
       </AnimatePresence>
