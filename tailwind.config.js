@@ -5,10 +5,10 @@ module.exports = withMT({
   theme: {
     extend: {
       colors: {
-        'button-color': '#a50000',
-        'nav-color': "#ffffff",
-        'button-texts-color': '#ffffff',
-        'header-color': '#fe4c4c'
+        'button-color': 'var(--color-button, #a50000)',
+        'nav-color': 'var(--color-nav, #ffffff)',
+        'button-texts-color': 'var(--color-button-text, #ffffff)',
+        'header-color': 'var(--color-header, #fe4c4c)',
       }
       
     },

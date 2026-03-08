@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import sanityClient from '@sanity/client';
+import { SITE_CONFIG_QUERY } from '../lib/siteConfig';
 
 export const client = sanityClient({
   projectId: 'gjvp776o',
@@ -20,6 +21,7 @@ const query_blog = `
     "title": blogTitle,
     "slug": slug.current,
     "authors": blogAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    academicYear,
     tags
   }
 `;
@@ -36,7 +38,7 @@ const query_bulletin = `
   }
 `;
 const query_thesis = `
-  *[_type == 'thesis'] | order(_createdAt desc, _updatedAt desc){
+  *[_type == 'thesis'] | order(academicYear desc, _createdAt desc){
     _id,
     _createdAt,
     _updatedAt,
@@ -45,11 +47,13 @@ const query_thesis = `
     "title": thesisTitle,
     "slug": slug.current,
     "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    academicYear,
+    department,
     tags,
   }
 `;
 const query_award = `
-  *[_type == 'award'] | order(_createdAt desc, _updatedAt desc){
+  *[_type == 'award'] | order(academicYear desc, dateAwarded desc){
     _id,
     _createdAt,
     _updatedAt,
@@ -61,7 +65,9 @@ const query_award = `
     "badges": awardBadges,
     "recipients": awardRecipients[] -> { fullName, pronouns, batchYear, yearLeve, program, "recipientPhoto": recipientPhoto.asset -> url },
     "images": awardImages[].asset->url,
-    "content": awardContent,
+    "description": awardDescription,
+    academicYear,
+    dateAwarded,
     tags,
   }
 `;
@@ -74,6 +80,7 @@ const PrefetcherWrapper = ({ children }) => {
   const [thesis, setThesis] = useState([]);
   const [awards, setAwards] = useState([]);
   const [globalSearchItems, setGlobalSearchItems] = useState([]);
+  const [siteConfig, setSiteConfig] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
   let sharedStates = {
@@ -82,6 +89,7 @@ const PrefetcherWrapper = ({ children }) => {
     thesis,
     awards,
     globalSearchItems,
+    siteConfig,
   };
 
   const fetchInitalData = async () => {
@@ -89,6 +97,7 @@ const PrefetcherWrapper = ({ children }) => {
     const res_bulletin = await client.fetch(query_bulletin);
     const res_thesis = await client.fetch(query_thesis);
     const res_awards = await client.fetch(query_award);
+    const res_config = await client.fetch(SITE_CONFIG_QUERY);
     const globalItems = [...res_blog, ...res_bulletin, ...res_thesis, ...res_awards];
 
     setBlogs(res_blog);
@@ -96,6 +105,7 @@ const PrefetcherWrapper = ({ children }) => {
     setThesis(res_thesis);
     setAwards(res_awards);
     setGlobalSearchItems(globalItems);
+    setSiteConfig(res_config || {});
 
     if (res_blog && res_thesis && res_bulletin && res_awards) {
       setTimeout(() => {

@@ -15,22 +15,16 @@ const Navbar = (e) => {
   const { globalSearchItems } = usePrefetcer();
 
   const searchItems = (e) => {
-    const thisSearchValue = e.target.value;
-    console.log(globalSearchItems);
+    const thisSearchValue = e.target.value.toLowerCase();
 
-    
-      const results = globalSearchItems.filter((item) => {
-        if (
-          item.title.toLowerCase().includes(thisSearchValue.toLowerCase()) ||
-          item.tags.some((tag) =>
-            tag.toLowerCase().includes(thisSearchValue.toLowerCase())
-          )
-        ) {
-          // return 5 items
-          return item;
-        }
-      });
-      setSearchResults(results);   
+    const results = (globalSearchItems || []).filter((item) => {
+      const titleMatch = (item.title || '').toLowerCase().includes(thisSearchValue);
+      const tagMatch = (item.tags || []).some((tag) =>
+        (tag || '').toLowerCase().includes(thisSearchValue)
+      );
+      return titleMatch || tagMatch;
+    });
+    setSearchResults(results);
   };
 
   useEffect((e) => {
@@ -57,7 +51,7 @@ const Navbar = (e) => {
   return (
     <>
       {/* side nav */}
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence mode="wait">
         {sideMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -150,7 +144,7 @@ const Navbar = (e) => {
       </AnimatePresence>
 
       {/* global search */}
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence mode="wait">
         {globalSearchMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
