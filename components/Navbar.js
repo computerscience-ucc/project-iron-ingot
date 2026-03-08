@@ -202,7 +202,7 @@ const Navbar = () => {
       </AnimatePresence>
 
       <main  
-        className={`"gradient-background"
+        className={`
           ${thresholdReached ? 'py-5 bg-[#0A0C10]' : 'py-10 bg-transparent'}
           fixed w-full  flex justify-center items-center px-5 lg:px-0 z-[99] transition-all duration-200
         `}

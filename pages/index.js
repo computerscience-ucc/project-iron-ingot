@@ -8,7 +8,7 @@ import {
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import BlobBackground from '../components/BlobBackground';
+
 import BlogCard from '../components/Card/Blog';
 import BulletinCard from '../components/Card/Bulletin';
 import Head from '../components/Head';
@@ -47,8 +47,10 @@ const Home = () => {
         url="/"
       />
 
-      {/* background blob */}
-      <BlobBackground />
+
+
+
+
 
       <motion.div
         initial={{ opacity: 0 }}
