@@ -295,13 +295,13 @@ const ChatThesisCard = ({ card }) => (
   </Link>
 );
 
-const BotMessage = ({ text, cards }) => (
-  <div className="flex flex-col gap-1">
-    <div className="max-w-[85%] px-3 py-2 rounded-xl rounded-bl-sm bg-[#1a1d24] text-gray-200 text-sm leading-relaxed">
+const BotMessage = ({ text, cards, isFullscreen }) => (
+  <div className="flex flex-col gap-1 w-full">
+    <div className={`${isFullscreen ? 'max-w-2xl' : 'max-w-[85%]'} px-3 py-2 rounded-xl rounded-bl-sm bg-[#1a1d24] text-gray-200 text-sm leading-relaxed`}>
       <MarkdownText text={text} />
     </div>
     {cards && cards.length > 0 && (
-      <div className="max-w-[85%] flex flex-col gap-2">
+      <div className={isFullscreen && cards.length > 1 ? 'max-w-2xl grid grid-cols-2 gap-2' : 'max-w-[85%] flex flex-col gap-2'}>
         {cards.map((card, i) => (
           <ChatThesisCard key={i} card={card} />
         ))}
@@ -608,7 +608,7 @@ const ChatBot = () => {
                       {msg.text}
                     </div>
                   ) : (
-                    <BotMessage text={msg.text} cards={msg.cards} />
+                    <BotMessage text={msg.text} cards={msg.cards} isFullscreen={isFullscreen} />
                   )}
                 </div>
               ))}

@@ -256,12 +256,15 @@ export default async function handler(req, res) {
       userMessage = quickActionPrompts[quickAction] || message;
     }
 
+    // Use CMS-defined system prompt if set, otherwise fall back to the built-in one
+    const systemPrompt = (siteConfig && siteConfig.chatbotSystemPrompt?.trim()) || SYSTEM_PROMPT;
+
     // Start chat with system instruction and site context
     const chat = model.startChat({
       history: chatHistory,
       systemInstruction: {
         parts: [
-          { text: SYSTEM_PROMPT },
+          { text: systemPrompt },
           {
             text: `\n\nHere is the current content from the Ingo website:\n\n${siteContext}`,
           },

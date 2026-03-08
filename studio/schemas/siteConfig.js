@@ -187,6 +187,14 @@ export default {
       initialValue: 'gemini-2.5-flash',
     },
     {
+      name: 'chatbotSystemPrompt',
+      title: 'System Prompt',
+      type: 'text',
+      fieldset: 'chatbot',
+      rows: 10,
+      description: 'Custom system prompt for the AI chatbot. Leave empty to use the built-in default prompt.',
+    },
+    {
       name: 'chatbotName',
       title: 'Chatbot Display Name',
       type: 'string',
