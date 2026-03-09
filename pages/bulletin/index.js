@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import BulletinCard from '../../components/card/Bulletin';
+import BulletinCard from '../../components/Card/Bulletin';
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';

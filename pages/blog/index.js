@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import BlogCard from '../../components/card/Blog';
+import BlogCard from '../../components/Card/Blog';
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefetcher } from '../../components/Prefetcher';
 import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
+import YearPill from '../../components/YearPill';
 
 // ─── helpers ───────────────────────────────────
 const ALL = 'All';
@@ -22,24 +23,7 @@ function authorString(authors) {
     .join(' ');
 }
 
-// ─── Year pill ─────────────────────────────────
-const YearPill = ({ label, active, onClick }) => (
-  <motion.button
-    onClick={onClick}
-    className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-      active ? 'text-white' : 'text-white/50 hover:text-white/80'
-    }`}
-  >
-    {active && (
-      <motion.div
-        layoutId="blogYearPill"
-        className="absolute inset-0 rounded-full bg-header-color/30 border border-header-color/40"
-        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-      />
-    )}
-    <span className="relative z-10">{label}</span>
-  </motion.button>
-);
+
 
 // ─── Page ──────────────────────────────────────
 const BlogPage = () => {

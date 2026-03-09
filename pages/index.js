@@ -9,156 +9,17 @@ import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import BlobBackground from '../components/BlobBackground';
-import BlogCard from '../components/card/Blog';
-import BulletinCard from '../components/card/Bulletin';
+import BlogCard from '../components/Card/Blog';
+import BulletinCard from '../components/Card/Bulletin';
 import Head from '../components/Head';
 import Link from 'next/link';
-import ThesisCard from '../components/card/Thesis';
+import ThesisCard from '../components/Card/Thesis';
 import Image from 'next/image';
 import { _Transition_Page } from '../components/_Animations';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePrefetcher } from '../components/Prefetcher';
-
-// ─── Awards Carousel ──────────────────────────────────────────────────────────
-const AwardsCarousel = ({ awards }) => {
-  const items = awards?.filter((a) => a.headerImage) || [];
-  const [idx, setIdx] = useState(0);
-  const [dir, setDir] = useState(1);
-  const [paused, setPaused] = useState(false);
-  const timerRef = useRef(null);
-
-  const go = useCallback((d) => {
-    if (items.length < 2) return;
-    setDir(d);
-    setIdx((i) => (i + d + items.length) % items.length);
-  }, [items.length]);
-
-  useEffect(() => {
-    if (paused || items.length < 2) return;
-    timerRef.current = setInterval(() => go(1), 3500);
-    return () => clearInterval(timerRef.current);
-  }, [paused, items.length, go]);
-
-  if (items.length === 0) return null;
-
-  const current = items[idx];
-
-  const slideVariants = {
-    enter: (d) => ({ x: d > 0 ? 80 : -80, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d) => ({ x: d > 0 ? -80 : 80, opacity: 0 }),
-  };
-
-  return (
-    <div className="flex flex-col gap-2 justify-center mb-32 mt-10">
-      <div className="flex items-end justify-between mb-10">
-        <p className="text-3xl font-semibold text-left md:text-center">
-          Awards &amp; Achievements
-        </p>
-        <Link href="/awards">
-          <a className="text-sm text-red-400 hover:text-red-300 transition hidden md:block">
-            View all →
-          </a>
-        </Link>
-      </div>
-
-      <div
-        className="relative w-full rounded-2xl overflow-hidden bg-[#0e1015] border border-white/5 shadow-xl"
-        style={{ height: '480px' }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.div
-            key={idx}
-            custom={dir}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={current.headerImage}
-              alt={current.title}
-              layout="fill"
-              objectFit="cover"
-              priority
-            />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-
-            {/* Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-              <div className="flex flex-wrap items-center gap-2 mb-2">
-                {current.academicYear && (
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-600/80 text-white font-semibold">
-                    {current.academicYear}
-                  </span>
-                )}
-                {current.category && (
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-gray-300">
-                    {current.category}
-                  </span>
-                )}
-              </div>
-              <p className="text-xl md:text-2xl font-bold text-white leading-snug">{current.title}</p>
-              {current.description && (
-                <p className="text-sm text-gray-400 mt-1 line-clamp-2">{current.description}</p>
-              )}
-              <Link href="/awards">
-                <a className="inline-block mt-3 text-xs text-red-400 hover:text-red-300 transition font-semibold">
-                  See all awards →
-                </a>
-              </Link>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Prev / Next */}
-        {items.length > 1 && (
-          <>
-            <button
-              onClick={() => go(-1)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-black/60 hover:bg-black/90 text-white transition"
-              aria-label="Previous"
-            >
-              <CgChevronLeft size={22} />
-            </button>
-            <button
-              onClick={() => go(1)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-black/60 hover:bg-black/90 text-white transition"
-              aria-label="Next"
-            >
-              <CgChevronRight size={22} />
-            </button>
-          </>
-        )}
-
-        {/* Dot indicators */}
-        {items.length > 1 && (
-          <div className="absolute top-4 right-4 z-10 flex gap-1.5">
-            {items.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === idx ? 'bg-white w-5' : 'bg-white/30 w-1.5 hover:bg-white/60'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Counter */}
-        <span className="absolute top-4 left-4 z-10 text-[11px] px-2 py-0.5 rounded-full bg-black/60 text-gray-300">
-          {idx + 1} / {items.length}
-        </span>
-      </div>
-    </div>
-  );
-};
+import AwardsCarousel from '../components/AwardsCarousel';
+import IngoLogo from '../components/IngoLogo';
 
 const Home = () => {
   const { blogs, bulletins, thesis, awards } = usePrefetcher();
@@ -186,7 +47,7 @@ const Home = () => {
         url="/"
       />
 
-      {/* blob background */}
+      {/* background blob */}
       <BlobBackground />
 
       <motion.div
@@ -219,35 +80,9 @@ const Home = () => {
       >
         {/* landing */}
         <div className="flex flex-col gap-2 justify-center pt-16 text-center min-h-screen relative">
-          <p className="text-6xl font-bold mb-2 text-transparent">
-            <motion.span
-              animate={{
-                backgroundPosition: [
-                  '0% 0%',
-                  '100% 0%',
-                  '100% 100%',
-                  '0% 100%',
-                  '0% 0%',
-                ],
-              }}
-              transition={{
-                duration: 5,
-                ease: 'linear',
-                repeat: Infinity,
-              }}
-              style={{
-                backgroundSize: '1000px 1000px',
-
-                //backgroundColor: 'rgb(6, 182, 212)',
-                backgroundColor: 'rgb(212, 6, 100)',
-                backgroundImage:
-                  'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
-              }}
-              className="bg-clip-text bg-transparent"
-            >
-              ingo
-            </motion.span>
-          </p>
+          <div className="w-full flex justify-center mb-2">
+            <IngoLogo />
+          </div>
           <p className="text-lg font-semibold text-gray-500">
             Your CS <span className="text-pink-600 font-bold">In</span>formation
             Board on the <span className="text-pink-600 font-bold">Go</span>
@@ -284,7 +119,7 @@ const Home = () => {
             </motion.div>
           </Link>
 
-          {/* arrow down */}
+          {/* arrow */}
           <motion.div
             className="self-center absolute bottom-7"
             animate={{
@@ -401,7 +236,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Scroll-to-top FAB — bottom left */}
+      {/* fab btn */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
