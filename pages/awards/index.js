@@ -10,7 +10,7 @@ import {
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
-import { client } from '../../components/Prefetcher';
+import { client } from '../../lib/sanity';
 
 // ─────────────────────────────────────
 // Sanity GROQ query

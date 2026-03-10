@@ -8,7 +8,7 @@ import {
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import BlobBackgound from '../components/BlobBackground';
+import BlobBackground from '../components/BlobBackground';
 import BlogCard from '../components/card/Blog';
 import BulletinCard from '../components/card/Bulletin';
 import Head from '../components/Head';
@@ -16,7 +16,7 @@ import Link from 'next/link';
 import ThesisCard from '../components/card/Thesis';
 import { _Transition_Page } from '../components/_Animations';
 import { AnimatePresence, motion } from 'framer-motion';
-import { usePrefetcer } from '../components/Prefetcher';
+import { usePrefetcher } from '../components/Prefetcher';
 
 // ─── Awards Carousel ──────────────────────────────────────────────────────────
 const AwardsCarousel = ({ awards }) => {
@@ -157,8 +157,8 @@ const AwardsCarousel = ({ awards }) => {
   );
 };
 
-const Home = (e) => {
-  const { blogs, bulletins, thesis, awards } = usePrefetcer();
+const Home = () => {
+  const { blogs, bulletins, thesis, awards } = usePrefetcher();
 
   const [isVisible, setIsVisible] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -166,20 +166,13 @@ const Home = (e) => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    console.log();
-
-    window.addEventListener('scroll', (e) => {
-      if (window.scrollY < 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+    const handleScroll = () => {
+      setIsVisible(window.scrollY < 100);
       setShowScrollTop(window.scrollY > 400);
+    };
 
-      return (e) => {
-        window.removeEventListener('scroll', e);
-      };
-    });
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -191,7 +184,7 @@ const Home = (e) => {
       />
 
       {/* blob background */}
-      <BlobBackgound />
+      <BlobBackground />
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -237,7 +230,7 @@ const Home = (e) => {
               transition={{
                 duration: 5,
                 ease: 'linear',
-                loop: Infinity,
+                repeat: Infinity,
               }}
               style={{
                 backgroundSize: '1000px 1000px',
@@ -274,7 +267,7 @@ const Home = (e) => {
               transition={{
                 duration: 5,
                 ease: 'linear',
-                loop: Infinity,
+                repeat: Infinity,
               }}
               style={{
                 backgroundSize: '1000px 1000px',

@@ -6,14 +6,6 @@ import dayjs from 'dayjs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
-const titleCase = (str) => {
-  let split = str.toLowerCase().split(' ');
-  for (let i = 0; i < split.length; i++) {
-    split[i] = split[i][0].toUpperCase() + split[i].slice(1);
-  }
-  return split.join(' ');
-};
-
 const BlogCard = ({ blog }) => {
   const { _id, _updatedAt, _createdAt, authors, title, tags, slug } = blog;
 
@@ -66,13 +58,15 @@ const BlogCard = ({ blog }) => {
                 {dayjs(_createdAt).format('MMM DD, YYYY')}
               </p>
             </CardBody>
-            <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">
-              {tags.map((tag, i) => (
-                <div key={i}>
-                  <Chip className="bg-[#27292D]" value={tag} />
-                </div>
-              ))}
-            </CardFooter>
+            {tags && tags.length > 0 && (
+              <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">
+                {tags.map((tag, i) => (
+                  <div key={i}>
+                    <Chip className="bg-[#27292D]" value={tag} />
+                  </div>
+                ))}
+              </CardFooter>
+            )}
           </Card>
         </motion.div>
       </Link>

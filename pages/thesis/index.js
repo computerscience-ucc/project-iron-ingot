@@ -5,7 +5,7 @@ import ThesisCard from '../../components/card/Thesis';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcer } from '../../components/Prefetcher';
+import { usePrefetcher } from '../../components/Prefetcher';
 import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
 
 // ─── constants ─────────────────────────────────
@@ -78,7 +78,7 @@ const DeptSection = ({ dept, items }) => {
 
 // ─── Page ──────────────────────────────────────
 const Thesis = () => {
-  const { thesis } = usePrefetcer();
+  const { thesis } = usePrefetcher();
   const [thesisList, setThesisList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortAsc, setSortAsc] = useState(false);

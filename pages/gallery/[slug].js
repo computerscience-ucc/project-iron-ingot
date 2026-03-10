@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { _Transition_Page } from '../../components/_Animations';
-import { client } from '../../components/Prefetcher';
+import { client } from '../../lib/sanity';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 

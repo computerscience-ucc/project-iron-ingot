@@ -1,5 +1,5 @@
 import NextHead from 'next/head';
-import { usePrefetcer } from './Prefetcher';
+import { usePrefetcher } from './Prefetcher';
 
 const Head = ({
   title,
@@ -9,7 +9,7 @@ const Head = ({
   url,
   type = 'website'
 }) => {
-  const { siteConfig } = usePrefetcer();
+  const { siteConfig } = usePrefetcher();
   const cfg = siteConfig || {};
 
   // Derive values from CMS config with hardcoded fallbacks

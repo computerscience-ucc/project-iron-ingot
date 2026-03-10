@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { CgArrowRight, CgChevronLeft, CgChevronRight, CgClose } from 'react-icons/cg';
-import { client } from '../../../components/Prefetcher';
+import { client } from '../../../lib/sanity';
 import { _Transition_Page } from '../../../components/_Animations';
 
 // ─── GROQ query ────────────────────────────────

@@ -5,7 +5,7 @@ import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcer } from '../../components/Prefetcher';
+import { usePrefetcher } from '../../components/Prefetcher';
 import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
 
 // ─── helpers ───────────────────────────────────
@@ -43,7 +43,7 @@ const YearPill = ({ label, active, onClick }) => (
 
 // ─── Page ──────────────────────────────────────
 const BlogPage = () => {
-  const { blogs } = usePrefetcer();
+  const { blogs } = usePrefetcher();
   const [blogList, setBlogList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortAsc, setSortAsc] = useState(false);

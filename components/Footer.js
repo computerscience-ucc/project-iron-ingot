@@ -22,7 +22,7 @@ const Footer = () => {
                 transition={{
                   duration: 10,
                   ease: 'linear',
-                  loop: Infinity,
+                  repeat: Infinity,
                 }}
                 style={{
                   backgroundSize: '1000px 1000px',

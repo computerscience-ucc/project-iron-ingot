@@ -5,16 +5,16 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { usePrefetcer } from './Prefetcher';
+import { usePrefetcher } from './Prefetcher';
 
-const Navbar = (e) => {
+const Navbar = () => {
   const router = useRouter();
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [globalSearchMenuOpen, setGlobalSearchMenuOpen] = useState(false);
   const [thresholdReached, setThresholdReached] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const { globalSearchItems } = usePrefetcer();
+  const { globalSearchItems } = usePrefetcher();
 
   const isActivePath = (path) => {
     if (path === '/') return router.pathname === '/';
@@ -34,25 +34,25 @@ const Navbar = (e) => {
     setSearchResults(results);
   };
 
-  useEffect((e) => {
-    window.addEventListener('scroll', (e) => {
-      setThresholdReached(window.scrollY > 75);
-    });
+  useEffect(() => {
+    const handleScroll = () => setThresholdReached(window.scrollY > 75);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // check if user pressed ctrl + k and if so, set global search menu open to true
-  useEffect((e) => {
-    window.addEventListener('keydown', (e) => {
+  useEffect(() => {
+    const handleKeydown = (e) => {
       if (e.ctrlKey && e.key === 'k') {
         setGlobalSearchMenuOpen(true);
       }
-      // if user pressed esc, set global search menu open to false
       if (e.key === 'Escape') {
         setGlobalSearchMenuOpen(false);
         setSearchValue('');
         setSearchResults([]);
       }
-    });
+    };
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
   }, []);
 
   return (
@@ -267,7 +267,7 @@ const Navbar = (e) => {
                   transition={{
                     duration: 7,
                     ease: 'linear',
-                    loop: Infinity,
+                    repeat: Infinity,
                   }}
                   style={{
                     backgroundSize: '1000px 1000px',

@@ -6,14 +6,6 @@ import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-const titleCase = (str) => {
-  let split = str.toLowerCase().split(' ');
-  for (let i = 0; i < split.length; i++) {
-    split[i] = split[i][0].toUpperCase() + split[i].slice(1);
-  }
-  return split.join(' ');
-};
-
 const BulletinCard = ({ bulletin }) => {
   const { _id, _updatedAt, _createdAt, authors, title, tags, slug } = bulletin;
 
@@ -53,21 +45,15 @@ const BulletinCard = ({ bulletin }) => {
                 {dayjs(_updatedAt).format('MMM DD, YYYY')}
               </p>
             </CardBody>
-            <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">
-              {/* <p className="text-sm">
-                {authors
-                  .map((author) => {
-                    return `${author.fullName.lastName}`;
-                  })
-                  .join(', ')}
-              </p>*/}
-
-              {tags.map((tag, i) => (
-                <div key={i}>
-                  <Chip className="bg-[#27292D]" value={tag} />
-                </div>
-              ))}
-            </CardFooter>
+            {tags && tags.length > 0 && (
+              <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">
+                {tags.map((tag, i) => (
+                  <div key={i}>
+                    <Chip className="bg-[#27292D]" value={tag} />
+                  </div>
+                ))}
+              </CardFooter>
+            )}
           </Card>
         </motion.div>
       </Link>

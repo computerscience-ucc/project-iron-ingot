@@ -15,7 +15,7 @@ import {
   AiOutlineUnorderedList,
 } from 'react-icons/ai';
 import Link from 'next/link';
-import { usePrefetcer } from './Prefetcher';
+import { usePrefetcher } from './Prefetcher';
 
 // Character-scanner inline parser — reliably handles **bold**, *italic*, `code`
 function parseInline(text) {
@@ -434,7 +434,7 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
 // ────────────────────────────────────────────
 
 const ChatBot = () => {
-  const { siteConfig } = usePrefetcer() || {};
+  const { siteConfig } = usePrefetcher() || {};
   const chatbotName = siteConfig?.chatbotName || 'Ingo Assistant';
   const chatbotIcon = siteConfig?.chatbotIcon || null;
   const defaultWelcome = "Hi, I'm the Ingo Assistant. Use the buttons below to explore, or type a question directly.";
