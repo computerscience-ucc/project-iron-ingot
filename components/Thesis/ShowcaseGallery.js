@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
-import Image from 'next/image';
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CgChevronLeft, CgChevronRight } from "react-icons/cg";
+import Image from "next/image";
 
 const ShowcaseGallery = ({ images }) => {
   const [idx, setIdx] = useState(0);
@@ -35,7 +35,7 @@ const ShowcaseGallery = ({ images }) => {
       </div>
 
       {/* main image */}
-      <div className="relative bg-black overflow-hidden" style={{ height: '320px' }}>
+      <div className="relative bg-black overflow-hidden" style={{ height: "320px" }}>
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={idx}
@@ -44,13 +44,14 @@ const ShowcaseGallery = ({ images }) => {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             className="absolute inset-0"
           >
             <Image
               src={images[idx]}
-              layout="fill"
-              objectFit="contain"
+              fill
+              style={{ objectFit: "contain" }}
+              sizes="100vw"
               alt={`Showcase ${idx + 1}`}
             />
           </motion.div>
@@ -78,10 +79,10 @@ const ShowcaseGallery = ({ images }) => {
               key={i}
               onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
               className={`shrink-0 w-12 h-9 rounded-md overflow-hidden border-2 transition-all ${
-                i === idx ? 'border-red-500 opacity-100' : 'border-transparent opacity-35 hover:opacity-70'
+                i === idx ? "border-red-500 opacity-100" : "border-transparent opacity-35 hover:opacity-70"
               }`}
             >
-              <Image src={img} width={48} height={36} objectFit="cover" alt={`thumb-${i}`} />
+              <Image src={img} width={48} height={36} style={{ objectFit: "cover" }} alt={`thumb-${i}`} />
             </button>
           ))}
         </div>

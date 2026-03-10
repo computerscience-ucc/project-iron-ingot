@@ -1,13 +1,13 @@
-import { Card, CardBody, CardFooter, Chip } from '@material-tailwind/react';
+import { Card, CardBody, CardFooter, Chip } from "@material-tailwind/react";
 
-import Link from 'next/link';
-import { _Transition_Card } from '../../lib/animations';
-import dayjs from 'dayjs';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import Link from "next/link";
+import { _Transition_Card } from "../../lib/animations";
+import dayjs from "dayjs";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const BlogCard = ({ blog }) => {
-  const { _id, _updatedAt, _createdAt, authors, title, tags, slug } = blog;
+  const { _createdAt, authors, title, tags, slug } = blog;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,7 +34,7 @@ const BlogCard = ({ blog }) => {
               >
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                   className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full"
                 />
               </motion.div>
@@ -51,11 +51,11 @@ const BlogCard = ({ blog }) => {
                   .map((author) => {
                     return `${author.fullName.firstName} ${author.fullName.lastName}`;
                   })
-                  .join(', ')}
+                  .join(", ")}
               </p>
 
               <p className="text-sm text-grey-700">
-                {dayjs(_createdAt).format('MMM DD, YYYY')}
+                {dayjs(_createdAt).format("MMM DD, YYYY")}
               </p>
             </CardBody>
             {tags && tags.length > 0 && (

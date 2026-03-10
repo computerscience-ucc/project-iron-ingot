@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
-import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CgChevronLeft, CgChevronRight } from "react-icons/cg";
+import Image from "next/image";
 
 const HeroCarousel = ({ images, youtubeId }) => {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState(1);
-  const [tab, setTab] = useState('photos');
+  const [tab, setTab] = useState("photos");
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
 
@@ -20,7 +20,7 @@ const HeroCarousel = ({ images, youtubeId }) => {
   }, [hasImages, images]);
 
   useEffect(() => {
-    if (paused || tab !== 'photos' || !hasImages || images.length < 2) return;
+    if (paused || tab !== "photos" || !hasImages || images.length < 2) return;
     timerRef.current = setInterval(() => go(1), 4000);
     return () => clearInterval(timerRef.current);
   }, [paused, tab, hasImages, images, go]);
@@ -42,25 +42,25 @@ const HeroCarousel = ({ images, youtubeId }) => {
       {/* tab bar */}
       {hasImages && hasVideo && (
         <div className="flex border-b border-white/10">
-          {['photos', 'video'].map((t) => (
+          {["photos", "video"].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={`px-5 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors ${
                 tab === t
-                  ? 'text-white border-b-2 border-red-500'
-                  : 'text-gray-500 hover:text-gray-300'
+                  ? "text-white border-b-2 border-red-500"
+                  : "text-gray-500 hover:text-gray-300"
               }`}
             >
-              {t === 'photos' ? `Photos (${images.length})` : 'Video'}
+              {t === "photos" ? `Photos (${images.length})` : "Video"}
             </button>
           ))}
         </div>
       )}
 
       {/* photos */}
-      {tab === 'photos' && hasImages && (
-        <div className="relative w-full" style={{ height: '420px' }}>
+      {tab === "photos" && hasImages && (
+        <div className="relative w-full" style={{ height: "420px" }}>
           <AnimatePresence mode="wait" custom={dir}>
             <motion.div
               key={idx}
@@ -69,13 +69,14 @@ const HeroCarousel = ({ images, youtubeId }) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.35, ease: 'easeOut' }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
               className="absolute inset-0"
             >
               <Image
                 src={images[idx]}
-                layout="fill"
-                objectFit="cover"
+                fill
+                style={{ objectFit: "cover" }}
+                sizes="100vw"
                 alt={`Photo ${idx + 1}`}
                 priority={idx === 0}
               />
@@ -98,7 +99,7 @@ const HeroCarousel = ({ images, youtubeId }) => {
                     key={i}
                     onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
                     className={`h-1.5 rounded-full transition-all ${
-                      i === idx ? 'bg-white w-5' : 'bg-white/40 w-1.5 hover:bg-white/70'
+                      i === idx ? "bg-white w-5" : "bg-white/40 w-1.5 hover:bg-white/70"
                     }`}
                   />
                 ))}
@@ -112,8 +113,8 @@ const HeroCarousel = ({ images, youtubeId }) => {
       )}
 
       {/* video */}
-      {(tab === 'video' || (!hasImages && hasVideo)) && (
-        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+      {(tab === "video" || (!hasImages && hasVideo)) && (
+        <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
           <iframe
             className="absolute inset-0 w-full h-full"
             src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&enablejsapi=1`}

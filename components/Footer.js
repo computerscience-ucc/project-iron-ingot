@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { Typography } from '@material-tailwind/react';
-import IngoLogo from './IngoLogo';
+import Link from "next/link";
+import { Typography } from "@material-tailwind/react";
+import IngoLogo from "./IngoLogo";
 
 const Footer = () => {
   return (
@@ -102,7 +102,7 @@ const Footer = () => {
           </div>
           <div className="flex flex-col items-center lg:flex-row lg:justify-between text-grey-400 mt-4 text-center lg:text-left">
             <p className="flex gap-2 ">
-              Questions &amp; Suggestions?{' '}
+              Questions &amp; Suggestions?{" "}
               <span>
                 <a
                   href="mailto:ucc.computersciencecouncil@gmail.com"

@@ -1,32 +1,32 @@
-import { CgChevronLeft } from 'react-icons/cg';
+﻿import { CgChevronLeft } from "react-icons/cg";
 
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { _Transition_Page } from '../../lib/animations';
-import { client } from '../../lib/sanity';
-import dayjs from 'dayjs';
-import { motion } from 'framer-motion';
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import { _Transition_Page } from "../../lib/animations";
+import { client } from "../../lib/sanity";
+import dayjs from "dayjs";
+import { motion } from "framer-motion";
 
 function getYouTubeEmbedUrl(url) {
   if (!url) return null;
 
   try {
     const parsed = new URL(url);
-    if (parsed.hostname.includes('youtu.be')) {
-      const id = parsed.pathname.replace('/', '');
+    if (parsed.hostname.includes("youtu.be")) {
+      const id = parsed.pathname.replace("/", "");
       return id ? `https://www.youtube-nocookie.com/embed/${id}` : null;
     }
 
-    if (parsed.hostname.includes('youtube.com')) {
-      const id = parsed.searchParams.get('v');
+    if (parsed.hostname.includes("youtube.com")) {
+      const id = parsed.searchParams.get("v");
       if (id) return `https://www.youtube-nocookie.com/embed/${id}`;
 
-      if (parsed.pathname.startsWith('/embed/')) {
+      if (parsed.pathname.startsWith("/embed/")) {
         return `https://www.youtube-nocookie.com${parsed.pathname}`;
       }
     }
-  } catch (error) {
+  } catch {
     return null;
   }
 
@@ -35,12 +35,12 @@ function getYouTubeEmbedUrl(url) {
 
 export const getStaticPaths = async () => {
   const projects = await client.fetch(
-    `*[_type == "gallery"]{ "slug": slug.current }`
+    "*[_type == \"gallery\"]{ \"slug\": slug.current }"
   );
 
   return {
     paths: projects.map((project) => ({ params: { slug: project.slug } })),
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 };
 
@@ -113,12 +113,13 @@ const GalleryProjectPage = ({ project }) => {
                 <Image
                   src={project.profilePicture}
                   alt={project.personName}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               ) : (
                 <span className="w-full h-full flex items-center justify-center text-lg text-white/50 font-semibold">
-                  {(project.personName || '?').charAt(0).toUpperCase()}
+                  {(project.personName || "?").charAt(0).toUpperCase()}
                 </span>
               )}
             </a>
@@ -128,8 +129,8 @@ const GalleryProjectPage = ({ project }) => {
                 <span className="text-white/40">By:</span> {project.personName}
               </p>
               <p>
-                <span className="text-white/40">Date:</span>{' '}
-                {dayjs(project.projectDate || project._createdAt).format('MMMM D, YYYY')}
+                <span className="text-white/40">Date:</span>{" "}
+                {dayjs(project.projectDate || project._createdAt).format("MMMM D, YYYY")}
               </p>
             </div>
           </div>
@@ -168,7 +169,7 @@ const GalleryProjectPage = ({ project }) => {
         <hr className="mb-10 mt-6 opacity-30" />
 
         {embedUrl ? (
-          <div className="relative w-full rounded-xl overflow-hidden border border-white/10" style={{ paddingBottom: '56.25%' }}>
+          <div className="relative w-full rounded-xl overflow-hidden border border-white/10" style={{ paddingBottom: "56.25%" }}>
             <iframe
               className="absolute inset-0 w-full h-full"
               src={`${embedUrl}?rel=0&modestbranding=1&enablejsapi=1`}

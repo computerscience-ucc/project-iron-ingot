@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 const Card = ({ award, onClick }) => {
   const [loaded, setLoaded] = useState(false);
@@ -16,22 +16,21 @@ const Card = ({ award, onClick }) => {
       className="relative group break-inside-avoid rounded-2xl overflow-hidden bg-[#0f1218] border border-white/5 hover:border-red-500/40 transition-all cursor-pointer shadow-md hover:shadow-red-900/20 hover:shadow-lg mb-6"
     >
       {award.headerImage ? (
-        <>
+        <div className="w-full h-48 relative overflow-hidden">
           {!loaded && (
-            <div className="w-full h-48 bg-[#1a1d24] animate-pulse" />
+            <div className="absolute inset-0 z-10 bg-[#1a1d24] animate-pulse" />
           )}
-          <div className={`w-full h-48 relative overflow-hidden transition-transform duration-500 group-hover:scale-105 ${
-            loaded ? 'block' : 'hidden'
-          }`}>
+          <div className="w-full h-full transition-transform duration-500 group-hover:scale-105">
             <Image
               src={award.headerImage}
               alt={award.title}
-              onLoadingComplete={() => setLoaded(true)}
-              layout="fill"
-              objectFit="cover"
+              onLoad={() => setLoaded(true)}
+              fill
+              className={`object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+              sizes="(max-width: 768px) 100vw, 33vw"
             />
           </div>
-        </>
+        </div>
       ) : (
         <div className="w-full h-[260px] flex flex-col items-center justify-center bg-[#13151b] p-6 text-center gap-2">
           <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mb-1">
@@ -47,7 +46,7 @@ const Card = ({ award, onClick }) => {
       )}
 
       {/* hover overlay */}
-      <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 p-4">
+      <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 p-4 z-20">
         <div className="flex items-start justify-between gap-2">
           {award.academicYear && (
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-700/80 text-white font-semibold">

@@ -1,5 +1,5 @@
-import { memo, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { memo, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Module-level session cache
 const _modelSessionCache = new Map();
@@ -18,7 +18,7 @@ const ModelViewer = memo(function ModelViewer({ src }) {
     if (!el) return;
 
     const onLoad = () => {
-      _modelSessionCache.set(src, true); 
+      _modelSessionCache.set(src, true);
       setModelLoaded(true);
     };
     const onProgress = (e) => {
@@ -26,13 +26,13 @@ const ModelViewer = memo(function ModelViewer({ src }) {
       setProgress(pct);
     };
 
-    el.addEventListener('load', onLoad);
-    el.addEventListener('progress', onProgress);
+    el.addEventListener("load", onLoad);
+    el.addEventListener("progress", onProgress);
     return () => {
-      el.removeEventListener('load', onLoad);
-      el.removeEventListener('progress', onProgress);
+      el.removeEventListener("load", onLoad);
+      el.removeEventListener("progress", onProgress);
     };
-  }, [mounted, src]); 
+  }, [mounted, src]);
 
   if (!mounted || !src) return null;
 
@@ -40,7 +40,7 @@ const ModelViewer = memo(function ModelViewer({ src }) {
     <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0a0c10] shadow-xl">
       {/* Header */}
       <div className="px-4 py-2.5 border-b border-white/5 flex items-center gap-2 flex-wrap">
-        <span className={`w-2 h-2 rounded-full shrink-0 ${modelLoaded ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`} />
+        <span className={`w-2 h-2 rounded-full shrink-0 ${modelLoaded ? "bg-green-500" : "bg-red-500 animate-pulse"}`} />
         <span className="text-xs font-semibold text-gray-400 tracking-wide uppercase break-words leading-snug">
           Interactive 3D Model
         </span>
@@ -53,7 +53,7 @@ const ModelViewer = memo(function ModelViewer({ src }) {
       </div>
 
       {/* Viewer + loading overlay */}
-      <div className="relative" style={{ height: '460px' }}>
+      <div className="relative" style={{ height: "460px" }}>
         {/* Skeleton / loading state */}
         <AnimatePresence>
           {!modelLoaded && (
@@ -66,7 +66,7 @@ const ModelViewer = memo(function ModelViewer({ src }) {
               {/* Spinning 3D cube icon */}
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                 className="w-12 h-12 rounded-xl border-2 border-red-500/30 border-t-red-500 flex items-center justify-center"
               >
                 <svg className="w-5 h-5 text-red-500/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,7 +82,7 @@ const ModelViewer = memo(function ModelViewer({ src }) {
                     className="h-full rounded-full bg-red-500/70"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    transition={{ ease: 'easeOut', duration: 0.3 }}
+                    transition={{ ease: "easeOut", duration: 0.3 }}
                   />
                 </div>
                 <p className="text-[10px] text-gray-600">{progress}%</p>
@@ -91,14 +91,13 @@ const ModelViewer = memo(function ModelViewer({ src }) {
           )}
         </AnimatePresence>
 
-        {/* eslint-disable-next-line react/no-unknown-property */}
         <model-viewer
           ref={viewerRef}
           src={src}
           camera-controls
           auto-rotate
           shadow-intensity="1"
-          style={{ width: '100%', height: '100%', background: 'transparent', display: 'block' }}
+          style={{ width: "100%", height: "100%", background: "transparent", display: "block" }}
         />
       </div>
 

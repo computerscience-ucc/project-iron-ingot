@@ -2,9 +2,9 @@
 // Chatbot API route powered by Google Gemini 2.5 Flash
 // Requires: GEMINI_API_KEY environment variable
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { buildSiteContext, fetchAllTheses } from '../../lib/sanity';
-import { fetchSiteConfig } from '../../lib/siteConfig';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { buildSiteContext, fetchAllTheses } from "../../lib/sanity";
+import { fetchSiteConfig } from "../../lib/siteConfig";
 
 // ────────────────────────────────────────────────────────────
 // Rate limiting & IP protection
@@ -24,10 +24,10 @@ const MAX_MSG_LENGTH   = 600;             // hard cap on inbound message charact
 /** Extract best-guess client IP from the request */
 function getClientIp(req) {
   return (
-    (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
-    req.headers['x-real-ip'] ||
+    (req.headers["x-forwarded-for"] || "").split(",")[0].trim() ||
+    req.headers["x-real-ip"] ||
     req.socket?.remoteAddress ||
-    'unknown'
+    "unknown"
   );
 }
 
@@ -154,7 +154,7 @@ function findRelevantTheses(text, theses) {
 // Build card data from thesis entries
 function buildCards(theses) {
   return theses.map((t) => ({
-    type: 'thesis',
+    type: "thesis",
     title: t.title,
     slug: t.slug,
     headerImage: t.headerImage || null,
@@ -162,28 +162,28 @@ function buildCards(theses) {
     department: t.department || null,
     authors:
       t.authors
-        ?.map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
+        ?.map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
         .filter(Boolean)
-        .join(', ') || null,
-    owners: t.owners?.ownerFullname?.join(', ') || null,
+        .join(", ") || null,
+    owners: t.owners?.ownerFullname?.join(", ") || null,
     tags: t.tags || [],
     // Short IMRAD excerpt shown in the chat card (max 160 chars)
     summary: t.imrad
-      ? t.imrad.replace(/\s+/g, ' ').trim().slice(0, 160) + (t.imrad.length > 160 ? '…' : '')
+      ? t.imrad.replace(/\s+/g, " ").trim().slice(0, 160) + (t.imrad.length > 160 ? "…" : "")
       : null,
   }));
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   // ── Honeypot check – bots fill hidden fields, real users never do ──
   const { message, history, quickAction, _hp } = req.body || {};
-  if (typeof _hp === 'string' && _hp.trim().length > 0) {
+  if (typeof _hp === "string" && _hp.trim().length > 0) {
     // Silently succeed — mislead the bot into thinking it worked
-    console.warn('[chat] Honeypot triggered.');
+    console.warn("[chat] Honeypot triggered.");
     return res.status(200).json({ reply: "I couldn't find any relevant information on that.", cards: [] });
   }
 
@@ -192,7 +192,7 @@ export default async function handler(req, res) {
   const rl = checkRateLimit(clientIp);
   if (!rl.allowed) {
     const retryAfter = rl.retryAfter ?? 60;
-    res.setHeader('Retry-After', String(retryAfter));
+    res.setHeader("Retry-After", String(retryAfter));
     let msg;
     if (rl.banned) {
       msg = `Your IP has been temporarily blocked due to excessive requests. Please try again in ${Math.ceil(retryAfter / 60)} minute(s).`;
@@ -210,25 +210,25 @@ export default async function handler(req, res) {
   // Check if chatbot is disabled from the CMS
   if (siteConfig && siteConfig.chatbotEnabled === false) {
     return res.status(503).json({
-      reply: 'The chatbot is currently disabled. Please check back later.',
+      reply: "The chatbot is currently disabled. Please check back later.",
     });
   }
 
   // API key is always sourced from the environment variable (never stored in CMS)
   const apiKey = process.env.GEMINI_API_KEY;
-  const aiModel = (siteConfig && siteConfig.chatbotModel) || 'gemini-2.5-flash';
+  const aiModel = (siteConfig && siteConfig.chatbotModel) || "gemini-2.5-flash";
 
   if (!apiKey) {
-    console.error('GEMINI_API_KEY is not set in CMS or environment');
+    console.error("GEMINI_API_KEY is not set in CMS or environment");
     return res.status(500).json({
       reply:
-        'The chatbot is not configured yet. Please set the API key in Site Configuration or the GEMINI_API_KEY environment variable.',
+        "The chatbot is not configured yet. Please set the API key in Site Configuration or the GEMINI_API_KEY environment variable.",
     });
   }
 
   try {
-    if (!message || typeof message !== 'string') {
-      return res.status(400).json({ error: 'Message is required' });
+    if (!message || typeof message !== "string") {
+      return res.status(400).json({ error: "Message is required" });
     }
 
     // ── Message length cap ──
@@ -252,11 +252,11 @@ export default async function handler(req, res) {
     if (history && Array.isArray(history)) {
       let seenUser = false;
       history.forEach((msg) => {
-        if (msg.role === 'user') {
+        if (msg.role === "user") {
           seenUser = true;
-          chatHistory.push({ role: 'user', parts: [{ text: msg.text }] });
-        } else if (msg.role === 'bot' && seenUser) {
-          chatHistory.push({ role: 'model', parts: [{ text: msg.text }] });
+          chatHistory.push({ role: "user", parts: [{ text: msg.text }] });
+        } else if (msg.role === "bot" && seenUser) {
+          chatHistory.push({ role: "model", parts: [{ text: msg.text }] });
         }
       });
     }
@@ -265,10 +265,10 @@ export default async function handler(req, res) {
     let userMessage = message;
     if (quickAction) {
       const quickActionPrompts = {
-        'browse-thesis': `The user wants to browse thesis projects. Give them a helpful overview of available theses. List some notable ones with their titles and tags. Keep it concise.`,
-        'search-thesis': `The user is asking about thesis projects. Their specific question is: "${message}". Answer based on the thesis data available.`,
-        'about-ingo': `The user wants to know about Ingo and what this website does. Explain it clearly and concisely.`,
-        'recent-updates': `The user wants to know about recent updates on the site. Summarize the latest blogs, bulletins, thesis posts, and awards.`,
+        "browse-thesis": "The user wants to browse thesis projects. Give them a helpful overview of available theses. List some notable ones with their titles and tags. Keep it concise.",
+        "search-thesis": `The user is asking about thesis projects. Their specific question is: "${message}". Answer based on the thesis data available.`,
+        "about-ingo": "The user wants to know about Ingo and what this website does. Explain it clearly and concisely.",
+        "recent-updates": "The user wants to know about recent updates on the site. Summarize the latest blogs, bulletins, thesis posts, and awards.",
       };
       userMessage = quickActionPrompts[quickAction] || message;
     }
@@ -302,14 +302,14 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ reply, cards, warning: warningMsg });
   } catch (error) {
-    console.error('Chat API error:', error);
+    console.error("Chat API error:", error);
 
     // Provide a user-friendly error message
     const errorMessage =
-      error.message?.includes('API_KEY') ||
-      error.message?.includes('authentication')
-        ? 'There was an issue with the AI service configuration. Please try again later.'
-        : 'Sorry, I encountered an error. Please try again in a moment.';
+      error.message?.includes("API_KEY") ||
+      error.message?.includes("authentication")
+        ? "There was an issue with the AI service configuration. Please try again later."
+        : "Sorry, I encountered an error. Please try again in a moment.";
 
     return res.status(500).json({ reply: errorMessage });
   }

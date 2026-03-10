@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
-const TopGradient = ({ colorLeft = '#007ACC', colorRight = '#F92450' }) => {
+const TopGradient = ({ colorLeft = "#007ACC", colorRight = "#F92450" }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setIsVisible(window.scrollY < 75);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -15,9 +15,9 @@ const TopGradient = ({ colorLeft = '#007ACC', colorRight = '#F92450' }) => {
       initial={{ opacity: 0 }}
       animate={{
         opacity: 1,
-        transition: { duration: 0.5, ease: 'circOut' },
+        transition: { duration: 0.5, ease: "circOut" },
       }}
-      exit={{ opacity: 0, transition: { duration: 0.2, ease: 'circIn' } }}
+      exit={{ opacity: 0, transition: { duration: 0.2, ease: "circIn" } }}
       className="fixed top-0 left-0 h-[200px] scale-x-150 lg:h-[300px] w-full overflow-hidden -z-[1]"
     >
       <motion.div

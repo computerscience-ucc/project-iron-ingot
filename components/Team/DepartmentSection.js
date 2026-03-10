@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
-import MemberCarousel from './MemberCarousel';
-import PersonCard from './PersonCard';
-import NameOnlyList from './NameOnlyList';
+import { motion } from "framer-motion";
+import MemberCarousel from "./MemberCarousel";
+import PersonCard from "./PersonCard";
+import NameOnlyList from "./NameOnlyList";
 
 const cardPop = {
   initial: { opacity: 0, scale: 0.85, y: 20 },
-  animate: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+  animate: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
 };
 
 const stagger = {
@@ -39,14 +39,14 @@ const DepartmentSection = ({ dept, onPersonClick, CAROUSEL_THRESHOLD }) => {
             <PersonCard
               key={i}
               name={m.name}
-              subtitle={m.role || 'Member'}
+              subtitle={m.role || "Member"}
               photo={m.photo}
-              onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
+              onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || "Member" }) : undefined}
             />
           ))}
         </motion.div>
       ) : (
-        <NameOnlyList items={dept.members?.map((m) => ({ name: m.name, subtitle: m.role || 'Member' })) || []} />
+        <NameOnlyList items={dept.members?.map((m) => ({ name: m.name, subtitle: m.role || "Member" })) || []} />
       )}
     </motion.div>
   );

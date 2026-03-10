@@ -4,22 +4,19 @@ import {
   AiOutlineInfoCircle,
   AiOutlineLink,
   AiOutlineArrowUp,
-} from 'react-icons/ai';
-import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
-import { useCallback, useEffect, useRef, useState } from 'react';
+} from "react-icons/ai";
+import { useEffect, useState } from "react";
 
-
-import BlogCard from '../components/Card/Blog';
-import BulletinCard from '../components/Card/Bulletin';
-import Head from '../components/Head';
-import Link from 'next/link';
-import ThesisCard from '../components/Card/Thesis';
-import Image from 'next/image';
-import { _Transition_Page } from '../lib/animations';
-import { AnimatePresence, motion } from 'framer-motion';
-import { usePrefetcher } from '../components/Prefetcher';
-import Carousel from '../components/Awards/Carousel';
-import IngoLogo from '../components/IngoLogo';
+import BlogCard from "../components/Card/Blog";
+import BulletinCard from "../components/Card/Bulletin";
+import Head from "../components/Head";
+import Link from "next/link";
+import ThesisCard from "../components/Card/Thesis";
+import { _Transition_Page } from "../lib/animations";
+import { AnimatePresence, motion } from "framer-motion";
+import { usePrefetcher } from "../components/Prefetcher";
+import Carousel from "../components/Awards/Carousel";
+import IngoLogo from "../components/IngoLogo";
 
 const Home = () => {
   const { blogs, bulletins, thesis, awards } = usePrefetcher();
@@ -35,30 +32,24 @@ const Home = () => {
       setShowScrollTop(window.scrollY > 400);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <>
-      <Head 
+      <Head
         title="Home | Ingo"
         description="Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects."
         url="/"
       />
-
-
-
-
-
-
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}
         exit={{ opacity: 0 }}
         style={{
           background:
-            'radial-gradient(circle, #731010 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
+            "radial-gradient(circle, #731010 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)",
         }}
         className="absolute w-[800px] h-[800px] top-[100px] -left-[40vw] z-0 opacity-25"
       />
@@ -68,7 +59,7 @@ const Home = () => {
         exit={{ opacity: 0 }}
         style={{
           background:
-            'radial-gradient(circle, #a80000 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)',
+            "radial-gradient(circle, #a80000 0%,rgba(0,0,0,0) 60%, rgba(0,0,0,0) 100%)",
         }}
         className="absolute w-[800px] h-[800px] -top-[200px] left-[40vw] z-0 opacity-25"
       />
@@ -93,29 +84,29 @@ const Home = () => {
             See and learn what is happening in the BSCS Program
           </p>
 
-          <Link href={'/bulletin'}>
+          <Link href={"/bulletin"} className="self-center w-fit">
             <motion.div
               animate={{
                 backgroundPosition: [
-                  '0% 0%',
-                  '100% 0%',
-                  '100% 100%',
-                  '0% 100%',
-                  '0% 0%',
+                  "0% 0%",
+                  "100% 0%",
+                  "100% 100%",
+                  "0% 100%",
+                  "0% 0%",
                 ],
               }}
               transition={{
                 duration: 5,
-                ease: 'linear',
+                ease: "linear",
                 repeat: Infinity,
               }}
               style={{
-                backgroundSize: '1000px 1000px',
-                backgroundColor: 'rgb(6, 182, 212)',
+                backgroundSize: "1000px 1000px",
+                backgroundColor: "rgb(6, 182, 212)",
                 backgroundImage:
-                  'radial-gradient(at 17% 56%, rgb(244, 63, 94) 0, transparent 92%), radial-gradient(at 73% 7%, rgb(251, 146, 60) 0, transparent 45%), radial-gradient(at 73% 93%, rgb(185, 28, 28) 0, transparent 77%)',
+                  "radial-gradient(at 17% 56%, rgb(244, 63, 94) 0, transparent 92%), radial-gradient(at 73% 7%, rgb(251, 146, 60) 0, transparent 45%), radial-gradient(at 73% 93%, rgb(185, 28, 28) 0, transparent 77%)",
               }}
-              className="hover:scale-110 duration-200 text-primary-content w-fit px-10 py-3 rounded-lg cursor-pointer mt-16 self-center border-0"
+              className="hover:scale-110 duration-200 text-primary-content px-10 py-3 rounded-lg cursor-pointer mt-16 border-0"
             >
               See what&apos;s new on the board
             </motion.div>
@@ -134,7 +125,7 @@ const Home = () => {
                 translateY: [0, 10, 10],
                 transition: {
                   duration: 1,
-                  ease: 'easeInOut',
+                  ease: "easeInOut",
                   repeat: Infinity,
                 },
               }}
@@ -245,7 +236,7 @@ const Home = () => {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="fixed z-30 bottom-6 left-6 w-10 h-10 rounded-full bg-[#1a1d24] border border-white/10 hover:border-red-500/50 flex items-center justify-center text-gray-400 hover:text-white transition shadow-lg"
             aria-label="Scroll to top"
           >

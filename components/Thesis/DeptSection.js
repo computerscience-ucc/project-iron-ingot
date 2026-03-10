@@ -1,4 +1,4 @@
-import ThesisCard from '../Card/Thesis';
+import ThesisCard from "../Card/Thesis";
 
 const DeptSection = ({ dept, items }) => {
   if (!items || items.length === 0) return null;

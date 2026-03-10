@@ -1,11 +1,11 @@
-import { Card, CardBody, CardFooter, Chip } from '@material-tailwind/react';
+import { Card, CardBody, CardFooter, Chip } from "@material-tailwind/react";
 
-import Link from 'next/link';
-import { _Transition_Card } from '../../lib/animations';
-import dayjs from 'dayjs';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import Image from 'next/image';
+import Link from "next/link";
+import { _Transition_Card } from "../../lib/animations";
+import dayjs from "dayjs";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import Image from "next/image";
 
 const ThesisCard = ({ thesis }) => {
   const { _id, _createdAt, authors, title, tags, slug, headerImage } = thesis;
@@ -36,7 +36,7 @@ const ThesisCard = ({ thesis }) => {
               >
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                   className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full"
                 />
               </motion.div>
@@ -51,7 +51,8 @@ const ThesisCard = ({ thesis }) => {
                   className="absolute w-3/4 transition-all duration-200 h-full top-0 right-0 object-cover object-center -z-10 opacity-40 group-hover:scale-[0.95] rounded-xl group-hover:opacity-90"
                   src={headerImage}
                   alt={title}
-                  layout="fill"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               )}
             </motion.div>
@@ -61,10 +62,10 @@ const ThesisCard = ({ thesis }) => {
               <p className="z-10 text-sm mt-3 text-grey-600 font-semibold">
                 {authors
                   ?.map((author) => `${author.fullName.firstName} ${author.fullName.lastName}`)
-                  .join(', ')}
+                  .join(", ")}
               </p>
               <p className="z-10 text-sm text-grey-700">
-                {dayjs(_createdAt).format('MMM DD, YYYY')}
+                {dayjs(_createdAt).format("MMM DD, YYYY")}
               </p>
             </CardBody>
             {tags && tags.length > 0 && (

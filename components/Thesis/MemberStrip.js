@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { AiFillLinkedin, AiOutlineGlobal } from 'react-icons/ai';
-import Image from 'next/image';
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { AiFillLinkedin, AiOutlineGlobal } from "react-icons/ai";
+import Image from "next/image";
 
 function getInitials(name) {
-  if (!name) return '?';
-  return name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  if (!name) return "?";
+  return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 }
 
 const MemberCard = ({ member }) => {
   const [hovered, setHovered] = useState(false);
   const link = member.linkedIn || member.website || null;
-  const photoUrl = typeof member.photo === 'string'
+  const photoUrl = typeof member.photo === "string"
     ? member.photo
     : member.photo?.asset?.url || null;
 
@@ -24,7 +24,7 @@ const MemberCard = ({ member }) => {
       {/* avatar */}
       <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-red-500/60 transition-all shadow-md bg-[#1a1d24] flex items-center justify-center shrink-0">
         {photoUrl ? (
-          <Image src={photoUrl} layout="fill" objectFit="cover" alt={member.fullName} />
+          <Image src={photoUrl} fill style={{ objectFit: "cover" }} alt={member.fullName} sizes="48px" />
         ) : (
           <span className="text-sm font-bold text-gray-300">{getInitials(member.fullName)}</span>
         )}
@@ -53,7 +53,7 @@ const MemberCard = ({ member }) => {
             {member.section && <p className="text-[10px] text-gray-500 mt-0.5">{member.section}</p>}
             {link && (
               <p className="text-[9px] text-red-400 mt-1">
-                {member.linkedIn ? 'LinkedIn' : 'Website'} →
+                {member.linkedIn ? "LinkedIn" : "Website"} →
               </p>
             )}
           </motion.div>

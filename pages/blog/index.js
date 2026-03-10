@@ -1,29 +1,27 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-import BlogCard from '../../components/Card/Blog';
-import Head from '../../components/Head';
-import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../lib/animations';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcher } from '../../components/Prefetcher';
-import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
-import YearPill from '../../components/YearPill';
+import BlogCard from "../../components/Card/Blog";
+import Head from "../../components/Head";
+import TopGradient from "../../components/TopGradient";
+import { _Transition_Page } from "../../lib/animations";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePrefetcher } from "../../components/Prefetcher";
+import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from "react-icons/cg";
+import YearPill from "../../components/YearPill";
 
 // ─── helpers ───────────────────────────────────
-const ALL = 'All';
+const ALL = "All";
 
 function getYears(blogs) {
-  const years = [...new Set(blogs.map((b) => b.academicYear || 'Unknown'))].sort().reverse();
+  const years = [...new Set(blogs.map((b) => b.academicYear || "Unknown"))].sort().reverse();
   return [ALL, ...years];
 }
 
 function authorString(authors) {
   return (authors || [])
-    .map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
-    .join(' ');
+    .map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
+    .join(" ");
 }
-
-
 
 // ─── Page ──────────────────────────────────────
 const BlogPage = () => {
@@ -31,7 +29,7 @@ const BlogPage = () => {
   const [blogList, setBlogList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortAsc, setSortAsc] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     setBlogList(blogs || []);
@@ -47,13 +45,13 @@ const BlogPage = () => {
     const q = searchValue.trim().toLowerCase();
     let list = selectedYear === ALL
       ? blogList
-      : blogList.filter((b) => (b.academicYear || 'Unknown') === selectedYear);
+      : blogList.filter((b) => (b.academicYear || "Unknown") === selectedYear);
     if (q) {
       list = list.filter((b) => {
-        const titleMatch = (b.title || '').toLowerCase().includes(q);
-        const tagMatch = (b.tags || []).some((t) => (t || '').toLowerCase().includes(q));
+        const titleMatch = (b.title || "").toLowerCase().includes(q);
+        const tagMatch = (b.tags || []).some((t) => (t || "").toLowerCase().includes(q));
         const authorMatch = authorString(b.authors).toLowerCase().includes(q);
-        const yearMatch = (b.academicYear || '').toLowerCase().includes(q);
+        const yearMatch = (b.academicYear || "").toLowerCase().includes(q);
         return titleMatch || tagMatch || authorMatch || yearMatch;
       });
     }
@@ -65,7 +63,7 @@ const BlogPage = () => {
 
   return (
     <>
-      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
+      <TopGradient colorLeft={"#fd0101"} colorRight={"#a50000"} />
       <Head
         title="Blog | Ingo"
         description="Latest blog posts from BSCS students and faculty. Computer science trends, tutorials, and insights."
@@ -102,7 +100,7 @@ const BlogPage = () => {
           />
           {searchValue && (
             <button
-              onClick={() => setSearchValue('')}
+              onClick={() => setSearchValue("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
             >
               <CgClose size={14} />
@@ -130,7 +128,7 @@ const BlogPage = () => {
             className="ml-auto flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors border border-white/10 rounded-full px-3 py-1.5"
           >
             {sortAsc ? <CgArrowUp size={14} /> : <CgArrowDown size={14} />}
-            {sortAsc ? 'Oldest first' : 'Newest first'}
+            {sortAsc ? "Oldest first" : "Newest first"}
           </button>
         </div>
 
@@ -154,7 +152,7 @@ const BlogPage = () => {
                 </div>
               ) : (
                 <p className="text-white/40 text-lg">
-                  No blog posts found{searchValue ? ` for "${searchValue}"` : selectedYear !== ALL ? ` in ${selectedYear}` : ''}.
+                  No blog posts found{searchValue ? ` for "${searchValue}"` : selectedYear !== ALL ? ` in ${selectedYear}` : ""}.
                 </p>
               )}
             </motion.div>
