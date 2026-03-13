@@ -9,11 +9,11 @@ import {
 } from 'react-icons/cg';
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../components/_Animations';
+import { _Transition_Page } from '../../lib/animations';
 import { client } from '../../lib/sanity';
 import YearPill from '../../components/YearPill';
-import AwardCard from '../../components/AwardCard';
-import Lightbox from '../../components/Lightbox';
+import Card from '../../components/Awards/Card';
+import Lightbox from '../../components/Awards/Lightbox';
 
 // ─────────────────────────────────────
 // Sanity GROQ query
@@ -159,7 +159,7 @@ const Awards = () => {
         {!loading && filtered.length > 0 && (
           <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
             {filtered.map((award) => (
-              <AwardCard
+              <Card
                 key={award._id}
                 award={award}
                 onClick={() => setLightbox(award)}

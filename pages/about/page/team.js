@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { _Transition_Page } from '../../../components/_Animations';
+import { _Transition_Page } from '../../../lib/animations';
 import { client } from '../../../lib/sanity';
 import PersonLightbox from '../../../components/Team/PersonLightbox';
 import NameOnlyList from '../../../components/Team/NameOnlyList';
@@ -32,6 +32,17 @@ const TEAM_QUERY = `
 // ─── Helpers ──────────────────────────────────
 const anyPhoto = (arr) => arr?.some((m) => !!m.photo) ?? false;
 const CAROUSEL_THRESHOLD = 5;
+
+// ─── Animation variants ────────────────────────
+const fadeSlide = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: 'easeIn' } },
+};
+
+const stagger = {
+  animate: { transition: { staggerChildren: 0.08 } },
+};
 
 // ─── Team Content ──────────────────────────────
 const TeamContent = ({ team, onPersonClick }) => {

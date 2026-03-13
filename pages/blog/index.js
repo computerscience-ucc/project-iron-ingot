@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import BlogCard from '../../components/Card/Blog';
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../components/_Animations';
+import { _Transition_Page } from '../../lib/animations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefetcher } from '../../components/Prefetcher';
 import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';

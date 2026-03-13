@@ -5,7 +5,7 @@ import Head from '../../components/Head';
 import Link from 'next/link';
 import Image from 'next/image';
 import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../components/_Animations';
+import { _Transition_Page } from '../../lib/animations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefetcher } from '../../components/Prefetcher';
 import dayjs from 'dayjs';

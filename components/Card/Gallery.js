@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 import Link from 'next/link';
-import { _Transition_Card } from '../_Animations';
+import { _Transition_Card } from '../../lib/animations';
 import dayjs from 'dayjs';
 
 const GalleryCard = ({ project }) => {

@@ -6,7 +6,6 @@ import Image from 'next/image';
 const Lightbox = ({ award, onClose }) => {
   const [imgIndex, setImgIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const MotionImage = motion(Image);
 
   const images = useMemo(() => {
     if (award.images && award.images.length > 0) return award.images;
@@ -51,14 +50,14 @@ const Lightbox = ({ award, onClose }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.94, opacity: 0 }}
         transition={{ duration: 0.18, ease: 'easeOut' }}
-        className="relative w-full max-w-4xl bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
-        style={{ maxHeight: '92vh' }}
+        className="relative w-[1100px] max-w-[95vw] bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+        style={{ height: 'fit-content', maxHeight: '96vh' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+          className="absolute top-3 right-3 z-30 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
           aria-label="Close"
         >
           <CgClose size={18} />
@@ -67,10 +66,10 @@ const Lightbox = ({ award, onClose }) => {
         {/* main img */}
         <div
           className="relative flex items-center justify-center bg-black overflow-hidden shrink-0"
-          style={{ minHeight: '240px', maxHeight: '55vh' }}
+          style={{ height: '650px', maxHeight: '70vh' }}
         >
           <AnimatePresence mode="wait" custom={direction}>
-            <MotionImage
+            <motion.div
               key={imgIndex}
               custom={direction}
               variants={slideVariants}
@@ -78,11 +77,16 @@ const Lightbox = ({ award, onClose }) => {
               animate="center"
               exit="exit"
               transition={{ duration: 0.18, ease: 'easeOut' }}
-              src={images[imgIndex]}
-              alt={`${award.title} — photo ${imgIndex + 1}`}
-              layout="fill"
-              objectFit="contain"
-            />
+              className="absolute inset-0"
+            >
+              <Image
+                src={images[imgIndex]}
+                alt={`${award.title} — photo ${imgIndex + 1}`}
+                layout="fill"
+                objectFit="contain"
+                priority
+              />
+            </motion.div>
           </AnimatePresence>
 
           {/* prev / next */}

@@ -4,7 +4,7 @@ import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const AwardsCarousel = ({ awards }) => {
+const Carousel = ({ awards }) => {
   const items = awards?.filter((a) => a.headerImage) || [];
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState(1);
@@ -144,4 +144,4 @@ const AwardsCarousel = ({ awards }) => {
   );
 };
 
-export default AwardsCarousel;
+export default Carousel;

@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { CgArrowRight, CgChevronLeft, CgChevronRight, CgClose } from 'react-icons/cg';
 import Image from 'next/image';
 import { client } from '../../../lib/sanity';
-import { _Transition_Page } from '../../../components/_Animations';
+import { _Transition_Page } from '../../../lib/animations';
 
 // ─── GROQ query ────────────────────────────────
 const COUNCIL_QUERY = `

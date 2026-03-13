@@ -1,7 +1,7 @@
 import { Card, CardBody, CardFooter, Chip } from '@material-tailwind/react';
 
 import Link from 'next/link';
-import { _Transition_Card } from '../_Animations';
+import { _Transition_Card } from '../../lib/animations';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useState } from 'react';

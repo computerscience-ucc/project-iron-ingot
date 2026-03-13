@@ -15,10 +15,10 @@ import Head from '../components/Head';
 import Link from 'next/link';
 import ThesisCard from '../components/Card/Thesis';
 import Image from 'next/image';
-import { _Transition_Page } from '../components/_Animations';
+import { _Transition_Page } from '../lib/animations';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePrefetcher } from '../components/Prefetcher';
-import AwardsCarousel from '../components/AwardsCarousel';
+import Carousel from '../components/Awards/Carousel';
 import IngoLogo from '../components/IngoLogo';
 
 const Home = () => {
@@ -190,7 +190,7 @@ const Home = () => {
         </div>
 
         {/* awards carousel */}
-        <AwardsCarousel awards={awards} />
+        <Carousel awards={awards} />
 
         {/* latest blog */}
         <div className="flex flex-col gap-2 justify-center mb-32 mt-10">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-const AwardCard = ({ award, onClick }) => {
+const Card = ({ award, onClick }) => {
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -75,4 +75,4 @@ const AwardCard = ({ award, onClick }) => {
   );
 };
 
-export default AwardCard;
+export default Card;
