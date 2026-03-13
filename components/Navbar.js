@@ -1,18 +1,25 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button, IconButton, Input, Tooltip } from '@material-tailwind/react';
 import { CgClose, CgMenu, CgSearch } from 'react-icons/cg';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { usePrefetcer } from './Prefetcher';
 
 const Navbar = (e) => {
+  const router = useRouter();
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [globalSearchMenuOpen, setGlobalSearchMenuOpen] = useState(false);
   const [thresholdReached, setThresholdReached] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const { globalSearchItems } = usePrefetcer();
+
+  const isActivePath = (path) => {
+    if (path === '/') return router.pathname === '/';
+    return router.pathname === path || router.pathname.startsWith(`${path}/`);
+  };
 
   const searchItems = (e) => {
     const thisSearchValue = e.target.value.toLowerCase();
@@ -96,7 +103,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  className = "text-button-color"
+                  className={isActivePath('/blog') ? 'text-header-color' : 'text-button-color'}
                 >
                   blog
                 </Button>
@@ -105,7 +112,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  className = "text-button-color"
+                  className={isActivePath('/bulletin') ? 'text-header-color' : 'text-button-color'}
                 >
                   bulletin
                 </Button>
@@ -114,7 +121,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  className = "text-button-color"
+                  className={isActivePath('/thesis') ? 'text-header-color' : 'text-button-color'}
                 >
                   thesis
                 </Button>
@@ -123,9 +130,18 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  className = "text-button-color"
+                  className={isActivePath('/awards') ? 'text-header-color' : 'text-button-color'}
                 >
                   awards
+                </Button>
+              </Link>
+              <Link href="/gallery">
+                <Button
+                  onClick={(e) => setSideMenuOpen(false)}
+                  variant="text"
+                  className={isActivePath('/gallery') ? 'text-header-color' : 'text-button-color'}
+                >
+                  gallery
                 </Button>
               </Link>
 
@@ -133,7 +149,7 @@ const Navbar = (e) => {
                 <Button
                   onClick={(e) => setSideMenuOpen(false)}
                   variant="text"
-                  className = "text-button-color"
+                  className={isActivePath('/about') ? 'text-header-color' : 'text-button-color'}
                 >
                   about
                 </Button>
@@ -268,27 +284,32 @@ const Navbar = (e) => {
           </div>
           <div className="lg:flex gap-2 hidden">
             <Link href="/blog" scroll={false}>
-              <Button className = "font-black text-nav-color " variant="text">
+              <Button className={`font-black ${isActivePath('/blog') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
                 blog
               </Button>
             </Link>
             <Link href="/bulletin" scroll={false}>
-              <Button className = "font-black text-nav-color" variant="text">
+              <Button className={`font-black ${isActivePath('/bulletin') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
                 bulletin
               </Button>
             </Link>
             <Link href="/thesis" scroll={false}>
-              <Button className = "font-black text-nav-color" variant="text">
+              <Button className={`font-black ${isActivePath('/thesis') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
                 thesis
               </Button>
             </Link>
             <Link href="/awards" scroll={false}>
-              <Button className = "font-black text-nav-color" variant="text">
+              <Button className={`font-black ${isActivePath('/awards') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
                 awards
               </Button>
             </Link>
+            <Link href="/gallery" scroll={false}>
+              <Button className={`font-black ${isActivePath('/gallery') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
+                gallery
+              </Button>
+            </Link>
             <Link href="/about" scroll={false}>
-              <Button className = "font-black text-nav-color" variant="text">
+              <Button className={`font-black ${isActivePath('/about') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
                 about
               </Button>
             </Link>

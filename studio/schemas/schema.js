@@ -8,6 +8,7 @@ import blog from './blog';
 import bulletin from './bulletin';
 import thesis from './thesis';
 import award from './award';
+import gallery from './gallery';
 import recipient from './documents/recipient';
 import siteConfig from './siteConfig';
 import council from './council';
@@ -16,5 +17,5 @@ import devTeam from './devTeam';
 export default createSchema({
   name: 'default',
 
-  types: schemaTypes.concat([blog, author, bulletin, thesis, award, recipient, siteConfig, council, devTeam]),
+  types: schemaTypes.concat([blog, author, bulletin, thesis, award, gallery, recipient, siteConfig, council, devTeam]),
 });

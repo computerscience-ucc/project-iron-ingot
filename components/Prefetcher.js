@@ -71,6 +71,23 @@ const query_award = `
     tags,
   }
 `;
+const query_gallery = `
+  *[_type == 'gallery'] | order(projectDate desc, _createdAt desc) {
+    _id,
+    _createdAt,
+    _updatedAt,
+    _type,
+    "title": projectTitle,
+    "slug": slug.current,
+    personName,
+    "profilePicture": profilePicture.asset -> url,
+    projectDate,
+    youtubeEmbedLink,
+    githubUrl,
+    linkedinProfile,
+    tags,
+  }
+`;
 
 const PrefetcherContext = createContext();
 
@@ -79,6 +96,7 @@ const PrefetcherWrapper = ({ children }) => {
   const [bulletins, setBulletins] = useState([]);
   const [thesis, setThesis] = useState([]);
   const [awards, setAwards] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const [globalSearchItems, setGlobalSearchItems] = useState([]);
   const [siteConfig, setSiteConfig] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -88,6 +106,7 @@ const PrefetcherWrapper = ({ children }) => {
     bulletins,
     thesis,
     awards,
+    gallery,
     globalSearchItems,
     siteConfig,
   };
@@ -97,17 +116,19 @@ const PrefetcherWrapper = ({ children }) => {
     const res_bulletin = await client.fetch(query_bulletin);
     const res_thesis = await client.fetch(query_thesis);
     const res_awards = await client.fetch(query_award);
+    const res_gallery = await client.fetch(query_gallery);
     const res_config = await client.fetch(SITE_CONFIG_QUERY);
-    const globalItems = [...res_blog, ...res_bulletin, ...res_thesis, ...res_awards];
+    const globalItems = [...res_blog, ...res_bulletin, ...res_thesis, ...res_awards, ...res_gallery];
 
     setBlogs(res_blog);
     setBulletins(res_bulletin);
     setThesis(res_thesis);
     setAwards(res_awards);
+    setGallery(res_gallery);
     setGlobalSearchItems(globalItems);
     setSiteConfig(res_config || {});
 
-    if (res_blog && res_thesis && res_bulletin && res_awards) {
+    if (res_blog && res_thesis && res_bulletin && res_awards && res_gallery) {
       setTimeout(() => {
         setLoaded(true);
       }, 200);
