@@ -116,10 +116,12 @@ const HeroCarousel = ({ images, youtubeId }) => {
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
           <iframe
             className="absolute inset-0 w-full h-full"
-            src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&enablejsapi=1`}
             title="Thesis Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="autoplay; fullscreen; picture-in-picture; web-share"
             allowFullScreen
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
       )}
