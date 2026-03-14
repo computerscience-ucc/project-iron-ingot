@@ -11,6 +11,7 @@ import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
 import { _Transition_Page } from '../../components/_Animations';
 import { client } from '../../lib/sanity';
+import Image from 'next/image';
 
 // ─────────────────────────────────────
 // Sanity GROQ query
@@ -73,14 +74,17 @@ const AwardCard = ({ award, onClick }) => {
           {!loaded && (
             <div className="w-full h-48 bg-[#1a1d24] animate-pulse" />
           )}
-          <img
-            src={award.headerImage}
-            alt={award.title}
-            onLoad={() => setLoaded(true)}
-            className={`w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 ${
-              loaded ? 'block' : 'hidden'
-            }`}
-          />
+          <div className={`w-full h-48 relative overflow-hidden transition-transform duration-500 group-hover:scale-105 ${
+            loaded ? 'block' : 'hidden'
+          }`}>
+            <Image
+              src={award.headerImage}
+              alt={award.title}
+              onLoadingComplete={() => setLoaded(true)}
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
         </>
       ) : (
         <div className="w-full h-[260px] flex flex-col items-center justify-center bg-[#13151b] p-6 text-center gap-2">
@@ -131,6 +135,7 @@ const AwardCard = ({ award, onClick }) => {
 const Lightbox = ({ award, onClose }) => {
   const [imgIndex, setImgIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const MotionImage = motion(Image);
 
   const images = useMemo(() => {
     if (award.images && award.images.length > 0) return award.images;
@@ -194,7 +199,7 @@ const Lightbox = ({ award, onClose }) => {
           style={{ minHeight: '240px', maxHeight: '55vh' }}
         >
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.img
+            <MotionImage
               key={imgIndex}
               custom={direction}
               variants={slideVariants}
@@ -204,8 +209,8 @@ const Lightbox = ({ award, onClose }) => {
               transition={{ duration: 0.18, ease: 'easeOut' }}
               src={images[imgIndex]}
               alt={`${award.title} — photo ${imgIndex + 1}`}
-              className="max-w-full w-auto h-auto object-contain"
-              style={{ maxHeight: '55vh' }}
+              layout="fill"
+              objectFit="contain"
             />
           </AnimatePresence>
 
@@ -251,7 +256,9 @@ const Lightbox = ({ award, onClose }) => {
                     : 'border-transparent opacity-40 hover:opacity-75'
                 }`}
               >
-                <img src={img} alt={`thumb-${i}`} className="w-full h-full object-cover" />
+                <div className="w-full h-full relative">
+                  <Image src={img} alt={`thumb-${i}`} layout="fill" objectFit="cover" />
+                </div>
               </button>
             ))}
           </div>

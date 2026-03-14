@@ -14,6 +14,7 @@ import BulletinCard from '../components/card/Bulletin';
 import Head from '../components/Head';
 import Link from 'next/link';
 import ThesisCard from '../components/card/Thesis';
+import Image from 'next/image';
 import { _Transition_Page } from '../components/_Animations';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePrefetcher } from '../components/Prefetcher';
@@ -78,10 +79,12 @@ const AwardsCarousel = ({ awards }) => {
             transition={{ duration: 0.45, ease: 'easeOut' }}
             className="absolute inset-0"
           >
-            <img
+            <Image
               src={current.headerImage}
               alt={current.title}
-              className="w-full h-full object-cover"
+              layout="fill"
+              objectFit="cover"
+              priority
             />
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />

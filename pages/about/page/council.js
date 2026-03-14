@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { CgArrowRight, CgChevronLeft, CgChevronRight, CgClose } from 'react-icons/cg';
+import Image from 'next/image';
 import { client } from '../../../lib/sanity';
 import { _Transition_Page } from '../../../components/_Animations';
 
@@ -134,8 +135,8 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
               style={{ gridArea: '1 / 1' }}
             >
               {person.photo ? (
-                <div className="w-full overflow-hidden bg-black flex items-center justify-center" style={{ maxHeight: '70vh' }}>
-                  <img src={person.photo} alt={person.name} className="w-full h-auto max-h-[70vh] object-contain" />
+                <div className="w-full overflow-hidden bg-black flex items-center justify-center relative" style={{ height: '50vh', maxHeight: '70vh' }}>
+                  <Image src={person.photo} alt={person.name} layout="fill" objectFit="contain" priority />
                 </div>
               ) : (
                 <div
@@ -232,8 +233,8 @@ const PersonCard = ({ name, subtitle, photo, highlight = false, onClick, size = 
         />
       )}
       {photo ? (
-        <div className={`${cardH} w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
-          <img src={photo} alt={name} className="w-full h-full object-cover" />
+        <div className={`${cardH} w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all relative ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
+          <Image src={photo} alt={name} layout="fill" objectFit="cover" />
         </div>
       ) : (
         <div className={`${cardH} w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color' : ''}`}>

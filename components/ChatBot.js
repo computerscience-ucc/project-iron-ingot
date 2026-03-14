@@ -16,6 +16,7 @@ import {
 } from 'react-icons/ai';
 import Link from 'next/link';
 import { usePrefetcher } from './Prefetcher';
+import Image from 'next/image';
 
 // Character-scanner inline parser — reliably handles **bold**, *italic*, `code`
 function parseInline(text) {
@@ -286,11 +287,12 @@ const ChatThesisCard = ({ card, onNavigate }) => {
       )}
       {/* Banner image */}
       {card.headerImage && (
-        <div className="relative w-full h-24 overflow-hidden">
-          <img
+        <div className="relative w-full h-24 overflow-hidden transition-transform duration-500 group-hover:scale-105">
+          <Image
             src={card.headerImage}
             alt={card.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            layout="fill"
+            objectFit="cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0f1218]" />
         </div>
@@ -664,11 +666,11 @@ const ChatBot = () => {
             aria-label="Open chat"
           >
             {chatbotIcon ? (
-              <>
-                <img src={chatbotIcon} alt={chatbotName} className="w-full h-full object-cover" />
+              <div className="w-full h-full relative">
+                <Image src={chatbotIcon} alt={chatbotName} layout="fill" objectFit="cover" />
                 {/* Green online indicator */}
                 <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-[#0e1015] shadow" />
-              </>
+              </div>
             ) : (
               <>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
