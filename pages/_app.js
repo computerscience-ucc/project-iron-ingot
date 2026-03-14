@@ -6,18 +6,14 @@ import { useEffect } from 'react';
 import ChatBot from '../components/ChatBot';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import { PrefetcherWrapper, usePrefetcer } from '../components/Prefetcher';
+import { PrefetcherWrapper, usePrefetcher } from '../components/Prefetcher';
 import { ThemeProvider } from '@material-tailwind/react';
 import { useRouter } from 'next/router';
 
-/**
- * Inner app shell that has access to the Prefetcher context.
- * Injects CSS custom properties from the CMS Site Configuration
- * so colors flow into globals.css / Tailwind automatically.
- */
+// inner app shell with access to Prefetcher context
 function AppShell({ Component, pageProps }) {
   const router = useRouter();
-  const { siteConfig } = usePrefetcer();
+  const { siteConfig } = usePrefetcher();
 
   useEffect(() => {
     const handleRouteChange = () => window.scrollTo(0, 0);

@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import BulletinCard from '../../components/card/Bulletin';
+import BulletinCard from '../../components/Card/Bulletin';
 import Head from '../../components/Head';
 import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../components/_Animations';
+import { _Transition_Page } from '../../lib/animations';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcer } from '../../components/Prefetcher';
+import { usePrefetcher } from '../../components/Prefetcher';
 import { CgSearch, CgClose } from 'react-icons/cg';
 
 const Bulletin = (e) => {
-  const { bulletins } = usePrefetcer();
+  const { bulletins } = usePrefetcher();
   const [bulletinList, setBulletinList] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 

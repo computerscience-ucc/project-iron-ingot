@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import YearPill from '../../components/YearPill';
+import DeptSection from '../../components/Thesis/DeptSection';
 import Head from '../../components/Head';
-import ThesisCard from '../../components/card/Thesis';
+import ThesisCard from '../../components/Card/Thesis';
 import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../components/_Animations';
+import { _Transition_Page } from '../../lib/animations';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcer } from '../../components/Prefetcher';
+import { usePrefetcher } from '../../components/Prefetcher';
 import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
 
 // ─── constants ─────────────────────────────────
@@ -32,53 +34,12 @@ function authorString(authors) {
 }
 
 // ─── Year pill ─────────────────────────────────
-const YearPill = ({ label, active, onClick }) => (
-  <motion.button
-    onClick={onClick}
-    className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-      active ? 'text-white' : 'text-white/50 hover:text-white/80'
-    }`}
-  >
-    {active && (
-      <motion.div
-        layoutId="thesisYearPill"
-        className="absolute inset-0 rounded-full bg-header-color/30 border border-header-color/40"
-        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-      />
-    )}
-    <span className="relative z-10">{label}</span>
-  </motion.button>
-);
+
 
 // ─── Dept section ──────────────────────────────
-const DeptSection = ({ dept, items }) => {
-  if (items.length === 0) return null;
-  return (
-    <div className="mt-12">
-      <div className="mb-6">
-        <div className="flex items-center gap-3">
-          <span className="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase bg-header-color/20 text-header-color border border-header-color/30">
-            {dept}
-          </span>
-          <div className="flex-1 h-px bg-white/10 min-w-0" />
-          <span className="flex-shrink-0 text-white/30 text-xs">
-            {items.length} project{items.length !== 1 ? 's' : ''}
-          </span>
-        </div>
-        <p className="mt-1.5 ml-1 text-sm text-white/40">{DEPT_LABEL[dept]}</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {items.map((thesis, i) => (
-          <ThesisCard key={thesis._id || i} thesis={thesis} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
 // ─── Page ──────────────────────────────────────
 const Thesis = () => {
-  const { thesis } = usePrefetcer();
+  const { thesis } = usePrefetcher();
   const [thesisList, setThesisList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortAsc, setSortAsc] = useState(false);
