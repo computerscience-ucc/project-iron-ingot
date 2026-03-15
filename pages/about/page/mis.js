@@ -1,4 +1,4 @@
-import { _Transition_Page } from '../../../components/_Animations';
+import { _Transition_Page } from '../../../lib/animations';
 import { motion } from 'framer-motion';
 
 const Page_MIS = (e) => {

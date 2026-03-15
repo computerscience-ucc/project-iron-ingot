@@ -12,8 +12,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
-import { _Transition_Page } from '../../components/_Animations';
-import { client } from '../../components/Prefetcher';
+import { _Transition_Page } from '../../lib/animations';
+import { client } from '../../lib/sanity';
 import dayjs from 'dayjs';
 import urlBuilder from '@sanity/image-url';
 
@@ -194,12 +194,11 @@ const Blog = ({ blogPost }) => {
               </a>
             </Breadcrumbs>
           </div>
-          <p className="flex flex-col">
+          <div className="flex flex-col">
             Posted by:{' '}
             {post.authors.map((author, i) => (
               <p key={i} className="text-header-color transition font-bold">
-                {author.fullName.firstName} {author.fullName.lastName} (
-                {author.pronouns})
+                {author.fullName.firstName} {author.fullName.lastName} ({author.pronouns})
                 {author.batchYear && author.yearLevel && (
                   <span>
                     {' '}
@@ -208,7 +207,7 @@ const Blog = ({ blogPost }) => {
                 )}
               </p>
             ))}
-          </p>
+          </div>
         </div>
 
         <hr className="mb-16 mt-5 opacity-50" />

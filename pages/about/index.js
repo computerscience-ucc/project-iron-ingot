@@ -6,7 +6,7 @@ import Page_Council from './page/council';
 import Page_MIS from './page/mis';
 import Page_Team from './page/team';
 import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../components/_Animations';
+import { _Transition_Page } from '../../lib/animations';
 import { useRef, useState } from 'react';
 
 const AboutPage = (e) => {

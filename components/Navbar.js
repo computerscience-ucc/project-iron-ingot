@@ -5,16 +5,26 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { usePrefetcer } from './Prefetcher';
+import { usePrefetcher } from './Prefetcher';
+import IngoLogo from './IngoLogo';
 
-const Navbar = (e) => {
+const NAV_LINKS = [
+  { href: '/blog', label: 'blog' },
+  { href: '/bulletin', label: 'bulletin' },
+  { href: '/thesis', label: 'thesis' },
+  { href: '/awards', label: 'awards' },
+  { href: '/gallery', label: 'gallery' },
+  { href: '/about', label: 'about' },
+];
+
+const Navbar = () => {
   const router = useRouter();
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [globalSearchMenuOpen, setGlobalSearchMenuOpen] = useState(false);
   const [thresholdReached, setThresholdReached] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const { globalSearchItems } = usePrefetcer();
+  const { globalSearchItems } = usePrefetcher();
 
   const isActivePath = (path) => {
     if (path === '/') return router.pathname === '/';
@@ -34,25 +44,25 @@ const Navbar = (e) => {
     setSearchResults(results);
   };
 
-  useEffect((e) => {
-    window.addEventListener('scroll', (e) => {
-      setThresholdReached(window.scrollY > 75);
-    });
+  useEffect(() => {
+    const handleScroll = () => setThresholdReached(window.scrollY > 75);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // check if user pressed ctrl + k and if so, set global search menu open to true
-  useEffect((e) => {
-    window.addEventListener('keydown', (e) => {
+  useEffect(() => {
+    const handleKeydown = (e) => {
       if (e.ctrlKey && e.key === 'k') {
         setGlobalSearchMenuOpen(true);
       }
-      // if user pressed esc, set global search menu open to false
       if (e.key === 'Escape') {
         setGlobalSearchMenuOpen(false);
         setSearchValue('');
         setSearchResults([]);
       }
-    });
+    };
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
   }, []);
 
   return (
@@ -99,61 +109,17 @@ const Navbar = (e) => {
               }}
               className="w-10/12 sm:w-6/12 min-h-screen bg-[#161a22] flex flex-col justify-center gap-2 px-4"
             >
-              <Link href="/blog">
-                <Button
-                  onClick={(e) => setSideMenuOpen(false)}
-                  variant="text"
-                  className={isActivePath('/blog') ? 'text-header-color' : 'text-button-color'}
-                >
-                  blog
-                </Button>
-              </Link>
-              <Link href="/bulletin">
-                <Button
-                  onClick={(e) => setSideMenuOpen(false)}
-                  variant="text"
-                  className={isActivePath('/bulletin') ? 'text-header-color' : 'text-button-color'}
-                >
-                  bulletin
-                </Button>
-              </Link>
-              <Link href="/thesis">
-                <Button
-                  onClick={(e) => setSideMenuOpen(false)}
-                  variant="text"
-                  className={isActivePath('/thesis') ? 'text-header-color' : 'text-button-color'}
-                >
-                  thesis
-                </Button>
-              </Link>
-              <Link href="/awards">
-                <Button
-                  onClick={(e) => setSideMenuOpen(false)}
-                  variant="text"
-                  className={isActivePath('/awards') ? 'text-header-color' : 'text-button-color'}
-                >
-                  awards
-                </Button>
-              </Link>
-              <Link href="/gallery">
-                <Button
-                  onClick={(e) => setSideMenuOpen(false)}
-                  variant="text"
-                  className={isActivePath('/gallery') ? 'text-header-color' : 'text-button-color'}
-                >
-                  gallery
-                </Button>
-              </Link>
-
-              <Link href="/about">
-                <Button
-                  onClick={(e) => setSideMenuOpen(false)}
-                  variant="text"
-                  className={isActivePath('/about') ? 'text-header-color' : 'text-button-color'}
-                >
-                  about
-                </Button>
-              </Link>
+              {NAV_LINKS.map(({ href, label }) => (
+                <Link key={href} href={href}>
+                  <Button
+                    onClick={() => setSideMenuOpen(false)}
+                    variant="text"
+                    className={isActivePath(href) ? 'text-header-color' : 'text-button-color'}
+                  >
+                    {label}
+                  </Button>
+                </Link>
+              ))}
             </motion.div>
           </motion.div>
         )}
@@ -236,7 +202,7 @@ const Navbar = (e) => {
       </AnimatePresence>
 
       <main  
-        className={`"gradient-background"
+        className={`
           ${thresholdReached ? 'py-5 bg-[#0A0C10]' : 'py-10 bg-transparent'}
           fixed w-full  flex justify-center items-center px-5 lg:px-0 z-[99] transition-all duration-200
         `}
@@ -253,66 +219,19 @@ const Navbar = (e) => {
               </IconButton>
             </div>
             <Link href="/">
-              <p className="text-2xl font-bold text-transparent cursor-pointer">
-                <motion.span
-                  animate={{
-                    backgroundPosition: [
-                      '0% 0%',
-                      '100% 0%',
-                      '100% 100%',
-                      '0% 100%',
-                      '0% 0%',
-                    ],
-                  }}
-                  transition={{
-                    duration: 7,
-                    ease: 'linear',
-                    loop: Infinity,
-                  }}
-                  style={{
-                    backgroundSize: '1000px 1000px',
-                    backgroundColor: 'rgb(255, 50, 6)',
-                    backgroundImage:
-                      'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(100, 50, 85) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
-                  }}
-                  className="bg-clip-text bg-transparent"
-                >
-                  ingo
-                </motion.span>
-              </p>
+              <div className="cursor-pointer">
+                <IngoLogo />
+              </div>
             </Link>
           </div>
           <div className="lg:flex gap-2 hidden">
-            <Link href="/blog" scroll={false}>
-              <Button className={`font-black ${isActivePath('/blog') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
-                blog
-              </Button>
-            </Link>
-            <Link href="/bulletin" scroll={false}>
-              <Button className={`font-black ${isActivePath('/bulletin') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
-                bulletin
-              </Button>
-            </Link>
-            <Link href="/thesis" scroll={false}>
-              <Button className={`font-black ${isActivePath('/thesis') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
-                thesis
-              </Button>
-            </Link>
-            <Link href="/awards" scroll={false}>
-              <Button className={`font-black ${isActivePath('/awards') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
-                awards
-              </Button>
-            </Link>
-            <Link href="/gallery" scroll={false}>
-              <Button className={`font-black ${isActivePath('/gallery') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
-                gallery
-              </Button>
-            </Link>
-            <Link href="/about" scroll={false}>
-              <Button className={`font-black ${isActivePath('/about') ? 'text-header-color' : 'text-nav-color'}`} variant="text">
-                about
-              </Button>
-            </Link>
+            {NAV_LINKS.map(({ href, label }) => (
+              <Link key={href} href={href} scroll={false}>
+                <Button className={`font-black ${isActivePath(href) ? 'text-header-color' : 'text-nav-color'}`} variant="text">
+                  {label}
+                </Button>
+              </Link>
+            ))}
             <Tooltip
               content="You can press CTRL + K to open search"
               placement="bottom-end"

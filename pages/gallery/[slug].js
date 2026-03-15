@@ -3,8 +3,8 @@ import { CgChevronLeft } from 'react-icons/cg';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { _Transition_Page } from '../../components/_Animations';
-import { client } from '../../components/Prefetcher';
+import { _Transition_Page } from '../../lib/animations';
+import { client } from '../../lib/sanity';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 
@@ -15,15 +15,15 @@ function getYouTubeEmbedUrl(url) {
     const parsed = new URL(url);
     if (parsed.hostname.includes('youtu.be')) {
       const id = parsed.pathname.replace('/', '');
-      return id ? `https://www.youtube.com/embed/${id}` : null;
+      return id ? `https://www.youtube-nocookie.com/embed/${id}` : null;
     }
 
     if (parsed.hostname.includes('youtube.com')) {
       const id = parsed.searchParams.get('v');
-      if (id) return `https://www.youtube.com/embed/${id}`;
+      if (id) return `https://www.youtube-nocookie.com/embed/${id}`;
 
       if (parsed.pathname.startsWith('/embed/')) {
-        return `https://www.youtube.com${parsed.pathname}`;
+        return `https://www.youtube-nocookie.com${parsed.pathname}`;
       }
     }
   } catch (error) {
@@ -80,6 +80,9 @@ const GalleryProjectPage = ({ project }) => {
     <>
       <Head>
         <title>{`${project.title} | Gallery | Ingo`}</title>
+        <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
+        <link rel="preconnect" href="https://static.doubleclick.net" />
       </Head>
 
       <motion.main
@@ -168,10 +171,12 @@ const GalleryProjectPage = ({ project }) => {
           <div className="relative w-full rounded-xl overflow-hidden border border-white/10" style={{ paddingBottom: '56.25%' }}>
             <iframe
               className="absolute inset-0 w-full h-full"
-              src={`${embedUrl}?rel=0&modestbranding=1`}
+              src={`${embedUrl}?rel=0&modestbranding=1&enablejsapi=1`}
               title={`${project.title} video output`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="autoplay; fullscreen; picture-in-picture; web-share"
               allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
         ) : (

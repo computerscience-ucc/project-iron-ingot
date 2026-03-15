@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Typography } from '@material-tailwind/react';
-import { motion } from 'framer-motion';
+import IngoLogo from './IngoLogo';
 
 const Footer = () => {
   return (
@@ -8,34 +8,7 @@ const Footer = () => {
       <main className="pb-10 pt-5 flex justify-center px-5 lg:px-0 z-40">
         <section className="w-full max-w-4xl flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row lg:justify-between mt-7 text-center lg:text-right">
-            <p className="text-xl font-bold text-transparent">
-              <motion.span
-                animate={{
-                  backgroundPosition: [
-                    '0% 0%',
-                    '100% 0%',
-                    '100% 100%',
-                    '0% 100%',
-                    '0% 0%',
-                  ],
-                }}
-                transition={{
-                  duration: 10,
-                  ease: 'linear',
-                  loop: Infinity,
-                }}
-                style={{
-                  backgroundSize: '1000px 1000px',
-
-                  backgroundColor: 'rgb(6, 182, 212)',
-                  backgroundImage:
-                    'radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)',
-                }}
-                className="bg-clip-text bg-transparent"
-              >
-                ingo
-              </motion.span>
-            </p>
+            <IngoLogo />
             <div className="flex flex-col md:flex-row mt-4 lg:mt-0 gap-7 lg:gap-10 ">
               <div>
                 <p className="font-semibold mb-2">Internal Links</p>

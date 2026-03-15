@@ -1,15 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import sanityClient from '@sanity/client';
+import { client } from '../lib/sanity';
 import { SITE_CONFIG_QUERY } from '../lib/siteConfig';
-
-export const client = sanityClient({
-  projectId: 'gjvp776o',
-  dataset: 'production',
-  useCdn: true,
-  apiVersion: '2022-06-22',
-});
 
 // queries
 const query_blog = `
@@ -111,7 +104,7 @@ const PrefetcherWrapper = ({ children }) => {
     siteConfig,
   };
 
-  const fetchInitalData = async () => {
+  const fetchInitialData = async () => {
     const res_blog = await client.fetch(query_blog);
     const res_bulletin = await client.fetch(query_bulletin);
     const res_thesis = await client.fetch(query_thesis);
@@ -135,8 +128,8 @@ const PrefetcherWrapper = ({ children }) => {
     }
   };
 
-  useEffect((e) => {
-    fetchInitalData();
+  useEffect(() => {
+    fetchInitialData();
   }, []);
 
   return (
@@ -170,7 +163,7 @@ const PrefetcherWrapper = ({ children }) => {
                 transition={{
                   duration: 10,
                   ease: 'linear',
-                  loop: Infinity,
+                  repeat: Infinity,
                 }}
                 style={{
                   backgroundSize: '1000px 1000px',
@@ -191,8 +184,8 @@ const PrefetcherWrapper = ({ children }) => {
   );
 };
 
-const usePrefetcer = () => {
+const usePrefetcher = () => {
   return useContext(PrefetcherContext);
 };
 
-export { PrefetcherWrapper, usePrefetcer };
+export { PrefetcherWrapper, usePrefetcher };
