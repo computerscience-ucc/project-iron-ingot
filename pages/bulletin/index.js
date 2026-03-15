@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-import BulletinCard from '../../components/Card/Bulletin';
-import Head from '../../components/Head';
-import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../lib/animations';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcher } from '../../components/Prefetcher';
-import { CgSearch, CgClose } from 'react-icons/cg';
+import BulletinCard from "../../components/Card/Bulletin";
+import Head from "../../components/Head";
+import TopGradient from "../../components/TopGradient";
+import { _Transition_Page } from "../../lib/animations";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePrefetcher } from "../../components/Prefetcher";
+import { CgSearch, CgClose } from "react-icons/cg";
 
-const Bulletin = (e) => {
+const Bulletin = () => {
   const { bulletins } = usePrefetcher();
   const [bulletinList, setBulletinList] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     setBulletinList(bulletins);
@@ -25,16 +25,16 @@ const Bulletin = (e) => {
     const q = searchValue.trim().toLowerCase();
     if (!q) return bulletinList;
     return bulletinList.filter((b) => {
-      const titleMatch = (b.title || '').toLowerCase().includes(q);
-      const tagMatch = (b.tags || []).some((t) => (t || '').toLowerCase().includes(q));
+      const titleMatch = (b.title || "").toLowerCase().includes(q);
+      const tagMatch = (b.tags || []).some((t) => (t || "").toLowerCase().includes(q));
       return titleMatch || tagMatch;
     });
   }, [bulletinList, searchValue]);
 
   return (
     <>
-      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
-      <Head 
+      <TopGradient colorLeft={"#fd0101"} colorRight={"#a50000"} />
+      <Head
         title="Bulletin | Ingo"
         description="Official BSCS program bulletins, announcements, and important updates from the Computer Science department."
         url="/bulletin"
@@ -69,7 +69,7 @@ const Bulletin = (e) => {
           />
           {searchValue && (
             <button
-              onClick={() => setSearchValue('')}
+              onClick={() => setSearchValue("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
             >
               <CgClose size={14} />
@@ -95,7 +95,7 @@ const Bulletin = (e) => {
                 </div>
               ) : (
                 <p className="text-white/40 text-lg">
-                  No bulletins found{searchValue ? ` for "${searchValue}"` : ''}.
+                  No bulletins found{searchValue ? ` for "${searchValue}"` : ""}.
                 </p>
               )}
             </motion.div>

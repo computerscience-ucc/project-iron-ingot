@@ -1,4 +1,4 @@
-export default {
+const recipient = {
   type: "document",
   name: "recipient",
   title: "Recipient",
@@ -190,7 +190,7 @@ export default {
         hotspot: true,
       },
       validation: (Rule) => [
-        Rule.custom((value) => {
+        Rule.custom(() => {
           return true;
         }),
       ],
@@ -267,3 +267,5 @@ export default {
     },
   },
 };
+
+export default recipient;

@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CgChevronLeft, CgChevronRight, CgClose } from 'react-icons/cg';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CgChevronLeft, CgChevronRight, CgClose } from "react-icons/cg";
+import Image from "next/image";
 
 const GRADIENTS = [
-  'from-rose-500/40 to-pink-600/30',
-  'from-violet-500/40 to-purple-600/30',
-  'from-blue-500/40 to-cyan-600/30',
-  'from-emerald-500/40 to-teal-600/30',
-  'from-amber-500/40 to-orange-600/30',
-  'from-fuchsia-500/40 to-pink-500/30',
-  'from-sky-500/40 to-indigo-600/30',
-  'from-lime-500/40 to-green-600/30',
-  'from-red-500/40 to-rose-600/30',
-  'from-cyan-500/40 to-blue-600/30',
+  "from-rose-500/40 to-pink-600/30",
+  "from-violet-500/40 to-purple-600/30",
+  "from-blue-500/40 to-cyan-600/30",
+  "from-emerald-500/40 to-teal-600/30",
+  "from-amber-500/40 to-orange-600/30",
+  "from-fuchsia-500/40 to-pink-500/30",
+  "from-sky-500/40 to-indigo-600/30",
+  "from-lime-500/40 to-green-600/30",
+  "from-red-500/40 to-rose-600/30",
+  "from-cyan-500/40 to-blue-600/30",
 ];
 
 export const getGradient = (name) => {
-  const hash = (name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const hash = (name || "").split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return GRADIENTS[hash % GRADIENTS.length];
 };
 
@@ -37,12 +37,12 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') { setDir(1);  setIdx((i) => (i + 1 + people.length) % people.length); }
-      if (e.key === 'ArrowLeft')  { setDir(-1); setIdx((i) => (i - 1 + people.length) % people.length); }
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") { setDir(1);  setIdx((i) => (i + 1 + people.length) % people.length); }
+      if (e.key === "ArrowLeft")  { setDir(-1); setIdx((i) => (i - 1 + people.length) % people.length); }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose, people.length]);
 
   if (!person) return null;
@@ -60,7 +60,7 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
         className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -96,7 +96,7 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
         )}
 
         {/* grid-stack wrapper: entering + exiting overlap in the same cell, no height doubling or FLIP */}
-        <div style={{ display: 'grid', overflow: 'hidden' }}>
+        <div style={{ display: "grid", overflow: "hidden" }}>
           <AnimatePresence custom={dir} initial={false}>
             <motion.div
               key={idx}
@@ -105,19 +105,19 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.22, ease: 'easeInOut' }}
-              style={{ gridArea: '1 / 1' }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+              style={{ gridArea: "1 / 1" }}
             >
               {person.photo ? (
-                <div className="w-full overflow-hidden bg-black flex items-center justify-center relative" style={{ height: '50vh', maxHeight: '70vh' }}>
-                  <Image src={person.photo} alt={person.name} layout="fill" objectFit="contain" priority />
+                <div className="w-full overflow-hidden bg-black flex items-center justify-center relative" style={{ height: "50vh", maxHeight: "70vh" }}>
+                  <Image src={person.photo} alt={person.name} fill style={{ objectFit: "contain" }} sizes="100vw" priority />
                 </div>
               ) : (
                 <div
                   className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
-                  style={{ height: '400px' }}
+                  style={{ height: "400px" }}
                 >
-                  <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || '?'}</span>
+                  <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || "?"}</span>
                 </div>
               )}
 

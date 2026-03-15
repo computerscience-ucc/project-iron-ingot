@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue } from 'framer-motion';
-import { CgArrowRight } from 'react-icons/cg';
-import PersonCard from './PersonCard';
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue } from "framer-motion";
+import { CgArrowRight } from "react-icons/cg";
+import PersonCard from "./PersonCard";
 
 const CAROUSEL_THRESHOLD = 5;
 const AUTO_SCROLL_THRESHOLD = CAROUSEL_THRESHOLD;
@@ -24,8 +24,8 @@ const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
       }
     };
     measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
   }, [members]);
 
   useEffect(() => {
@@ -61,9 +61,9 @@ const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
     <PersonCard
       key={i}
       name={m.name}
-      subtitle={m.role || 'Member'}
+      subtitle={m.role || "Member"}
       photo={m.photo}
-      onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
+      onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || "Member" }) : undefined}
     />
   );
 
@@ -81,7 +81,7 @@ const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
           dragConstraints={{ right: 0, left: -constraint }}
           onDragStart={() => { isDragging.current = true; }}
           onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 300); }}
-          whileTap={{ cursor: 'grabbing' }}
+          whileTap={{ cursor: "grabbing" }}
           className="flex gap-5 py-2 w-max"
         >
           {members.map(renderItem || defaultRender)}

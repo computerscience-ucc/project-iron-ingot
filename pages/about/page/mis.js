@@ -1,7 +1,7 @@
-import { _Transition_Page } from '../../../lib/animations';
-import { motion } from 'framer-motion';
+import { _Transition_Page } from "../../../lib/animations";
+import { motion } from "framer-motion";
 
-const Page_MIS = (e) => {
+const Page_MIS = () => {
   return (
     <>
       <motion.section
@@ -17,21 +17,21 @@ const Page_MIS = (e) => {
 
         <p>
           Management Information System helps the students in terms of data
-          encoding and enrollment, MIS help the student to{' '}
+          encoding and enrollment, MIS help the student to{" "}
           <span className="font-semibold text-header-color">
             see and gather their data in our Database
           </span>
-          , MIS was built to help the University in terms of{' '}
+          , MIS was built to help the University in terms of{" "}
           <span className="font-semibold text-header-color">
             students data, enrolling, encoding, and even photocopying
-          </span>{' '}
+          </span>{" "}
           their paper works.
         </p>
         <p className="mt-4">
           <span className="font-semibold text-header-color">
             Prof. Joemen Barrios
           </span>
-          , also an alumni of the University, is known as one of the{' '}
+          , also an alumni of the University, is known as one of the{" "}
           <span className="font-semibold text-header-color">
             pioneers of the said organization
           </span>

@@ -1,23 +1,22 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { CgChevronLeft, CgChevronRight, CgChevronUp } from 'react-icons/cg';
-import { AiFillLinkedin, AiOutlineGlobal } from 'react-icons/ai';
-import { useCallback, useEffect, useRef, useState, memo } from 'react';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import Script from 'next/script';
-import { PortableText } from '@portabletext/react';
-import { _Transition_Page } from '../../lib/animations';
-import { client } from '../../lib/sanity';
-import dayjs from 'dayjs';
-import urlBuilder from '@sanity/image-url';
-import MaterialsList from '../../components/Thesis/MaterialsList';
-import HeroCarousel from '../../components/Thesis/HeroCarousel';
-import MemberStrip from '../../components/Thesis/MemberStrip';
-import RightPanel from '../../components/Thesis/RightPanel';
+import { AnimatePresence, motion } from "framer-motion";
+import { CgChevronLeft, CgChevronUp } from "react-icons/cg";
+import { useEffect, useRef, useState } from "react";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import Script from "next/script";
+import { PortableText } from "@portabletext/react";
+import { _Transition_Page } from "../../lib/animations";
+import { client } from "../../lib/sanity";
+import dayjs from "dayjs";
+import urlBuilder from "@sanity/image-url";
+import MaterialsList from "../../components/Thesis/MaterialsList";
+import HeroCarousel from "../../components/Thesis/HeroCarousel";
+import MemberStrip from "../../components/Thesis/MemberStrip";
+import RightPanel from "../../components/Thesis/RightPanel";
 
 const urlFor = (source) =>
-  urlBuilder({ projectId: 'gjvp776o', dataset: 'production' }).image(source);
+  urlBuilder({ projectId: "gjvp776o", dataset: "production" }).image(source);
 
 function getYouTubeId(url) {
   if (!url) return null;
@@ -25,16 +24,11 @@ function getYouTubeId(url) {
   return m ? m[1] : null;
 }
 
-function getInitials(name) {
-  if (!name) return '?';
-  return name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-}
-
 const blockComponents = {
   types: {
     image: ({ value }) => (
       <div className="relative w-full h-[300px] my-4">
-        <Image src={urlFor(value.asset).url()} layout="fill" objectFit="contain" alt={value.alt || ''} />
+        <Image src={urlFor(value.asset).url()} layout="fill" objectFit="contain" alt={value.alt || ""} />
       </div>
     ),
   },
@@ -60,21 +54,19 @@ const blockComponents = {
   },
 };
 
-
-
 const DEPT_LABEL = {
-  CS: 'Computer Science',
-  IT: 'Information Technology',
-  IS: 'Information Systems',
-  EMC: 'Entertainment & Multimedia Computing',
-  Other: 'General / Other',
+  CS: "Computer Science",
+  IT: "Information Technology",
+  IS: "Information Systems",
+  EMC: "Entertainment & Multimedia Computing",
+  Other: "General / Other",
 };
 
 export const getStaticPaths = async () => {
-  const posts = await client.fetch(`*[_type == "thesis"]{ "slug": slug.current }`);
+  const posts = await client.fetch("*[_type == \"thesis\"]{ \"slug\": slug.current }");
   return {
     paths: posts.map((p) => ({ params: { slug: p.slug } })),
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 };
 
@@ -113,7 +105,7 @@ export const getStaticProps = async ({ params }) => {
 const ThesisPage = ({ post }) => {
   const mainRef = useRef(null);
   const [scrollTop, setScrollTop] = useState(false);
-  const [leftTab, setLeftTab] = useState('abstract');
+  const [leftTab, setLeftTab] = useState("abstract");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -121,8 +113,8 @@ const ThesisPage = ({ post }) => {
       const h = mainRef.current?.scrollHeight || 0;
       setScrollTop(window.scrollY > h * 0.15 && window.scrollY < h - 700);
     };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   if (!post) return null;
@@ -139,7 +131,6 @@ const ThesisPage = ({ post }) => {
         <title>{post.title} | Ingo</title>
         <meta name="description" content={post.title} />
       </Head>
-
       {/* Load Google model-viewer script only when needed */}
       {hasModel && (
         <Script
@@ -148,7 +139,6 @@ const ThesisPage = ({ post }) => {
           strategy="lazyOnload"
         />
       )}
-
       <motion.main
         ref={mainRef}
         variants={_Transition_Page}
@@ -159,11 +149,13 @@ const ThesisPage = ({ post }) => {
       >
         {/* ── Back + Title ── */}
         <div className="mb-8">
-          <Link href="/thesis" scroll={false}>
-            <a className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-red-400 transition mb-5">
-              <CgChevronLeft size={18} />
-              Back to Thesis
-            </a>
+          <Link
+            href="/thesis"
+            scroll={false}
+            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-red-400 transition mb-5">
+
+            <CgChevronLeft size={18} />Back to Thesis
+
           </Link>
 
           {/* Meta badges */}
@@ -180,7 +172,7 @@ const ThesisPage = ({ post }) => {
             )}
             {post._createdAt && (
               <span className="text-[11px] text-gray-600 ml-auto">
-                {dayjs(post._createdAt).format('MMMM D, YYYY')}
+                {dayjs(post._createdAt).format("MMMM D, YYYY")}
               </span>
             )}
           </div>
@@ -217,7 +209,7 @@ const ThesisPage = ({ post }) => {
               {post.owners.ownerSection && (
                 <span className="text-red-400 mr-2">({post.owners.ownerSection})</span>
               )}
-              {post.owners.ownerFullname.join(', ')}
+              {post.owners.ownerFullname.join(", ")}
             </p>
           </div>
         )}
@@ -225,28 +217,28 @@ const ThesisPage = ({ post }) => {
         <hr className="border-white/5 mb-10" />
 
         {/* ── Two-column: Content | 3D Model or Showcase ── */}
-        <div className={hasRightPanel ? 'grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10 items-start' : ''}>
+        <div className={hasRightPanel ? "grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10 items-start" : ""}>
           {/* Left: Tabs + content */}
           <div className="flex flex-col gap-4">
             {/* Tab switcher */}
             <div className="flex gap-1 p-1 bg-[#0a0c10] rounded-xl border border-white/5 w-fit">
               <button
-                onClick={() => setLeftTab('abstract')}
+                onClick={() => setLeftTab("abstract")}
                 className={`px-5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  leftTab === 'abstract'
-                    ? 'bg-red-600/90 text-white shadow-sm'
-                    : 'text-gray-500 hover:text-gray-300'
+                  leftTab === "abstract"
+                    ? "bg-red-600/90 text-white shadow-sm"
+                    : "text-gray-500 hover:text-gray-300"
                 }`}
               >
                 Abstract
               </button>
               {post.materials && post.materials.length > 0 && (
                 <button
-                  onClick={() => setLeftTab('materials')}
+                  onClick={() => setLeftTab("materials")}
                   className={`flex items-center gap-1.5 px-5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                    leftTab === 'materials'
-                      ? 'bg-red-600/90 text-white shadow-sm'
-                      : 'text-gray-500 hover:text-gray-300'
+                    leftTab === "materials"
+                      ? "bg-red-600/90 text-white shadow-sm"
+                      : "text-gray-500 hover:text-gray-300"
                   }`}
                 >
                   Materials
@@ -257,7 +249,7 @@ const ThesisPage = ({ post }) => {
 
             {/* Tab content */}
             <AnimatePresence mode="wait">
-              {leftTab === 'abstract' && (
+              {leftTab === "abstract" && (
                 <motion.div
                   key="abstract"
                   initial={{ opacity: 0, y: 6 }}
@@ -272,7 +264,7 @@ const ThesisPage = ({ post }) => {
                   )}
                 </motion.div>
               )}
-              {leftTab === 'materials' && (
+              {leftTab === "materials" && (
                 <motion.div
                   key="materials"
                   initial={{ opacity: 0, y: 6 }}
@@ -298,13 +290,12 @@ const ThesisPage = ({ post }) => {
             <p className="text-xs text-gray-600 uppercase tracking-wider mb-1">Posted by</p>
             <p className="text-sm text-gray-400">
               {post.authors
-                .map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
-                .join(', ')}
+                .map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
+                .join(", ")}
             </p>
           </div>
         )}
       </motion.main>
-
       {/* Scroll-to-top FAB */}
       <AnimatePresence>
         {scrollTop && (
@@ -312,7 +303,7 @@ const ThesisPage = ({ post }) => {
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 10 }}
-            onClick={() => window.scroll({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scroll({ top: 0, behavior: "smooth" })}
             className="fixed z-30 bottom-6 right-6 w-10 h-10 rounded-full bg-[#1a1d24] border border-white/10 hover:border-red-500/50 flex items-center justify-center text-gray-400 hover:text-white transition shadow-lg"
             aria-label="Scroll to top"
           >

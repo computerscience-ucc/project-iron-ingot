@@ -1,4 +1,4 @@
-export default {
+const author = {
   type: "document",
   name: "author",
   title: "Author",
@@ -8,14 +8,14 @@ export default {
       name: "fullName",
       title: "Authors Full name",
       options: {
-         collapsed: true,
+        collapsed: true,
       },
       fields: [
         {
           type: "string",
           name: "firstName",
           title: "First name",
-         validation: Rule => Rule.required(),
+          validation: Rule => Rule.required(),
         },
         {
           type: "string",
@@ -77,3 +77,5 @@ export default {
     },
   },
 };
+
+export default author;

@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
-import { CgArrowRight, CgChevronLeft, CgChevronRight, CgClose } from 'react-icons/cg';
-import Image from 'next/image';
-import { client } from '../../../lib/sanity';
-import { _Transition_Page } from '../../../lib/animations';
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { client } from "../../../lib/sanity";
+import { _Transition_Page } from "../../../lib/animations";
 
 // ─── GROQ query ────────────────────────────────
 const COUNCIL_QUERY = `
@@ -45,147 +43,17 @@ const COUNCIL_QUERY = `
   }
 `;
 
-// ─── Lightbox slide variants ──────────────────
-const lightboxSlideVariants = {
-  enter: (d) => ({ opacity: 0, y: 0, x: d > 0 ? 60 : -60 }),
-  center: { opacity: 1, x: 0 },
-  exit: (d) => ({ opacity: 0, y: 0, x: d > 0 ? -60 : 60 }),
-};
-
-// ─── Person Lightbox ─────────────────────────
-const PersonLightbox = ({ people, initialIndex, onClose }) => {
-  const [idx, setIdx] = useState(initialIndex);
-  const [dir, setDir] = useState(1);
-  const person = people[idx];
-  const gradient = getGradient(person?.name);
-
-  const go = (d) => { setDir(d); setIdx((i) => (i + d + people.length) % people.length); };
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') { setDir(1);  setIdx((i) => (i + 1 + people.length) % people.length); }
-      if (e.key === 'ArrowLeft')  { setDir(-1); setIdx((i) => (i - 1 + people.length) % people.length); }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose, people.length]);
-
-  if (!person) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-        className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-          aria-label="Close"
-        >
-          <CgClose size={18} />
-        </button>
-
-        {/* Prev */}
-        {people.length > 1 && (
-          <button
-            onClick={(e) => { e.stopPropagation(); go(-1); }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-            aria-label="Previous"
-          >
-            <CgChevronLeft size={22} />
-          </button>
-        )}
-
-        {/* Next */}
-        {people.length > 1 && (
-          <button
-            onClick={(e) => { e.stopPropagation(); go(1); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-            aria-label="Next"
-          >
-            <CgChevronRight size={22} />
-          </button>
-        )}
-
-        {/* Grid-stack wrapper: entering + exiting overlap in the same cell, no height doubling or FLIP */}
-        <div style={{ display: 'grid', overflow: 'hidden' }}>
-          <AnimatePresence custom={dir} initial={false}>
-            <motion.div
-              key={idx}
-              custom={dir}
-              variants={lightboxSlideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.22, ease: 'easeInOut' }}
-              style={{ gridArea: '1 / 1' }}
-            >
-              {person.photo ? (
-                <div className="w-full overflow-hidden bg-black flex items-center justify-center relative" style={{ height: '50vh', maxHeight: '70vh' }}>
-                  <Image src={person.photo} alt={person.name} layout="fill" objectFit="contain" priority />
-                </div>
-              ) : (
-                <div
-                  className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
-                  style={{ height: '400px' }}
-                >
-                  <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || '?'}</span>
-                </div>
-              )}
-
-              <div className="p-5">
-                <p className="text-lg font-bold text-white">{person.name}</p>
-                <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
-                {people.length > 1 && (
-                  <p className="text-[10px] text-white/20 mt-2">{idx + 1} / {people.length}</p>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-// ─── Gradient palette ────
-const GRADIENTS = [
-  'from-rose-500/40 to-pink-600/30',
-  'from-violet-500/40 to-purple-600/30',
-  'from-blue-500/40 to-cyan-600/30',
-  'from-emerald-500/40 to-teal-600/30',
-  'from-amber-500/40 to-orange-600/30',
-  'from-fuchsia-500/40 to-pink-500/30',
-  'from-sky-500/40 to-indigo-600/30',
-  'from-lime-500/40 to-green-600/30',
-  'from-red-500/40 to-rose-600/30',
-  'from-cyan-500/40 to-blue-600/30',
-];
-
-const getGradient = (name) => {
-  const hash = (name || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  return GRADIENTS[hash % GRADIENTS.length];
-};
+import PersonLightbox from "../../../components/Team/PersonLightbox";
+import NameOnlyList from "../../../components/Team/NameOnlyList";
+import PersonCard from "../../../components/Team/PersonCard";
+import YearSelector from "../../../components/Team/YearSelector";
+import MemberCarousel from "../../../components/Team/MemberCarousel";
 
 // ─── Animation variants ────────────────────────
 const fadeSlide = {
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
-  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: 'easeIn' } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: "easeIn" } },
 };
 
 const stagger = {
@@ -194,187 +62,12 @@ const stagger = {
 
 const cardPop = {
   initial: { opacity: 0, scale: 0.85, y: 20 },
-  animate: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+  animate: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
 };
 
 // ─── Helpers ──────────────────────────────────
 const anyPhoto = (arr) => arr?.some((m) => !!m.photo) ?? false;
-
-// ─── Name-only list (no photos in section) ────
-const NameOnlyList = ({ items }) => (
-  <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
-    {items.map((item, i) => (
-      <div key={i} className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center w-full md:w-auto md:min-w-[130px]">
-        <p className="text-sm font-semibold text-white leading-tight">{item.name}</p>
-        {item.subtitle && <p className="text-[11px] text-header-color mt-0.5 leading-tight">{item.subtitle}</p>}
-      </div>
-    ))}
-  </div>
-);
-
-// ─── Portrait Card (rectangular, uniform size) ─
-const PersonCard = ({ name, subtitle, photo, highlight = false, onClick, size = 'lg' }) => {
-  const gradient = getGradient(name);
-  const isSmall = size === 'sm';
-  const cardW = isSmall ? 'w-32 md:w-40' : 'w-52 md:w-64';
-  const cardH = isSmall ? 'h-40 md:h-48' : 'h-64 md:h-80';
-  const initials = isSmall ? 'text-3xl md:text-4xl' : 'text-5xl md:text-6xl';
-  return (
-    <motion.div
-      variants={cardPop}
-      onClick={onClick}
-      className={`${cardW} flex-shrink-0 flex flex-col ${highlight ? 'relative' : ''} ${onClick ? 'cursor-pointer group/card' : ''}`}
-    >
-      {highlight && (
-        <motion.div
-          className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-header-color/20 to-button-color/10 blur-md -z-10"
-          animate={{ opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
-      {photo ? (
-        <div className={`${cardH} w-full rounded-xl overflow-hidden ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all relative ${onClick ? 'group-hover/card:ring-header-color group-hover/card:scale-[1.02]' : ''}`}>
-          <Image src={photo} alt={name} layout="fill" objectFit="cover" />
-        </div>
-      ) : (
-        <div className={`${cardH} w-full rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} ring-1 ${highlight ? 'ring-header-color' : 'ring-white/10'} shadow-lg transition-all ${onClick ? 'group-hover/card:ring-header-color' : ''}`}>
-          <span className={`${initials} font-bold opacity-70`}>{name?.charAt(0) || '?'}</span>
-        </div>
-      )}
-      <div className="mt-3 text-center px-1">
-        <p className="font-semibold leading-tight text-sm md:text-base">{name}</p>
-        <p className="text-[11px] text-header-color leading-tight mt-1">{subtitle}</p>
-        {onClick && <p className="text-[9px] text-white/20 mt-0.5 group-hover/card:text-white/40 transition-colors">Click to view</p>}
-      </div>
-    </motion.div>
-  );
-};
-
-// ─── Year Pill Selector ────────────────────────
-const YearSelector = ({ years, selected, onSelect }) => (
-  <div className="flex flex-wrap justify-center gap-2 mt-8">
-    {years.map((year) => (
-      <motion.button
-        key={year.academicYear}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => onSelect(year._id)}
-        className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${
-          selected === year._id
-            ? 'text-white'
-            : 'text-white/50 hover:text-white/80 bg-white/5 hover:bg-white/10'
-        }`}
-      >
-        {selected === year._id && (
-          <motion.div
-            layoutId="yearPill"
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-button-color to-header-color"
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            style={{ zIndex: -1 }}
-          />
-        )}
-        {year.academicYear}
-        {year.isCurrent && <span className="ml-1 text-yellow-400 text-[10px] align-bottom">★</span>}
-      </motion.button>
-    ))}
-  </div>
-);
-
-// ─── Auto-scrolling Carousel ───────────────────
 const CAROUSEL_THRESHOLD = 5;
-const AUTO_SCROLL_THRESHOLD = CAROUSEL_THRESHOLD;
-const SCROLL_SPEED = 0.4;
-
-const MemberCarousel = ({ members, renderItem, onPersonClick }) => {
-  const containerRef = useRef();
-  const innerRef = useRef();
-  const x = useMotionValue(0);
-  const [constraint, setConstraint] = useState(0);
-  const isDragging = useRef(false);
-  const isHovering = useRef(false);
-  const isVisible = useRef(false);
-  const autoScroll = members.length >= AUTO_SCROLL_THRESHOLD;
-
-  useEffect(() => {
-    const measure = () => {
-      if (innerRef.current && containerRef.current) {
-        setConstraint(innerRef.current.scrollWidth - containerRef.current.offsetWidth);
-      }
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [members]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { isVisible.current = entry.isIntersecting; },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // Auto-scroll ping-pong
-  useEffect(() => {
-    if (!autoScroll || constraint <= 0) return;
-    let dir = -1;
-    let raf;
-    const step = () => {
-      if (!isDragging.current && !isHovering.current && isVisible.current) {
-        const cur = x.get();
-        let next = cur + dir * SCROLL_SPEED;
-        if (next <= -constraint) { dir = 1; }
-        if (next >= 0) { dir = -1; }
-        x.set(next);
-      }
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [autoScroll, constraint, x]);
-
-  const defaultRender = (m, i) => (
-    <PersonCard
-      key={i}
-      name={m.name}
-      subtitle={m.role || 'Member'}
-      photo={m.photo}
-      highlight={m.role?.toLowerCase().includes('head')}
-      onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
-    />
-  );
-
-  return (
-    <div
-      className="w-full"
-      onMouseEnter={() => { isHovering.current = true; }}
-      onMouseLeave={() => { isHovering.current = false; }}
-    >
-      <motion.div ref={containerRef} className="cursor-grab overflow-hidden">
-        <motion.div
-          ref={innerRef}
-          style={{ x }}
-          drag="x"
-          dragConstraints={{ right: 0, left: -constraint }}
-          onDragStart={() => { isDragging.current = true; }}
-          onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 300); }}
-          whileTap={{ cursor: 'grabbing' }}
-          className="flex gap-5 py-2 w-max"
-        >
-          {members.map(renderItem || defaultRender)}
-        </motion.div>
-      </motion.div>
-      <p className="flex items-center justify-end gap-2 mt-3 text-xs text-white/30">
-        {autoScroll && <span className="animate-pulse text-white/20">Auto-scrolling</span>}
-        <span>Drag to browse</span>
-        <CgArrowRight size={14} className="text-yellow-500/60" />
-      </p>
-    </div>
-  );
-};
 
 // ─── Committee Section ─────────────────────────
 const CommitteeSection = ({ committee, onPersonClick }) => {
@@ -401,15 +94,15 @@ const CommitteeSection = ({ committee, onPersonClick }) => {
             <PersonCard
               key={i}
               name={m.name}
-              subtitle={m.role || 'Member'}
+              subtitle={m.role || "Member"}
               photo={m.photo}
-              highlight={m.role?.toLowerCase().includes('head')}
-              onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' }) : undefined}
+              highlight={m.role?.toLowerCase().includes("head")}
+              onClick={onPersonClick ? () => onPersonClick({ name: m.name, photo: m.photo, subtitle: m.role || "Member" }) : undefined}
             />
           ))}
         </motion.div>
       ) : (
-        <NameOnlyList items={committee.members?.map((m) => ({ name: m.name, subtitle: m.role || 'Member' })) || []} />
+        <NameOnlyList items={committee.members?.map((m) => ({ name: m.name, subtitle: m.role || "Member" })) || []} />
       )}
     </motion.div>
   );
@@ -426,9 +119,9 @@ const PyramidSection = ({ council, onPersonClick }) => {
         <motion.div variants={cardPop} className="flex flex-col items-center">
           <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Adviser</p>
           {council.adviser.photo ? (
-            <PersonCard name={council.adviser.name} subtitle="Adviser" photo={council.adviser.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.adviser.name, photo: council.adviser.photo, subtitle: 'Adviser' }) : undefined} />
+            <PersonCard name={council.adviser.name} subtitle="Adviser" photo={council.adviser.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.adviser.name, photo: council.adviser.photo, subtitle: "Adviser" }) : undefined} />
           ) : (
-            <NameOnlyList items={[{ name: council.adviser.name, subtitle: 'Adviser' }]} />
+            <NameOnlyList items={[{ name: council.adviser.name, subtitle: "Adviser" }]} />
           )}
         </motion.div>
       )}
@@ -439,16 +132,16 @@ const PyramidSection = ({ council, onPersonClick }) => {
         {anyPhoto([council.president, council.vicePresident].filter(Boolean)) ? (
           <div className="flex flex-wrap justify-center gap-8">
             {council.president?.name && (
-              <PersonCard name={council.president.name} subtitle="President" photo={council.president.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.president.name, photo: council.president.photo, subtitle: 'President' }) : undefined} />
+              <PersonCard name={council.president.name} subtitle="President" photo={council.president.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.president.name, photo: council.president.photo, subtitle: "President" }) : undefined} />
             )}
             {council.vicePresident?.name && (
-              <PersonCard name={council.vicePresident.name} subtitle="Vice President" photo={council.vicePresident.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.vicePresident.name, photo: council.vicePresident.photo, subtitle: 'Vice President' }) : undefined} />
+              <PersonCard name={council.vicePresident.name} subtitle="Vice President" photo={council.vicePresident.photo} highlight onClick={onPersonClick ? () => onPersonClick({ name: council.vicePresident.name, photo: council.vicePresident.photo, subtitle: "Vice President" }) : undefined} />
             )}
           </div>
         ) : (
           <NameOnlyList items={[
-            council.president?.name && { name: council.president.name, subtitle: 'President' },
-            council.vicePresident?.name && { name: council.vicePresident.name, subtitle: 'Vice President' },
+            council.president?.name && { name: council.president.name, subtitle: "President" },
+            council.vicePresident?.name && { name: council.vicePresident.name, subtitle: "Vice President" },
           ].filter(Boolean)} />
         )}
       </motion.div>
@@ -472,7 +165,7 @@ const PyramidSection = ({ council, onPersonClick }) => {
                 const isLastRow = rowIdx === Math.ceil(council.officers.length / 3) - 1;
                 const isSolo = isLastRow && row.length === 1;
                 return (
-                  <div key={rowIdx} className={`flex gap-6 ${isSolo ? 'justify-center' : 'flex-wrap justify-center'}`}>
+                  <div key={rowIdx} className={`flex gap-6 ${isSolo ? "justify-center" : "flex-wrap justify-center"}`}>
                     {row.map((o, i) => (
                       <PersonCard key={rowIdx * 3 + i} name={o.name} subtitle={o.position} photo={o.photo} onClick={onPersonClick ? () => onPersonClick({ name: o.name, photo: o.photo, subtitle: o.position }) : undefined} />
                     ))}
@@ -529,7 +222,7 @@ const PyramidSection = ({ council, onPersonClick }) => {
           variants={fadeSlide}
           initial="initial"
           whileInView="animate"
-          viewport={{ once: true, margin: '-50px' }}
+          viewport={{ once: true, margin: "-50px" }}
           className="w-full mt-10 flex flex-col items-center"
         >
           <div className="border-b border-white/10 w-full max-w-xl mb-10" />
@@ -553,12 +246,12 @@ const PyramidSection = ({ council, onPersonClick }) => {
 const buildCouncilPeople = (council) => {
   if (!council) return [];
   const list = [];
-  if (council.adviser?.name) list.push({ name: council.adviser.name, photo: council.adviser.photo, subtitle: 'Adviser' });
-  if (council.president?.name) list.push({ name: council.president.name, photo: council.president.photo, subtitle: 'President' });
-  if (council.vicePresident?.name) list.push({ name: council.vicePresident.name, photo: council.vicePresident.photo, subtitle: 'Vice President' });
+  if (council.adviser?.name) list.push({ name: council.adviser.name, photo: council.adviser.photo, subtitle: "Adviser" });
+  if (council.president?.name) list.push({ name: council.president.name, photo: council.president.photo, subtitle: "President" });
+  if (council.vicePresident?.name) list.push({ name: council.vicePresident.name, photo: council.vicePresident.photo, subtitle: "Vice President" });
   council.officers?.forEach((o) => list.push({ name: o.name, photo: o.photo, subtitle: o.position }));
   council.yearRepresentatives?.forEach((r) => list.push({ name: r.name, photo: r.photo, subtitle: r.yearLevel }));
-  council.committees?.forEach((c) => c.members?.forEach((m) => list.push({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' })));
+  council.committees?.forEach((c) => c.members?.forEach((m) => list.push({ name: m.name, photo: m.photo, subtitle: m.role || "Member" })));
   council.classPresidents?.forEach((cp) => list.push({ name: cp.name, photo: cp.photo, subtitle: cp.section }));
   return list;
 };
@@ -602,43 +295,43 @@ const Page_Council = () => {
         {lightbox && <PersonLightbox people={lightbox.people} initialIndex={lightbox.index} onClose={() => setLightbox(null)} />}
       </AnimatePresence>
 
-    <motion.section
-      variants={_Transition_Page}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="py-8 text-center"
-    >
-      <p className="text-2xl font-semibold">Computer Science Council</p>
+      <motion.section
+        variants={_Transition_Page}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="py-8 text-center"
+      >
+        <p className="text-2xl font-semibold">Computer Science Council</p>
 
-      {loading ? (
-        <div className="mt-16 flex justify-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
-          />
-        </div>
-      ) : (
-        <>
-          <YearSelector years={councils} selected={selectedId} onSelect={setSelectedId} />
+        {loading ? (
+          <div className="mt-16 flex justify-center">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
+            />
+          </div>
+        ) : (
+          <>
+            <YearSelector years={councils} selected={selectedId} onSelect={setSelectedId} />
 
-          <AnimatePresence mode="wait">
-            {selectedCouncil && (
-              <motion.div
-                key={selectedCouncil._id}
-                variants={fadeSlide}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <PyramidSection council={selectedCouncil} onPersonClick={handlePersonClick} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
-      )}
-    </motion.section>
+            <AnimatePresence mode="wait">
+              {selectedCouncil && (
+                <motion.div
+                  key={selectedCouncil._id}
+                  variants={fadeSlide}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <PyramidSection council={selectedCouncil} onPersonClick={handlePersonClick} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
+      </motion.section>
     </>
   );
 };

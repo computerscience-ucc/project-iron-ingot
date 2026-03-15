@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { _Transition_Page } from '../../../lib/animations';
-import { client } from '../../../lib/sanity';
-import PersonLightbox from '../../../components/Team/PersonLightbox';
-import NameOnlyList from '../../../components/Team/NameOnlyList';
-import PersonCard from '../../../components/Team/PersonCard';
-import YearSelector from '../../../components/Team/YearSelector';
-import MemberCarousel from '../../../components/Team/MemberCarousel';
-import DepartmentSection from '../../../components/Team/DepartmentSection';
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { _Transition_Page } from "../../../lib/animations";
+import { client } from "../../../lib/sanity";
+import PersonLightbox from "../../../components/Team/PersonLightbox";
+import NameOnlyList from "../../../components/Team/NameOnlyList";
+import PersonCard from "../../../components/Team/PersonCard";
+import YearSelector from "../../../components/Team/YearSelector";
+import DepartmentSection from "../../../components/Team/DepartmentSection";
 
 // ─── GROQ query ────────────────────────────────
 const TEAM_QUERY = `
@@ -37,7 +36,7 @@ const CAROUSEL_THRESHOLD = 5;
 const fadeSlide = {
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
-  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: 'easeIn' } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: "easeIn" } },
 };
 
 const stagger = {
@@ -103,7 +102,7 @@ const buildTeamPeople = (team) => {
   if (!team) return [];
   const list = [];
   team.leadership?.forEach((l) => list.push({ name: l.name, photo: l.photo, subtitle: l.role }));
-  team.departments?.forEach((d) => d.members?.forEach((m) => list.push({ name: m.name, photo: m.photo, subtitle: m.role || 'Member' })));
+  team.departments?.forEach((d) => d.members?.forEach((m) => list.push({ name: m.name, photo: m.photo, subtitle: m.role || "Member" })));
   return list;
 };
 
@@ -146,43 +145,43 @@ const Page_Team = () => {
         {lightbox && <PersonLightbox people={lightbox.people} initialIndex={lightbox.index} onClose={() => setLightbox(null)} />}
       </AnimatePresence>
 
-    <motion.section
-      variants={_Transition_Page}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="py-8 text-center"
-    >
-      <p className="text-2xl font-semibold">Project Ingo Development Team</p>
+      <motion.section
+        variants={_Transition_Page}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="py-8 text-center"
+      >
+        <p className="text-2xl font-semibold">Project Ingo Development Team</p>
 
-      {loading ? (
-        <div className="mt-16 flex justify-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
-          />
-        </div>
-      ) : (
-        <>
-          <YearSelector years={teams} selected={selectedId} onSelect={setSelectedId} />
+        {loading ? (
+          <div className="mt-16 flex justify-center">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
+            />
+          </div>
+        ) : (
+          <>
+            <YearSelector years={teams} selected={selectedId} onSelect={setSelectedId} />
 
-          <AnimatePresence mode="wait">
-            {selectedTeam && (
-              <motion.div
-                key={selectedTeam._id}
-                variants={fadeSlide}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <TeamContent team={selectedTeam} onPersonClick={handlePersonClick} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
-      )}
-    </motion.section>
+            <AnimatePresence mode="wait">
+              {selectedTeam && (
+                <motion.div
+                  key={selectedTeam._id}
+                  variants={fadeSlide}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <TeamContent team={selectedTeam} onPersonClick={handlePersonClick} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
+      </motion.section>
     </>
   );
 };

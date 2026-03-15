@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CgChevronLeft, CgChevronRight } from "react-icons/cg";
+import Image from "next/image";
+import Link from "next/link";
 
 const Carousel = ({ awards }) => {
   const items = awards?.filter((a) => a.headerImage) || [];
@@ -39,16 +39,17 @@ const Carousel = ({ awards }) => {
         <p className="text-3xl font-semibold text-left md:text-center">
           Awards &amp; Achievements
         </p>
-        <Link href="/awards">
-          <a className="text-sm text-red-400 hover:text-red-300 transition hidden md:block">
+        <Link
+          href="/awards"
+          className="text-sm text-red-400 hover:text-red-300 transition hidden md:block">
+
             View all →
-          </a>
+
         </Link>
       </div>
-
       <div
         className="relative w-full rounded-2xl overflow-hidden bg-[#0e1015] border border-white/5 shadow-xl"
-        style={{ height: '480px' }}
+        style={{ height: "480px" }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -60,14 +61,15 @@ const Carousel = ({ awards }) => {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.45, ease: 'easeOut' }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
             className="absolute inset-0"
           >
             <Image
               src={current.headerImage}
               alt={current.title}
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: "cover" }}
+              sizes="100vw"
               priority
             />
             {/* gradient wrapper */}
@@ -91,10 +93,12 @@ const Carousel = ({ awards }) => {
               {current.description && (
                 <p className="text-sm text-gray-400 mt-1 line-clamp-2">{current.description}</p>
               )}
-              <Link href="/awards">
-                <a className="inline-block mt-3 text-xs text-red-400 hover:text-red-300 transition font-semibold">
+              <Link
+                href="/awards"
+                className="inline-block mt-3 text-xs text-red-400 hover:text-red-300 transition font-semibold">
+
                   See all awards →
-                </a>
+
               </Link>
             </div>
           </motion.div>
@@ -128,7 +132,7 @@ const Carousel = ({ awards }) => {
                 key={i}
                 onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === idx ? 'bg-white w-5' : 'bg-white/30 w-1.5 hover:bg-white/60'
+                  i === idx ? "bg-white w-5" : "bg-white/30 w-1.5 hover:bg-white/60"
                 }`}
               />
             ))}

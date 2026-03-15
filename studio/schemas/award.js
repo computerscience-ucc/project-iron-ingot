@@ -1,4 +1,4 @@
-export default {
+const award = {
   type: "document",
   name: "award",
   title: "Award",
@@ -292,3 +292,5 @@ export default {
     },
   },
 };
+
+export default award;

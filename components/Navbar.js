@@ -1,20 +1,20 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { Button, IconButton, Input, Tooltip } from '@material-tailwind/react';
-import { CgClose, CgMenu, CgSearch } from 'react-icons/cg';
-import { useEffect, useState } from 'react';
+﻿import { AnimatePresence, motion } from "framer-motion";
+import { Button, IconButton, Input, Tooltip } from "@material-tailwind/react";
+import { CgClose, CgMenu, CgSearch } from "react-icons/cg";
+import { useEffect, useState } from "react";
 
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { usePrefetcher } from './Prefetcher';
-import IngoLogo from './IngoLogo';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { usePrefetcher } from "./Prefetcher";
+import IngoLogo from "./IngoLogo";
 
 const NAV_LINKS = [
-  { href: '/blog', label: 'blog' },
-  { href: '/bulletin', label: 'bulletin' },
-  { href: '/thesis', label: 'thesis' },
-  { href: '/awards', label: 'awards' },
-  { href: '/gallery', label: 'gallery' },
-  { href: '/about', label: 'about' },
+  { href: "/blog", label: "blog" },
+  { href: "/bulletin", label: "bulletin" },
+  { href: "/thesis", label: "thesis" },
+  { href: "/awards", label: "awards" },
+  { href: "/gallery", label: "gallery" },
+  { href: "/about", label: "about" },
 ];
 
 const Navbar = () => {
@@ -22,12 +22,12 @@ const Navbar = () => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [globalSearchMenuOpen, setGlobalSearchMenuOpen] = useState(false);
   const [thresholdReached, setThresholdReached] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const { globalSearchItems } = usePrefetcher();
 
   const isActivePath = (path) => {
-    if (path === '/') return router.pathname === '/';
+    if (path === "/") return router.pathname === "/";
     return router.pathname === path || router.pathname.startsWith(`${path}/`);
   };
 
@@ -35,9 +35,9 @@ const Navbar = () => {
     const thisSearchValue = e.target.value.toLowerCase();
 
     const results = (globalSearchItems || []).filter((item) => {
-      const titleMatch = (item.title || '').toLowerCase().includes(thisSearchValue);
+      const titleMatch = (item.title || "").toLowerCase().includes(thisSearchValue);
       const tagMatch = (item.tags || []).some((tag) =>
-        (tag || '').toLowerCase().includes(thisSearchValue)
+        (tag || "").toLowerCase().includes(thisSearchValue)
       );
       return titleMatch || tagMatch;
     });
@@ -46,23 +46,23 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setThresholdReached(window.scrollY > 75);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     const handleKeydown = (e) => {
-      if (e.ctrlKey && e.key === 'k') {
+      if (e.ctrlKey && e.key === "k") {
         setGlobalSearchMenuOpen(true);
       }
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setGlobalSearchMenuOpen(false);
-        setSearchValue('');
+        setSearchValue("");
         setSearchResults([]);
       }
     };
-    window.addEventListener('keydown', handleKeydown);
-    return () => window.removeEventListener('keydown', handleKeydown);
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
   }, []);
 
   return (
@@ -76,14 +76,14 @@ const Navbar = () => {
               opacity: 1,
               transition: {
                 duration: 0.3,
-                ease: 'circOut',
+                ease: "circOut",
               },
             }}
             exit={{
               opacity: 0,
               transition: {
                 duration: 0.3,
-                ease: 'circIn',
+                ease: "circIn",
               },
             }}
             className="lg:hidden fixed z-[90] w-full bg-[#0A0C10] bg-opacity-60"
@@ -94,7 +94,7 @@ const Navbar = () => {
                 x: 0,
                 transition: {
                   duration: 0.3,
-                  ease: 'circOut',
+                  ease: "circOut",
                 },
               }}
               drag="x"
@@ -114,7 +114,7 @@ const Navbar = () => {
                   <Button
                     onClick={() => setSideMenuOpen(false)}
                     variant="text"
-                    className={isActivePath(href) ? 'text-header-color' : 'text-button-color'}
+                    className={isActivePath(href) ? "text-header-color" : "text-button-color"}
                   >
                     {label}
                   </Button>
@@ -125,21 +125,20 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* global search */}
       <AnimatePresence mode="wait">
         {globalSearchMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'circOut' }}
+            transition={{ duration: 0.3, ease: "circOut" }}
             className="fixed z-[90] w-full h-screen bg-[#0A0C10] bg-opacity-[0.98] flex justify-center"
           >
             <motion.div
               initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              transition={{ duration: 0.3, ease: 'circOut' }}
+              transition={{ duration: 0.3, ease: "circOut" }}
               onClick={(e) =>
                 e.currentTarget === e.target && setGlobalSearchMenuOpen(false)
               }
@@ -151,7 +150,7 @@ const Navbar = () => {
                 variant="outlined"
                 size="lg"
                 label="Search from ingo"
-                style={{ color: 'white' }}
+                style={{ color: "white" }}
                 className="text-lg"
                 onChange={(e) => {
                   setSearchValue(e.currentTarget.value);
@@ -177,7 +176,7 @@ const Navbar = () => {
                       onClick={() => setGlobalSearchMenuOpen(false)}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, ease: 'circOut' }}
+                      transition={{ duration: 0.3, ease: "circOut" }}
                       className="bg-grey-900 p-4 rounded-lg hover:bg-grey-800 cursor-pointer flex flex-col"
                     >
                       <p className="text-sm text-yellow-500">
@@ -201,9 +200,9 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      <main  
+      <main
         className={`
-          ${thresholdReached ? 'py-5 bg-[#0A0C10]' : 'py-10 bg-transparent'}
+          ${thresholdReached ? "py-5 bg-[#0A0C10]" : "py-10 bg-transparent"}
           fixed w-full  flex justify-center items-center px-5 lg:px-0 z-[99] transition-all duration-200
         `}
       >
@@ -227,7 +226,7 @@ const Navbar = () => {
           <div className="lg:flex gap-2 hidden">
             {NAV_LINKS.map(({ href, label }) => (
               <Link key={href} href={href} scroll={false}>
-                <Button className={`font-black ${isActivePath(href) ? 'text-header-color' : 'text-nav-color'}`} variant="text">
+                <Button className={`font-black ${isActivePath(href) ? "text-header-color" : "text-nav-color"}`} variant="text">
                   {label}
                 </Button>
               </Link>
@@ -239,7 +238,7 @@ const Navbar = () => {
               <IconButton
                 onClick={() => {
                   setGlobalSearchMenuOpen(!globalSearchMenuOpen);
-                  setSearchValue('');
+                  setSearchValue("");
                   setSearchResults([]);
                 }}
                 className = "text-nav-color"
@@ -257,7 +256,7 @@ const Navbar = () => {
             <IconButton
               onClick={() => {
                 setGlobalSearchMenuOpen(!globalSearchMenuOpen);
-                setSearchValue('');
+                setSearchValue("");
                 setSearchResults([]);
               }}
               className = "text-button-color"

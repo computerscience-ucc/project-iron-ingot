@@ -1,30 +1,30 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
 
-import { Button } from '@material-tailwind/react';
-import Head from '../../components/Head';
-import Page_Council from './page/council';
-import Page_MIS from './page/mis';
-import Page_Team from './page/team';
-import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../lib/animations';
-import { useRef, useState } from 'react';
+import { Button } from "@material-tailwind/react";
+import Head from "../../components/Head";
+import Page_Council from "./page/council";
+import Page_MIS from "./page/mis";
+import Page_Team from "./page/team";
+import TopGradient from "../../components/TopGradient";
+import { _Transition_Page } from "../../lib/animations";
+import { useRef, useState } from "react";
 
-const AboutPage = (e) => {
+const AboutPage = () => {
   const [selected, setSelected] = useState(1);
   const contentRef = useRef(null);
 
   const selectTab = (id) => {
     setSelected(id);
     setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   };
 
   return (
     <>
-      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
+      <TopGradient colorLeft={"#fd0101"} colorRight={"#a50000"} />
 
-      <Head 
+      <Head
         title="About | Ingo"
         description="Learn about Ingo, the BSCS information board. Meet our team, council, and discover our mission."
         url="/about"
@@ -46,33 +46,33 @@ const AboutPage = (e) => {
         <div className="flex flex-col md:flex-row gap-4 mt-16">
           <Button
             className={`${
-              selected === 1 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
+              selected === 1 ? "bg-button-color text-button-texts-color" : "bg-transparent text-header-color"
             }`}
             onClick={() => selectTab(1)}
             //color={`${selected == 1 && 'red'}`}
-            variant={`${selected == 1 ? 'filled' : 'text'}`}
+            variant={`${selected == 1 ? "filled" : "text"}`}
             fullWidth
           >
             Development Team
           </Button>
           <Button
             className={`${
-              selected === 2 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
+              selected === 2 ? "bg-button-color text-button-texts-color" : "bg-transparent text-header-color"
             }`}
             onClick={() => selectTab(2)}
             //color={`${selected == 2 && 'red'}`}
-            variant={`${selected == 2 ? 'filled' : 'text'}`}
+            variant={`${selected == 2 ? "filled" : "text"}`}
             fullWidth
           >
             Computer Science Council
           </Button>
           <Button
             className={`${
-              selected === 3 ? 'bg-button-color text-button-texts-color' : 'bg-transparent text-header-color'
+              selected === 3 ? "bg-button-color text-button-texts-color" : "bg-transparent text-header-color"
             }`}
             onClick={() => selectTab(3)}
             //color={`${selected == 3 && 'red'}`}
-            variant={`${selected == 3 ? 'filled' : 'text'}`}
+            variant={`${selected == 3 ? "filled" : "text"}`}
             fullWidth
           >
             MIS - ACES

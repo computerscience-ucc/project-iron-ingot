@@ -1,4 +1,4 @@
-import { MATERIAL_ICONS } from './Constants';
+import { MATERIAL_ICONS } from "./Constants";
 
 const MaterialsList = ({ materials }) => {
   if (!materials || materials.length === 0) {

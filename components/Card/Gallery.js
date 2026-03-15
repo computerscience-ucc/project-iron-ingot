@@ -1,10 +1,10 @@
-import { Card, CardBody, CardFooter, Chip } from '@material-tailwind/react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { Card, CardBody, CardFooter, Chip } from "@material-tailwind/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
-import Link from 'next/link';
-import { _Transition_Card } from '../../lib/animations';
-import dayjs from 'dayjs';
+import Link from "next/link";
+import { _Transition_Card } from "../../lib/animations";
+import dayjs from "dayjs";
 
 const GalleryCard = ({ project }) => {
   const { _id, title, slug, personName, projectDate, tags } = project;
@@ -32,7 +32,7 @@ const GalleryCard = ({ project }) => {
             >
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                 className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full"
               />
             </motion.div>
@@ -45,7 +45,7 @@ const GalleryCard = ({ project }) => {
             <p className="text-lg font-medium">{title}</p>
             <p className="text-sm mt-3 text-grey-600 font-semibold">{personName}</p>
             <p className="text-sm text-grey-700">
-              {dayjs(projectDate).format('MMM DD, YYYY')}
+              {dayjs(projectDate).format("MMM DD, YYYY")}
             </p>
           </CardBody>
           {tags && tags.length > 0 && (

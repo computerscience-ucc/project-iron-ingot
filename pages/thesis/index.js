@@ -1,40 +1,32 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-import YearPill from '../../components/YearPill';
-import DeptSection from '../../components/Thesis/DeptSection';
-import Head from '../../components/Head';
-import ThesisCard from '../../components/Card/Thesis';
-import TopGradient from '../../components/TopGradient';
-import { _Transition_Page } from '../../lib/animations';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePrefetcher } from '../../components/Prefetcher';
-import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from 'react-icons/cg';
+import YearPill from "../../components/YearPill";
+import DeptSection from "../../components/Thesis/DeptSection";
+import Head from "../../components/Head";
+import ThesisCard from "../../components/Card/Thesis";
+import TopGradient from "../../components/TopGradient";
+import { _Transition_Page } from "../../lib/animations";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePrefetcher } from "../../components/Prefetcher";
+import { CgArrowUp, CgArrowDown, CgSearch, CgClose } from "react-icons/cg";
 
 // ─── constants ─────────────────────────────────
-const ALL = 'All';
-const DEPARTMENTS = ['CS', 'IT', 'IS', 'EMC', 'Other'];
-const DEPT_LABEL = {
-  CS: 'Computer Science',
-  IT: 'Information Technology',
-  IS: 'Information Systems',
-  EMC: 'Entertainment & Multimedia Computing',
-  Other: 'General / Other',
-};
+const ALL = "All";
+const DEPARTMENTS = ["CS", "IT", "IS", "EMC", "Other"];
 
 // ─── helpers ───────────────────────────────────
 function getYears(list) {
-  const years = [...new Set(list.map((t) => t.academicYear || 'Unknown'))].sort().reverse();
+  const years = [...new Set(list.map((t) => t.academicYear || "Unknown"))].sort().reverse();
   return [ALL, ...years];
 }
 
 function authorString(authors) {
   return (authors || [])
-    .map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
-    .join(' ');
+    .map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
+    .join(" ");
 }
 
 // ─── Year pill ─────────────────────────────────
-
 
 // ─── Dept section ──────────────────────────────
 // ─── Page ──────────────────────────────────────
@@ -43,7 +35,7 @@ const Thesis = () => {
   const [thesisList, setThesisList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortAsc, setSortAsc] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     setThesisList(thesis || []);
@@ -61,13 +53,13 @@ const Thesis = () => {
     let list =
       selectedYear === ALL
         ? thesisList
-        : thesisList.filter((t) => (t.academicYear || 'Unknown') === selectedYear);
+        : thesisList.filter((t) => (t.academicYear || "Unknown") === selectedYear);
     if (q) {
       list = list.filter((t) => {
-        const titleMatch = (t.title || '').toLowerCase().includes(q);
-        const tagMatch = (t.tags || []).some((tag) => (tag || '').toLowerCase().includes(q));
+        const titleMatch = (t.title || "").toLowerCase().includes(q);
+        const tagMatch = (t.tags || []).some((tag) => (tag || "").toLowerCase().includes(q));
         const authorMatch = authorString(t.authors).toLowerCase().includes(q);
-        const yearMatch = (t.academicYear || '').toLowerCase().includes(q);
+        const yearMatch = (t.academicYear || "").toLowerCase().includes(q);
         return titleMatch || tagMatch || authorMatch || yearMatch;
       });
     }
@@ -81,7 +73,7 @@ const Thesis = () => {
   const deptMap = useMemo(() => {
     const map = {};
     for (const d of DEPARTMENTS) {
-      map[d] = yearFiltered.filter((t) => (t.department || 'Other') === d);
+      map[d] = yearFiltered.filter((t) => (t.department || "Other") === d);
     }
     return map;
   }, [yearFiltered]);
@@ -91,7 +83,7 @@ const Thesis = () => {
 
   return (
     <>
-      <TopGradient colorLeft={'#fd0101'} colorRight={'#a50000'} />
+      <TopGradient colorLeft={"#fd0101"} colorRight={"#a50000"} />
       <Head
         title="Thesis | Ingo"
         description="Innovative thesis projects by BSCS seniors. Explore cutting-edge research and connect with student developers."
@@ -128,7 +120,7 @@ const Thesis = () => {
           />
           {searchValue && (
             <button
-              onClick={() => setSearchValue('')}
+              onClick={() => setSearchValue("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
             >
               <CgClose size={14} />
@@ -156,7 +148,7 @@ const Thesis = () => {
             className="ml-auto flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors border border-white/10 rounded-full px-3 py-1.5"
           >
             {sortAsc ? <CgArrowUp size={14} /> : <CgArrowDown size={14} />}
-            {sortAsc ? 'Oldest first' : 'Newest first'}
+            {sortAsc ? "Oldest first" : "Newest first"}
           </button>
         </div>
 
@@ -170,7 +162,7 @@ const Thesis = () => {
           >
             {yearFiltered.length === 0 ? (
               <p className="mt-16 text-white/40 text-lg">
-                No thesis projects found{searchValue ? ` for "${searchValue}"` : selectedYear !== ALL ? ` in ${selectedYear}` : ''}.
+                No thesis projects found{searchValue ? ` for "${searchValue}"` : selectedYear !== ALL ? ` in ${selectedYear}` : ""}.
               </p>
             ) : (
               <>

@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CgClose, CgChevronLeft, CgChevronRight } from 'react-icons/cg';
-import Image from 'next/image';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CgClose, CgChevronLeft, CgChevronRight } from "react-icons/cg";
+import Image from "next/image";
 
 const Lightbox = ({ award, onClose }) => {
   const [imgIndex, setImgIndex] = useState(0);
@@ -22,14 +22,14 @@ const Lightbox = ({ award, onClose }) => {
   // keyboard nav
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') go(-1);
-      if (e.key === 'ArrowRight') go(1);
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [onClose, go]);
-  
+
   const slideVariants = {
     enter: (d) => ({ x: d > 0 ? 50 : -50, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -49,9 +49,9 @@ const Lightbox = ({ award, onClose }) => {
         initial={{ scale: 0.94, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.94, opacity: 0 }}
-        transition={{ duration: 0.18, ease: 'easeOut' }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
         className="relative w-[1100px] max-w-[95vw] bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
-        style={{ height: 'fit-content', maxHeight: '96vh' }}
+        style={{ height: "fit-content", maxHeight: "96vh" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
@@ -66,7 +66,7 @@ const Lightbox = ({ award, onClose }) => {
         {/* main img */}
         <div
           className="relative flex items-center justify-center bg-black overflow-hidden shrink-0"
-          style={{ height: '650px', maxHeight: '70vh' }}
+          style={{ height: "650px", maxHeight: "70vh" }}
         >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -76,14 +76,15 @@ const Lightbox = ({ award, onClose }) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.18, ease: 'easeOut' }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
               className="absolute inset-0"
             >
               <Image
                 src={images[imgIndex]}
                 alt={`${award.title} — photo ${imgIndex + 1}`}
-                layout="fill"
-                objectFit="contain"
+                fill
+                style={{ objectFit: "contain" }}
+                sizes="100vw"
                 priority
               />
             </motion.div>
@@ -127,12 +128,12 @@ const Lightbox = ({ award, onClose }) => {
                 }}
                 className={`shrink-0 w-14 h-10 rounded-md overflow-hidden border-2 transition-all ${
                   i === imgIndex
-                    ? 'border-red-500 opacity-100'
-                    : 'border-transparent opacity-40 hover:opacity-75'
+                    ? "border-red-500 opacity-100"
+                    : "border-transparent opacity-40 hover:opacity-75"
                 }`}
               >
                 <div className="w-full h-full relative">
-                  <Image src={img} alt={`thumb-${i}`} layout="fill" objectFit="cover" />
+                  <Image src={img} alt={`thumb-${i}`} fill style={{ objectFit: "cover" }} sizes="100px" />
                 </div>
               </button>
             ))}

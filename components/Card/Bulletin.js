@@ -1,15 +1,12 @@
-import { Card, CardBody, CardFooter, Chip } from '@material-tailwind/react';
+import { Card, CardBody, CardFooter, Chip } from "@material-tailwind/react";
 
-import Link from 'next/link';
-import { _Transition_Card } from '../../lib/animations';
-import dayjs from 'dayjs';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import Link from "next/link";
+import { _Transition_Card } from "../../lib/animations";
+import dayjs from "dayjs";
+import { motion } from "framer-motion";
 
 const BulletinCard = ({ bulletin }) => {
-  const { _id, _updatedAt, _createdAt, authors, title, tags, slug } = bulletin;
-
-  const [isLoading, setIsLoading] = useState(false);
+  const { _id, _updatedAt, authors, title, tags, slug } = bulletin;
 
   return (
     <>
@@ -26,7 +23,6 @@ const BulletinCard = ({ bulletin }) => {
             scale: 0.95,
             y: -5,
           }}
-          onClick={() => setIsLoading(true)}
         >
           <Card className="bg-[#0f1218] text-grey-100 cursor-pointer">
             <CardBody>
@@ -38,11 +34,11 @@ const BulletinCard = ({ bulletin }) => {
                   .map((author) => {
                     return `${author.fullName.firstName} ${author.fullName.lastName}`;
                   })
-                  .join(', ')}
+                  .join(", ")}
               </p>
 
               <p className="text-sm text-grey-700">
-                {dayjs(_updatedAt).format('MMM DD, YYYY')}
+                {dayjs(_updatedAt).format("MMM DD, YYYY")}
               </p>
             </CardBody>
             {tags && tags.length > 0 && (

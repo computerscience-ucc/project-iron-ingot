@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CgClose, CgArrowsExpandRight, CgCompressRight, CgSearch, CgChevronLeft } from 'react-icons/cg';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CgClose, CgArrowsExpandRight, CgCompressRight, CgSearch, CgChevronLeft } from "react-icons/cg";
 import {
   AiOutlineBook,
   AiOutlineInfoCircle,
@@ -13,25 +13,25 @@ import {
   AiOutlineUser,
   AiOutlineQuestionCircle,
   AiOutlineUnorderedList,
-} from 'react-icons/ai';
-import Link from 'next/link';
-import { usePrefetcher } from './Prefetcher';
-import Image from 'next/image';
+} from "react-icons/ai";
+import Link from "next/link";
+import { usePrefetcher } from "./Prefetcher";
+import Image from "next/image";
 
 // Character-scanner inline parser — reliably handles **bold**, *italic*, `code`
 function parseInline(text) {
   const tokens = [];
   const s = String(text);
   let i = 0;
-  let buf = '';
+  let buf = "";
   let k = 0;
 
-  const flush = () => { if (buf) { tokens.push(buf); buf = ''; } };
+  const flush = () => { if (buf) { tokens.push(buf); buf = ""; } };
 
   while (i < s.length) {
     // **bold**
-    if (s[i] === '*' && s[i + 1] === '*') {
-      const end = s.indexOf('**', i + 2);
+    if (s[i] === "*" && s[i + 1] === "*") {
+      const end = s.indexOf("**", i + 2);
       if (end !== -1) {
         flush();
         tokens.push(<strong key={k++} className="font-semibold text-gray-100">{s.slice(i + 2, end)}</strong>);
@@ -40,9 +40,9 @@ function parseInline(text) {
       }
     }
     // *italic* (single star, not part of **)
-    if (s[i] === '*' && s[i + 1] !== '*' && s[i - 1] !== '*') {
-      const end = s.indexOf('*', i + 1);
-      if (end !== -1 && s[end + 1] !== '*') {
+    if (s[i] === "*" && s[i + 1] !== "*" && s[i - 1] !== "*") {
+      const end = s.indexOf("*", i + 1);
+      if (end !== -1 && s[end + 1] !== "*") {
         flush();
         tokens.push(<em key={k++} className="italic text-gray-300">{s.slice(i + 1, end)}</em>);
         i = end + 1;
@@ -50,8 +50,8 @@ function parseInline(text) {
       }
     }
     // `code`
-    if (s[i] === '`') {
-      const end = s.indexOf('`', i + 1);
+    if (s[i] === "`") {
+      const end = s.indexOf("`", i + 1);
       if (end !== -1) {
         flush();
         tokens.push(<code key={k++} className="text-[11px] bg-gray-800 text-red-300 px-1 py-0.5 rounded font-mono">{s.slice(i + 1, end)}</code>);
@@ -68,21 +68,21 @@ function parseInline(text) {
 
 const MarkdownText = ({ text }) => {
   if (!text) return null;
-  const lines = text.split('\n');
+  const lines = text.split("\n");
   return (
     <div className="flex flex-col gap-0.5">
       {lines.map((line, i) => {
-        if (line.startsWith('### ')) return <p key={i} className="font-semibold text-gray-200 mt-1">{parseInline(line.slice(4))}</p>;
-        if (line.startsWith('## '))  return <p key={i} className="font-bold text-gray-100 mt-1">{parseInline(line.slice(3))}</p>;
-        if (line.startsWith('# '))   return <p key={i} className="text-base font-bold text-gray-100 mt-1">{parseInline(line.slice(2))}</p>;
-        if (line.startsWith('- ') || line.startsWith('• '))
+        if (line.startsWith("### ")) return <p key={i} className="font-semibold text-gray-200 mt-1">{parseInline(line.slice(4))}</p>;
+        if (line.startsWith("## "))  return <p key={i} className="font-bold text-gray-100 mt-1">{parseInline(line.slice(3))}</p>;
+        if (line.startsWith("# "))   return <p key={i} className="text-base font-bold text-gray-100 mt-1">{parseInline(line.slice(2))}</p>;
+        if (line.startsWith("- ") || line.startsWith("• "))
           return (
             <div key={i} className="flex gap-1.5">
               <span className="text-gray-500 shrink-0 mt-0.5">•</span>
               <span>{parseInline(line.slice(2))}</span>
             </div>
           );
-        if (line.trim() === '') return <div key={i} className="h-1" />;
+        if (line.trim() === "") return <div key={i} className="h-1" />;
         return <p key={i}>{parseInline(line)}</p>;
       })}
     </div>
@@ -93,12 +93,12 @@ const MarkdownText = ({ text }) => {
 // Typewriter / streaming text reveal
 // ────────────────────────────────────────────
 const StreamingMessage = ({ text, onDone }) => {
-  const [displayed, setDisplayed] = useState('');
+  const [displayed, setDisplayed] = useState("");
   const idxRef = useRef(0);
 
   useEffect(() => {
     idxRef.current = 0;
-    setDisplayed('');
+    setDisplayed("");
     const charsPerTick = Math.max(10, Math.ceil(text.length / 100));
     const timer = setInterval(() => {
       idxRef.current = Math.min(idxRef.current + charsPerTick, text.length);
@@ -121,147 +121,147 @@ const StreamingMessage = ({ text, onDone }) => {
 // Nodes with `input: true` prompt the user to type before sending
 // ────────────────────────────────────────────
 const FLOW_TREE = {
-  id: 'root',
-  prompt: 'What can I help you with?',
+  id: "root",
+  prompt: "What can I help you with?",
   children: [
     {
-      id: 'thesis',
-      label: 'Thesis Projects',
+      id: "thesis",
+      label: "Thesis Projects",
       icon: AiOutlineBook,
-      prompt: 'What would you like to know about theses?',
+      prompt: "What would you like to know about theses?",
       children: [
         {
-          id: 'thesis-browse',
-          label: 'Browse all theses',
+          id: "thesis-browse",
+          label: "Browse all theses",
           icon: AiOutlineUnorderedList,
-          message: 'Show me all available thesis projects with their titles and tags',
-          quickAction: 'browse-thesis',
+          message: "Show me all available thesis projects with their titles and tags",
+          quickAction: "browse-thesis",
         },
         {
-          id: 'thesis-search-topic',
-          label: 'Search by topic',
+          id: "thesis-search-topic",
+          label: "Search by topic",
           icon: CgSearch,
           input: true,
-          placeholder: 'Enter a topic or keyword...',
+          placeholder: "Enter a topic or keyword...",
           messageTemplate: (v) => `Find thesis projects related to "${v}"`,
-          quickAction: 'search-thesis',
+          quickAction: "search-thesis",
         },
         {
-          id: 'thesis-search-author',
-          label: 'Search by author',
+          id: "thesis-search-author",
+          label: "Search by author",
           icon: AiOutlineUser,
           input: true,
-          placeholder: 'Enter an author name...',
+          placeholder: "Enter an author name...",
           messageTemplate: (v) => `Find thesis projects by author "${v}"`,
-          quickAction: 'search-thesis',
+          quickAction: "search-thesis",
         },
         {
-          id: 'thesis-search-tag',
-          label: 'Search by tag',
+          id: "thesis-search-tag",
+          label: "Search by tag",
           icon: AiOutlineTag,
           input: true,
-          placeholder: 'Enter a tag (e.g. AI, web, mobile)...',
+          placeholder: "Enter a tag (e.g. AI, web, mobile)...",
           messageTemplate: (v) => `Find thesis projects tagged with "${v}"`,
-          quickAction: 'search-thesis',
+          quickAction: "search-thesis",
         },
         {
-          id: 'thesis-ask',
-          label: 'Ask a question',
+          id: "thesis-ask",
+          label: "Ask a question",
           icon: AiOutlineQuestionCircle,
           input: true,
-          placeholder: 'Type your thesis question...',
+          placeholder: "Type your thesis question...",
           messageTemplate: (v) => v,
-          quickAction: 'search-thesis',
+          quickAction: "search-thesis",
         },
       ],
     },
     {
-      id: 'blogs',
-      label: 'Blogs',
+      id: "blogs",
+      label: "Blogs",
       icon: AiOutlineFileText,
-      prompt: 'What about blogs?',
+      prompt: "What about blogs?",
       children: [
         {
-          id: 'blogs-latest',
-          label: 'Latest blog posts',
+          id: "blogs-latest",
+          label: "Latest blog posts",
           icon: AiOutlineBell,
-          message: 'What are the latest blog posts on the site?',
-          quickAction: 'recent-updates',
+          message: "What are the latest blog posts on the site?",
+          quickAction: "recent-updates",
         },
         {
-          id: 'blogs-search',
-          label: 'Search blogs',
+          id: "blogs-search",
+          label: "Search blogs",
           icon: CgSearch,
           input: true,
-          placeholder: 'Search blogs by topic or keyword...',
+          placeholder: "Search blogs by topic or keyword...",
           messageTemplate: (v) => `Find blog posts about "${v}"`,
         },
       ],
     },
     {
-      id: 'bulletins',
-      label: 'Bulletins',
+      id: "bulletins",
+      label: "Bulletins",
       icon: AiOutlineBell,
-      prompt: 'What about bulletins?',
+      prompt: "What about bulletins?",
       children: [
         {
-          id: 'bulletins-latest',
-          label: 'Latest bulletins',
+          id: "bulletins-latest",
+          label: "Latest bulletins",
           icon: AiOutlineUnorderedList,
-          message: 'What are the latest bulletins and announcements?',
-          quickAction: 'recent-updates',
+          message: "What are the latest bulletins and announcements?",
+          quickAction: "recent-updates",
         },
         {
-          id: 'bulletins-search',
-          label: 'Search bulletins',
+          id: "bulletins-search",
+          label: "Search bulletins",
           icon: CgSearch,
           input: true,
-          placeholder: 'Search bulletins...',
+          placeholder: "Search bulletins...",
           messageTemplate: (v) => `Find bulletins about "${v}"`,
         },
       ],
     },
     {
-      id: 'awards',
-      label: 'Awards',
+      id: "awards",
+      label: "Awards",
       icon: AiOutlineTrophy,
-      message: 'Show me the awards and achievements on the site',
+      message: "Show me the awards and achievements on the site",
     },
     {
-      id: 'about',
-      label: 'About Ingo',
+      id: "about",
+      label: "About Ingo",
       icon: AiOutlineInfoCircle,
-      prompt: 'What do you want to know?',
+      prompt: "What do you want to know?",
       children: [
         {
-          id: 'about-what',
-          label: 'What is Ingo?',
+          id: "about-what",
+          label: "What is Ingo?",
           icon: AiOutlineInfoCircle,
-          message: 'What is Ingo and what does this website do?',
-          quickAction: 'about-ingo',
+          message: "What is Ingo and what does this website do?",
+          quickAction: "about-ingo",
         },
         {
-          id: 'about-team',
-          label: 'Development team',
+          id: "about-team",
+          label: "Development team",
           icon: AiOutlineTeam,
-          message: 'Tell me about the Ingo development team',
-          quickAction: 'about-ingo',
+          message: "Tell me about the Ingo development team",
+          quickAction: "about-ingo",
         },
         {
-          id: 'about-council',
-          label: 'CS Student Council',
+          id: "about-council",
+          label: "CS Student Council",
           icon: AiOutlineTeam,
-          message: 'Tell me about the Computer Science Student Council',
-          quickAction: 'about-ingo',
+          message: "Tell me about the Computer Science Student Council",
+          quickAction: "about-ingo",
         },
       ],
     },
     {
-      id: 'ask-anything',
-      label: 'Ask anything',
+      id: "ask-anything",
+      label: "Ask anything",
       icon: AiOutlineQuestionCircle,
       input: true,
-      placeholder: 'Type your question...',
+      placeholder: "Type your question...",
       messageTemplate: (v) => v,
     },
   ],
@@ -274,11 +274,12 @@ const FLOW_TREE = {
 const ChatThesisCard = ({ card, onNavigate }) => {
   const [navigating, setNavigating] = useState(false);
   return (
-  <Link href={`/thesis/${card.slug}`} scroll={false}>
-    <a
+    <Link
+      href={`/thesis/${card.slug}`}
+      scroll={false}
       onClick={() => { setNavigating(true); onNavigate?.(); }}
-      className="block mt-2 relative rounded-xl border border-white/10 bg-[#0f1218] hover:border-red-500/50 hover:bg-[#141720] transition-all group cursor-pointer overflow-hidden"
-    >
+      className="block mt-2 relative rounded-xl border border-white/10 bg-[#0f1218] hover:border-red-500/50 hover:bg-[#141720] transition-all group cursor-pointer overflow-hidden">
+
       {/* Click-loading overlay */}
       {navigating && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60 rounded-xl">
@@ -291,8 +292,9 @@ const ChatThesisCard = ({ card, onNavigate }) => {
           <Image
             src={card.headerImage}
             alt={card.title}
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: "cover" }}
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0f1218]" />
         </div>
@@ -350,14 +352,14 @@ const ChatThesisCard = ({ card, onNavigate }) => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </div>
-    </a>
-  </Link>
+
+    </Link>
   );
 };
 
 const BotMessage = ({ text, cards, isFullscreen, isStreaming, onStreamDone, onNavigate }) => (
   <div className="flex flex-col gap-1 w-full">
-    <div className={`${isFullscreen ? 'max-w-2xl' : 'max-w-[85%]'} px-3 py-2 rounded-xl rounded-bl-sm bg-[#1a1d24] text-gray-200 text-sm leading-relaxed`}>
+    <div className={`${isFullscreen ? "max-w-2xl" : "max-w-[85%]"} px-3 py-2 rounded-xl rounded-bl-sm bg-[#1a1d24] text-gray-200 text-sm leading-relaxed`}>
       {isStreaming
         ? <StreamingMessage text={text} onDone={onStreamDone} />
         : <MarkdownText text={text} />
@@ -367,10 +369,10 @@ const BotMessage = ({ text, cards, isFullscreen, isStreaming, onStreamDone, onNa
     {!isStreaming && cards && cards.length > 0 && (
       <div className={
         isFullscreen && cards.length > 1
-          ? 'max-w-2xl grid grid-cols-2 gap-2'
+          ? "max-w-2xl grid grid-cols-2 gap-2"
           : isFullscreen
-          ? 'w-72 flex flex-col gap-2'
-          : 'max-w-[85%] flex flex-col gap-2'
+            ? "w-72 flex flex-col gap-2"
+            : "max-w-[85%] flex flex-col gap-2"
       }>
         {cards.map((card, i) => (
           <ChatThesisCard key={i} card={card} onNavigate={onNavigate} />
@@ -385,9 +387,9 @@ const ThinkingIndicator = () => (
     <div className="bg-[#1a1d24] text-gray-400 px-4 py-2.5 rounded-xl rounded-bl-sm text-sm flex items-center gap-2">
       <span className="text-xs text-gray-500">Thinking</span>
       <span className="flex gap-0.5">
-        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms', animationDuration: '0.8s' }} />
-        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '200ms', animationDuration: '0.8s' }} />
-        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '400ms', animationDuration: '0.8s' }} />
+        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "0ms", animationDuration: "0.8s" }} />
+        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "200ms", animationDuration: "0.8s" }} />
+        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: "400ms", animationDuration: "0.8s" }} />
       </span>
     </div>
   </div>
@@ -437,7 +439,7 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
 
 const ChatBot = () => {
   const { siteConfig } = usePrefetcher() || {};
-  const chatbotName = siteConfig?.chatbotName || 'Ingo Assistant';
+  const chatbotName = siteConfig?.chatbotName || "Ingo Assistant";
   const chatbotIcon = siteConfig?.chatbotIcon || null;
   const defaultWelcome = "Hi, I'm the Ingo Assistant. Use the buttons below to explore, or type a question directly.";
 
@@ -452,15 +454,14 @@ const ChatBot = () => {
     if (!welcomeSet.current && (siteConfig !== undefined)) {
       welcomeSet.current = true;
       setMessages([{
-        role: 'bot',
+        role: "bot",
         text: siteConfig?.chatbotWelcomeMessage?.trim() || defaultWelcome,
         cards: [],
       }]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [siteConfig]);
-  const [input, setInput] = useState('');
-  const [honeypot, setHoneypot] = useState('');
+  const [input, setInput] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [cooldown, setCooldown] = useState(0); // seconds remaining before next send allowed
@@ -498,8 +499,8 @@ const ChatBot = () => {
   const autoResize = useCallback(() => {
     const el = inputRef.current;
     if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 128) + 'px';
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 128) + "px";
   }, []);
 
   useEffect(() => { autoResize(); }, [input, autoResize]);
@@ -507,17 +508,17 @@ const ChatBot = () => {
   // Escape key closes the chat
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         setIsOpen(false);
         setIsFullscreen(false);
       }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [isOpen]);
 
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -538,9 +539,9 @@ const ChatBot = () => {
     setFlowInputNode(null);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userMessage,
           history: messages.map((m) => ({ role: m.role, text: m.text })),
@@ -557,26 +558,26 @@ const ChatBot = () => {
         startCooldown(wait);
         setMessages((prev) => {
           setStreamingMsgIdx(prev.length);
-          return [...prev, { role: 'bot', text: data.reply, cards: [], isError: true }];
+          return [...prev, { role: "bot", text: data.reply, cards: [], isError: true }];
         });
       } else if (res.ok) {
         // Minimum 3s cooldown between every message
         startCooldown(3);
         setMessages((prev) => {
           setStreamingMsgIdx(prev.length);
-          return [...prev, { role: 'bot', text: data.reply, cards: data.cards || [], warning: data.warning || null }];
+          return [...prev, { role: "bot", text: data.reply, cards: data.cards || [], warning: data.warning || null }];
         });
       } else {
         startCooldown(3);
         setMessages((prev) => {
           setStreamingMsgIdx(prev.length);
-          return [...prev, { role: 'bot', text: data.reply || 'Something went wrong. Please try again.', cards: [], isError: true }];
+          return [...prev, { role: "bot", text: data.reply || "Something went wrong. Please try again.", cards: [], isError: true }];
         });
       }
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'bot', text: 'Could not connect. Please try again later.', cards: [], isError: true },
+        { role: "bot", text: "Could not connect. Please try again later.", cards: [], isError: true },
       ]);
     } finally {
       setIsLoading(false);
@@ -589,7 +590,7 @@ const ChatBot = () => {
   const handleFlowSelect = (node) => {
     // If it's a leaf with a direct message → send immediately
     if (node.message) {
-      setMessages((prev) => [...prev, { role: 'user', text: node.message, cards: [] }]);
+      setMessages((prev) => [...prev, { role: "user", text: node.message, cards: [] }]);
       sendToAPI(node.message, node.quickAction || null);
       return;
     }
@@ -597,7 +598,7 @@ const ChatBot = () => {
     // If it needs text input → show input mode
     if (node.input) {
       setFlowInputNode(node);
-      setInput('');
+      setInput("");
       setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
@@ -624,19 +625,19 @@ const ChatBot = () => {
     if (!input.trim() || isLoading || cooldown > 0) return;
 
     const userMessage = input.trim();
-    setInput('');
+    setInput("");
 
     if (flowInputNode) {
       // Build the final message from the flow template
       const finalMessage = flowInputNode.messageTemplate
         ? flowInputNode.messageTemplate(userMessage)
         : userMessage;
-      setMessages((prev) => [...prev, { role: 'user', text: finalMessage, cards: [] }]);
+      setMessages((prev) => [...prev, { role: "user", text: finalMessage, cards: [] }]);
       sendToAPI(finalMessage, flowInputNode.quickAction || null);
       setFlowInputNode(null);
     } else {
       // Freeform message — bypass flow
-      setMessages((prev) => [...prev, { role: 'user', text: userMessage, cards: [] }]);
+      setMessages((prev) => [...prev, { role: "user", text: userMessage, cards: [] }]);
       sendToAPI(userMessage);
     }
   };
@@ -661,13 +662,13 @@ const ChatBot = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
             className={`fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg shadow-red-900/30 hover:shadow-xl hover:shadow-red-900/40 transition-shadow overflow-hidden ${
-                chatbotIcon ? '' : 'bg-gradient-to-br from-red-600 to-red-800'
-              }`}
+              chatbotIcon ? "" : "bg-gradient-to-br from-red-600 to-red-800"
+            }`}
             aria-label="Open chat"
           >
             {chatbotIcon ? (
               <div className="w-full h-full relative">
-                <Image src={chatbotIcon} alt={chatbotName} layout="fill" objectFit="cover" />
+                <Image src={chatbotIcon} alt={chatbotName} fill style={{ objectFit: "cover" }} sizes="48px" />
                 {/* Green online indicator */}
                 <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-[#0e1015] shadow" />
               </div>
@@ -689,13 +690,13 @@ const ChatBot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className={`${
               isFullscreen
-                ? 'fixed inset-0 z-[100] rounded-none'
-                : 'fixed bottom-5 right-5 z-50 w-[380px] h-[540px] rounded-2xl shadow-2xl border border-gray-700/50'
+                ? "fixed inset-0 z-[100] rounded-none"
+                : "fixed bottom-5 right-5 z-50 w-[380px] h-[540px] rounded-2xl shadow-2xl border border-gray-700/50"
             } flex flex-col overflow-hidden`}
-            style={{ background: '#0e1015' }}
+            style={{ background: "#0e1015" }}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-red-700 to-red-900 text-white shrink-0">
@@ -707,7 +708,7 @@ const ChatBot = () => {
                 <button
                   onClick={() => setIsFullscreen((f) => !f)}
                   className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
-                  aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
                 >
                   {isFullscreen ? <CgCompressRight size={16} /> : <CgArrowsExpandRight size={16} />}
                 </button>
@@ -726,9 +727,9 @@ const ChatBot = () => {
               {messages.map((msg, i) => (
                 <div
                   key={i}
-                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {msg.role === 'user' ? (
+                  {msg.role === "user" ? (
                     <div className="max-w-[85%] px-3 py-2 rounded-xl rounded-br-sm bg-red-700/80 text-white text-sm leading-relaxed whitespace-pre-wrap">
                       {msg.text}
                     </div>
@@ -769,17 +770,17 @@ const ChatBot = () => {
               {flowInputNode && !isLoading && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
+                  animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   className="px-4 py-2 bg-[#13151b] border-t border-gray-800 flex items-center justify-between overflow-hidden shrink-0"
                 >
                   <span className="text-xs text-gray-400 truncate">
-                    {flowInputNode.placeholder || 'Type your answer...'}
+                    {flowInputNode.placeholder || "Type your answer..."}
                   </span>
                   <button
                     onClick={() => {
                       setFlowInputNode(null);
-                      setInput('');
+                      setInput("");
                     }}
                     className="text-xs text-gray-600 hover:text-gray-300 transition-colors ml-2 shrink-0"
                   >
@@ -793,9 +794,9 @@ const ChatBot = () => {
             <form
               onSubmit={sendMessage}
               className={`flex flex-col gap-1.5 px-3 pt-2 pb-3 border-t shrink-0 transition-colors ${
-                isInputFocused ? 'border-red-700/40' : 'border-gray-800'
+                isInputFocused ? "border-red-700/40" : "border-gray-800"
               }`}
-              style={{ background: '#0e1015' }}
+              style={{ background: "#0e1015" }}
             >
               {/* Cooldown bar */}
               {cooldown > 0 && (
@@ -810,55 +811,55 @@ const ChatBot = () => {
                 </div>
               )}
               <div className="flex items-end gap-2">
-              {/* Honeypot — invisible to real users, bots fill it in */}
-              <input
-                type="text"
-                name="website"
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0, pointerEvents: 'none' }}
-              />
-              <textarea
-                ref={inputRef}
-                rows={1}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage(e);
+                {/* Honeypot — invisible to real users, bots fill it in */}
+                <input
+                  type="text"
+                  name="website"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0, pointerEvents: "none" }}
+                />
+                <textarea
+                  ref={inputRef}
+                  rows={1}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onFocus={() => setIsInputFocused(true)}
+                  onBlur={() => setIsInputFocused(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage(e);
+                    }
+                  }}
+                  placeholder={
+                    cooldown > 0
+                      ? `Please wait ${cooldown}s...`
+                      : flowInputNode
+                        ? flowInputNode.placeholder
+                        : "Or type a question..."
                   }
-                }}
-                placeholder={
-                  cooldown > 0
-                    ? `Please wait ${cooldown}s...`
-                    : flowInputNode
-                    ? flowInputNode.placeholder
-                    : 'Or type a question...'
-                }
-                className={`flex-1 bg-[#1a1d24] text-gray-200 text-sm rounded-lg px-3 py-2.5 outline-none focus:ring-1 focus:ring-red-700/50 placeholder-gray-600 transition-shadow resize-none overflow-y-auto leading-relaxed ${
-                  cooldown > 0 ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                style={{ minHeight: '40px', maxHeight: '128px' }}
-                disabled={isLoading || cooldown > 0}
-              />
-              <button
-                type="submit"
-                disabled={isLoading || !input.trim() || cooldown > 0}
-                className="p-2.5 rounded-lg bg-gradient-to-br from-red-600 to-red-800 text-white disabled:opacity-30 hover:brightness-110 transition-all shrink-0 relative"
-                aria-label="Send message"
-              >
-                {cooldown > 0 ? (
-                  <span className="text-[11px] font-bold tabular-nums">{cooldown}</span>
-                ) : (
-                  <AiOutlineSend size={16} />
-                )}
-              </button>
+                  className={`flex-1 bg-[#1a1d24] text-gray-200 text-sm rounded-lg px-3 py-2.5 outline-none focus:ring-1 focus:ring-red-700/50 placeholder-gray-600 transition-shadow resize-none overflow-y-auto leading-relaxed ${
+                    cooldown > 0 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  style={{ minHeight: "40px", maxHeight: "128px" }}
+                  disabled={isLoading || cooldown > 0}
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !input.trim() || cooldown > 0}
+                  className="p-2.5 rounded-lg bg-gradient-to-br from-red-600 to-red-800 text-white disabled:opacity-30 hover:brightness-110 transition-all shrink-0 relative"
+                  aria-label="Send message"
+                >
+                  {cooldown > 0 ? (
+                    <span className="text-[11px] font-bold tabular-nums">{cooldown}</span>
+                  ) : (
+                    <AiOutlineSend size={16} />
+                  )}
+                </button>
               </div>
             </form>
           </motion.div>
