@@ -142,10 +142,10 @@ const AboutPage = () => {
         {/* Controls bar / tabs */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 mt-6">
           {/* Main Tabs */}
-          <div className="flex flex-wrap items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit relative">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center lg:bg-[#202020] rounded-[6px] p-0 lg:p-1 gap-2 lg:gap-1 h-fit relative">
             <button
               onClick={() => selectTab(1)}
-              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+              className={`relative text-left lg:text-center pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors w-full lg:w-auto ${
                 selected === 1 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
@@ -160,7 +160,7 @@ const AboutPage = () => {
             </button>
             <button
               onClick={() => selectTab(2)}
-              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+              className={`relative text-left lg:text-center pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors w-full lg:w-auto ${
                 selected === 2 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
@@ -175,7 +175,7 @@ const AboutPage = () => {
             </button>
             <button
               onClick={() => selectTab(3)}
-              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+              className={`relative text-left lg:text-center pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors w-full lg:w-auto ${
                 selected === 3 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >

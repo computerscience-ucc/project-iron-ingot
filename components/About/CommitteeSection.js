@@ -60,7 +60,7 @@ const CommitteeSection = ({ committees }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-[4rem] xl:gap-[2rem] items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-[2rem] items-start">
         {/* Left: Interactive Grid */}
         <div className="grid grid-cols-4 w-full border-t border-l border-dashed border-[#8E8E8E]/40 h-fit">
           {Array.from({ length: 12 }).map((_, idx) => {
@@ -102,7 +102,7 @@ const CommitteeSection = ({ committees }) => {
         </div>
 
         {/* Right: Details & Selector */}
-        <div className="flex flex-col h-full min-h-[300px] py-4">
+        <div className="flex flex-col h-full xl:min-h-[300px] pt-0 pb-4 xl:py-4">
           {/* Selected Member Details */}
           <AnimatePresence mode="wait">
             <motion.div
@@ -111,7 +111,7 @@ const CommitteeSection = ({ committees }) => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
-              className="flex flex-col gap-1 items-start mb-8"
+              className="flex flex-col gap-1 items-start mb-4 xl:mb-8"
             >
               <h4 className="text-[1.25rem] font-semibold text-[#EFEFEF] tracking-normal leading-[1.3] line-clamp-1 w-full">
                 {selectedMember?.name || "Member Name"}
@@ -122,7 +122,7 @@ const CommitteeSection = ({ committees }) => {
             </motion.div>
           </AnimatePresence>
 
-          <p className="text-[1rem] text-[#8C8C8C] font-normal leading-snug max-w-[450px] mt-auto">
+          <p className="text-[1rem] text-[#8C8C8C] font-normal leading-snug max-w-[450px] mt-0 xl:mt-auto">
             {activeCommittee.description || getFallbackDescription(activeCommittee.committeeName)}
           </p>
         </div>

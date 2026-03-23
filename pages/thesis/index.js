@@ -148,7 +148,7 @@ export default function Thesis() {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="flex flex-col pr-6">
+              <div className="flex flex-col">
                 {years.map((y) => {
                   const isActive = selectedYear === y;
                   return (
@@ -200,7 +200,7 @@ export default function Thesis() {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="flex flex-col pr-6">
+              <div className="flex flex-col">
                 {departments.map((d) => {
                   const isActive = selectedDepartment === d;
                   return (
@@ -252,7 +252,7 @@ export default function Thesis() {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="flex flex-col pr-6">
+              <div className="flex flex-col">
                 {categories.map((c) => {
                   const isActive = selectedCategory === c;
                   return (
@@ -320,7 +320,9 @@ export default function Thesis() {
               <div className="relative md:hidden">
                 <button
                   onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-                  className="flex items-center gap-2 text-[0.875rem] font-normal text-[#EFEFEF] hover:text-white transition-colors bg-[#1A1A1A] border border-[#2F2F2F] px-4 py-2 rounded-[4px]"
+                  className={`flex items-center gap-2 text-[0.875rem] font-normal text-[#EFEFEF] hover:text-white transition-colors border border-[#2F2F2F] px-4 py-2 rounded-[4px] ${
+                    isMobileFilterOpen ? "bg-[#252525]" : "bg-[#1A1A1A]"
+                  }`}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
@@ -335,12 +337,12 @@ export default function Thesis() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-[calc(100%+0.5rem)] left-0 w-[260px] bg-[#181818] border border-[#2F2F2F] rounded-[8px] pt-3 pb-4 pl-4 pr-1 shadow-xl z-50 overflow-y-auto max-h-[60vh] flex flex-col items-start"
+                      className="absolute top-[calc(100%+0.5rem)] left-0 w-[260px] bg-[#181818] border border-[#2F2F2F] rounded-[8px] pt-2 pb-4 px-4 shadow-xl z-50 overflow-y-auto max-h-[60vh] flex flex-col items-start"
                     >
                       {/* X close button for mobile convenience */}
                       <button 
                         onClick={() => setIsMobileFilterOpen(false)}
-                        className="self-end text-[#8C8C8C] hover:text-white mb-2 p-1"
+                        className="self-end text-[#8C8C8C] hover:text-white mb-0.5 p-1 -mr-1"
                       >
                         <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M13 1L1 13M1 1l12 12" />

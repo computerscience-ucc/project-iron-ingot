@@ -12,7 +12,7 @@ import SectionStripe from "@/components/SectionStripe";
 import Footer from "@/layouts/Footer";
 
 import { Search, X } from "@geist-ui/icons";
-import { motion, useScroll, useMotionValueEvent } from "motion/react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -36,6 +36,7 @@ function AppInner({ Component, pageProps }) {
   const [showGrid, setShowGrid] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [yPos, setYPos] = useState(0);
   const { scrollY } = useScroll();
 
@@ -85,9 +86,29 @@ function AppInner({ Component, pageProps }) {
     { href: "/about", label: "About" },
   ];
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    const handleRouteChange = () => setMenuOpen(false);
+    router.events.on("routeChangeStart", handleRouteChange);
+    return () => router.events.off("routeChangeStart", handleRouteChange);
+  }, [router]);
+
   return (
     <>
       <div className="app-root">
+        {/* Mobile Backdrop Overlay - Dim background when menu is open */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 z-[48] md:hidden backdrop-blur-[2px]"
+            />
+          )}
+        </AnimatePresence>
+
         {showBanner && (
           <div className="w-full bg-[#FF3538] h-[2rem] flex items-center px-2 relative z-[100] transition-all duration-300 overflow-hidden group">
             <motion.div
@@ -146,7 +167,7 @@ function AppInner({ Component, pageProps }) {
         >
           <div className="stripe-banner absolute inset-0 z-0"></div>
           <div className="absolute bottom-0 left-0 w-full border-dashed-long-h text-[var(--color-border-dashed)]"></div>
-          <div className="relative z-[2] h-[4rem] flex items-center justify-between px-[1.4rem] max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto font-mono font-normal tracking-[0.34%] text-[0.875rem] text-[var(--color-text-muted)]">
+          <div className="relative z-[2] h-[4rem] flex items-center justify-between pl-2 pr-1 md:px-4 max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto font-mono font-normal tracking-[0.34%] text-[0.875rem] text-[var(--color-text-muted)]">
             {/* Logo Group */}
             <Link
               href="/"
@@ -165,8 +186,32 @@ function AppInner({ Component, pageProps }) {
               </span>
             </Link>
 
+            {/* Hamburger button - mobile only */}
+            <button
+              className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 ml-auto"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Toggle menu"
+            >
+              <motion.span
+                className="block w-5 h-[1.5px] bg-[var(--color-text)] origin-center"
+                animate={menuOpen ? { rotate: 45, y: 6.5 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25 }}
+              />
+              <motion.span
+                className="block w-5 h-[1.5px] bg-[var(--color-text)] origin-center"
+                animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+                transition={{ duration: 0.15 }}
+              />
+              <motion.span
+                className="block w-5 h-[1.5px] bg-[var(--color-text)] origin-center"
+                animate={menuOpen ? { rotate: -45, y: -6.5 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25 }}
+              />
+            </button>
+
             {/* Absolutely Centered Navigation Menu */}
-            <div className="absolute left-1/2 -translate-x-1/2 mt-[0.1rem]">
+            {/* Desktop nav - hidden on mobile */}
+            <div className="hidden md:block absolute left-1/2 -translate-x-1/2 mt-[0.1rem]">
               <NavigationMenu
                 viewport={false}
                 className="font-sans text-[1rem] z-[100]"
@@ -450,7 +495,8 @@ function AppInner({ Component, pageProps }) {
             </div>
 
             {/* Actions Group */}
-            <div className="flex items-center justify-end gap-[1.2rem]">
+            {/* Desktop actions - hidden on mobile */}
+            <div className="hidden md:flex items-center justify-end gap-[1.2rem]">
               {/* <div
                 className="theme-switch"
                 onClick={toggleTheme}
@@ -516,6 +562,90 @@ function AppInner({ Component, pageProps }) {
               </div>
             </div>
           </div>
+
+          {/* Mobile menu overlay */}
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                className="md:hidden absolute top-full left-0 w-full bg-[var(--color-bg)] border-b border-[var(--color-border)] z-[49] overflow-hidden"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                <div className="flex flex-col max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto px-[1.4rem] pt-8 pb-10 gap-6">
+                  {/* Nav links section */}
+                  <nav className="flex flex-col">
+                    {navLinks.map((link) => {
+                      const isActive = router.pathname === link.href;
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1.5 font-sans font-normal text-[1.1rem] ${
+                            isActive
+                              ? "active text-[#FF5154]"
+                              : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+
+                  {/* Search & Socials - Simplified */}
+                  <div className="flex flex-col gap-6">
+                    {/* Search - Desktop consistency */}
+                    <div
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setSearchOpen(true);
+                      }}
+                      className="relative group/search w-full font-sans cursor-pointer"
+                    >
+                      <Search
+                        className="absolute left-2 top-1/2 -translate-y-1/2 group-hover/search:text-[var(--color-text)] transition-colors duration-200"
+                        size={20}
+                        color="#8C8C8C"
+                      />
+                      <div className="pl-8 pr-16 h-[42px] bg-[#1D1D1D] border border-[#333333] rounded-[6px] flex items-center text-[#8C8C8C] text-[1rem] select-none">
+                        Search
+                      </div>
+                    </div>
+
+                    {/* Social icons - Desktop consistency */}
+                    <div className="flex items-center gap-[0.2rem] text-[#515151]">
+                      <a
+                        href="https://facebook.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
+                      >
+                        <SiFacebook size={24} />
+                      </a>
+                      <a
+                        href="https://discord.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
+                      >
+                        <SiDiscord size={24} />
+                      </a>
+                      <a
+                        href="https://github.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
+                      >
+                        <SiGithub size={24} />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.header>
 
         <div className="fixed inset-0 pointer-events-none z-[-1] flex justify-center">

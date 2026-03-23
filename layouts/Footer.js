@@ -31,11 +31,11 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="relative w-full overflow-hidden font-sans">
-      <div className="section-container px-[9.5rem] pt-[2.8rem] pb-0 flex flex-col">
+      <div className="section-container px-6 md:px-12 lg:px-[9.5rem] pt-8 md:pt-[2.8rem] pb-0 flex flex-col">
         {/* Main Grid Layout */}
-        <div className="grid grid-cols-[3.5fr_1fr_1.5fr_1fr_1fr] gap-[2rem] w-full pb-[2rem] mb-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[3.5fr_1fr_1.5fr_1fr_1fr] gap-y-5 md:gap-y-10 gap-x-4 lg:gap-[2rem] w-full pb-6 md:pb-[2rem] mb-0">
           {/* Logo Column */}
-          <div className="flex flex-col">
+          <div className="flex flex-col col-span-2 md:col-span-4 lg:col-span-1">
             <Link
               href="/"
               className="flex items-center gap-[0.8rem] group cursor-pointer w-fit"
@@ -55,7 +55,7 @@ export default function Footer() {
 
           {/* Links Columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category} className="flex flex-col gap-[1rem]">
+            <div key={category} className="flex flex-col gap-2 md:gap-[1rem] col-span-1">
               <h4 className="text-[#434343] text-[1rem] font-normal leading-relaxed">
                 {category}
               </h4>
@@ -74,8 +74,7 @@ export default function Footer() {
             </div>
           ))}
 
-          {/* Social Links Column */}
-          <div className="flex flex-col gap-[1rem]">
+          <div className="flex flex-col gap-2 md:gap-[1rem] col-span-1">
             <h4 className="text-[#434343] text-[1rem] font-normal leading-relaxed">
               Social
             </h4>
@@ -102,7 +101,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright Text */}
-        <div className="text-[1rem] font-sans font-normal leading-relaxed text-[#434343] pb-[3.4rem]">
+        <div className="text-[1rem] font-sans font-normal leading-tight text-[#434343] pb-8 md:pb-[3.4rem]">
           @ 2026 CS Council and Technical Committee. All rights reserved
         </div>
       </div>
