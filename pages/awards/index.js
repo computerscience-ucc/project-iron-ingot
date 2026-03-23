@@ -89,7 +89,7 @@ const Awards = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="max-w-[1200px] w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
+        className="max-w-[1200px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
       >
         {/* Header */}
         <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">
@@ -103,7 +103,7 @@ const Awards = () => {
         </div>
 
         {/* Controls bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 md:mb-10">
           {/* Year pills */}
           <div className="flex flex-wrap items-center gap-2">
             {years.map((y) => {
@@ -151,7 +151,7 @@ const Awards = () => {
 
         {/* Loading skeleton */}
         {loading && (
-          <div className="columns-1 sm:columns-2 lg:columns-4 gap-4">
+          <div className="columns-2 lg:columns-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
@@ -171,7 +171,7 @@ const Awards = () => {
 
         {/* Masonry-like Columns */}
         {!loading && filtered.length > 0 && (
-          <div className="columns-1 sm:columns-2 lg:columns-4 gap-4 space-y-4">
+          <div className="columns-2 lg:columns-4 gap-4 space-y-4">
             {filtered.map((award) => (
               <Card
                 key={award._id}

@@ -26,7 +26,6 @@ const Card = ({ award, onClick }) => {
           className="relative w-full overflow-hidden"
           style={{
             aspectRatio: award.headerImage.metadata ? `${award.headerImage.metadata.width} / ${award.headerImage.metadata.height}` : "auto",
-            minHeight: "200px"
           }}
         >
           {!loaded && (
@@ -53,18 +52,18 @@ const Card = ({ award, onClick }) => {
 
       {/* hover overlay */}
       <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 z-20">
-        <h3 className="text-[1.25rem] font-semibold text-[#EFEFEF] group-hover:text-white mb-1.5 tracking-normal transition-colors leading-[1.3] line-clamp-2">
+        <h3 className="text-[1.25rem] font-semibold text-[#EFEFEF] group-hover:text-white mb-2 tracking-normal transition-colors leading-[1.3] line-clamp-2">
           {award.title}
         </h3>
-        {award.category && (
-          <p className="text-[#8C8C8C] text-[0.875rem] font-normal leading-normal mb-3.5">
-            {award.category}
-          </p>
-        )}
-        <div className="flex flex-wrap items-center gap-2 mt-2">
+        <div className="flex flex-wrap items-center gap-2">
           {award.academicYear && (
-            <span className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+            <span className="px-2 py-0.5 bg-[#EA2B2E] text-[#EFEFEF] text-[0.8rem] font-sans font-medium tracking-wide">
               {award.academicYear}
+            </span>
+          )}
+          {award.category && (
+            <span className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              {award.category}
             </span>
           )}
           {award.images && award.images.length > 1 && (

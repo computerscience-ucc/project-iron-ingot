@@ -35,13 +35,7 @@ export default function BlogPage() {
     });
   }, [blogList, selectedYear, sortLatest]);
 
-  const rows = useMemo(() => {
-    const res = [];
-    for (let i = 0; i < filtered.length; i += 2) {
-      res.push(filtered.slice(i, i + 2));
-    }
-    return res;
-  }, [filtered]);
+
 
   return (
     <>
@@ -56,103 +50,82 @@ export default function BlogPage() {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="max-w-[1440px] w-[80%] mx-auto pt-[4rem] pb-[4rem] z-10 min-h-screen relative"
+        className="max-w-[1200px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
       >
-        {/* Full-height vertical borders for the layout sides */}
-        <div className="absolute left-[calc(240px+4rem)] top-0 bottom-0 w-px border-l border-dashed border-[#2F2F2F] hidden md:block" />
-        <div className="absolute right-0 top-0 bottom-0 w-px border-r border-dashed border-[#2F2F2F] hidden md:block" />
+        <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">
+          <h1 className="text-[2rem] text-[#ffffff] font-semibold tracking-normal">
+            Blog
+          </h1>
+          <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal max-w-[600px]">
+            See what CS students are up to in the BSCS Program
+          </p>
+        </div>
 
-        {/* Full-height vertical dashed borders between columns */}
-        {/* These calculate the center of the 1fr section and add/subtract 1.5rem offset */}
-        <div className="absolute left-[calc(240px+4rem+(100%-(240px+4rem))/2-1.5rem)] top-0 bottom-0 w-px border-l border-dashed border-[#2F2F2F] hidden md:block" />
-        <div className="absolute left-[calc(240px+4rem+(100%-(240px+4rem))/2+1.5rem)] top-0 bottom-0 w-px border-l border-dashed border-[#2F2F2F] hidden md:block" />
+        {/* Filters and Sorting */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {years.map((y) => {
+              const isActive = selectedYear === y;
+              return (
+                <button
+                  key={y}
+                  onClick={() => setSelectedYear(y)}
+                  className={`px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                    isActive
+                      ? "bg-[#EA2B2E] text-white"
+                      : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
+                  }`}
+                >
+                  {y}
+                </button>
+              );
+            })}
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] md:gap-[4rem] min-h-full">
-          {/* Sidebar */}
-          <aside className="flex flex-col w-full sticky top-[4rem] h-fit pr-4 md:pr-0 pb-10 md:pb-0">
-            <h1 className="text-[2rem] text-[#ffffff] font-semibold mb-4 tracking-normal">
-              Blog
-            </h1>
-            <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal mb-10 max-w-[95%]">
-              See what CS students are up to in the BSCS Program
-            </p>
+          <div className="flex items-center gap-1.5 shrink-0 relative z-10">
+            <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
+              Sort by:
+            </span>
+            <button
+              onClick={() => setSortLatest(!sortLatest)}
+              className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
+            >
+              <span>{sortLatest ? "Latest" : "Oldest"}</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                <path
+                  d="M1 1L5 5L9 1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-            <div className="flex flex-col gap-[2.5rem]">
-              {/* Year Filter */}
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-col pr-6">
-                  {years.map((y) => {
-                    const isActive = selectedYear === y;
-                    return (
-                      <button
-                        key={y}
-                        onClick={() => setSelectedYear(y)}
-                        className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                          isActive
-                            ? "bg-[#EA2B2E] text-white"
-                            : "text-[#EFEFEF] hover:bg-[#202020]"
-                        }`}
-                      >
-                        {y}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* Main Content Area */}
-          <section className="flex flex-col w-full relative min-h-full">
-            <div className="flex items-center justify-end mb-[1.5rem] mt-2 gap-1.5 relative z-10">
-              <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
-                Sort by:
-              </span>
-              <button
-                onClick={() => setSortLatest(!sortLatest)}
-                className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
-              >
-                <span>{sortLatest ? "Latest" : "Oldest"}</span>
-                <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                  <path
-                    d="M1 1L5 5L9 1"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${selectedYear}-${sortLatest}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col"
-              >
-                {rows.length === 0 ? (
-                  <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
-                    No blog posts found.
-                  </p>
-                ) : (
-                  rows.map((row, rowIndex) => (
-                    <div
-                      key={rowIndex}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-x-12 pb-4 mb-12 border-t border-b border-dashed border-[#2F2F2F]"
-                    >
-                      {row.map((blog, index) => (
-                        <BlogCard key={blog._id || index} blog={blog} />
-                      ))}
-                    </div>
-                  ))
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </section>
+        {/* Blog List */}
+        <div className="flex flex-col">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${selectedYear}-${sortLatest}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col gap-8 lg:gap-[1.5rem]"
+            >
+              {filtered.length === 0 ? (
+                <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
+                  No blog posts found.
+                </p>
+              ) : (
+                filtered.map((blog, i) => (
+                  <BlogCard key={blog._id || i} blog={blog} />
+                ))
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </motion.main>
     </>

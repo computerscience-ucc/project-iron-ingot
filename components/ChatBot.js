@@ -868,7 +868,7 @@ const ChatBot = () => {
             className={`${
               isFullscreen
                 ? "fixed inset-0 z-[100] rounded-none"
-                : "fixed bottom-5 right-5 z-50 w-[380px] h-[540px] rounded-xl shadow-2xl border border-[#2A2A2A]"
+                : "fixed bottom-5 right-5 z-50 w-[380px] h-[540px] rounded-xl border border-[#2A2A2A]"
             } flex flex-col overflow-hidden bg-[#181818] font-sans`}
             style={{ background: "#181818" }}
           >

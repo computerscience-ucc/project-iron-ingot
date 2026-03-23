@@ -127,7 +127,7 @@ const AboutPage = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="max-w-[1200px] w-[80%] mx-auto pt-[2rem] pb-[8rem] z-10 min-h-screen relative"
+        className="max-w-[1200px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[2rem] pb-[8rem] z-10 min-h-screen relative"
       >
         {/* Header */}
         <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">

@@ -168,7 +168,7 @@ const BlogPage = ({ blogPost }) => {
             </div>
           </div>
           {/* Back button (Mobile view) */}
-          <div className="lg:hidden mb-[2rem]">
+          <div className="lg:hidden mb-[3.5rem] flex justify-end">
             <Link href="/blog" scroll={false}>
               <Button className="bg-[#242424] hover:bg-[#2F2F2F] text-[#8C8C8C] hover:text-[#EFEFEF] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-[0.9375rem] transition-colors flex items-center gap-[0.6rem]">
                 <ArrowLeft size={18} />
@@ -209,7 +209,7 @@ const BlogPage = ({ blogPost }) => {
             </div>
           )}
 
-          <hr className="border-[#2F2F2F] my-[2.5rem]" />
+          <hr className="border-[#2F2F2F] my-[1.5rem]" />
 
           {/* content */}
           <div className="flex flex-col gap-[1.5rem]">

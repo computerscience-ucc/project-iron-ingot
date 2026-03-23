@@ -54,7 +54,7 @@ export default function Bulletin() {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="max-w-[1200px] w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
+        className="max-w-[1200px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
       >
         <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">
           <h1 className="text-[2rem] text-[#ffffff] font-semibold tracking-normal">

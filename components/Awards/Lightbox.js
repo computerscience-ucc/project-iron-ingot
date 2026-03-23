@@ -120,8 +120,8 @@ const Lightbox = ({ award, onClose }) => {
 
         {/* main img */}
         <div
-          className="relative flex items-center justify-center bg-black overflow-hidden shrink-0"
-          style={{ height: "650px", maxHeight: "70vh" }}
+          className="relative flex items-center justify-center bg-black overflow-hidden shrink-0 w-full"
+          style={{ aspectRatio: aspectRatio }}
         >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div

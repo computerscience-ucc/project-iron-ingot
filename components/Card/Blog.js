@@ -23,7 +23,7 @@ const BlogCard = ({ blog }) => {
       href={`/blog/${slug}`}
       scroll={false}
       onClick={() => setIsLoading(true)}
-      className="flex flex-col gap-0 relative group cursor-pointer w-full h-full"
+      className="flex flex-col lg:flex-row gap-0 relative group cursor-pointer w-full min-h-fit lg:h-[168.75px] pb-0 lg:pb-0 overflow-hidden"
     >
       {/* Click-loading overlay */}
       {isLoading && (
@@ -33,14 +33,14 @@ const BlogCard = ({ blog }) => {
       )}
 
       {/* Project Image / Placeholder */}
-      <div className="w-full h-[260px] shrink-0 overflow-hidden relative bg-[#252525]">
+      <div className="w-full lg:w-[300px] shrink-0 overflow-hidden relative bg-[#252525] aspect-video self-start lg:self-auto">
         {headerImage ? (
           <Image
             src={headerImage}
             alt={title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 1024px) 100vw, 300px"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-[#333333]">
@@ -61,17 +61,19 @@ const BlogCard = ({ blog }) => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col pt-5 px-6 transition-colors duration-200 overflow-hidden">
-        <p className="text-[1.25rem] font-semibold tracking-normal text-[#EFEFEF] group-hover:text-white transition-colors leading-[1.3] line-clamp-2">
-          {title || "Untitled Post"}
-        </p>
+      <div className="flex-1 flex flex-col px-0 lg:pl-6 lg:pr-4 pt-4 pb-0 lg:py-3 transition-colors duration-200 group-hover:bg-white/[0.02] min-h-fit">
+        <div className="flex items-start justify-between gap-4">
+          <p className="text-[1rem] md:text-[1.25rem] font-semibold tracking-normal text-[#EFEFEF] group-hover:text-white transition-colors leading-[1.3] line-clamp-1">
+            {title || "Untitled Post"}
+          </p>
+        </div>
 
-        <p className="text-[1rem] text-[#8C8C8C] mt-2 leading-normal font-normal truncate">
+        <p className="text-[0.75rem] md:text-[0.875rem] text-[#8C8C8C] mt-1 leading-[1.4] font-medium line-clamp-1">
           By {displayAuthors} on {dayjs(_createdAt).format("MMM DD, YYYY")}
         </p>
 
-        {/* Tags Container pushed to the bottom */}
-        <div className="flex flex-wrap gap-2 mt-auto pt-6 pb-2">
+        {/* Tags Container pushed to the bottom on desktop, spaced on mobile */}
+        <div className="flex flex-wrap overflow-hidden gap-2 mt-4 lg:mt-auto h-[26px]">
           {tags &&
             tags.length > 0 &&
             tags.slice(0, 4).map((tag, i) => (
