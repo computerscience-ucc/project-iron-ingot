@@ -34,18 +34,27 @@ const CommitteeSection = ({ committees }) => {
         </h3>
 
         {/* Committee Tabs */}
-        <div className="flex flex-wrap items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit w-fit">
+        <div className="flex flex-wrap items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit w-fit relative">
           {committees.map((c, i) => (
             <button
               key={i}
               onClick={() => handleCommitteeChange(i)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-all ${
+              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-all ${
                 activeCommitteeIdx === i
-                  ? "bg-[#333333] text-white shadow-sm"
-                  : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
+                  ? "text-white"
+                  : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
-              {c.committeeName.replace(/ committee/gi, "")}
+              {activeCommitteeIdx === i && (
+                <motion.div
+                  layoutId="activeCommitteeTab"
+                  className="absolute inset-0 bg-[#333333] rounded-[4px] z-0 shadow-sm"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">
+                {c.committeeName.replace(/ committee/gi, "")}
+              </span>
             </button>
           ))}
         </div>

@@ -142,36 +142,51 @@ const AboutPage = () => {
         {/* Controls bar / tabs */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 mt-6">
           {/* Main Tabs */}
-          <div className="flex flex-wrap items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit">
+          <div className="flex flex-wrap items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit relative">
             <button
               onClick={() => selectTab(1)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                selected === 1
-                  ? "bg-[#333333] text-white"
-                  : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
+              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                selected === 1 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
-              Development Team
+              {selected === 1 && (
+                <motion.div
+                  layoutId="activeTabAbout"
+                  className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">Development Team</span>
             </button>
             <button
               onClick={() => selectTab(2)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                selected === 2
-                  ? "bg-[#333333] text-white"
-                  : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
+              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                selected === 2 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
-              Computer Science Council
+              {selected === 2 && (
+                <motion.div
+                  layoutId="activeTabAbout"
+                  className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">Computer Science Council</span>
             </button>
             <button
               onClick={() => selectTab(3)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                selected === 3
-                  ? "bg-[#333333] text-white"
-                  : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
+              className={`relative pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                selected === 3 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
-              MIS - ACES
+              {selected === 3 && (
+                <motion.div
+                  layoutId="activeTabAbout"
+                  className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">MIS - ACES</span>
             </button>
           </div>
 
@@ -187,16 +202,24 @@ const AboutPage = () => {
                     <button
                       key={y}
                       onClick={() => setSelectedYear(y)}
-                      className={`${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
-                        isActive
-                          ? "bg-[#EA2B2E] text-white"
-                          : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
+                      className={`relative ${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
+                        isActive ? "text-white" : "text-[#EFEFEF] hover:bg-[#202020]"
                       }`}
                     >
-                      {hasAsterisk && (
-                        <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">✱</span>
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeYearCouncil"
+                          className="absolute inset-0 bg-[#EA2B2E] rounded-[4px] z-0"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
                       )}
-                      {y}
+                      {!isActive && <div className="absolute inset-0 bg-[#2A2A2A] rounded-[4px] z-0" />}
+                      <span className="relative z-10 flex items-center">
+                        {hasAsterisk && (
+                          <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">✱</span>
+                        )}
+                        {y}
+                      </span>
                     </button>
                   );
                 });
@@ -209,22 +232,30 @@ const AboutPage = () => {
               {teams.map((t) => {
                 const isActive = selectedTeamId === t._id;
                 const hasAsterisk = t.isCurrent;
-                return (
-                  <button
-                    key={t._id}
-                    onClick={() => setSelectedTeamId(t._id)}
-                    className={`${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
-                      isActive
-                        ? "bg-[#EA2B2E] text-white"
-                        : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
-                    }`}
-                  >
-                    {hasAsterisk && (
-                      <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">✱</span>
-                    )}
-                    {t.academicYear}
-                  </button>
-                );
+                  return (
+                    <button
+                      key={t._id}
+                      onClick={() => setSelectedTeamId(t._id)}
+                      className={`relative ${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
+                        isActive ? "text-white" : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeYearTeam"
+                          className="absolute inset-0 bg-[#EA2B2E] rounded-[4px] z-0"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                      {!isActive && <div className="absolute inset-0 bg-[#2A2A2A] rounded-[4px] z-0" />}
+                      <span className="relative z-10 flex items-center">
+                        {hasAsterisk && (
+                          <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">✱</span>
+                        )}
+                        {t.academicYear}
+                      </span>
+                    </button>
+                  );
               })}
             </div>
           )}
