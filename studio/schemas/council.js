@@ -108,6 +108,13 @@ const council = {
               validation: (Rule) => Rule.required(),
             },
             {
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 3,
+              description: "Brief description of the committee's purpose and activities",
+            },
+            {
               name: "members",
               title: "Members",
               type: "array",

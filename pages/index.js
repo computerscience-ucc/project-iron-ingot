@@ -11,7 +11,6 @@ import LatestOnIngo from "@/layouts/LatestOnIngo";
 import Council from "@/layouts/Council";
 import FAQ from "@/layouts/FAQ";
 import HappyCodingSection from "@/layouts/HappyCodingSection";
-import Footer from "@/layouts/Footer";
 import { usePrefetcher } from "@/components/Prefetcher";
 
 export default function Home() {
@@ -40,8 +39,6 @@ export default function Home() {
       <SectionStripe className="mt-[4rem]" />
       <FAQ />
       <HappyCodingSection />
-      <SectionStripe className="mt-0" />
-      <Footer />
     </>
   );
 }

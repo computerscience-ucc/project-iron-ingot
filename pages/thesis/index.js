@@ -108,7 +108,7 @@ export default function Thesis() {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="max-w-[1440px] w-[80%] mx-auto pt-[4rem] pb-[4rem] z-10 min-h-screen relative"
+        className="max-w-[1440px] w-[80%] mx-auto pt-[4rem] pb-[12rem] z-10 min-h-screen relative"
       >
         {/* Full-height dashed borders sticking to the cards container */}
         <div className="absolute left-[calc(240px+4rem)] top-0 bottom-0 w-px border-l border-dashed border-[#2F2F2F] hidden md:block" />

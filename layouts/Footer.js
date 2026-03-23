@@ -64,7 +64,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[#8C8C8C] text-[1.1rem] font-normal hover:text-white transition-colors leading-relaxed"
+                      className="text-[#8C8C8C] text-[1rem] font-normal hover:text-white transition-colors leading-relaxed"
                     >
                       {link.label}
                     </Link>
@@ -86,10 +86,10 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[#8C8C8C] text-[1.1rem] font-normal hover:text-white transition-colors flex items-center gap-[0.8rem] leading-relaxed group"
+                      className="text-[#8C8C8C] text-[1rem] font-normal hover:text-white transition-colors flex items-center gap-[0.8rem] leading-relaxed group"
                     >
                       <Icon
-                        size={19}
+                        size={18}
                         className="text-[#515151] group-hover:text-white transition-colors"
                       />
                       {link.label}
@@ -102,7 +102,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright Text */}
-        <div className="text-[0.8rem] font-sans font-medium tracking-wide text-[#434343] pb-[3.4rem]">
+        <div className="text-[1rem] font-sans font-normal leading-relaxed text-[#434343] pb-[3.4rem]">
           @ 2026 CS Council and Technical Committee. All rights reserved
         </div>
       </div>

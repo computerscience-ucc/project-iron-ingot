@@ -8,6 +8,8 @@ import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ChatBot from "../components/ChatBot";
 import SearchModal from "../components/SearchModal";
 import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
+import SectionStripe from "@/components/SectionStripe";
+import Footer from "@/layouts/Footer";
 
 import { Search, X } from "@geist-ui/icons";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
@@ -492,6 +494,9 @@ export default function App({ Component, pageProps }) {
         <main>
           <Component {...pageProps} />
         </main>
+        
+        <SectionStripe className="mt-0" />
+        <Footer />
 
         {/* Layout Grids */}
         {showGrid && (

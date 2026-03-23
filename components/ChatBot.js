@@ -428,7 +428,7 @@ const BotMessage = ({
       <div
         className={`${
           isFullscreen ? "max-w-2xl" : "max-w-[88%]"
-        } px-4 py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.9375rem] leading-relaxed font-normal relative z-10`}
+        } w-fit px-4 py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.9375rem] leading-relaxed font-normal relative z-10`}
       >
         {isStreaming ? (
           <StreamingMessage text={text} onDone={onStreamDone} />
