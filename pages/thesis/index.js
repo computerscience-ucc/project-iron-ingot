@@ -20,6 +20,7 @@ export default function Thesis() {
   const [isYearOpen, setIsYearOpen] = useState(true);
   const [isDepartmentOpen, setIsDepartmentOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const departments = [ALL, "BSCS", "BSEMC", "BSIT", "BSIS", "Other"];
 
@@ -116,6 +117,166 @@ export default function Thesis() {
     });
   }, [listFilteredByYearAndDept, selectedCategory, sortLatest]);
 
+  const renderFilters = () => (
+    <div className="flex flex-col gap-[1.5rem] w-full">
+      {/* Year Filter */}
+      <div className="flex flex-col gap-1.5">
+        <div
+          className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
+          onClick={() => setIsYearOpen(!isYearOpen)}
+        >
+          <span>Year</span>
+          <svg
+            width="10" height="6" viewBox="0 0 10 6" fill="none"
+            className={`transition-transform duration-200 ${isYearOpen ? "" : "rotate-180"}`}
+          >
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <AnimatePresence>
+          {isYearOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col pr-6">
+                {years.map((y) => {
+                  const isActive = selectedYear === y;
+                  return (
+                    <button
+                      key={y}
+                      onClick={() => setSelectedYear(y)}
+                      className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                        isActive
+                          ? "bg-[#EA2B2E] text-white"
+                          : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
+                    >
+                      {y}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Department Filter */}
+      <div className="flex flex-col gap-1.5">
+        <div
+          className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
+          onClick={() => setIsDepartmentOpen(!isDepartmentOpen)}
+        >
+          <span>Department</span>
+          <svg
+            width="10" height="6" viewBox="0 0 10 6" fill="none"
+            className={`transition-transform duration-200 ${isDepartmentOpen ? "" : "rotate-180"}`}
+          >
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <AnimatePresence>
+          {isDepartmentOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col pr-6">
+                {departments.map((d) => {
+                  const isActive = selectedDepartment === d;
+                  return (
+                    <button
+                      key={d}
+                      onClick={() => setSelectedDepartment(d)}
+                      className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                        isActive
+                          ? "bg-[#2A2A2A] text-white"
+                          : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex flex-col gap-1.5">
+        <div
+          className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
+          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+        >
+          <span>Category</span>
+          <svg
+            width="10" height="6" viewBox="0 0 10 6" fill="none"
+            className={`transition-transform duration-200 ${isCategoryOpen ? "" : "rotate-180"}`}
+          >
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <AnimatePresence>
+          {isCategoryOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col pr-6">
+                {categories.map((c) => {
+                  const isActive = selectedCategory === c;
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => setSelectedCategory(c)}
+                      className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                        isActive
+                          ? "bg-[#2A2A2A] text-white"
+                          : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <Head
@@ -137,194 +298,82 @@ export default function Thesis() {
 
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] md:gap-[4rem] min-h-full">
           {/* Sidebar */}
-          <aside className="flex flex-col w-full sticky top-[4rem] h-fit pr-4 md:pr-0 pb-10 md:pb-0">
+          <aside className="flex flex-col w-full relative lg:sticky lg:top-[4rem] h-fit pr-4 md:pr-0 pb-4 md:pb-0 z-20">
             <h1 className="text-[2rem] text-[#ffffff] font-semibold mb-4 tracking-normal">
               Thesis
             </h1>
-            <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal mb-10 max-w-[95%]">
+            <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal mb-4 md:mb-10 max-w-[95%]">
               Search projects, open each profile, and watch project outputs.
             </p>
 
-            <div className="flex flex-col gap-[1.5rem]">
-              {/* Year Filter */}
-              <div className="flex flex-col gap-1.5">
-                <div
-                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
-                  onClick={() => setIsYearOpen(!isYearOpen)}
-                >
-                  <span>Year</span>
-                  <svg
-                    width="10" height="6" viewBox="0 0 10 6" fill="none"
-                    className={`transition-transform duration-200 ${isYearOpen ? "" : "rotate-180"}`}
-                  >
-                    <path
-                      d="M1 1L5 5L9 1"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <AnimatePresence>
-                  {isYearOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="flex flex-col pr-6">
-                        {years.map((y) => {
-                          const isActive = selectedYear === y;
-                          return (
-                            <button
-                              key={y}
-                              onClick={() => setSelectedYear(y)}
-                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                                isActive
-                                  ? "bg-[#EA2B2E] text-white"
-                                  : "text-[#EFEFEF] hover:bg-[#202020]"
-                              }`}
-                            >
-                              {y}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Department Filter */}
-              <div className="flex flex-col gap-1.5">
-                <div
-                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
-                  onClick={() => setIsDepartmentOpen(!isDepartmentOpen)}
-                >
-                  <span>Department</span>
-                  <svg
-                    width="10" height="6" viewBox="0 0 10 6" fill="none"
-                    className={`transition-transform duration-200 ${isDepartmentOpen ? "" : "rotate-180"}`}
-                  >
-                    <path
-                      d="M1 1L5 5L9 1"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <AnimatePresence>
-                  {isDepartmentOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="flex flex-col pr-6">
-                        {departments.map((d) => {
-                          const isActive = selectedDepartment === d;
-                          return (
-                            <button
-                              key={d}
-                              onClick={() => setSelectedDepartment(d)}
-                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                                isActive
-                                  ? "bg-[#2A2A2A] text-white"
-                                  : "text-[#EFEFEF] hover:bg-[#202020]"
-                              }`}
-                            >
-                              {d}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Category Filter */}
-              <div className="flex flex-col gap-1.5">
-                <div
-                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
-                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                >
-                  <span>Category</span>
-                  <svg
-                    width="10" height="6" viewBox="0 0 10 6" fill="none"
-                    className={`transition-transform duration-200 ${isCategoryOpen ? "" : "rotate-180"}`}
-                  >
-                    <path
-                      d="M1 1L5 5L9 1"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <AnimatePresence>
-                  {isCategoryOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="flex flex-col pr-6">
-                        {categories.map((c) => {
-                          const isActive = selectedCategory === c;
-                          return (
-                            <button
-                              key={c}
-                              onClick={() => setSelectedCategory(c)}
-                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
-                                isActive
-                                  ? "bg-[#2A2A2A] text-white"
-                                  : "text-[#EFEFEF] hover:bg-[#202020]"
-                              }`}
-                            >
-                              {c}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+            {/* Desktop Filters */}
+            <div className="hidden md:block">
+              {renderFilters()}
             </div>
           </aside>
 
           {/* Main Content Area */}
           <section className="flex flex-col w-full relative min-h-full">
-            <div className="flex items-center justify-end mb-[1rem] mt-2 gap-1.5 relative z-10">
-              <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
-                Sort by:
-              </span>
-              <button
-                onClick={() => setSortLatest(!sortLatest)}
-                className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
-              >
-                <span>{sortLatest ? "Latest" : "Oldest"}</span>
-                <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                  <path
-                    d="M1 1L5 5L9 1"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
+            <div className="flex items-center justify-between md:justify-end mb-[1rem] mt-0 md:mt-2 w-full relative z-30">
+              
+              {/* Mobile Filter Button & Dropdown */}
+              <div className="relative md:hidden">
+                <button
+                  onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+                  className="flex items-center gap-2 text-[0.875rem] font-normal text-[#EFEFEF] hover:text-white transition-colors bg-[#1A1A1A] border border-[#2F2F2F] px-4 py-2 rounded-[4px]"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                  </svg>
+                  <span>Filter</span>
+                </button>
+
+                <AnimatePresence>
+                  {isMobileFilterOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-[calc(100%+0.5rem)] left-0 w-[260px] bg-[#181818] border border-[#2F2F2F] rounded-[8px] pt-3 pb-4 pl-4 pr-1 shadow-xl z-50 overflow-y-auto max-h-[60vh] flex flex-col items-start"
+                    >
+                      {/* X close button for mobile convenience */}
+                      <button 
+                        onClick={() => setIsMobileFilterOpen(false)}
+                        className="self-end text-[#8C8C8C] hover:text-white mb-2 p-1"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M13 1L1 13M1 1l12 12" />
+                        </svg>
+                      </button>
+                      
+                      {renderFilters()}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Sort By Container */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
+                  Sort by:
+                </span>
+                <button
+                  onClick={() => setSortLatest(!sortLatest)}
+                  className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
+                >
+                  <span>{sortLatest ? "Latest" : "Oldest"}</span>
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path
+                      d="M1 1L5 5L9 1"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <AnimatePresence mode="wait">
@@ -334,7 +383,7 @@ export default function Thesis() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="flex flex-col gap-[1.5rem]"
+                className="flex flex-col gap-8 lg:gap-[1.5rem]"
               >
                 {filteredList.length === 0 ? (
                   <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
