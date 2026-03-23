@@ -4,10 +4,12 @@ import ThesisCard from "../../components/Card/Thesis";
 import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
+import { useRouter } from "next/router";
 
 const ALL = "All";
 
 export default function Thesis() {
+  const router = useRouter();
   const { thesis } = usePrefetcher();
   const [thesisList, setThesisList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
@@ -24,6 +26,25 @@ export default function Thesis() {
   useEffect(() => {
     setThesisList(thesis || []);
   }, [thesis]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { year, department, category } = router.query;
+
+      if (year) {
+        setSelectedYear(year);
+        setIsYearOpen(true);
+      }
+      if (department) {
+        setSelectedDepartment(department);
+        setIsDepartmentOpen(true);
+      }
+      if (category) {
+        setSelectedCategory(category);
+        setIsCategoryOpen(true);
+      }
+    }
+  }, [router.isReady, router.query]);
 
   // Extract unique academic years dynamically based on provided theses
   const years = useMemo(() => {
@@ -127,12 +148,12 @@ export default function Thesis() {
             <div className="flex flex-col gap-[1.5rem]">
               {/* Year Filter */}
               <div className="flex flex-col gap-1.5">
-                <div 
-                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-medium cursor-pointer hover:text-white transition-colors pl-2 select-none"
+                <div
+                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
                   onClick={() => setIsYearOpen(!isYearOpen)}
                 >
                   <span>Year</span>
-                  <svg 
+                  <svg
                     width="10" height="6" viewBox="0 0 10 6" fill="none"
                     className={`transition-transform duration-200 ${isYearOpen ? "" : "rotate-180"}`}
                   >
@@ -161,7 +182,7 @@ export default function Thesis() {
                             <button
                               key={y}
                               onClick={() => setSelectedYear(y)}
-                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                                 isActive
                                   ? "bg-[#EA2B2E] text-white"
                                   : "text-[#EFEFEF] hover:bg-[#202020]"
@@ -179,12 +200,12 @@ export default function Thesis() {
 
               {/* Department Filter */}
               <div className="flex flex-col gap-1.5">
-                <div 
-                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-medium cursor-pointer hover:text-white transition-colors pl-2 select-none"
+                <div
+                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
                   onClick={() => setIsDepartmentOpen(!isDepartmentOpen)}
                 >
                   <span>Department</span>
-                  <svg 
+                  <svg
                     width="10" height="6" viewBox="0 0 10 6" fill="none"
                     className={`transition-transform duration-200 ${isDepartmentOpen ? "" : "rotate-180"}`}
                   >
@@ -213,7 +234,7 @@ export default function Thesis() {
                             <button
                               key={d}
                               onClick={() => setSelectedDepartment(d)}
-                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                                 isActive
                                   ? "bg-[#2A2A2A] text-white"
                                   : "text-[#EFEFEF] hover:bg-[#202020]"
@@ -231,12 +252,12 @@ export default function Thesis() {
 
               {/* Category Filter */}
               <div className="flex flex-col gap-1.5">
-                <div 
-                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-medium cursor-pointer hover:text-white transition-colors pl-2 select-none"
+                <div
+                  className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
                   onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                 >
                   <span>Category</span>
-                  <svg 
+                  <svg
                     width="10" height="6" viewBox="0 0 10 6" fill="none"
                     className={`transition-transform duration-200 ${isCategoryOpen ? "" : "rotate-180"}`}
                   >
@@ -265,7 +286,7 @@ export default function Thesis() {
                             <button
                               key={c}
                               onClick={() => setSelectedCategory(c)}
-                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+                              className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                                 isActive
                                   ? "bg-[#2A2A2A] text-white"
                                   : "text-[#EFEFEF] hover:bg-[#202020]"
@@ -286,12 +307,12 @@ export default function Thesis() {
           {/* Main Content Area */}
           <section className="flex flex-col w-full relative min-h-full">
             <div className="flex items-center justify-end mb-[1rem] mt-2 gap-1.5 relative z-10">
-              <span className="text-[0.875rem] text-[#8C8C8C] font-medium leading-normal">
+              <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
                 Sort by:
               </span>
               <button
                 onClick={() => setSortLatest(!sortLatest)}
-                className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-medium leading-normal hover:text-white transition-colors"
+                className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
               >
                 <span>{sortLatest ? "Latest" : "Oldest"}</span>
                 <svg width="10" height="6" viewBox="0 0 10 6" fill="none">

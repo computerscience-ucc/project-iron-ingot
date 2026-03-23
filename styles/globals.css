@@ -129,3 +129,66 @@ body {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+/* Navigation Menu Drawer Animation - Custom Fix */
+@keyframes navDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navDrawerOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Specific animation for centered content to preserve translateX(-50%) */
+@keyframes navContentIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes navContentOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
+[data-slot="navigation-menu-viewport"][data-state="open"] {
+  animation: navDrawerIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="navigation-menu-viewport"][data-state="closed"] {
+  animation: navDrawerOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="navigation-menu-content"][data-state="open"] {
+  animation: navContentIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="navigation-menu-content"][data-state="closed"] {
+  animation: navContentOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

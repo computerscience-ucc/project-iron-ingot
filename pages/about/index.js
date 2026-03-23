@@ -145,7 +145,7 @@ const AboutPage = () => {
           <div className="flex flex-wrap items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit">
             <button
               onClick={() => selectTab(1)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                 selected === 1
                   ? "bg-[#333333] text-white"
                   : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
@@ -155,7 +155,7 @@ const AboutPage = () => {
             </button>
             <button
               onClick={() => selectTab(2)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                 selected === 2
                   ? "bg-[#333333] text-white"
                   : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
@@ -165,7 +165,7 @@ const AboutPage = () => {
             </button>
             <button
               onClick={() => selectTab(3)}
-              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+              className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                 selected === 3
                   ? "bg-[#333333] text-white"
                   : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
@@ -187,7 +187,7 @@ const AboutPage = () => {
                     <button
                       key={y}
                       onClick={() => setSelectedYear(y)}
-                      className={`${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors whitespace-nowrap flex items-center ${
+                      className={`${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
                         isActive
                           ? "bg-[#EA2B2E] text-white"
                           : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
@@ -213,7 +213,7 @@ const AboutPage = () => {
                   <button
                     key={t._id}
                     onClick={() => setSelectedTeamId(t._id)}
-                    className={`${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors whitespace-nowrap flex items-center ${
+                    className={`${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
                       isActive
                         ? "bg-[#EA2B2E] text-white"
                         : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"

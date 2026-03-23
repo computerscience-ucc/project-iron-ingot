@@ -96,8 +96,7 @@ const NavigationMenuContent = React.forwardRef(({
       ref={ref}
       data-slot="navigation-menu-content"
       className={cn(
-        "left-0 top-0 w-full md:absolute md:w-auto data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out",
-        "group-data-[viewport=false]/navigation-menu:data-[state=open]:animate-in group-data-[viewport=false]/navigation-menu:data-[state=open]:fade-in-0 group-data-[viewport=false]/navigation-menu:data-[state=open]:zoom-in-95 group-data-[viewport=false]/navigation-menu:data-[state=closed]:animate-out group-data-[viewport=false]/navigation-menu:data-[state=closed]:fade-out-0 group-data-[viewport=false]/navigation-menu:data-[state=closed]:zoom-out-95",
+        "left-0 top-0 w-full md:absolute md:w-auto",
         className
       )}
       {...props} />
@@ -116,7 +115,7 @@ const NavigationMenuViewport = React.forwardRef(({
         ref={ref}
         data-slot="navigation-menu-viewport"
         className={cn(
-          "origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-[14px] bg-[#2A2A2A] text-popover-foreground shadow-[0_10px_40px_rgba(0,0,0,0.5)] duration-200 md:w-(--radix-navigation-menu-viewport-width) data-open:animate-in data-open:zoom-in-95 data-closed:animate-out data-closed:zoom-out-95",
+          "origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-[14px] bg-[#2A2A2A] text-popover-foreground shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:w-(--radix-navigation-menu-viewport-width)",
           className
         )}
         {...props} />

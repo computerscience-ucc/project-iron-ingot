@@ -75,7 +75,7 @@ export default function Bulletin() {
                 <button
                   key={y}
                   onClick={() => setSelectedYear(y)}
-                  className={`px-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-colors ${
+                  className={`px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
                     isActive
                       ? "bg-[#EA2B2E] text-white"
                       : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
@@ -88,12 +88,12 @@ export default function Bulletin() {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0 relative z-10">
-            <span className="text-[0.875rem] text-[#8C8C8C] font-medium leading-normal">
+            <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
               Sort by:
             </span>
             <button
               onClick={() => setSortLatest(!sortLatest)}
-              className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-medium leading-normal hover:text-white transition-colors"
+              className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
             >
               <span>{sortLatest ? "Latest" : "Oldest"}</span>
               <svg width="10" height="6" viewBox="0 0 10 6" fill="none">

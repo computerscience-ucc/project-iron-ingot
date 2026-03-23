@@ -29,8 +29,9 @@ const AppChatBot = () => {
   ) : null;
 };
 
-export default function App({ Component, pageProps }) {
+function AppInner({ Component, pageProps }) {
   const router = useRouter();
+  const { blogs } = usePrefetcher();
   const [theme, setTheme] = useState("dark");
   const [showGrid, setShowGrid] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
@@ -80,11 +81,12 @@ export default function App({ Component, pageProps }) {
     { href: "/bulletin", label: "Bulletin" },
     { href: "/thesis", label: "Thesis", hasChevron: true },
     { href: "/awards", label: "Awards" },
+    { href: "/gallery", label: "Gallery" },
     { href: "/about", label: "About" },
   ];
 
   return (
-    <PrefetcherWrapper>
+    <>
       <div className="app-root">
         {showBanner && (
           <div className="w-full bg-[#FF3538] h-[2rem] flex items-center px-2 relative z-[100] transition-all duration-300 overflow-hidden group">
@@ -210,10 +212,10 @@ export default function App({ Component, pageProps }) {
                               )}
                             </NavigationMenuTrigger>
                           </Link>
-                          <NavigationMenuContent className="p-0 border-none bg-transparent shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[6px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
-                            <div className="relative pt-[12px] flex justify-center">
+                          <NavigationMenuContent className="p-0 border-none bg-transparent shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[1px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+                            <div className="relative pt-[10px] flex justify-center">
                               {/* SVG Pointer precisely above the card */}
-                              <div className="absolute top-[3px] left-1/2 -translate-x-1/2 z-[51]">
+                              <div className="absolute top-[1px] left-1/2 -translate-x-1/2 z-[51]">
                                 <svg
                                   width="21"
                                   height="20"
@@ -227,29 +229,29 @@ export default function App({ Component, pageProps }) {
                                   />
                                 </svg>
                               </div>
-                              <div className="flex gap-[2.5rem] p-[1.2rem] px-[1.5rem] bg-[#2A2A2A] rounded-[10px] w-max select-none relative z-50">
-                                <div className="flex flex-col gap-[0.5rem] min-w-[200px]">
+                              <div className="flex gap-[2.5rem] p-[1rem] px-[1.2rem] bg-[#2A2A2A] rounded-[10px] w-max select-none relative z-50">
+                                <div className="flex flex-col gap-[0.5rem] min-w-[160px]">
                                   <span className="text-[#8C8C8C] text-sm mb-[0.1rem] font-medium">
                                     Blog Posts
                                   </span>
-                                  {[
-                                    "AI Is Changing Dev Jobs",
-                                    "Small Habits, Big Results",
-                                    "How to Start Saving Money",
-                                    "Stay Consistent at the Gym",
-                                    "Take Back Your Time",
-                                  ].map((item) => (
-                                    <Link
-                                      key={item}
-                                      href="#"
-                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-[1rem]"
-                                    >
-                                      {item}
-                                    </Link>
-                                  ))}
+                                  {blogs?.length > 0 ? (
+                                    blogs.slice(0, 5).map((item) => (
+                                      <Link
+                                        key={item._id}
+                                        href={`/blog/${item.slug}`}
+                                        className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm truncate max-w-[400px] block"
+                                      >
+                                        {item.title}
+                                      </Link>
+                                    ))
+                                  ) : (
+                                    <span className="text-[#8C8C8C] text-sm">
+                                      No posts available
+                                    </span>
+                                  )}
                                   <Link
-                                    href="#"
-                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-[1rem] mt-1 group/more"
+                                    href="/blog"
+                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-sm mt-1 group/more"
                                   >
                                     <div className="flex gap-[0.15rem]">
                                       <span className="w-1 h-1 rounded-full bg-[#8C8C8C] group-hover/more:bg-[#EFEFEF] transition-colors"></span>
@@ -298,10 +300,10 @@ export default function App({ Component, pageProps }) {
                               )}
                             </NavigationMenuTrigger>
                           </Link>
-                          <NavigationMenuContent className="p-0 border-none bg-transparent shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[6px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
-                            <div className="relative pt-[12px] flex justify-center">
+                          <NavigationMenuContent className="p-0 border-none bg-transparent shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[1px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+                            <div className="relative pt-[10px] flex justify-center">
                               {/* SVG Pointer precisely above the card */}
-                              <div className="absolute top-[3px] left-1/2 -translate-x-1/2 z-[51]">
+                              <div className="absolute top-[1px] left-1/2 -translate-x-1/2 z-[51]">
                                 <svg
                                   width="21"
                                   height="20"
@@ -315,28 +317,60 @@ export default function App({ Component, pageProps }) {
                                   />
                                 </svg>
                               </div>
-                              <div className="flex gap-[2.5rem] p-[1.2rem] px-[1.5rem] bg-[#2A2A2A] rounded-[10px] w-max select-none relative z-50">
-                                <div className="flex flex-col gap-[0.5rem] min-w-[125px]">
+                              <div className="flex gap-[2.5rem] p-[1rem] px-[1.2rem] bg-[#2A2A2A] rounded-[10px] w-max select-none relative z-50">
+                                <div className="flex flex-col gap-[0.5rem] min-w-[100px]">
                                   <span className="text-[#8C8C8C] text-sm mb-[0.1rem] font-medium">
                                     Academic year
                                   </span>
                                   {[
-                                    "2025 - 2026",
-                                    "2024 - 2025",
-                                    "2023 - 2024",
-                                    "2022 - 2023",
+                                    "2026",
+                                    "2025",
+                                    "2024",
+                                    "2023",
+                                    "2022",
                                   ].map((item) => (
                                     <Link
                                       key={item}
-                                      href="#"
-                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-[1rem]"
+                                      href={`/thesis?year=${encodeURIComponent(item)}`}
+                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
                                     >
                                       {item}
                                     </Link>
                                   ))}
                                   <Link
-                                    href="#"
-                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-[1rem] mt-1 group/more"
+                                    href="/thesis"
+                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-sm mt-1 group/more"
+                                  >
+                                    <div className="flex gap-[0.15rem]">
+                                      <span className="w-1 h-1 rounded-full bg-[#8C8C8C] group-hover/more:bg-[#EFEFEF] transition-colors"></span>
+                                      <span className="w-1 h-1 rounded-full bg-[#8C8C8C] group-hover/more:bg-[#EFEFEF] transition-colors"></span>
+                                      <span className="w-1 h-1 rounded-full bg-[#8C8C8C] group-hover/more:bg-[#EFEFEF] transition-colors"></span>
+                                    </div>
+                                    More
+                                  </Link>
+                                </div>
+                                <div className="flex flex-col gap-[0.5rem] min-w-[100px]">
+                                  <span className="text-[#8C8C8C] text-sm mb-[0.1rem] font-medium">
+                                    Department
+                                  </span>
+                                  {[
+                                    "BSCS",
+                                    "BSEMC",
+                                    "BSIT",
+                                    "BSIS",
+                                    "Other",
+                                  ].map((item) => (
+                                    <Link
+                                      key={item}
+                                      href={`/thesis?department=${encodeURIComponent(item)}`}
+                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
+                                    >
+                                      {item}
+                                    </Link>
+                                  ))}
+                                  <Link
+                                    href="/thesis"
+                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-sm mt-1 group/more"
                                   >
                                     <div className="flex gap-[0.15rem]">
                                       <span className="w-1 h-1 rounded-full bg-[#8C8C8C] group-hover/more:bg-[#EFEFEF] transition-colors"></span>
@@ -359,15 +393,15 @@ export default function App({ Component, pageProps }) {
                                   ].map((item) => (
                                     <Link
                                       key={item}
-                                      href="#"
-                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-[1rem]"
+                                      href={`/thesis?category=${encodeURIComponent(item)}`}
+                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
                                     >
                                       {item}
                                     </Link>
                                   ))}
                                   <Link
-                                    href="#"
-                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-[1rem] mt-1 group/more"
+                                    href="/thesis"
+                                    className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-sm mt-1 group/more"
                                   >
                                     <div className="flex gap-[0.15rem]">
                                       <span className="w-1 h-1 rounded-full bg-[#8C8C8C] group-hover/more:bg-[#EFEFEF] transition-colors"></span>
@@ -494,7 +528,6 @@ export default function App({ Component, pageProps }) {
         <main>
           <Component {...pageProps} />
         </main>
-        
         <SectionStripe className="mt-0" />
         <Footer />
 
@@ -517,6 +550,14 @@ export default function App({ Component, pageProps }) {
 
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
+    </>
+  );
+}
+
+export default function App(props) {
+  return (
+    <PrefetcherWrapper>
+      <AppInner {...props} />
     </PrefetcherWrapper>
   );
 }
