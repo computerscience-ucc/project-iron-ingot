@@ -5,7 +5,6 @@ import PersonLightbox from "../../../components/Team/PersonLightbox";
 import OfficerCard from "../../../components/Home/MeetCouncil/OfficerCard";
 import DepartmentSection from "../../../components/Team/DepartmentSection";
 
-
 // ─── Animation variants ────────────────────────
 const fadeSlide = {
   initial: { opacity: 0, y: 30 },

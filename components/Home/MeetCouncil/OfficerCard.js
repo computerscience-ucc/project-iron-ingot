@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function OfficerCard({ name, role, photo, className, imageClassName, onClick }) {
   return (
-    <div 
+    <div
       className={`flex flex-col ${className || "min-w-[25rem] w-[25rem]"} ${onClick ? "cursor-pointer group" : ""}`}
       onClick={onClick}
     >

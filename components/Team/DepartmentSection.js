@@ -5,7 +5,6 @@ const stagger = {
   animate: { transition: { staggerChildren: 0.08 } },
 };
 
-
 const DepartmentSection = ({ dept, onPersonClick }) => {
 
   return (

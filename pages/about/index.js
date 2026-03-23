@@ -73,7 +73,7 @@ const AboutPage = () => {
   const [selected, setSelected] = useState(2); // Set default to Computer Science Council
   const [councils, setCouncils] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
- 
+
   const [teams, setTeams] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
 
@@ -84,7 +84,7 @@ const AboutPage = () => {
       const current = result.find((c) => c.isCurrent) || result[0];
       if (current) setSelectedYear(current.academicYear);
     });
-   
+
     client.fetch(TEAM_QUERY).then((data) => {
       const result = data || [];
       setTeams(result);
@@ -203,7 +203,7 @@ const AboutPage = () => {
               })()}
             </div>
           )}
-         
+
           {selected === 1 && teams.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 overflow-x-auto scrollbar-hide">
               {teams.map((t) => {
@@ -245,7 +245,7 @@ const AboutPage = () => {
                   <Page_Team teams={teams} selectedTeamId={selectedTeamId} />
                 </motion.div>
               )}
-             
+
               {selected === 2 && council && (
                 <>
                   <div className="flex flex-col xl:flex-row gap-[4rem] xl:gap-[6rem] w-full items-start justify-start">
@@ -261,7 +261,7 @@ const AboutPage = () => {
                         className="w-full xl:w-[22.5rem]"
                       />
                     </div>
-               
+
                     {/* Executive */}
                     <div className="flex flex-col w-full xl:w-auto">
                       <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
@@ -280,7 +280,7 @@ const AboutPage = () => {
                       </div>
                     </div>
                   </div>
-               
+
                   {/* Officers */}
                   {council.officers && council.officers.length > 0 && (
                     <div className="flex flex-col mt-12">
