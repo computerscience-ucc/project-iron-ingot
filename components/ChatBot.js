@@ -427,7 +427,7 @@ const BotMessage = ({
     <div className="relative w-full">
       <div
         className={`${
-          isFullscreen ? "max-w-2xl" : "max-w-[88%]"
+          isFullscreen ? "max-w-[85%] md:max-w-2xl" : "max-w-[88%]"
         } w-fit px-4 py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.9375rem] leading-relaxed font-normal relative z-10`}
       >
         {isStreaming ? (
@@ -456,9 +456,9 @@ const BotMessage = ({
       <div
         className={
           isFullscreen && cards.length > 1
-            ? "max-w-2xl grid grid-cols-2 gap-2 mt-1"
+            ? "max-w-[85%] md:max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1"
             : isFullscreen
-              ? "w-72 flex flex-col gap-2 mt-1"
+              ? "w-[85%] sm:w-72 flex flex-col gap-2 mt-1"
               : "max-w-[85%] flex flex-col gap-2 mt-1"
         }
       >
