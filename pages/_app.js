@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ChatBot from "../components/ChatBot";
 import SearchModal from "../components/SearchModal";
@@ -31,7 +31,15 @@ const AppChatBot = () => {
 
 function AppInner({ Component, pageProps }) {
   const router = useRouter();
-  const { blogs } = usePrefetcher();
+  const { blogs, thesis } = usePrefetcher();
+
+  const dynamicAcademicYears = useMemo(() => {
+    return [...new Set((thesis || []).map(t => t.academicYear).filter(Boolean))].sort().reverse().slice(0, 5);
+  }, [thesis]);
+
+  const dynamicCategories = useMemo(() => {
+    return [...new Set((thesis || []).flatMap(t => t.tags || []).filter(Boolean))].slice(0, 5);
+  }, [thesis]);
   const [theme, setTheme] = useState("dark");
   const [showGrid, setShowGrid] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
@@ -218,7 +226,7 @@ function AppInner({ Component, pageProps }) {
               >
                 <NavigationMenuList className="gap-[2rem]">
                   {navLinks.map((link) => {
-                    const isActive = router.pathname === link.href;
+                    const isActive = router.pathname === link.href || router.pathname.startsWith(link.href + "/");
                     const linkClass = `nav-link flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent ${
                       isActive
                         ? "active text-[#FF5154]"
@@ -367,21 +375,21 @@ function AppInner({ Component, pageProps }) {
                                   <span className="text-[#8C8C8C] text-sm mb-[0.1rem] font-medium">
                                     Academic year
                                   </span>
-                                  {[
-                                    "2026",
-                                    "2025",
-                                    "2024",
-                                    "2023",
-                                    "2022",
-                                  ].map((item) => (
-                                    <Link
-                                      key={item}
-                                      href={`/thesis?year=${encodeURIComponent(item)}`}
-                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
-                                    >
-                                      {item}
-                                    </Link>
-                                  ))}
+                                  {dynamicAcademicYears.length > 0 ? (
+                                    dynamicAcademicYears.map((item) => (
+                                      <Link
+                                        key={item}
+                                        href={`/thesis?year=${encodeURIComponent(item)}`}
+                                        className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
+                                      >
+                                        {item}
+                                      </Link>
+                                    ))
+                                  ) : (
+                                    <span className="text-[#8C8C8C] text-sm">
+                                      No years available
+                                    </span>
+                                  )}
                                   <Link
                                     href="/thesis"
                                     className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-sm mt-1 group/more"
@@ -429,21 +437,21 @@ function AppInner({ Component, pageProps }) {
                                   <span className="text-[#8C8C8C] text-sm mb-[0.1rem] font-medium">
                                     Categories
                                   </span>
-                                  {[
-                                    "Blockchain",
-                                    "IoT",
-                                    "OS",
-                                    "ML/AI",
-                                    "CyberSec",
-                                  ].map((item) => (
-                                    <Link
-                                      key={item}
-                                      href={`/thesis?category=${encodeURIComponent(item)}`}
-                                      className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
-                                    >
-                                      {item}
-                                    </Link>
-                                  ))}
+                                  {dynamicCategories.length > 0 ? (
+                                    dynamicCategories.map((item) => (
+                                      <Link
+                                        key={item}
+                                        href={`/thesis?category=${encodeURIComponent(item)}`}
+                                        className="text-[#EFEFEF] hover:text-[#FF5154] transition-colors text-sm"
+                                      >
+                                        {item}
+                                      </Link>
+                                    ))
+                                  ) : (
+                                    <span className="text-[#8C8C8C] text-sm">
+                                      No categories
+                                    </span>
+                                  )}
                                   <Link
                                     href="/thesis"
                                     className="flex items-center gap-[0.4rem] text-[#8C8C8C] hover:text-[#EFEFEF] transition-colors text-sm mt-1 group/more"
@@ -573,16 +581,16 @@ function AppInner({ Component, pageProps }) {
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                <div className="flex flex-col max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto px-[1.4rem] pt-8 pb-10 gap-6">
+                <div className="flex flex-col max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto px-[1.4rem] pt-4 pb-6 gap-4">
                   {/* Nav links section */}
                   <nav className="flex flex-col">
                     {navLinks.map((link) => {
-                      const isActive = router.pathname === link.href;
+                      const isActive = router.pathname === link.href || router.pathname.startsWith(link.href + "/");
                       return (
                         <Link
                           key={link.href}
                           href={link.href}
-                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1.5 font-sans font-normal text-[1.1rem] ${
+                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[1.1rem] ${
                             isActive
                               ? "active text-[#FF5154]"
                               : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
@@ -595,7 +603,7 @@ function AppInner({ Component, pageProps }) {
                   </nav>
 
                   {/* Search & Socials - Simplified */}
-                  <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4">
                     {/* Search - Desktop consistency */}
                     <div
                       onClick={() => {
@@ -609,7 +617,7 @@ function AppInner({ Component, pageProps }) {
                         size={20}
                         color="#8C8C8C"
                       />
-                      <div className="pl-8 pr-16 h-[42px] bg-[#1D1D1D] border border-[#333333] rounded-[6px] flex items-center text-[#8C8C8C] text-[1rem] select-none">
+                      <div className="pl-8 pr-16 h-[42px] bg-[#1D1D1D] border border-[#333333] rounded-[6px] flex items-center text-[#8C8C8C] text-[1rem] select-none font-normal">
                         Search
                       </div>
                     </div>

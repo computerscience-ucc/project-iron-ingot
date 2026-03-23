@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { CgChevronLeft, CgChevronUp } from "react-icons/cg";
+import { CgChevronUp } from "react-icons/cg";
+import { ArrowLeft } from "@geist-ui/icons";
+import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
@@ -27,27 +29,38 @@ function getYouTubeId(url) {
 const blockComponents = {
   types: {
     image: ({ value }) => (
-      <div className="relative w-full h-[300px] my-4">
-        <Image src={urlFor(value.asset).url()} layout="fill" objectFit="contain" alt={value.alt || ""} />
+      <div className="mx-auto w-[90%] my-[0.25rem]">
+        <div className="overflow-hidden rounded-[8px]">
+          <img
+            src={urlFor(value.asset).url()}
+            className="w-full h-auto"
+            alt={value.alt || ""}
+          />
+        </div>
+        {value.caption && (
+          <p className="text-[0.875rem] text-[#8C8C8C] mt-[0.3rem] italic leading-tight text-center">
+            {value.caption}
+          </p>
+        )}
       </div>
     ),
   },
   block: {
-    h1: ({ children }) => <h1 className="text-4xl font-bold mt-6 mb-2">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-3xl font-bold mt-5 mb-2">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-2xl font-bold mt-4 mb-1">{children}</h3>,
-    h4: ({ children }) => <h4 className="text-xl font-bold mt-3 mb-1">{children}</h4>,
-    normal: ({ children }) => <p className="leading-relaxed mb-3 text-gray-300">{children}</p>,
+    h1: ({ children }) => <h1 className="text-[2rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-[1.5rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-[1.25rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h3>,
+    h4: ({ children }) => <h4 className="text-[1.125rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h4>,
+    normal: ({ children }) => <p className="text-[1rem] text-[#8C8C8C] leading-relaxed mb-[1rem] last:mb-0 font-normal">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="border-l-2 border-red-600 pl-4 my-4 italic text-gray-400">{children}</blockquote>
+      <blockquote className="border-l-2 border-[#2F2F2F] pl-[1rem] my-[0.25rem] italic text-[#8C8C8C] leading-relaxed">{children}</blockquote>
     ),
   },
   marks: {
-    em: ({ children }) => <em className="italic text-gray-300">{children}</em>,
+    em: ({ children }) => <em className="italic text-[#8C8C8C]">{children}</em>,
     strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
     link: ({ children, value }) => (
       <a href={value.href} target="_blank" rel="noopener noreferrer"
-        className="underline underline-offset-4 text-blue-400 hover:text-blue-300 transition">
+        className="underline underline-offset-4 text-[#EFEFEF] hover:text-white transition-colors">
         {children}
       </a>
     ),
@@ -145,56 +158,73 @@ const ThesisPage = ({ post }) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="min-h-screen pt-36 pb-24"
+        className="max-w-[1100px] w-[90%] mx-auto pt-[2rem] md:pt-[3rem] lg:pt-[4rem] pb-[6rem] md:pb-[8rem] lg:pb-[12rem] z-10 min-h-screen relative flex justify-center"
       >
-        {/* ── Back + Title ── */}
-        <div className="mb-8">
-          <Link
-            href="/thesis"
-            scroll={false}
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-red-400 transition mb-5">
-
-            <CgChevronLeft size={18} />Back to Thesis
-
-          </Link>
-
-          {/* Meta badges */}
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            {post.academicYear && (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-600/20 text-red-400 border border-red-600/30 font-semibold">
-                {post.academicYear}
-              </span>
-            )}
-            {post.department && (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-white/5 text-gray-400 border border-white/10">
-                {DEPT_LABEL[post.department] || post.department}
-              </span>
-            )}
-            {post._createdAt && (
-              <span className="text-[11px] text-gray-600 ml-auto">
-                {dayjs(post._createdAt).format("MMMM D, YYYY")}
-              </span>
-            )}
+        {/* Content Column */}
+        <div className="w-full max-w-[800px] relative">
+          {/* Sticky Sidebar (Desktop) */}
+          <div className="hidden lg:block absolute right-full top-0 h-full pr-[4rem] xl:pr-[6rem]">
+            <div className="sticky top-[8rem]">
+              <Link href="/thesis" scroll={false}>
+                <Button className="bg-[#242424] hover:bg-[#2F2F2F] text-[#8C8C8C] hover:text-[#EFEFEF] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-[0.9375rem] transition-colors flex items-center gap-[0.6rem] whitespace-nowrap">
+                  <ArrowLeft size={18} />
+                  <span>Back</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
+          {/* Back button (Mobile view) */}
+          <div className="lg:hidden mb-[2rem] flex justify-end">
+            <Link href="/thesis" scroll={false}>
+              <Button className="bg-[#242424] hover:bg-[#2F2F2F] text-[#8C8C8C] hover:text-[#EFEFEF] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-[0.9375rem] transition-colors flex items-center gap-[0.6rem]">
+                <ArrowLeft size={18} />
+                <span>Back to Thesis</span>
+              </Button>
+            </Link>
           </div>
 
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-white mb-4">
+
+          <h1 className="text-[1.375rem] md:text-[1.75rem] lg:text-[2rem] text-[#ffffff] font-semibold tracking-normal leading-tight mb-[0.5rem]">
             {post.title}
           </h1>
 
-          {/* Tags */}
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {post.tags.map((tag, i) => (
-                <span key={i} className="text-[11px] px-2.5 py-0.5 rounded-full bg-[#1a1d24] text-gray-400 border border-white/5">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
+          <div className="flex items-center gap-2 text-[0.8rem] md:text-[0.875rem] text-[#8C8C8C] mb-[1rem] md:mb-[1.5rem] font-normal flex-wrap">
+            <span>
+              {post.authors
+                ?.map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
+                .join(", ") || "BSCS Council"}
+            </span>
+            <span>•</span>
+            <span>{dayjs(post._createdAt).format("MMMM D, YYYY")}</span>
+          </div>
+
 
         {/* ── Hero Carousel ── */}
         {hasCarousel && <HeroCarousel images={post.images || []} youtubeId={youtubeId} />}
+
+        {/* ── Meta & Tags (Bottom of Project) ── */}
+        <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-3 md:mt-4 mb-4 md:mb-6">
+          {post.academicYear && (
+            <span className="shrink-0 px-2.5 py-1 bg-[#F02E31] text-[#EFEFEF] text-[0.75rem] font-sans font-bold uppercase tracking-wider">
+              {post.academicYear}
+            </span>
+          )}
+          {post.department && (
+            <span className="px-2.5 py-1 bg-[#333333] text-[#EFEFEF] text-[0.75rem] font-sans font-bold uppercase tracking-wider">
+              {DEPT_LABEL[post.department] || post.department}
+            </span>
+          )}
+          {post.tags && post.tags.length > 0 &&
+            post.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="px-2.5 py-1 bg-[#333333] text-[#EFEFEF] text-[0.7rem] font-sans font-bold uppercase tracking-wider whitespace-nowrap"
+              >
+                {tag}
+              </span>
+            ))
+          }
+        </div>
 
         {/* ── Member Strip (new thesisMembers field) ── */}
         {post.members && post.members.length > 0 && (
@@ -203,48 +233,58 @@ const ThesisPage = ({ post }) => {
 
         {/* Fallback: legacy ownerFullname list */}
         {(!post.members || post.members.length === 0) && post.owners?.ownerFullname?.length > 0 && (
-          <div className="mb-8">
-            <p className="text-xs text-gray-600 uppercase tracking-wider mb-1.5">Thesis Authors</p>
-            <p className="text-sm text-gray-300">
+          <div className="mb-[2rem] pt-[0.5rem]">
+            <p className="text-[0.8rem] md:text-[0.875rem] text-[#707070] font-medium mb-[0.4rem]">Thesis Authors</p>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               {post.owners.ownerSection && (
-                <span className="text-red-400 mr-2">({post.owners.ownerSection})</span>
+                <span className="text-[1rem] text-[#8C8C8C] font-normal">({post.owners.ownerSection})</span>
               )}
-              {post.owners.ownerFullname.join(", ")}
-            </p>
+              <p className="text-[1rem] text-[#8C8C8C] font-normal leading-relaxed">
+                {post.owners.ownerFullname.join(", ")}
+              </p>
+            </div>
           </div>
         )}
 
-        <hr className="border-white/5 mb-10" />
+        <hr className="border-[#2F2F2F] mb-[1.5rem] md:mb-[2.5rem]" />
 
-        {/* ── Two-column: Content | 3D Model or Showcase ── */}
-        <div className={hasRightPanel ? "grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10 items-start" : ""}>
-          {/* Left: Tabs + content */}
-          <div className="flex flex-col gap-4">
+        {/* ── Content Section ── */}
+        <div className="flex flex-col gap-0">
+          {/* Main content: Tabs + info */}
+          <div className="flex flex-col gap-[1rem]">
             {/* Tab switcher */}
-            <div className="flex gap-1 p-1 bg-[#0a0c10] rounded-xl border border-white/5 w-fit">
+            <div className="flex items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit w-fit relative mb-2">
               <button
                 onClick={() => setLeftTab("abstract")}
-                className={`px-5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  leftTab === "abstract"
-                    ? "bg-red-600/90 text-white shadow-sm"
-                    : "text-gray-500 hover:text-gray-300"
+                className={`relative px-3 md:px-5 py-1.5 rounded-[4px] text-[0.8rem] md:text-[0.875rem] transition-colors ${
+                  leftTab === "abstract" ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
                 }`}
               >
-                Abstract
+                {leftTab === "abstract" && (
+                  <motion.div
+                    layoutId="activeThesisTab"
+                    className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <span className="relative z-10 font-medium">Abstract</span>
               </button>
-              {post.materials && post.materials.length > 0 && (
-                <button
-                  onClick={() => setLeftTab("materials")}
-                  className={`flex items-center gap-1.5 px-5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                    leftTab === "materials"
-                      ? "bg-red-600/90 text-white shadow-sm"
-                      : "text-gray-500 hover:text-gray-300"
-                  }`}
-                >
-                  Materials
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-white/10">{post.materials.length}</span>
-                </button>
-              )}
+
+              <button
+                onClick={() => setLeftTab("materials")}
+                className={`flex items-center gap-1.5 relative px-3 md:px-5 py-1.5 rounded-[4px] text-[0.8rem] md:text-[0.875rem] transition-colors ${
+                  leftTab === "materials" ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
+                }`}
+              >
+                {leftTab === "materials" && (
+                  <motion.div
+                    layoutId="activeThesisTab"
+                    className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <span className="relative z-10 font-medium">Materials</span>
+              </button>
             </div>
 
             {/* Tab content */}
@@ -256,11 +296,12 @@ const ThesisPage = ({ post }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.18 }}
+                  className="max-w-[1000px]"
                 >
                   {post.content ? (
                     <PortableText value={post.content} components={blockComponents} />
                   ) : (
-                    <p className="text-gray-500 italic">No content available yet.</p>
+                    <p className="text-[1rem] text-[#8C8C8C] leading-relaxed py-2 font-normal">No content available yet.</p>
                   )}
                 </motion.div>
               )}
@@ -271,6 +312,7 @@ const ThesisPage = ({ post }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.18 }}
+                  className="max-w-[1000px]"
                 >
                   <MaterialsList materials={post.materials} />
                 </motion.div>
@@ -278,24 +320,16 @@ const ThesisPage = ({ post }) => {
             </AnimatePresence>
           </div>
 
-          {/* Right: 3D model, image showcase, or tab-switcher if both */}
+          {/* RightPanel (now at the bottom): 3D model or image showcase */}
           {hasRightPanel && (
-            <RightPanel model3d={post.model3d} showcase={post.showcase} />
+            <div className="w-full max-w-[1000px] -mt-4">
+              <RightPanel model3d={post.model3d} showcase={post.showcase} />
+            </div>
           )}
         </div>
 
-        {/* ── Posted-by credit ── */}
-        {post.authors && post.authors.length > 0 && (
-          <div className="mt-12 pt-6 border-t border-white/5">
-            <p className="text-xs text-gray-600 uppercase tracking-wider mb-1">Posted by</p>
-            <p className="text-sm text-gray-400">
-              {post.authors
-                .map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
-                .join(", ")}
-            </p>
-          </div>
-        )}
-      </motion.main>
+      </div>
+    </motion.main>
       {/* Scroll-to-top FAB */}
       <AnimatePresence>
         {scrollTop && (
@@ -304,7 +338,7 @@ const ThesisPage = ({ post }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 10 }}
             onClick={() => window.scroll({ top: 0, behavior: "smooth" })}
-            className="fixed z-30 bottom-6 right-6 w-10 h-10 rounded-full bg-[#1a1d24] border border-white/10 hover:border-red-500/50 flex items-center justify-center text-gray-400 hover:text-white transition shadow-lg"
+            className="fixed z-30 bottom-6 right-6 w-10 h-10 rounded-full bg-[#1A1A1A] border border-[#2F2F2F] hover:border-[#EA2B2E] flex items-center justify-center text-[#8C8C8C] hover:text-white transition-colors shadow-lg"
             aria-label="Scroll to top"
           >
             <CgChevronUp size={20} />

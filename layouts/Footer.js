@@ -47,7 +47,7 @@ export default function Footer() {
                 width={32}
                 height={32}
               />
-              <span className="font-sans font-semibold text-[1.45rem] tracking-tight text-white">
+              <span className="font-sans font-semibold text-[1.45rem] tracking-normal text-white">
                 uccingo
               </span>
             </Link>
@@ -101,7 +101,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright Text */}
-        <div className="text-[1rem] font-sans font-normal leading-tight text-[#434343] pb-8 md:pb-[3.4rem]">
+        <div className="text-[1rem] font-sans font-normal leading-tight text-[#434343] pb-8 md:pb-[3.4rem] pt-[2rem]">
           @ 2026 CS Council and Technical Committee. All rights reserved
         </div>
       </div>

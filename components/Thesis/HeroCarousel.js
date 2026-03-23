@@ -35,24 +35,42 @@ const HeroCarousel = ({ images, youtubeId }) => {
 
   return (
     <div
-      className="w-full rounded-2xl overflow-hidden bg-black border border-white/5 mb-8"
+      className="relative w-full overflow-hidden bg-[#242424] mb-6"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {/* Absolute border overlay - Dashed style */}
+      <div className="absolute inset-0 border border-[#5B5B5B] border-dashed pointer-events-none z-30" />
+
+      {/* Corner Markers */}
+      <div className="absolute top-0 left-0 w-2 h-2 bg-[#FF5154] z-[40] transform -translate-x-[1px] -translate-y-[1px]" />
+      <div className="absolute top-0 right-0 w-2 h-2 bg-[#FF5154] z-[40] transform translate-x-[1px] -translate-y-[1px]" />
+      <div className="absolute bottom-0 left-0 w-2 h-2 bg-[#FF5154] z-[40] transform -translate-x-[1px] translate-y-[1px]" />
+      <div className="absolute bottom-0 right-0 w-2 h-2 bg-[#FF5154] z-[40] transform translate-x-[1px] translate-y-[1px]" />
+
       {/* tab bar */}
       {hasImages && hasVideo && (
-        <div className="flex border-b border-white/10">
+        <div className="flex border-b border-[#5B5B5B] border-dashed relative z-20 bg-[#181818]">
           {["photos", "video"].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-5 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors ${
+              className={`px-4 md:px-8 py-2.5 md:py-3 text-[0.8rem] md:text-[0.875rem] font-medium transition-all relative ${
                 tab === t
-                  ? "text-white border-b-2 border-red-500"
-                  : "text-gray-500 hover:text-gray-300"
+                  ? "text-white"
+                  : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
-              {t === "photos" ? `Photos (${images.length})` : "Video"}
+              <span className="relative z-10">
+                {t === "photos" ? `Photos (${images.length})` : "Video"}
+              </span>
+              {tab === t && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-white/5"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
             </button>
           ))}
         </div>
@@ -60,7 +78,7 @@ const HeroCarousel = ({ images, youtubeId }) => {
 
       {/* photos */}
       {tab === "photos" && hasImages && (
-        <div className="relative w-full" style={{ height: "420px" }}>
+        <div className="relative w-full aspect-video">
           <AnimatePresence mode="wait" custom={dir}>
             <motion.div
               key={idx}
@@ -69,14 +87,14 @@ const HeroCarousel = ({ images, youtubeId }) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.35, ease: "easeOut" }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0"
             >
               <Image
                 src={images[idx]}
                 fill
-                style={{ objectFit: "cover" }}
-                sizes="100vw"
+                className="object-cover"
+                sizes="1100px"
                 alt={`Photo ${idx + 1}`}
                 priority={idx === 0}
               />
@@ -86,25 +104,25 @@ const HeroCarousel = ({ images, youtubeId }) => {
           {images.length > 1 && (
             <>
               <button onClick={() => go(-1)}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-black/60 hover:bg-black/90 text-white transition">
-                <CgChevronLeft size={22} />
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-black/40 hover:bg-white/10 flex items-center justify-center text-white transition-all backdrop-blur-sm">
+                <CgChevronLeft size={20} />
               </button>
               <button onClick={() => go(1)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-black/60 hover:bg-black/90 text-white transition">
-                <CgChevronRight size={22} />
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-black/40 hover:bg-white/10 flex items-center justify-center text-white transition-all backdrop-blur-sm">
+                <CgChevronRight size={20} />
               </button>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+              <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-1.5 md:gap-2">
                 {images.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
-                    className={`h-1.5 rounded-full transition-all ${
-                      i === idx ? "bg-white w-5" : "bg-white/40 w-1.5 hover:bg-white/70"
+                    className={`h-1 rounded-full transition-all duration-300 ${
+                      i === idx ? "bg-white w-8" : "bg-white/30 w-1.5 hover:bg-white/60"
                     }`}
                   />
                 ))}
               </div>
-              <span className="absolute top-3 right-3 z-10 text-[11px] px-2 py-0.5 rounded-full bg-black/60 text-gray-300">
+              <span className="absolute top-4 right-4 z-20 text-[0.7rem] font-sans font-bold tracking-wider px-2.5 py-1 bg-black/50 text-[#EFEFEF] backdrop-blur-md uppercase">
                 {idx + 1} / {images.length}
               </span>
             </>
@@ -114,7 +132,7 @@ const HeroCarousel = ({ images, youtubeId }) => {
 
       {/* video */}
       {(tab === "video" || (!hasImages && hasVideo)) && (
-        <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+        <div className="relative w-full aspect-video z-10">
           <iframe
             className="absolute inset-0 w-full h-full"
             src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&enablejsapi=1`}

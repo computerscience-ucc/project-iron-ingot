@@ -37,23 +37,16 @@ const ModelViewer = memo(function ModelViewer({ src }) {
   if (!mounted || !src) return null;
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0a0c10] shadow-xl">
+    <div className="relative">
       {/* Header */}
-      <div className="px-4 py-2.5 border-b border-white/5 flex items-center gap-2 flex-wrap">
-        <span className={`w-2 h-2 rounded-full shrink-0 ${modelLoaded ? "bg-green-500" : "bg-red-500 animate-pulse"}`} />
-        <span className="text-xs font-semibold text-gray-400 tracking-wide uppercase break-words leading-snug">
+      <div className="pt-0 pb-6">
+        <h3 className="text-[1.125rem] md:text-[1.25rem] font-semibold text-[#EFEFEF] tracking-normal leading-[1.3]">
           Interactive 3D Model
-        </span>
-        {!modelLoaded && (
-          <span className="text-[10px] text-gray-600 ml-auto shrink-0">{progress}%</span>
-        )}
-        {modelLoaded && (
-          <span className="text-[10px] text-green-600 ml-auto shrink-0">Ready</span>
-        )}
+        </h3>
       </div>
 
       {/* Viewer + loading overlay */}
-      <div className="relative" style={{ height: "460px" }}>
+      <div className="relative overflow-hidden aspect-[16/10] md:aspect-video">
         {/* Skeleton / loading state */}
         <AnimatePresence>
           {!modelLoaded && (
@@ -61,22 +54,9 @@ const ModelViewer = memo(function ModelViewer({ src }) {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0a0c10] gap-4"
+              className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#181818] gap-4"
             >
-              {/* Spinning 3D cube icon */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="w-12 h-12 rounded-xl border-2 border-red-500/30 border-t-red-500 flex items-center justify-center"
-              >
-                <svg className="w-5 h-5 text-red-500/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                    d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
-                </svg>
-              </motion.div>
               <div className="flex flex-col items-center gap-1.5">
-                <p className="text-xs text-gray-400">Loading 3D model…</p>
-                {/* Progress bar */}
                 <div className="w-32 h-1 rounded-full bg-white/5 overflow-hidden">
                   <motion.div
                     className="h-full rounded-full bg-red-500/70"
@@ -85,7 +65,7 @@ const ModelViewer = memo(function ModelViewer({ src }) {
                     transition={{ ease: "easeOut", duration: 0.3 }}
                   />
                 </div>
-                <p className="text-[10px] text-gray-600">{progress}%</p>
+                <p className="text-[1rem] text-gray-600 font-normal">{progress}%</p>
               </div>
             </motion.div>
           )}
@@ -101,10 +81,20 @@ const ModelViewer = memo(function ModelViewer({ src }) {
         />
       </div>
 
-      {/* Footer hint */}
-      <p className="text-[10px] text-gray-600 text-center py-2 leading-relaxed">
-        Drag to orbit · Scroll to zoom · Pinch on mobile
-      </p>
+      {/* Footer Status & Hint */}
+      <div className="flex flex-col items-center pt-4 pb-2">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${modelLoaded ? "bg-[#10B981]" : "bg-[#EF4444] animate-pulse"}`} />
+          {modelLoaded ? (
+            <span className="text-[1rem] text-[#8C8C8C] font-normal leading-relaxed">Ready</span>
+          ) : (
+            <span className="text-[1rem] text-[#8C8C8C] font-normal leading-relaxed">Loading ({progress}%)</span>
+          )}
+        </div>
+        <p className="text-[1rem] text-[#8C8C8C] text-center leading-relaxed font-normal opacity-60">
+          Drag to orbit · Scroll to zoom · Pinch on mobile
+        </p>
+      </div>
     </div>
   );
 });

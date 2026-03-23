@@ -1,11 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Breadcrumbs,
-  Chip,
-  IconButton,
-  Tooltip,
-} from "@material-tailwind/react";
-import { CgChevronLeft, CgChevronUp } from "react-icons/cg";
+import { CgChevronUp } from "react-icons/cg";
+import { ArrowLeft } from "@geist-ui/icons";
+import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 
 import Head from "next/head";
@@ -26,47 +22,50 @@ const urlFor = (source) =>
 const blockComponents = {
   types: {
     image: ({ value }) => (
-      <div className="relative w-full h-[300px]">
-        <Image
-          className="w-full h-full"
-          src={urlFor(value.asset).url()}
-          fill
-          style={{ objectFit: "contain" }}
-          sizes="100vw"
-          alt={value.alt}
-        />
+      <div className="mx-auto w-[90%] my-[0.25rem]">
+        <div className="overflow-hidden rounded-[8px]">
+          <img
+            src={urlFor(value.asset).url()}
+            className="w-full h-auto"
+            alt={value.alt || ""}
+          />
+        </div>
+        {value.caption && (
+          <p className="text-[0.875rem] text-[#8C8C8C] mt-[0.3rem] italic leading-tight text-center">
+            {value.caption}
+          </p>
+        )}
       </div>
     ),
   },
   block: {
-    h1: ({ children }) => <h1 className="text-4xl font-bo ld">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-3xl font-bold">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-2xl font-bold">{children}</h3>,
-    h4: ({ children }) => <h4 className="text-xl font-bold">{children}</h4>,
-    h5: ({ children }) => <h5 className="text-lg font-bold">{children}</h5>,
-    h6: ({ children }) => <h6 className="text-md font-bold">{children}</h6>,
-    p: ({ children }) => <p className="">{children}</p>,
+    h1: ({ children }) => <h1 className="text-[2rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-[1.5rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-[1.25rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h3>,
+    h4: ({ children }) => <h4 className="text-[1.125rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h4>,
+    h5: ({ children }) => <h5 className="text-[1rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h5>,
+    h6: ({ children }) => <h6 className="text-[0.875rem] text-[#ffffff] font-semibold mt-[0.5rem] mb-[0.25rem] leading-tight">{children}</h6>,
+    normal: ({ children }) => <p className="text-[1rem] text-[#8C8C8C] leading-relaxed mb-[0.25rem] font-normal">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="text-base p-10 relative ">
-        <span className="absolute text-white text-6xl left-2 top-2">
-          &ldquo;
-        </span>
+      <blockquote className="border-l-2 border-[#2F2F2F] pl-[1rem] my-[0.25rem] italic text-[#8C8C8C] leading-relaxed relative">
         {children}
       </blockquote>
     ),
-    span: ({ children }) => <span className="text-light">{children}</span>,
-    image: ({ node }) => (
-      <Image src={urlFor(node.asset)} alt={node.alt} className="w-full" layout = "fill" />
-    ),
+    span: ({ children }) => <span className="font-normal">{children}</span>,
   },
   marks: {
     em: ({ children }) => (
-      <em className="text-header-color font-bold">{children}</em>
+      <em className="italic text-[#8C8C8C]">{children}</em>
+    ),
+    strong: ({ children }) => (
+      <strong className="font-semibold text-white">{children}</strong>
     ),
     link: ({ children, value }) => (
       <a
         href={value.href}
-        className="underline underline-offset-4 cursor-pointer text-blue-400"
+        className="underline underline-offset-4 text-[#EFEFEF] hover:text-white transition-colors cursor-pointer"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         {children}
       </a>
@@ -111,18 +110,14 @@ export const getStaticProps = async (context) => {
   };
 };
 
-const Blog = ({ blogPost }) => {
+const BlogPage = ({ blogPost }) => {
   const [post, setPost] = useState(blogPost);
   const mainDocument = useRef(null);
   const [scrollToTopButtonShown, setScrollToTopButtonShown] = useState(false);
 
-  useEffect(
-    () => {
-      setPost(blogPost);
-      console.log(blogPost);
-    },
-    [blogPost]
-  );
+  useEffect(() => {
+    setPost(blogPost);
+  }, [blogPost]);
 
   // scroll to top on page load
   useEffect(() => {
@@ -131,16 +126,18 @@ const Blog = ({ blogPost }) => {
 
   // listen for scroll events
   useEffect(() => {
-    window.addEventListener("scroll", () => {
+    const handleScroll = () => {
       // show scroll to top button if user has scrolled down by 20% to 80% of the page
+      const h = mainDocument.current?.scrollHeight || 0;
       setScrollToTopButtonShown(
-        window.scrollY > mainDocument.current?.scrollHeight * 0.2 &&
-          window.scrollY < mainDocument.current?.scrollHeight - 700
+        window.scrollY > h * 0.2 && window.scrollY < h - 700
       );
-    });
+    };
+
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", () => {});
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -155,104 +152,91 @@ const Blog = ({ blogPost }) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="min-h-screen py-36"
+        className="max-w-[1100px] w-[90%] mx-auto pt-[4rem] pb-[12rem] z-10 min-h-screen relative flex justify-center"
       >
-        {/* title */}
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col lg:flex-row gap-3 lg:gap-7 lg:items-center lg:justify-between">
-            <p>{dayjs(post._updatedAt).format("MMMM D, YYYY")}</p>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag, i) => (
-                <Chip className="bg-[#010409]" key={i} value={tag} />
-              ))}
+        {/* Content Column */}
+        <div className="w-full max-w-[800px] relative">
+          {/* Sticky Sidebar (Desktop) */}
+          <div className="hidden lg:block absolute right-full top-0 h-full pr-[4rem] xl:pr-[6rem]">
+            <div className="sticky top-[8rem]">
+              <Link href="/blog" scroll={false}>
+                <Button className="bg-[#242424] hover:bg-[#2F2F2F] text-[#8C8C8C] hover:text-[#EFEFEF] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-[0.9375rem] transition-colors flex items-center gap-[0.6rem] whitespace-nowrap">
+                  <ArrowLeft size={18} />
+                  <span>Back</span>
+                </Button>
+              </Link>
             </div>
           </div>
-          <Link href="/blog" scroll={false}>
-            <p className="text-3xl md:text-4xl lg:text-6xl font-bold flex flex-col md:flex-row gap-2 cursor-pointer transition hover:-translate-x-3">
+          {/* Back button (Mobile view) */}
+          <div className="lg:hidden mb-[2rem]">
+            <Link href="/blog" scroll={false}>
+              <Button className="bg-[#242424] hover:bg-[#2F2F2F] text-[#8C8C8C] hover:text-[#EFEFEF] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-[0.9375rem] transition-colors flex items-center gap-[0.6rem]">
+                <ArrowLeft size={18} />
+                <span>Back to Blog</span>
+              </Button>
+            </Link>
+          </div>
+
+          <h1 className="text-[2rem] text-[#ffffff] font-semibold tracking-normal leading-tight mb-[0.5rem]">
+            {post?.title}
+          </h1>
+
+          <div className="flex items-center gap-2 text-[0.875rem] text-[#8C8C8C] mb-[1.5rem] font-normal">
+            <span>
+              {post?.authors
+                ?.map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
+                .join(", ") || "BSCS Council"}
+            </span>
+            {post?._updatedAt && (
               <>
-                <span className="flex items-center">
-                  <CgChevronLeft size={30} />
-                </span>
-                <span>{post.title}</span>
+                <span>•</span>
+                <span>{dayjs(post._updatedAt).format("MMMM D, YYYY")}</span>
               </>
-            </p>
-          </Link>
-          <div className="hidden md:block">
-            <Breadcrumbs className="bg-transparent px-0 ">
-              <Link
-                href="/"
-                className="text-grey-600 hover:text-header-color transition font-bold">
-
-                  Home
-
-              </Link>
-              <Link
-                href="/blog"
-                className="text-grey-600 hover:text-header-color transition font-bold">
-
-                  Blog
-
-              </Link>
-              <a className="text-grey-600 hover:text-header-color transition font-bold">
-                {post.title}
-              </a>
-            </Breadcrumbs>
+            )}
           </div>
-          <div className="flex flex-col">
-            Posted by:{" "}
-            {post.authors.map((author, i) => (
-              <p key={i} className="text-header-color transition font-bold">
-                {author.fullName.firstName} {author.fullName.lastName} ({author.pronouns})
-                {author.batchYear && author.yearLevel && (
-                  <span>
-                    {" "}
-                    / {author.batchYear} {author.yearLevel}
-                  </span>
-                )}
-              </p>
-            ))}
-          </div>
-        </div>
 
-        <hr className="mb-16 mt-5 opacity-50" />
-
-        {/* content */}
-        <div className=" flex flex-col gap-5">
-          <PortableText value={post.content} components={blockComponents} />
-        </div>
-
-        {/* scroll to top button */}
-        <AnimatePresence>
-          {scrollToTopButtonShown && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                x: 10,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                transition: { duration: 0.5, ease: "circOut" },
-              }}
-              exit={{
-                opacity: 0,
-                x: 10,
-                transition: { duration: 0.3, ease: "circIn" },
-              }}
-              className="fixed z-30 bottom-5 right-5 md:bottom-10 md:right-10"
-              onClick={() => window.scroll({ top: 0, behavior: "smooth" })}
-            >
-              <Tooltip content="Scroll to top" placement="left">
-                <IconButton className="bg-grey-800">
-                  <CgChevronUp size={25} />
-                </IconButton>
-              </Tooltip>
-            </motion.div>
+          {/* Tags */}
+          {post?.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-[0.5rem]">
+              {post.tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           )}
-        </AnimatePresence>
+
+          <hr className="border-[#2F2F2F] my-[2.5rem]" />
+
+          {/* content */}
+          <div className="flex flex-col gap-[1.5rem]">
+            {post?.content && (
+              <PortableText value={post.content} components={blockComponents} />
+            )}
+          </div>
+        </div>
       </motion.main>
+
+      {/* scroll to top button */}
+      <AnimatePresence>
+        {scrollToTopButtonShown && (
+          <motion.button
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0, transition: { duration: 0.5, ease: "circOut" } }}
+            exit={{ opacity: 0, x: 10, transition: { duration: 0.3, ease: "circIn" } }}
+            onClick={() => window.scroll({ top: 0, behavior: "smooth" })}
+            className="fixed z-30 bottom-6 right-6 w-10 h-10 rounded-full bg-[#1A1A1A] border border-[#2F2F2F] hover:border-[#EA2B2E] flex items-center justify-center text-[#8C8C8C] hover:text-white transition-colors shadow-lg"
+            aria-label="Scroll to top"
+          >
+            <CgChevronUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   );
 };
 
-export default Blog;
+export default BlogPage;
