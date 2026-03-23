@@ -2,13 +2,9 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { _Transition_Page } from "../../../lib/animations";
 import PersonLightbox from "../../../components/Team/PersonLightbox";
-import NameOnlyList from "../../../components/Team/NameOnlyList";
 import OfficerCard from "../../../components/Home/MeetCouncil/OfficerCard";
 import DepartmentSection from "../../../components/Team/DepartmentSection";
 
-// ─── Helpers ──────────────────────────────────
-const anyPhoto = (arr) => arr?.some((m) => !!m.photo) ?? false;
-const CAROUSEL_THRESHOLD = 5;
 
 // ─── Animation variants ────────────────────────
 const fadeSlide = {
@@ -54,7 +50,7 @@ const TeamContent = ({ team, onPersonClick }) => {
       {team.departments?.length > 0 && (
         <motion.div variants={stagger} initial="initial" animate="animate" className="w-full flex flex-col gap-8">
           {team.departments.map((dept, i) => (
-            <DepartmentSection key={i} dept={dept} onPersonClick={onPersonClick} CAROUSEL_THRESHOLD={CAROUSEL_THRESHOLD} />
+            <DepartmentSection key={i} dept={dept} onPersonClick={onPersonClick} />
           ))}
         </motion.div>
       )}

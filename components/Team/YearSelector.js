@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import React from "react";
 
 const YearSelector = ({ years, selected, onSelect }) => (
   <div className="flex flex-wrap items-center gap-2 overflow-x-auto scrollbar-hide mb-8">

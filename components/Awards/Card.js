@@ -22,11 +22,11 @@ const Card = ({ award, onClick }) => {
       <div className="absolute bottom-0 right-0 w-1 h-1 bg-[#efefef] z-30 transform translate-x-[0.5px] translate-y-[0.5px]" />
 
       {award.headerImage?.url ? (
-        <div 
+        <div
           className="relative w-full overflow-hidden"
-          style={{ 
-            aspectRatio: award.headerImage.metadata ? `${award.headerImage.metadata.width} / ${award.headerImage.metadata.height}` : 'auto',
-            minHeight: '200px'
+          style={{
+            aspectRatio: award.headerImage.metadata ? `${award.headerImage.metadata.width} / ${award.headerImage.metadata.height}` : "auto",
+            minHeight: "200px"
           }}
         >
           {!loaded && (

@@ -1,15 +1,12 @@
 import { motion } from "framer-motion";
 import OfficerCard from "../Home/MeetCouncil/OfficerCard";
-import NameOnlyList from "./NameOnlyList";
 
 const stagger = {
   animate: { transition: { staggerChildren: 0.08 } },
 };
 
-const anyPhoto = (arr) => arr?.some((m) => !!m.photo) ?? false;
 
-const DepartmentSection = ({ dept, onPersonClick, CAROUSEL_THRESHOLD }) => {
-  const hasPhotos = anyPhoto(dept.members);
+const DepartmentSection = ({ dept, onPersonClick }) => {
 
   return (
     <motion.div

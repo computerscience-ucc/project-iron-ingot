@@ -130,7 +130,7 @@ export default function Bulletin() {
                       <p className="text-[#8C8C8C] text-[0.875rem] font-normal leading-normal mb-3.5">
                         By{" "}
                         {bulletin.authors
-                          ?.map((a) => `${a.fullName?.firstName || ''} ${a.fullName?.lastName || ''}`.trim())
+                          ?.map((a) => `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim())
                           .filter(Boolean)
                           .join(", ") || "Unknown"}
                         {" "}on {dayjs(bulletin._updatedAt || bulletin._createdAt).format("MMM DD, YYYY")}

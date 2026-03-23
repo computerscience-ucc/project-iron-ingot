@@ -97,7 +97,7 @@ const Lightbox = ({ award, onClose }) => {
         exit={{ scale: 0.94, opacity: 0 }}
         transition={{ duration: 0.18, ease: "easeOut" }}
         className="relative max-w-[95vw] bg-[#121212] border border-[#5B5B5B] border-dashed flex flex-col my-auto"
-        style={{ 
+        style={{
           height: "fit-content",
           width: `min(95vw, calc(min(650px, 70vh) * ${aspectRatio}))`
         }}
@@ -205,7 +205,7 @@ const Lightbox = ({ award, onClose }) => {
               </p>
             )}
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-2">
             {award.category && (
               <span className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide">

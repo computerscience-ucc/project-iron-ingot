@@ -40,7 +40,7 @@ const CommitteeSection = ({ committees }) => {
               key={i}
               onClick={() => handleCommitteeChange(i)}
               className={`pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-medium leading-normal transition-all ${
-                activeCommitteeIdx === i 
+                activeCommitteeIdx === i
                   ? "bg-[#333333] text-white shadow-sm"
                   : "bg-transparent text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
@@ -96,7 +96,7 @@ const CommitteeSection = ({ committees }) => {
         <div className="flex flex-col h-full min-h-[300px] py-4">
           {/* Selected Member Details */}
           <AnimatePresence mode="wait">
-            <motion.div 
+            <motion.div
               key={`${activeCommitteeIdx}-${selectedMemberIdx}`}
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
