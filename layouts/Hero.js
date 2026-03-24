@@ -130,7 +130,7 @@ export default function Hero() {
               </Button>
             </Link>
             <motion.div className="relative" initial="rest" whileHover="hover">
-             <Link href="/thesis?year=2025-2026" scroll={false}>
+              <Link href="/thesis?year=2025-2026" scroll={false}>
                 <Button className="bg-gradient-to-r from-[#FF3538] to-[#DE2528] hover:brightness-110 text-white border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-all flex items-center gap-[0.6rem]">
                   2026 Thesis <ArrowRight size={18} />
                 </Button>

@@ -178,9 +178,9 @@ export default function Thesis() {
                       key={y}
                       onClick={() => setSelectedYear(y)}
                       className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${isActive
-                          ? "bg-[#EA2B2E] text-white"
-                          : "text-[#EFEFEF] hover:bg-[#202020]"
-                        }`}
+                        ? "bg-[#EA2B2E] text-white"
+                        : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
                     >
                       {y}
                     </button>
@@ -229,9 +229,9 @@ export default function Thesis() {
                       key={d}
                       onClick={() => setSelectedDepartment(d)}
                       className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${isActive
-                          ? "bg-[#2A2A2A] text-white"
-                          : "text-[#EFEFEF] hover:bg-[#202020]"
-                        }`}
+                        ? "bg-[#2A2A2A] text-white"
+                        : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
                     >
                       {d}
                     </button>
@@ -280,9 +280,9 @@ export default function Thesis() {
                       key={c}
                       onClick={() => setSelectedCategory(c)}
                       className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${isActive
-                          ? "bg-[#2A2A2A] text-white"
-                          : "text-[#EFEFEF] hover:bg-[#202020]"
-                        }`}
+                        ? "bg-[#2A2A2A] text-white"
+                        : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
                     >
                       {c}
                     </button>
@@ -340,7 +340,7 @@ export default function Thesis() {
                 <button
                   onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
                   className={`flex items-center gap-2 text-[0.875rem] font-normal text-[#EFEFEF] hover:text-white transition-colors border border-[#2F2F2F] px-4 py-2 rounded-[4px] ${isMobileFilterOpen ? "bg-[#252525]" : "bg-[#1A1A1A]"
-                    }`}
+                  }`}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />

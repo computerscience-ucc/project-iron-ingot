@@ -108,7 +108,7 @@ export default function Footer() {
               href="mailto:ucc.computersciencecouncil@gmail.com"
               className="text-[#FF5154] hover:underline underline-offset-4 transition-all"
             >
-              Email us by clicking here
+              Email us
             </a>
           </p>
           <div className="text-[0.85rem] md:text-[1rem] font-sans font-normal leading-tight text-[#434343]">
@@ -117,7 +117,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Giant Typography Section */}
       {/* Giant Typography Section */}
       <div className="relative w-full overflow-hidden">
         {/* Dashed Border right above the huge text */}

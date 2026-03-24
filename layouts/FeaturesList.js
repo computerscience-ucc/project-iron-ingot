@@ -77,25 +77,25 @@ export default function FeaturesList() {
                   key={idx}
                   onClick={() => handleFeatureClick(idx)}
                   className={`feature-item flex flex-col p-6 md:p-8 lg:p-[2rem] border-b border-dashed border-[#2A2A2A] last:border-b-0 transition-colors duration-500 cursor-pointer ${isActive ? "bg-[#242424]" : "bg-[#1C1C1C]"
-                    }`}
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3 gap-4">
                     <span
                       className={`font-minecraft text-5xl md:text-5xl lg:text-[3.6rem] leading-none transition-colors duration-500 ${isActive ? "text-[#EFEFEF]" : "text-[#434343]"
-                        }`}
+                      }`}
                     >
                       {feature.num}
                     </span>
                     <h3
                       className={`text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-right leading-none transition-colors duration-500 ${isActive ? "text-[#EFEFEF]" : "text-[#434343]"
-                        }`}
+                      }`}
                     >
                       {feature.title}
                     </h3>
                   </div>
                   <p
                     className={`text-sm md:text-base lg:text-[1.1rem] leading-tight font-normal transition-colors duration-500 ${isActive ? "text-[#8C8C8C]" : "text-[#2A2A2A]"
-                      }`}
+                    }`}
                   >
                     {feature.desc}
                   </p>

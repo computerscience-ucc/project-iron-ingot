@@ -3,7 +3,7 @@ import { CgChevronUp } from "react-icons/cg";
 import { ArrowLeft } from "@geist-ui/icons";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
-import Head from "next/head";
+import Head from "@/components/Head";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
@@ -31,8 +31,10 @@ const blockComponents = {
     image: ({ value }) => (
       <div className="mx-auto w-[90%] my-[0.25rem]">
         <div className="overflow-hidden rounded-[8px]">
-          <img
+          <Image
             src={urlFor(value.asset).url()}
+            width={800}
+            height={500}
             className="w-full h-auto"
             alt={value.alt || ""}
           />
@@ -140,10 +142,12 @@ const ThesisPage = ({ post }) => {
 
   return (
     <>
-      <Head>
-        <title>{post.title} | Ingo</title>
-        <meta name="description" content={post.title} />
-      </Head>
+      <Head
+        title={`${post.title} | Ingo`}
+        description={post.title}
+        ogImage={post.headerImage}
+        url={`/thesis/${post.slug}`}
+      />
       {/* Load Google model-viewer script only when needed */}
       {hasModel && (
         <Script
@@ -183,7 +187,6 @@ const ThesisPage = ({ post }) => {
             </Link>
           </div>
 
-
           <h1 className="text-[1.25rem] md:text-[1.5rem] lg:text-[2rem] text-[#ffffff] font-semibold tracking-normal leading-tight mb-[0.5rem]">
             {post.title}
           </h1>
@@ -198,23 +201,22 @@ const ThesisPage = ({ post }) => {
             <span>{dayjs(post._createdAt).format("MMMM D, YYYY")}</span>
           </div>
 
+          {/* ── Hero Carousel ── */}
+          {hasCarousel && <HeroCarousel images={post.images || []} youtubeId={youtubeId} />}
 
-        {/* ── Hero Carousel ── */}
-        {hasCarousel && <HeroCarousel images={post.images || []} youtubeId={youtubeId} />}
-
-        {/* ── Meta & Tags (Bottom of Project) ── */}
-        <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-3 md:mt-4 mb-4 md:mb-6">
-          {post.academicYear && (
-            <span className="shrink-0 px-2.5 py-1 bg-[#F02E31] text-[#EFEFEF] text-[0.75rem] font-sans font-bold uppercase tracking-wider">
-              {post.academicYear}
-            </span>
-          )}
-          {post.department && (
-            <span className="px-2.5 py-1 bg-[#333333] text-[#EFEFEF] text-[0.75rem] font-sans font-bold uppercase tracking-wider">
-              {DEPT_LABEL[post.department] || post.department}
-            </span>
-          )}
-          {post.tags && post.tags.length > 0 &&
+          {/* ── Meta & Tags (Bottom of Project) ── */}
+          <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-3 md:mt-4 mb-4 md:mb-6">
+            {post.academicYear && (
+              <span className="shrink-0 px-2.5 py-1 bg-[#F02E31] text-[#EFEFEF] text-[0.75rem] font-sans font-bold uppercase tracking-wider">
+                {post.academicYear}
+              </span>
+            )}
+            {post.department && (
+              <span className="px-2.5 py-1 bg-[#333333] text-[#EFEFEF] text-[0.75rem] font-sans font-bold uppercase tracking-wider">
+                {DEPT_LABEL[post.department] || post.department}
+              </span>
+            )}
+            {post.tags && post.tags.length > 0 &&
             post.tags.map((tag, i) => (
               <span
                 key={i}
@@ -223,113 +225,113 @@ const ThesisPage = ({ post }) => {
                 {tag}
               </span>
             ))
-          }
-        </div>
-
-        {/* ── Member Strip (new thesisMembers field) ── */}
-        {post.members && post.members.length > 0 && (
-          <MemberStrip members={post.members} />
-        )}
-
-        {/* Fallback: legacy ownerFullname list */}
-        {(!post.members || post.members.length === 0) && post.owners?.ownerFullname?.length > 0 && (
-          <div className="mb-[2rem] pt-[0.5rem]">
-            <p className="text-[0.8rem] md:text-[0.875rem] text-[#707070] font-medium mb-[0.4rem]">Thesis Authors</p>
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              {post.owners.ownerSection && (
-                <span className="text-[1rem] text-[#8C8C8C] font-normal">({post.owners.ownerSection})</span>
-              )}
-              <p className="text-[1rem] text-[#8C8C8C] font-normal leading-relaxed">
-                {post.owners.ownerFullname.join(", ")}
-              </p>
-            </div>
-          </div>
-        )}
-
-        <hr className="border-[#2F2F2F] mb-[1.5rem] md:mb-[2.5rem]" />
-
-        {/* ── Content Section ── */}
-        <div className="flex flex-col gap-0">
-          {/* Main content: Tabs + info */}
-          <div className="flex flex-col gap-[1rem]">
-            {/* Tab switcher */}
-            <div className="flex items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit w-fit relative mb-2">
-              <button
-                onClick={() => setLeftTab("abstract")}
-                className={`relative px-3 md:px-5 py-1.5 rounded-[4px] text-[0.8rem] md:text-[0.875rem] transition-colors ${
-                  leftTab === "abstract" ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
-                }`}
-              >
-                {leftTab === "abstract" && (
-                  <motion.div
-                    layoutId="activeThesisTab"
-                    className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-                <span className="relative z-10 font-medium">Abstract</span>
-              </button>
-
-              <button
-                onClick={() => setLeftTab("materials")}
-                className={`flex items-center gap-1.5 relative px-3 md:px-5 py-1.5 rounded-[4px] text-[0.8rem] md:text-[0.875rem] transition-colors ${
-                  leftTab === "materials" ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
-                }`}
-              >
-                {leftTab === "materials" && (
-                  <motion.div
-                    layoutId="activeThesisTab"
-                    className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-                <span className="relative z-10 font-medium">Materials</span>
-              </button>
-            </div>
-
-            {/* Tab content */}
-            <AnimatePresence mode="wait">
-              {leftTab === "abstract" && (
-                <motion.div
-                  key="abstract"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                  className="max-w-[1000px]"
-                >
-                  {post.content ? (
-                    <PortableText value={post.content} components={blockComponents} />
-                  ) : (
-                    <p className="text-[1rem] text-[#8C8C8C] leading-relaxed py-2 font-normal">No content available yet.</p>
-                  )}
-                </motion.div>
-              )}
-              {leftTab === "materials" && (
-                <motion.div
-                  key="materials"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                  className="max-w-[1000px]"
-                >
-                  <MaterialsList materials={post.materials} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            }
           </div>
 
-          {/* RightPanel (now at the bottom): 3D model or image showcase */}
-          {hasRightPanel && (
-            <div className="w-full max-w-[1000px] -mt-4">
-              <RightPanel model3d={post.model3d} showcase={post.showcase} />
+          {/* ── Member Strip (new thesisMembers field) ── */}
+          {post.members && post.members.length > 0 && (
+            <MemberStrip members={post.members} />
+          )}
+
+          {/* Fallback: legacy ownerFullname list */}
+          {(!post.members || post.members.length === 0) && post.owners?.ownerFullname?.length > 0 && (
+            <div className="mb-[2rem] pt-[0.5rem]">
+              <p className="text-[0.8rem] md:text-[0.875rem] text-[#707070] font-medium mb-[0.4rem]">Thesis Authors</p>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                {post.owners.ownerSection && (
+                  <span className="text-[1rem] text-[#8C8C8C] font-normal">({post.owners.ownerSection})</span>
+                )}
+                <p className="text-[1rem] text-[#8C8C8C] font-normal leading-relaxed">
+                  {post.owners.ownerFullname.join(", ")}
+                </p>
+              </div>
             </div>
           )}
-        </div>
 
-      </div>
-    </motion.main>
+          <hr className="border-[#2F2F2F] mb-[1.5rem] md:mb-[2.5rem]" />
+
+          {/* ── Content Section ── */}
+          <div className="flex flex-col gap-0">
+            {/* Main content: Tabs + info */}
+            <div className="flex flex-col gap-[1rem]">
+              {/* Tab switcher */}
+              <div className="flex items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit w-fit relative mb-2">
+                <button
+                  onClick={() => setLeftTab("abstract")}
+                  className={`relative px-3 md:px-5 py-1.5 rounded-[4px] text-[0.8rem] md:text-[0.875rem] transition-colors ${
+                    leftTab === "abstract" ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
+                  }`}
+                >
+                  {leftTab === "abstract" && (
+                    <motion.div
+                      layoutId="activeThesisTab"
+                      className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10 font-medium">Abstract</span>
+                </button>
+
+                <button
+                  onClick={() => setLeftTab("materials")}
+                  className={`flex items-center gap-1.5 relative px-3 md:px-5 py-1.5 rounded-[4px] text-[0.8rem] md:text-[0.875rem] transition-colors ${
+                    leftTab === "materials" ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
+                  }`}
+                >
+                  {leftTab === "materials" && (
+                    <motion.div
+                      layoutId="activeThesisTab"
+                      className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10 font-medium">Materials</span>
+                </button>
+              </div>
+
+              {/* Tab content */}
+              <AnimatePresence mode="wait">
+                {leftTab === "abstract" && (
+                  <motion.div
+                    key="abstract"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18 }}
+                    className="max-w-[1000px]"
+                  >
+                    {post.content ? (
+                      <PortableText value={post.content} components={blockComponents} />
+                    ) : (
+                      <p className="text-[1rem] text-[#8C8C8C] leading-relaxed py-2 font-normal">No content available yet.</p>
+                    )}
+                  </motion.div>
+                )}
+                {leftTab === "materials" && (
+                  <motion.div
+                    key="materials"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18 }}
+                    className="max-w-[1000px]"
+                  >
+                    <MaterialsList materials={post.materials} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* RightPanel (now at the bottom): 3D model or image showcase */}
+            {hasRightPanel && (
+              <div className="w-full max-w-[1000px] -mt-4">
+                <RightPanel model3d={post.model3d} showcase={post.showcase} />
+              </div>
+            )}
+          </div>
+
+        </div>
+      </motion.main>
       {/* Scroll-to-top FAB */}
       <AnimatePresence>
         {scrollTop && (

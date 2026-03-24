@@ -196,34 +196,34 @@ const Lightbox = ({ award, onClose }) => {
         )}
 
         {/* info */}
-        <div className="px-5 py-6 border-t border-[#5B5B5B] border-dashed shrink-0">
-          <div className="mb-4">
-            <h2 className="text-[1.6rem] font-semibold text-white tracking-tight leading-none mb-3">{award.title}</h2>
+        <div className="px-4 py-4 sm:px-5 sm:py-6 border-t border-[#5B5B5B] border-dashed shrink-0">
+          <div className="mb-3 sm:mb-4">
+            <h2 className="text-[1.1rem] sm:text-[1.6rem] font-semibold text-white tracking-tight leading-tight mb-2 sm:mb-3">{award.title}</h2>
             {award.description && (
-              <p className="text-[#EFEFEF] text-[1rem] leading-relaxed font-normal whitespace-pre-wrap">
+              <p className="text-[#EFEFEF] text-[0.875rem] sm:text-[1rem] leading-relaxed font-normal whitespace-pre-wrap">
                 {formatDescription(award.description)}
               </p>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {award.category && (
-              <span className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              <span className="px-1.5 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium uppercase tracking-wide">
                 {award.category}
               </span>
             )}
             {award.badges && award.badges.length > 0 && award.badges.map((b, i) => (
-              <span key={i} className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              <span key={i} className="px-1.5 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium uppercase tracking-wide">
                 {b}
               </span>
             ))}
             {award.academicYear && (
-              <span className="px-2 py-0.5 bg-[#F02E31] text-[#EFEFEF] text-[0.8rem] font-sans font-medium tracking-wide">
+              <span className="px-1.5 py-0.5 bg-[#F02E31] text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium tracking-wide">
                 {award.academicYear}
               </span>
             )}
             {award.tags && award.tags.length > 0 && award.tags.map((t, i) => (
-              <span key={i} className="px-2 py-0.5 bg-[#121212] border border-[#5B5B5B] border-dashed text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              <span key={i} className="px-1.5 py-0.5 bg-[#121212] border border-[#5B5B5B] border-dashed text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium uppercase tracking-wide">
                 {t}
               </span>
             ))}

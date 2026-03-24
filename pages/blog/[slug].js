@@ -4,7 +4,7 @@ import { ArrowLeft } from "@geist-ui/icons";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 
-import Head from "next/head";
+import Head from "@/components/Head";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
@@ -24,8 +24,10 @@ const blockComponents = {
     image: ({ value }) => (
       <div className="mx-auto w-[90%] my-[0.25rem]">
         <div className="overflow-hidden rounded-[8px]">
-          <img
+          <Image
             src={urlFor(value.asset).url()}
+            width={800}
+            height={500}
             className="w-full h-auto"
             alt={value.alt || ""}
           />
@@ -97,6 +99,7 @@ export const getStaticProps = async (context) => {
       _updatedAt,
       "title": blogTitle,
       "slug": slug.current,
+      "headerImage": headerImage.asset->url,
       "content": blogContent,
       "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
       tags
@@ -143,9 +146,11 @@ const BlogPage = ({ blogPost }) => {
 
   return (
     <>
-      <Head>
-        <title>{post ? `${post.title} | Ingo` : "Blog"}</title>
-      </Head>
+      <Head
+        title={post ? `${post.title} | Ingo` : "Blog"}
+        ogImage={post?.headerImage}
+        url={`/blog/${post?.slug}`}
+      />
       <motion.main
         ref={mainDocument}
         variants={_Transition_Page}

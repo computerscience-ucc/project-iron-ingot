@@ -7,7 +7,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className }) => {
   const renderPageNumbers = () => {
     const pages = [];
     const maxVisible = Math.max(1, totalPages);
-    
+
     for (let i = 1; i <= maxVisible; i++) {
       pages.push(
         <button
@@ -27,7 +27,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className }) => {
     // Add grayed out ellipsis if on last page or only 1 page
     if (isLastPage) {
       pages.push(
-        <div 
+        <div
           key="ellipsis"
           className="w-9 h-9 flex items-center justify-center text-[#4A4A4A] text-[1.25rem] font-bold cursor-default select-none pb-2"
         >
@@ -48,7 +48,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className }) => {
       >
         <ChevronLeft size={20} />
       </button>
-      
+
       <div className="flex items-center gap-1.5">
         {renderPageNumbers()}
       </div>

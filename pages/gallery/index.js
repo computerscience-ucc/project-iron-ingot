@@ -276,7 +276,7 @@ export default function GalleryPage() {
                       className="absolute top-[calc(100%+0.5rem)] left-0 w-[260px] bg-[#181818] border border-[#2F2F2F] rounded-[8px] pt-2 pb-4 px-4 shadow-xl z-50 overflow-y-auto max-h-[60vh] flex flex-col items-start"
                     >
                       {/* Close button */}
-                      <button 
+                      <button
                         onClick={() => setIsMobileFilterOpen(false)}
                         className="self-end text-[#8C8C8C] hover:text-white mb-0.5 p-1 -mr-1"
                       >
@@ -284,7 +284,7 @@ export default function GalleryPage() {
                           <path d="M13 1L1 13M1 1l12 12" />
                         </svg>
                       </button>
-                      
+
                       {renderFilters()}
                     </motion.div>
                   )}

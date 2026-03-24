@@ -66,7 +66,7 @@ export default function AwardCard({
       onMouseEnter={() => onHover(isCenter ? "center" : position)}
       onMouseLeave={() => onHover(null)}
       className={`absolute top-0 ${isCursorHidden ? "cursor-none" : "cursor-pointer"
-        }`}
+      }`}
       animate={{ scale: config.scale, x: config.x }}
       transition={springTransition}
       style={{ width: cardWidth, height: cardHeight, zIndex: config.zIndex }}

@@ -15,7 +15,7 @@ export default function HappyCodingSection() {
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
     const dist = Math.hypot(clientX - lastSpawnRef.current.x, clientY - lastSpawnRef.current.y);
-    
+
     // Spawn a bot every ~90px moved to prevent excessive clustering
     if (dist > 90) {
       lastSpawnRef.current = { x: clientX, y: clientY };
@@ -27,9 +27,9 @@ export default function HappyCodingSection() {
         size,
         img: MASCOTS[Math.floor(Math.random() * MASCOTS.length)]
       };
-      
+
       setTrail((prev) => [...prev, newBot]);
-      
+
       // Destroy the spawn after 600ms
       setTimeout(() => {
         setTrail((prev) => prev.filter(b => b.id !== newBot.id));
@@ -38,7 +38,7 @@ export default function HappyCodingSection() {
   };
 
   return (
-    <motion.section 
+    <motion.section
       className="relative w-full bg-[#1B1B1B] py-16 md:py-[8rem] overflow-hidden"
       onMouseMove={handleMouseMove}
       onHoverEnd={() => setTrail([])}
@@ -51,13 +51,13 @@ export default function HappyCodingSection() {
       <div className="section-container px-6 md:px-12 lg:px-[6rem] relative z-[10] pointer-events-none">
         <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[4rem]">
           {/* Graduation Bot Image */}
-          <motion.div 
+          <motion.div
             className="relative w-[180px] h-[180px] md:w-[280px] md:h-[280px]"
             variants={{
               rest: { scale: 1, rotate: 0, opacity: 1 },
               hover: { scale: 0.5, rotate: 20, opacity: 0 }
             }}
-            transition={{ 
+            transition={{
               type: "spring", stiffness: 600, damping: 12, mass: 0.8,
               opacity: { duration: 0.15, ease: "easeOut" }
             }}
@@ -71,7 +71,7 @@ export default function HappyCodingSection() {
           </motion.div>
 
           {/* Typography */}
-          <motion.h2 
+          <motion.h2
             className="font-minecraft text-center md:text-left text-white text-4xl md:text-[3.5rem] tracking-wider uppercase leading-none mt-4"
             variants={{
               rest: { opacity: 1, y: 0 },
@@ -97,12 +97,12 @@ export default function HappyCodingSection() {
                 left: bot.x,
                 top: bot.y,
                 x: "-50%",
-                y: "-50%" 
+                y: "-50%"
               }}
               initial={{ scale: 0, rotate: -25, opacity: 0 }}
               animate={{ scale: 1, rotate: 0, opacity: 1 }}
               exit={{ scale: 0.5, rotate: 30, opacity: 0 }}
-              transition={{ 
+              transition={{
                 type: "spring", stiffness: 500, damping: 15,
                 opacity: { duration: 0.15, ease: "easeOut" }
               }}

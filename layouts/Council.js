@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { client } from "@/lib/sanity";
 import OfficerCard from "../components/Home/MeetCouncil/OfficerCard";

@@ -109,7 +109,7 @@ export default function BlogPage() {
                           className={`px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${isActive
                             ? "bg-[#EA2B2E] text-white"
                             : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
-                            }`}
+                          }`}
                         >
                           {y}
                         </button>
@@ -177,9 +177,9 @@ export default function BlogPage() {
                               key={y}
                               onClick={() => setSelectedYear(y)}
                               className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${isActive
-                                  ? "bg-[#EA2B2E] text-white"
-                                  : "text-[#EFEFEF] hover:bg-[#202020]"
-                                }`}
+                                ? "bg-[#EA2B2E] text-white"
+                                : "text-[#EFEFEF] hover:bg-[#202020]"
+                              }`}
                             >
                               {y}
                             </button>

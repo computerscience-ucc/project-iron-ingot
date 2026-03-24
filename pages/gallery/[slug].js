@@ -3,7 +3,7 @@ import { CgChevronUp } from "react-icons/cg";
 import { ArrowLeft } from "@geist-ui/icons";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
-import Head from "next/head";
+import Head from "@/components/Head";
 import Image from "next/image";
 import Link from "next/link";
 import { SiGithub, SiLinkedin } from "react-icons/si";
@@ -79,9 +79,12 @@ const GalleryProjectPage = ({ project }) => {
 
   return (
     <>
-      <Head>
-        <title>{`${project.title} | Gallery | Ingo`}</title>
-        <meta name="description" content={project.title} />
+      <Head
+        title={`${project.title} | Gallery | Ingo`}
+        description={project.title}
+        ogImage={project.profilePicture}
+        url={`/gallery/${project.slug}`}
+      >
         <link rel="preconnect" href="https://www.youtube-nocookie.com" />
       </Head>
 

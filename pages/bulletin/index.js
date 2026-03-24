@@ -157,8 +157,8 @@ export default function Bulletin() {
                         <div className="flex items-center gap-2 flex-wrap mt-2">
                           {bulletin.tags.map((tag, i) => (
                             <span
-                               key={i}
-                               className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide"
+                              key={i}
+                              className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide"
                             >
                               {tag}
                             </span>

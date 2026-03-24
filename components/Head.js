@@ -7,7 +7,8 @@ const Head = ({
   keywords,
   ogImage,
   url,
-  type = "website"
+  type = "website",
+  children
 }) => {
   const { siteConfig } = usePrefetcher();
   const cfg = siteConfig || {};
@@ -17,7 +18,11 @@ const Head = ({
   const siteTagline = cfg.siteTagline || "Your CS Information on the Go";
   const defaultDescription = cfg.siteDescription || "Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects.";
   const defaultKeywords = cfg.siteKeywords?.join(", ") || "BSCS, Computer Science, Information Board, Student Portal, Academic Blog, Thesis Projects, University Updates, Ingo, UCC, University of Caloocan City";
-  const siteUrl = cfg.siteUrl || "https://uccingo.tech";
+
+  // Vercel auto-provides NEXT_PUBLIC_VERCEL_URL which is essential for OG images in preview deployments
+  const envUrl = process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "https://uccingo.tech";
+  const siteUrl = cfg.siteUrl || envUrl;
+
   const defaultOgImage = cfg.ogImage || "/branding/og-image.png";
   const faviconUrl = cfg.logo || "/branding/logo.svg";
   const appleTouchIconUrl = cfg.appleTouchIcon || "/branding/og-image.png";
@@ -115,6 +120,9 @@ const Head = ({
           })
         }}
       />
+
+      {/* Page Specific Tags (Preconnects, Scripts, etc.) */}
+      {children}
     </NextHead>
   );
 };

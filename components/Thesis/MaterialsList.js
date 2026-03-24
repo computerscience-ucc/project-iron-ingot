@@ -34,10 +34,10 @@ const MaterialsList = ({ materials }) => {
           </div>
 
           {/* External Link Icon */}
-          <svg 
-            className="w-5 h-5 text-[#8C8C8C] group-hover:text-[#EFEFEF] transition-colors shrink-0" 
-            fill="none" 
-            viewBox="0 0 24 24" 
+          <svg
+            className="w-5 h-5 text-[#8C8C8C] group-hover:text-[#EFEFEF] transition-colors shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
             stroke="currentColor"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

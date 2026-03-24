@@ -51,8 +51,11 @@ function AppInner({ Component, pageProps }) {
   const { scrollY } = useScroll();
 
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isHeroSection, setIsHeroSection] = useState(true);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsAtTop(latest < 50);
+    setIsHeroSection(latest < 800);
     const previous = scrollY.getPrevious();
     // Hide immediately when scrolling down
     // Show back immediately when scrolling up
@@ -167,8 +170,8 @@ function AppInner({ Component, pageProps }) {
         </Head>
 
         <motion.header
-          className={`w-full transition-colors duration-300 ${(isAtTop && !menuOpen && !headerHovered) ? "z-[10]" : "z-[100]"
-            }`}
+          className={`w-full transition-colors duration-300 ${((isAtTop || (router.pathname === "/" && isHeroSection)) && !menuOpen && !headerHovered) ? "z-[10]" : "z-[100]"
+          }`}
           onMouseEnter={() => {
             if (headerHoverTimer.current) clearTimeout(headerHoverTimer.current);
             setHeaderHovered(true);
@@ -241,7 +244,7 @@ function AppInner({ Component, pageProps }) {
                     const linkClass = `nav-link flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent ${isActive
                       ? "active text-[#FF5154]"
                       : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
-                      }`;
+                    }`;
 
                     if (link.label === "Blog") {
                       return (
@@ -611,7 +614,7 @@ function AppInner({ Component, pageProps }) {
                               className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${isActive
                                 ? "active text-[#FF5154]"
                                 : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
-                                }`}
+                              }`}
                             >
                               {link.label}
                             </Link>

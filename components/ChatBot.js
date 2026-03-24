@@ -427,7 +427,7 @@ const BotMessage = ({
     <div className="relative w-full">
       <div
         className={`${isFullscreen ? "max-w-[85%] md:max-w-2xl" : "max-w-[88%]"
-          } w-fit px-3 py-2.5 md:px-4 md:py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] leading-relaxed font-normal relative z-10`}
+        } w-fit px-3 py-2.5 md:px-4 md:py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] leading-relaxed font-normal relative z-10`}
       >
         {isStreaming ? (
           <StreamingMessage text={text} onDone={onStreamDone} />
@@ -867,7 +867,7 @@ const ChatBot = () => {
             className={`${isFullscreen
               ? "fixed inset-0 z-[100] rounded-none"
               : "fixed bottom-4 right-4 z-50 w-[380px] h-[540px] rounded-xl border border-[#2A2A2A]"
-              } flex flex-col overflow-hidden bg-[#181818] font-sans`}
+            } flex flex-col overflow-hidden bg-[#181818] font-sans`}
             style={{ background: "#181818" }}
           >
             {/* Header */}
@@ -1060,7 +1060,7 @@ const ChatBot = () => {
                         : "Or type a question..."
                   }
                   className={`flex-1 bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] rounded-lg px-3 py-2.5 md:px-4 md:py-[10px] outline-none placeholder-gray-500 transition-colors resize-none overflow-y-auto leading-relaxed font-normal ${cooldown ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  }`}
                   style={{ minHeight: "44px", maxHeight: "128px" }}
                   disabled={isLoading || cooldown > 0}
                 />

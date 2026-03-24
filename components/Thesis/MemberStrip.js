@@ -15,7 +15,7 @@ const MemberCard = ({ member }) => {
     : member.photo?.asset?.url || null;
 
   return (
-    <div 
+    <div
       className="relative aspect-square bg-transparent border-r border-b border-dashed border-[#8E8E8E]/40 w-[60px] sm:w-[80px] group cursor-pointer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -80,7 +80,7 @@ const MemberCard = ({ member }) => {
                 Visit Website →
               </p>
             )}
-            
+
             {/* Small arrow/beak above tooltip */}
             <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1a1b1e] border-l border-t border-[#2F2F2F] rotate-45" />
           </motion.div>

@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from "@/components/Head";
 import Hero from "@/layouts/Hero";
 import HeroFooterStripe from "@/layouts/HeroFooterStripe";
 import CSBotSection from "@/layouts/CSBotSection";
@@ -17,9 +17,11 @@ export default function Home() {
   const { blogs, thesis, bulletins } = usePrefetcher();
   return (
     <>
-      <Head>
-        <title>Home | Ingo</title>
-      </Head>
+      <Head
+        title="Home | Ingo"
+        description="Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects."
+        url="/"
+      />
 
       <Hero />
       <HeroFooterStripe />

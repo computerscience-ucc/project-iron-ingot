@@ -97,7 +97,7 @@ export default function CouncilAbout() {
           onMouseEnter={() => window.innerWidth >= 1024 && setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           className={`flex flex-col items-center justify-center text-center gap-[0.8rem] relative z-[1] w-fit mx-auto cursor-pointer ${isCursorHidden ? "lg:cursor-none" : ""
-            }`}
+          }`}
         >
           {/* Robot Image */}
           <div className="relative w-[220px] h-[220px] -mb-16 md:-mb-24 -mt-14 md:-mt-16 md:w-[340px] md:h-[340px]">

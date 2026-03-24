@@ -113,7 +113,7 @@ export default function AwardGallery() {
   const cardHeight = isMobile ? cardWidth * (3 / 4) : isTablet ? cardWidth * (10 / 16) : cardWidth * (11 / 16);
 
   const dynamicRayHeight = isMobile ? cardWidth * 0.35 : isTablet ? cardWidth * 0.25 : 220;
-  
+
   const rayHeight = isMobile ? dynamicRayHeight : isTablet ? dynamicRayHeight : 220;
   const rayTopWidth = isMobile ? 30 : isTablet ? 40 : 50;
 
@@ -173,8 +173,8 @@ export default function AwardGallery() {
       className="relative w-full flex flex-col items-center pt-4 pb-2 overflow-hidden"
     >
       {/* Invisible measurement container to track the dashed borders */}
-      <div 
-        ref={measureRef} 
+      <div
+        ref={measureRef}
         className="absolute top-0 w-full section-container px-6 md:px-12 lg:px-[6rem] h-0 pointer-events-none invisible"
       />
 
