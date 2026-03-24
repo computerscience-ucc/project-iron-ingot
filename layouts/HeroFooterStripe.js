@@ -85,45 +85,45 @@ export default function HeroFooterStripe() {
       <div className="absolute bottom-0 left-0 w-full border-dashed-long-h text-[#2A2A2A]"></div>
 
       <div className="relative z-10 w-full h-full flex items-center justify-center">
-        <div className="flex flex-wrap justify-center items-center py-2 md:py-3 lg:py-0 lg:border-l border-dashed border-[#2A2A2A] lg:w-auto">
+        <div className="flex flex-wrap justify-center gap-y-2 items-center py-2 md:py-3 lg:py-0 lg:border-l border-dashed border-[#2A2A2A] lg:w-auto">
           {stackLogos.map((stack, i) => {
             const currentW = isMobile ? `${parseFloat(stack.w) * 0.75}rem` : stack.w;
             const currentH = isMobile ? `${parseFloat(stack.h) * 0.75}rem` : stack.h;
 
             return (
-            <motion.div
-              key={i}
-              className="relative flex items-center justify-center px-2 md:px-4 lg:px-6 h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem] border-none lg:border-r lg:border-dashed lg:border-[#2A2A2A] overflow-hidden cursor-pointer"
-              initial="initial"
-              whileHover="hover"
-            >
-              {/* Invisible spacer to maintain layout width exactly */}
-              <div style={{ width: currentW, height: currentH, opacity: 0 }} />
- 
-              {/* Animating container moving from 0 to -50% to show the cloned logo below */}
               <motion.div
-                className="absolute top-0 left-0 w-full flex flex-col"
-                variants={{
-                  initial: { y: 0 },
-                  hover: { y: "-50%" },
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 18,
-                  mass: 0.8,
-                }}
+                key={i}
+                className="relative flex items-center justify-center px-2 md:px-4 lg:px-6 h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem] border-none lg:border-r lg:border-dashed lg:border-[#2A2A2A] overflow-hidden cursor-pointer"
+                initial="initial"
+                whileHover="hover"
               >
-                {/* Original Logo taking exactly the visual bounds of the stripe */}
-                <div className="flex items-center justify-center w-full h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem]">
-                  <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
-                </div>
-                {/* Clone Logo sitting just underneath it */}
-                <div className="flex items-center justify-center w-full h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem]">
-                  <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
-                </div>
+                {/* Invisible spacer to maintain layout width exactly */}
+                <div style={{ width: currentW, height: currentH, opacity: 0 }} />
+
+                {/* Animating container moving from 0 to -50% to show the cloned logo below */}
+                <motion.div
+                  className="absolute top-0 left-0 w-full flex flex-col"
+                  variants={{
+                    initial: { y: 0 },
+                    hover: { y: "-50%" },
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 18,
+                    mass: 0.8,
+                  }}
+                >
+                  {/* Original Logo taking exactly the visual bounds of the stripe */}
+                  <div className="flex items-center justify-center w-full h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem]">
+                    <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
+                  </div>
+                  {/* Clone Logo sitting just underneath it */}
+                  <div className="flex items-center justify-center w-full h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem]">
+                    <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
             );
           })}
         </div>

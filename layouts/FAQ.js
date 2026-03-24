@@ -32,12 +32,12 @@ const faqs = [
 
 const FAQItem = ({ faq, isOpen, onClick }) => {
   return (
-    <div className="border-b border-[#2A2A2A] overflow-hidden">
+    <div className="border-b border-[#2A2A2A] overflow-hidden px-6 md:px-12 lg:px-0">
       <button
         onClick={onClick}
-        className="w-full flex items-center justify-between py-[1.2rem] text-left group transition-colors"
+        className="w-full flex items-center justify-between py-[0.9rem] lg:py-[1.4rem] text-left group transition-colors"
       >
-        <span className="text-[1.4rem] font-semibold text-white tracking-wide transition-colors group-hover:text-white/80 pr-4">
+        <span className="text-base md:text-lg lg:text-[1.25rem] font-semibold text-white tracking-wide transition-colors group-hover:text-white/80 pr-4">
           {faq.question}
         </span>
         <motion.div
@@ -68,7 +68,7 @@ const FAQItem = ({ faq, isOpen, onClick }) => {
             exit={{ height: 0 }}
             transition={{ duration: 0.2, ease: "circOut" }}
           >
-            <div className="pb-[1.5rem] pt-0 text-[#8C8C8C] text-[1.1rem] leading-tight font-normal max-w-[85ch]">
+            <div className="pb-[1.1rem] pt-0 text-[#8C8C8C] text-sm md:text-[1rem] lg:text-[1.1rem] leading-relaxed font-normal max-w-[85ch]">
               {faq.answer}
             </div>
           </motion.div>
@@ -82,11 +82,11 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(-1);
 
   return (
-    <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-10 lg:mt-[3rem] mb-12 lg:mb-[6rem] font-sans">
-      <div className="flex flex-col w-full max-w-[900px] mx-auto">
+    <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 md:mt-10 lg:mt-[3rem] mb-12 lg:mb-[6rem] font-sans flex flex-col items-center">
+      <div className="flex flex-col w-full md:w-[54rem] mx-auto">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-[0.8rem] mb-8 md:mb-[2rem] md:-ml-[1.2rem]">
-          <div className="relative w-[80px] h-[80px] md:w-[110px] md:h-[110px] shrink-0">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-[0.8rem] mb-8 md:mb-[2rem]">
+          <div className="relative w-[100px] h-[100px] md:w-[80px] md:h-[80px] md:w-[110px] md:h-[110px] shrink-0">
             <Image
               src="/mascot/study-bot.png"
               alt="Study Bot"
@@ -94,16 +94,13 @@ export default function FAQ() {
               className="object-contain"
             />
           </div>
-          <h2 className="text-3xl md:text-[2.2rem] text-center md:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%]">
+          <h2 className="text-2xl md:text-3xl lg:text-[2.2rem] text-center md:text-left lg:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] max-w-[14ch] md:max-w-none">
             Frequently Asked Questions
           </h2>
         </div>
 
-        {/* Divider above FAQ list */}
-        <div className="w-full h-[1px] bg-[#2A2A2A]"></div>
-
         {/* FAQ Accordion List */}
-        <div className="flex flex-col">
+        <div className="flex flex-col -mx-6 md:-mx-12 lg:mx-0">
           {faqs.map((faq, index) => (
             <FAQItem
               key={index}

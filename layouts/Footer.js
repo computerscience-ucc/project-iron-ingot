@@ -47,7 +47,7 @@ export default function Footer() {
                 width={32}
                 height={32}
               />
-              <span className="font-sans font-semibold text-[1.45rem] tracking-normal text-white">
+              <span className="font-sans font-semibold text-[1.25rem] md:text-[1.45rem] tracking-normal text-white">
                 uccingo
               </span>
             </Link>
@@ -55,16 +55,16 @@ export default function Footer() {
 
           {/* Links Columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category} className="flex flex-col gap-2 md:gap-[1rem] col-span-1">
-              <h4 className="text-[#434343] text-[1rem] font-normal leading-relaxed">
+            <div key={category} className="flex flex-col gap-1 md:gap-[1rem] col-span-1">
+              <h4 className="text-[#434343] text-[0.85rem] md:text-[1rem] font-normal leading-relaxed">
                 {category}
               </h4>
-              <ul className="flex flex-col gap-[0.45rem]">
+              <ul className="flex flex-col gap-[0.35rem] md:gap-[0.45rem]">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[#8C8C8C] text-[1rem] font-normal hover:text-white transition-colors leading-relaxed"
+                      className="text-[#8C8C8C] text-[0.85rem] md:text-[1rem] font-normal hover:text-white transition-colors leading-relaxed"
                     >
                       {link.label}
                     </Link>
@@ -74,18 +74,18 @@ export default function Footer() {
             </div>
           ))}
 
-          <div className="flex flex-col gap-2 md:gap-[1rem] col-span-1">
-            <h4 className="text-[#434343] text-[1rem] font-normal leading-relaxed">
+          <div className="flex flex-col gap-1 md:gap-[1rem] col-span-1">
+            <h4 className="text-[#434343] text-[0.85rem] md:text-[1rem] font-normal leading-relaxed">
               Social
             </h4>
-            <ul className="flex flex-col gap-[0.45rem]">
+            <ul className="flex flex-col gap-[0.35rem] md:gap-[0.45rem]">
               {socialLinks.map((link) => {
                 const Icon = link.icon;
                 return (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[#8C8C8C] text-[1rem] font-normal hover:text-white transition-colors flex items-center gap-[0.8rem] leading-relaxed group"
+                      className="text-[#8C8C8C] text-[0.85rem] md:text-[1rem] font-normal hover:text-white transition-colors flex items-center gap-[0.8rem] leading-relaxed group"
                     >
                       <Icon
                         size={18}
@@ -101,7 +101,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright Text */}
-        <div className="text-[1rem] font-sans font-normal leading-tight text-[#434343] pb-8 md:pb-[3.4rem] pt-[2rem]">
+        <div className="text-[0.85rem] md:text-[1rem] font-sans font-normal leading-tight text-[#434343] pb-8 md:pb-[3.4rem] pt-[1.5rem] md:pt-[2rem]">
           @ 2026 CS Council and Technical Committee. All rights reserved
         </div>
       </div>

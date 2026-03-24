@@ -54,7 +54,7 @@ export default function FeaturesList() {
       <section className="relative section-container">
         <div className="relative z-10 flex flex-col lg:flex-row lg:block pointer-events-none">
           {/* Left Column: 3D Scene */}
-          <div className="relative lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:left-[4rem] lg:right-[54rem] h-[300px] md:h-[400px] lg:h-[80vh] w-full lg:w-auto flex items-center justify-center overflow-visible pointer-events-auto z-20 mb-2 lg:mb-0">
+          <div className="relative lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:left-[4rem] lg:right-[54rem] h-[300px] md:h-[400px] lg:h-[80vh] w-full md:w-auto flex items-center justify-center overflow-visible pointer-events-auto z-20 mb-2 lg:mb-0">
             <Scene3D
               activeIndex={activeIndex}
               scrollYProgress={scrollYProgress}

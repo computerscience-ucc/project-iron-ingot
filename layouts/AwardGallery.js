@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useMotionValue, useSpring, useInView } from "framer-motion";
+import { motion, useMotionValue, useSpring, useInView } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { client } from "../lib/sanity";
@@ -30,16 +30,30 @@ export default function AwardGallery() {
   const [isCursorHidden, setIsCursorHidden] = useState(false);
   const [isRayVisible, setIsRayVisible] = useState(true);
   const [isSwitching, setIsSwitching] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
+
+  const [windowWidth, setWindowWidth] = useState(1024);
+  const [containerWidth, setContainerWidth] = useState(1000);
+  const measureRef = useRef(null);
 
   // Track viewport for responsive card sizing
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (measureRef.current) {
+        const style = window.getComputedStyle(measureRef.current);
+        const pl = parseFloat(style.paddingLeft);
+        const pr = parseFloat(style.paddingRight);
+        setContainerWidth(measureRef.current.clientWidth - pl - pr);
+      }
+    };
+    handleResize(); // set initial
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const isMobile = windowWidth < 768;
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
 
   // Fetch awards from Sanity
   useEffect(() => {
@@ -88,9 +102,20 @@ export default function AwardGallery() {
     return () => clearTimeout(timer);
   }, [hoveredSide]);
 
-  const cardWidth = isMobile ? 340 : 1000;
-  const rayHeight = isMobile ? 120 : 220;
-  const rayTopWidth = isMobile ? 30 : 50;
+  // The side cards stick out by ~9% on each side due to scaling and x-offset (0.18 + 0.82/2 = 0.59 vs 0.5 center).
+  // We divide by 1.18 to ensure the entire visual carousel perfectly touches the grid lines.
+  const maxAvailableWidth = isMobile || isTablet ? containerWidth : 1000;
+  const layoutScaleFactor = (isMobile || isTablet) ? 1.18 : 1;
+  const cardWidth = maxAvailableWidth / layoutScaleFactor;
+
+  // Dynamically increase card height on smaller screens.
+  // Mobile uses a 4:3 aspect ratio, tablet uses 16:10, and desktop uses the original 16:9.
+  const cardHeight = isMobile ? cardWidth * (3 / 4) : isTablet ? cardWidth * (10 / 16) : cardWidth * (11 / 16);
+
+  const dynamicRayHeight = isMobile ? cardWidth * 0.35 : isTablet ? cardWidth * 0.25 : 220;
+  
+  const rayHeight = isMobile ? dynamicRayHeight : isTablet ? dynamicRayHeight : 220;
+  const rayTopWidth = isMobile ? 30 : isTablet ? 40 : 50;
 
   const getPosition = (itemIndex) => {
     const len = awards.length;
@@ -127,11 +152,32 @@ export default function AwardGallery() {
     }, 1500);
   };
 
+  const handleDragEnd = (e, { offset, velocity }) => {
+    const swipePower = Math.abs(offset.x) * velocity.x;
+    const len = awards.length;
+
+    if (swipePower < -500 || offset.x < -100) {
+      // Swiped Left -> Next Card (Right card comes center)
+      const nextIndex = (activeIndex + 1) % len;
+      handleClick(nextIndex);
+    } else if (swipePower > 500 || offset.x > 100) {
+      // Swiped Right -> Prev Card (Left card comes center)
+      const prevIndex = (activeIndex - 1 + len) % len;
+      handleClick(prevIndex);
+    }
+  };
+
   return (
     <section
       ref={sectionRef}
       className="relative w-full flex flex-col items-center pt-4 pb-2 overflow-hidden"
     >
+      {/* Invisible measurement container to track the dashed borders */}
+      <div 
+        ref={measureRef} 
+        className="absolute top-0 w-full section-container px-6 md:px-12 lg:px-[6rem] h-0 pointer-events-none invisible"
+      />
+
       {/* Custom Cursor Circle - hidden on mobile */}
       {!isMobile && (
         <AwardCursor
@@ -166,9 +212,13 @@ export default function AwardGallery() {
         />
 
         {/* Carousel */}
-        <div
-          className="relative w-full flex justify-center items-center mt-[-1px] z-20"
-          style={{ height: `${(cardWidth * 9) / 16}px` }}
+        <motion.div
+          className="relative w-full flex justify-center items-center mt-[-1px] z-20 touch-none md:touch-pan-y"
+          style={{ height: `${cardHeight}px` }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.15}
+          onDragEnd={handleDragEnd}
         >
           {awards.map((award, i) => {
             const position = getPosition(i);
@@ -183,10 +233,12 @@ export default function AwardGallery() {
                 isCursorHidden={isCursorHidden}
                 isInView={isInView}
                 isSwitching={isSwitching}
+                cardWidth={cardWidth}
+                cardHeight={cardHeight}
               />
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

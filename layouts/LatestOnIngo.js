@@ -103,10 +103,10 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
       />
 
       {/* Header Section */}
-      <section className="relative w-full py-10 md:py-[3.4rem] flex justify-center items-center px-4 md:px-0 text-center">
-        <h2 className="text-3xl md:text-[2.2rem] font-bold text-white flex items-center justify-center gap-[0.8rem] leading-[1.1] tracking-[0.34%] flex-wrap">
+      <section className="relative w-full py-8 md:py-10 lg:py-[3.4rem] flex justify-center items-center px-4 md:px-0 text-center">
+        <h2 className="text-2xl md:text-3xl lg:text-[2.2rem] font-bold text-white flex items-center justify-center gap-[0.5rem] lg:gap-[0.8rem] leading-[1.1] tracking-[0.34%] flex-wrap">
           Latest on
-          <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.38rem]">
+          <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.28rem] lg:translate-y-[0.38rem]">
             Ingo
           </span>
         </h2>
@@ -121,7 +121,7 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
           <div
             key={row.id}
             className={`w-full border-b border-dashed border-[#2A2A2A] transition-colors ${
-              idx === 0 ? "border-t" : "-mt-px"
+              idx === 0 ? "border-t border-dashed border-[#2A2A2A]" : "-mt-px"
             }`}
           >
             <div className="relative section-container grid grid-cols-1 lg:grid-cols-[12rem_1fr_1fr_12rem]">
@@ -137,18 +137,20 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
                     <ArticleCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-none lg:border-x border-b lg:border-b-0"
+                      borderClass={`border-x border-b ${idx === rows.length - 1 ? "" : "lg:border-b-0"}`}
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
+                      gridOrder="order-2 lg:order-none"
                     />
                   </Link>
                   <Link href={row.blogHref} className="contents">
                     <BlogCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-none lg:border-r"
+                      borderClass={`border-x lg:border-l-0 border-b ${idx === rows.length - 1 ? "" : "lg:border-b-0"}`}
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
+                      gridOrder="order-1 lg:order-none"
                     />
                   </Link>
                 </>
@@ -158,18 +160,20 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
                     <BlogCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-none lg:border-x border-b lg:border-b-0"
+                      borderClass={`border-x border-b ${idx === rows.length - 1 ? "" : "lg:border-b-0"}`}
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
+                      gridOrder="order-none"
                     />
                   </Link>
                   <Link href={row.articleHref} className="contents">
                     <ArticleCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-none lg:border-r"
+                      borderClass={`border-x lg:border-l-0 border-b ${idx === rows.length - 1 ? "" : "lg:border-b-0"}`}
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
+                      gridOrder="order-none"
                     />
                   </Link>
                 </>
