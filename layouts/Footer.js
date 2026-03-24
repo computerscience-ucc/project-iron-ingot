@@ -64,6 +64,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-[#8C8C8C] text-[0.85rem] md:text-[1rem] font-normal hover:text-white transition-colors leading-relaxed"
                     >
                       {link.label}
@@ -85,6 +87,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-[#8C8C8C] text-[0.85rem] md:text-[1rem] font-normal hover:text-white transition-colors flex items-center gap-[0.8rem] leading-relaxed group"
                     >
                       <Icon
@@ -106,6 +110,8 @@ export default function Footer() {
             Questions & Suggestions?{" "}
             <a
               href="mailto:ucc.computersciencecouncil@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[#FF5154] hover:underline underline-offset-4 transition-all"
             >
               Email us

@@ -39,42 +39,49 @@ export default function HeroFooterStripe() {
       alt: "Next.js",
       w: "6rem",
       h: "2rem",
+      href: "https://nextjs.org/",
     },
     {
       src: "/stack/vercel.svg",
       alt: "Vercel",
       w: "6rem",
       h: "1.2rem",
+      href: "https://vercel.com/",
     },
     {
       src: "/stack/sanity.svg",
       alt: "Sanity",
       w: "6rem",
       h: "1.2rem",
+      href: "https://www.sanity.io/",
     },
     {
       src: "/stack/shadcn.svg",
       alt: "Shadcn/UI",
       w: "7.6rem",
       h: "1.6rem",
+      href: "https://ui.shadcn.com/",
     },
     {
       src: "/stack/motion.svg",
       alt: "Motion",
       w: "7.5rem",
       h: "0.8rem",
+      href: "https://motion.dev/",
     },
     {
       src: "/stack/tailwindcss.svg",
       alt: "Tailwind",
       w: "8.4rem",
       h: "1.8rem",
+      href: "https://tailwindcss.com/",
     },
     {
       src: "/stack/threejs.svg",
       alt: "Three.js",
       w: "6rem",
       h: "1.6rem",
+      href: "https://threejs.org/",
     },
   ];
 
@@ -91,8 +98,11 @@ export default function HeroFooterStripe() {
             const currentH = isMobile ? `${parseFloat(stack.h) * 0.75}rem` : stack.h;
 
             return (
-              <motion.div
+              <motion.a
                 key={i}
+                href={stack.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative flex items-center justify-center px-2 md:px-4 lg:px-6 h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem] border-none lg:border-r lg:border-dashed lg:border-[#2A2A2A] overflow-hidden cursor-pointer"
                 initial="initial"
                 whileHover="hover"
@@ -123,7 +133,7 @@ export default function HeroFooterStripe() {
                     <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
                   </div>
                 </motion.div>
-              </motion.div>
+              </motion.a>
             );
           })}
         </div>
