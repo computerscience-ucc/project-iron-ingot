@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CgChevronLeft, CgChevronRight, CgClose } from "react-icons/cg";
+import { CgClose } from "react-icons/cg";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 const GRADIENTS = [
@@ -45,6 +46,14 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, people.length]);
 
+  // body lock
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   if (!person) return null;
 
   return (
@@ -53,83 +62,93 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/92 backdrop-blur-md p-4 overflow-y-auto custom-scrollbar"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.94, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+        exit={{ scale: 0.94, opacity: 0 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+        className="relative w-full max-w-lg bg-[#121212] border border-[#5B5B5B] border-dashed flex flex-col my-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Corner Markers */}
+        <div className="absolute top-0 left-0 w-2 h-2 bg-[#FF5154] z-50 transform -translate-x-[1px] -translate-y-[1px]" />
+        <div className="absolute top-0 right-0 w-2 h-2 bg-[#FF5154] z-50 transform translate-x-[1px] -translate-y-[1px]" />
+        <div className="absolute bottom-0 left-0 w-2 h-2 bg-[#FF5154] z-50 transform -translate-x-[1px] translate-y-[1px]" />
+        <div className="absolute bottom-0 right-0 w-2 h-2 bg-[#FF5154] z-50 transform translate-x-[1px] translate-y-[1px]" />
+
         {/* close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+          className="absolute top-3 right-3 z-30 w-9 h-9 md:w-11 md:h-11 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Close"
         >
           <CgClose size={18} />
         </button>
 
-        {/* prev */}
-        {people.length > 1 && (
-          <button
-            onClick={(e) => { e.stopPropagation(); go(-1); }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-            aria-label="Previous"
-          >
-            <CgChevronLeft size={22} />
-          </button>
-        )}
+        {/* sliding wrapper */}
+        <div className="relative">
+          {/* prev/next buttons (centered on image) */}
+          <div className="absolute top-0 left-0 w-full aspect-square pointer-events-none z-30 flex items-center justify-between px-3">
+            {people.length > 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); go(-1); }}
+                className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
+                aria-label="Previous"
+              >
+                <ArrowLeft size={20} strokeWidth={2.5} />
+              </button>
+            )}
 
-        {/* next */}
-        {people.length > 1 && (
-          <button
-            onClick={(e) => { e.stopPropagation(); go(1); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-            aria-label="Next"
-          >
-            <CgChevronRight size={22} />
-          </button>
-        )}
+            {people.length > 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); go(1); }}
+                className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
+                aria-label="Next"
+              >
+                <ArrowRight size={20} strokeWidth={2.5} />
+              </button>
+            )}
+          </div>
 
-        {/* grid-stack wrapper: entering + exiting overlap in the same cell, no height doubling or FLIP */}
-        <div style={{ display: "grid", overflow: "hidden" }}>
-          <AnimatePresence custom={dir} initial={false}>
-            <motion.div
-              key={idx}
-              custom={dir}
-              variants={lightboxSlideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              style={{ gridArea: "1 / 1" }}
-            >
-              {person.photo ? (
-                <div className="w-full overflow-hidden bg-black flex items-center justify-center relative" style={{ height: "50vh", maxHeight: "70vh" }}>
-                  <Image src={person.photo} alt={person.name} fill style={{ objectFit: "contain" }} sizes="100vw" priority />
-                </div>
-              ) : (
-                <div
-                  className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
-                  style={{ height: "400px" }}
-                >
-                  <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || "?"}</span>
-                </div>
-              )}
-
-              <div className="p-5">
-                <p className="text-lg font-bold text-white">{person.name}</p>
-                <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
-                {people.length > 1 && (
-                  <p className="text-[10px] text-white/20 mt-2">{idx + 1} / {people.length}</p>
+          <div style={{ display: "grid", overflow: "hidden" }}>
+            <AnimatePresence custom={dir} initial={false}>
+              <motion.div
+                key={idx}
+                custom={dir}
+                variants={lightboxSlideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                style={{ gridArea: "1 / 1" }}
+              >
+                {person.photo ? (
+                  <div className="w-full aspect-square overflow-hidden bg-black flex items-center justify-center relative border-b border-[#5B5B5B] border-dashed">
+                    <Image src={person.photo} alt={person.name} fill style={{ objectFit: "cover" }} sizes="100vw" priority />
+                  </div>
+                ) : (
+                  <div
+                    className={`w-full aspect-square flex items-center justify-center bg-gradient-to-br ${gradient} border-b border-[#5B5B5B] border-dashed`}
+                  >
+                    <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || "?"}</span>
+                  </div>
                 )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+
+                <div className="p-4 sm:p-5 text-left">
+                  <h2 className="text-[1.1rem] sm:text-[1.25rem] font-semibold text-white tracking-tight leading-tight">{person.name}</h2>
+                  <p className="text-[0.8rem] sm:text-[0.9rem] text-[#8C8C8C] mt-1 font-normal tracking-tight">{person.subtitle}</p>
+                  {people.length > 1 && (
+                    <span className="inline-block mt-3.5 text-[10px] sm:text-[11px] text-[#8C8C8C] pointer-events-none uppercase tracking-widest leading-none font-medium opacity-60">
+                      {idx + 1} / {people.length}
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </motion.div>
     </motion.div>

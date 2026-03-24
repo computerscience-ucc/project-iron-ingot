@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { client } from "../../lib/sanity";
 import CommitteeSection from "../../components/About/CommitteeSection";
 import OfficerCard from "../../components/Home/MeetCouncil/OfficerCard";
+import PersonLightbox from "../../components/Team/PersonLightbox";
 
 // ─────────────────────────────────────
 // Sanity GROQ query for Council
@@ -77,6 +78,8 @@ const AboutPage = () => {
   const [teams, setTeams] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
 
+  const [lightbox, setLightbox] = useState(null);
+
   useEffect(() => {
     client.fetch(COUNCIL_QUERY).then((data) => {
       const result = data || [];
@@ -114,6 +117,44 @@ const AboutPage = () => {
     },
   ].filter(Boolean);
 
+  const buildCouncilPeople = (council) => {
+    if (!council) return [];
+    const list = [];
+    if (council.adviser)
+      list.push({
+        name: council.adviser.name,
+        photo: council.adviser.photo,
+        subtitle: "CS Coordinator / Council Adviser",
+      });
+    if (council.president)
+      list.push({
+        name: council.president.name,
+        photo: council.president.photo,
+        subtitle: "President",
+      });
+    if (council.vicePresident)
+      list.push({
+        name: council.vicePresident.name,
+        photo: council.vicePresident.photo,
+        subtitle: "Vice President",
+      });
+    council.officers?.forEach((o) =>
+      list.push({ name: o.name, photo: o.photo, subtitle: o.position }),
+    );
+    council.classPresidents?.forEach((cp) =>
+      list.push({ name: cp.name, photo: cp.photo, subtitle: cp.section }),
+    );
+    return list;
+  };
+
+  const handlePersonClick = (person) => {
+    const people = buildCouncilPeople(council);
+    const index = people.findIndex(
+      (p) => p.name === person.name && p.subtitle === person.subtitle,
+    );
+    setLightbox({ people, index: index >= 0 ? index : 0 });
+  };
+
   return (
     <>
       <Head
@@ -121,6 +162,16 @@ const AboutPage = () => {
         description="Learn about Ingo, the BSCS information board. Meet our team, council, and discover our mission."
         url="/about"
       />
+
+      <AnimatePresence>
+        {lightbox && (
+          <PersonLightbox
+            people={lightbox.people}
+            initialIndex={lightbox.index}
+            onClose={() => setLightbox(null)}
+          />
+        )}
+      </AnimatePresence>
 
       <motion.main
         variants={_Transition_Page}
@@ -135,7 +186,8 @@ const AboutPage = () => {
             About
           </h1>
           <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal max-w-[600px]">
-            Meet the students and developers behind our community&apos;s digital initiatives.
+            Meet the students and developers behind our community&apos;s digital
+            initiatives.
           </p>
         </div>
 
@@ -146,7 +198,9 @@ const AboutPage = () => {
             <button
               onClick={() => selectTab(1)}
               className={`relative text-left lg:text-center pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors w-full lg:w-auto ${
-                selected === 1 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
+                selected === 1
+                  ? "text-white"
+                  : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
               {selected === 1 && (
@@ -161,7 +215,9 @@ const AboutPage = () => {
             <button
               onClick={() => selectTab(2)}
               className={`relative text-left lg:text-center pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors w-full lg:w-auto ${
-                selected === 2 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
+                selected === 2
+                  ? "text-white"
+                  : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
               {selected === 2 && (
@@ -176,7 +232,9 @@ const AboutPage = () => {
             <button
               onClick={() => selectTab(3)}
               className={`relative text-left lg:text-center pl-2 pr-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors w-full lg:w-auto ${
-                selected === 3 ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
+                selected === 3
+                  ? "text-white"
+                  : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
               {selected === 3 && (
@@ -194,7 +252,8 @@ const AboutPage = () => {
           {selected === 2 && years.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 overflow-x-auto scrollbar-hide">
               {(() => {
-                const currentYear = councils.find((c) => c.isCurrent)?.academicYear;
+                const currentYear = councils.find((c) => c.isCurrent)
+                  ?.academicYear;
                 return years.map((y) => {
                   const isActive = selectedYear === y;
                   const hasAsterisk = y === currentYear;
@@ -202,21 +261,33 @@ const AboutPage = () => {
                     <button
                       key={y}
                       onClick={() => setSelectedYear(y)}
-                      className={`relative ${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
-                        isActive ? "text-white" : "text-[#EFEFEF] hover:bg-[#202020]"
+                      className={`relative ${
+                        hasAsterisk ? "pl-2 pr-3" : "px-3"
+                      } py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
+                        isActive
+                          ? "text-white"
+                          : "text-[#EFEFEF] hover:bg-[#202020]"
                       }`}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="activeYearCouncil"
                           className="absolute inset-0 bg-[#EA2B2E] rounded-[4px] z-0"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
                         />
                       )}
-                      {!isActive && <div className="absolute inset-0 bg-[#2A2A2A] rounded-[4px] z-0" />}
+                      {!isActive && (
+                        <div className="absolute inset-0 bg-[#2A2A2A] rounded-[4px] z-0" />
+                      )}
                       <span className="relative z-10 flex items-center">
                         {hasAsterisk && (
-                          <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">✱</span>
+                          <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">
+                            ✱
+                          </span>
                         )}
                         {y}
                       </span>
@@ -236,21 +307,33 @@ const AboutPage = () => {
                   <button
                     key={t._id}
                     onClick={() => setSelectedTeamId(t._id)}
-                    className={`relative ${hasAsterisk ? "pl-2 pr-3" : "px-3"} py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
-                      isActive ? "text-white" : "text-[#EFEFEF] hover:bg-[#202020]"
+                    className={`relative ${
+                      hasAsterisk ? "pl-2 pr-3" : "px-3"
+                    } py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors whitespace-nowrap flex items-center ${
+                      isActive
+                        ? "text-white"
+                        : "text-[#EFEFEF] hover:bg-[#202020]"
                     }`}
                   >
                     {isActive && (
                       <motion.div
                         layoutId="activeYearTeam"
                         className="absolute inset-0 bg-[#EA2B2E] rounded-[4px] z-0"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        transition={{
+                          type: "spring",
+                          bounce: 0.2,
+                          duration: 0.6,
+                        }}
                       />
                     )}
-                    {!isActive && <div className="absolute inset-0 bg-[#2A2A2A] rounded-[4px] z-0" />}
+                    {!isActive && (
+                      <div className="absolute inset-0 bg-[#2A2A2A] rounded-[4px] z-0" />
+                    )}
                     <span className="relative z-10 flex items-center">
                       {hasAsterisk && (
-                        <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">✱</span>
+                        <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">
+                          ✱
+                        </span>
                       )}
                       {t.academicYear}
                     </span>
@@ -290,6 +373,12 @@ const AboutPage = () => {
                         role="CS Coordinator / Council Adviser"
                         photo={adviser?.photo}
                         className="w-full xl:w-[22.5rem]"
+                        onClick={() =>
+                          handlePersonClick({
+                            name: adviser?.name,
+                            subtitle: "CS Coordinator / Council Adviser",
+                          })
+                        }
                       />
                     </div>
 
@@ -306,6 +395,12 @@ const AboutPage = () => {
                             role={exec.role}
                             photo={exec.photo}
                             className="w-full xl:w-[22.5rem]"
+                            onClick={() =>
+                              handlePersonClick({
+                                name: exec.name,
+                                subtitle: exec.role,
+                              })
+                            }
                           />
                         ))}
                       </div>
@@ -326,6 +421,12 @@ const AboutPage = () => {
                             role={officer.position}
                             photo={officer.photo}
                             className="w-full"
+                            onClick={() =>
+                              handlePersonClick({
+                                name: officer.name,
+                                subtitle: officer.position,
+                              })
+                            }
                           />
                         ))}
                       </div>
@@ -338,25 +439,34 @@ const AboutPage = () => {
                   )}
 
                   {/* Class Presidents */}
-                  {council.classPresidents && council.classPresidents.length > 0 && (
-                    <div className="flex flex-col mt-12">
-                      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
-                        Class Presidents
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
-                        {council.classPresidents.map((cp, idx) => (
-                          <OfficerCard
-                            key={idx}
-                            name={cp.name}
-                            role={cp.section}
-                            photo={cp.photo || "/mascot/grad-bot.png"}
-                            imageClassName={cp.photo ? "object-cover" : "object-contain p-[3rem] opacity-30"}
-                            className="w-full"
-                          />
-                        ))}
+                  {council.classPresidents &&
+                    council.classPresidents.length > 0 && (
+                      <div className="flex flex-col mt-12">
+                        <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+                          Class Presidents
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
+                          {council.classPresidents.map((cp, idx) => (
+                            <OfficerCard
+                              key={idx}
+                              name={cp.name}
+                              role={cp.section}
+                              photo={cp.photo || "/mascot/grad-bot.png"}
+                              imageClassName={
+                                cp.photo ? "object-cover" : "object-contain p-[3rem] opacity-30"
+                              }
+                              className="w-full"
+                              onClick={() =>
+                                handlePersonClick({
+                                  name: cp.name,
+                                  subtitle: cp.section,
+                                })
+                              }
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </>
               )}
 

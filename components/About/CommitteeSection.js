@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import PersonLightbox from "../Team/PersonLightbox";
 
 const CommitteeSection = ({ committees }) => {
   const [activeCommitteeIdx, setActiveCommitteeIdx] = useState(0);
   const [selectedMemberIdx, setSelectedMemberIdx] = useState(0);
+  const [lightbox, setLightbox] = useState(null);
 
   if (!committees || committees.length === 0) return null;
 
@@ -17,6 +19,15 @@ const CommitteeSection = ({ committees }) => {
     setSelectedMemberIdx(0);
   };
 
+  const openLightbox = (index) => {
+    const people = members.map((m) => ({
+      name: m.name,
+      photo: m.photo,
+      subtitle: m.role || "Member",
+    }));
+    setLightbox({ people, index });
+  };
+
   const getFallbackDescription = (name) => {
     const lowerName = name?.toLowerCase() || "";
     if (lowerName.includes("program")) return "The dedicated team responsible for organizing our technical events, workshops, and program initiatives.";
@@ -27,6 +38,16 @@ const CommitteeSection = ({ committees }) => {
 
   return (
     <div className="flex flex-col mt-16 w-full">
+      <AnimatePresence>
+        {lightbox && (
+          <PersonLightbox
+            people={lightbox.people}
+            initialIndex={lightbox.index}
+            onClose={() => setLightbox(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Committee Header: Title & Tabs */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
@@ -71,7 +92,8 @@ const CommitteeSection = ({ committees }) => {
             return (
               <div
                 key={idx}
-                onClick={() => !isEmpty && setSelectedMemberIdx(idx)}
+                onMouseEnter={() => !isEmpty && setSelectedMemberIdx(idx)}
+                onClick={() => !isEmpty && openLightbox(idx)}
                 className={`relative aspect-square transition-all duration-300 border-r border-b border-dashed border-[#8E8E8E]/40 ${
                   !isEmpty ? "cursor-pointer bg-[#242424]" : "cursor-default bg-transparent"
                 }`}
@@ -84,7 +106,7 @@ const CommitteeSection = ({ committees }) => {
 
                 {!isEmpty && (
                   <div className={`relative w-full h-full transition-all duration-300 ${
-                    isSelected ? "opacity-100 grayscale-0" : "opacity-25 grayscale hover:opacity-60"
+                    isSelected ? "opacity-100" : "opacity-80 hover:opacity-100"
                   }`}>
                     {member.photo && (
                       <Image
