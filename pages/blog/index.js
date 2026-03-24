@@ -4,8 +4,10 @@ import Head from "../../components/Head";
 import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
+import Pagination from "../../components/Pagination";
 
 const ALL = "All";
+const ITEMS_PER_PAGE = 10;
 
 function getYears(blogs) {
   const years = [...new Set(blogs.map((b) => b.academicYear || "Unknown"))].sort().reverse();
@@ -17,6 +19,11 @@ export default function BlogPage() {
   const [blogList, setBlogList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedYear, sortLatest]);
 
   useEffect(() => {
     setBlogList(blogs || []);
@@ -34,6 +41,17 @@ export default function BlogPage() {
       return sortLatest ? diff : -diff;
     });
   }, [blogList, selectedYear, sortLatest]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const displayList = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
 
 
 
@@ -115,17 +133,23 @@ export default function BlogPage() {
               transition={{ duration: 0.2 }}
               className="flex flex-col gap-8 lg:gap-[1.5rem]"
             >
-              {filtered.length === 0 ? (
+              {displayList.length === 0 ? (
                 <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
                   No blog posts found.
                 </p>
               ) : (
-                filtered.map((blog, i) => (
+                displayList.map((blog, i) => (
                   <BlogCard key={blog._id || i} blog={blog} />
                 ))
               )}
             </motion.div>
           </AnimatePresence>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </motion.main>
     </>

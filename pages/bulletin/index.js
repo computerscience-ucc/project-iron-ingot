@@ -5,14 +5,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import dayjs from "dayjs";
 import Link from "next/link";
+import Pagination from "../../components/Pagination";
 
 const ALL = "All";
+const ITEMS_PER_PAGE = 10;
 
 export default function Bulletin() {
   const { bulletins } = usePrefetcher();
   const [bulletinList, setBulletinList] = useState([]);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedYear, sortLatest]);
 
   useEffect(() => {
     setBulletinList(bulletins || []);
@@ -40,6 +47,17 @@ export default function Bulletin() {
       return sortLatest ? diff : -diff;
     });
   }, [bulletinList, selectedYear, sortLatest]);
+
+  const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
+  const displayList = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredList.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredList, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <>
@@ -120,8 +138,8 @@ export default function Bulletin() {
               transition={{ duration: 0.25 }}
               className="flex flex-col w-full"
             >
-              {filteredList.length > 0 ? (
-                filteredList.map((bulletin) => (
+              {displayList.length > 0 ? (
+                displayList.map((bulletin) => (
                   <Link href={`/bulletin/${bulletin.slug}`} key={bulletin._id} scroll={false}>
                     <div className="py-6 border-b border-dashed border-[#2F2F2F] group cursor-pointer hover:bg-white/[0.02] transition-colors rounded-sm -mx-4 px-4">
                       <h2 className="text-[1.25rem] font-semibold text-[#EFEFEF] group-hover:text-white mb-1.5 tracking-normal transition-colors leading-[1.3] line-clamp-2">
@@ -139,8 +157,8 @@ export default function Bulletin() {
                         <div className="flex items-center gap-2 flex-wrap mt-2">
                           {bulletin.tags.map((tag, i) => (
                             <span
-                              key={i}
-                              className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide"
+                               key={i}
+                               className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide"
                             >
                               {tag}
                             </span>
@@ -157,6 +175,12 @@ export default function Bulletin() {
               )}
             </motion.div>
           </AnimatePresence>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </motion.main>
     </>

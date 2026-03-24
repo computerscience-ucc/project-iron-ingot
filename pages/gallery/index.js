@@ -4,8 +4,10 @@ import GalleryCard from "../../components/Card/Gallery";
 import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
+import Pagination from "../../components/Pagination";
 
 const ALL = "All";
+const ITEMS_PER_PAGE = 10;
 
 export default function GalleryPage() {
   const { gallery } = usePrefetcher();
@@ -13,10 +15,15 @@ export default function GalleryPage() {
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [selectedCategory, setSelectedCategory] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [isYearOpen, setIsYearOpen] = useState(true);
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedYear, selectedCategory, sortLatest]);
 
   useEffect(() => {
     setProjectList(gallery || []);
@@ -86,6 +93,17 @@ export default function GalleryPage() {
       return sortLatest ? diff : -diff;
     });
   }, [listFilteredByYear, selectedCategory, sortLatest]);
+
+  const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
+  const displayList = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredList.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredList, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
 
   const renderFilters = () => (
     <div className="flex flex-col gap-[1.5rem] w-full">
@@ -305,17 +323,23 @@ export default function GalleryPage() {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col gap-8 lg:gap-[1.5rem]"
               >
-                {filteredList.length === 0 ? (
+                {displayList.length === 0 ? (
                   <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
                     No projects found.
                   </p>
                 ) : (
-                  filteredList.map((project, i) => (
+                  displayList.map((project, i) => (
                     <GalleryCard key={project._id || i} project={project} />
                   ))
                 )}
               </motion.div>
             </AnimatePresence>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </section>
         </div>
       </motion.main>
