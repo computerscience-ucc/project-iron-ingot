@@ -94,7 +94,7 @@ export default function AwardsSection() {
           className={`flex flex-col items-center justify-center text-center gap-[0.8rem] relative z-[1] w-fit mx-auto ${isCursorHidden ? "lg:cursor-none" : ""
             }`}
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center justify-center text-center gap-[0.5rem] lg:gap-[0.8rem] max-w-[14ch] md:max-w-[18ch] lg:max-w-none">
+          <h2 className="text-2xl md:text-3xl lg:text-[2.2rem] font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center justify-center text-center gap-[0.5rem] lg:gap-[0.8rem] max-w-[14ch] md:max-w-[18ch] lg:max-w-none">
             Awards
             <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.1rem] lg:translate-y-[0.38rem]">
               &

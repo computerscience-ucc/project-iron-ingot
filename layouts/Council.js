@@ -91,7 +91,7 @@ export default function Council() {
 
       <div className="w-full flex flex-col items-center">
         {/* Adviser Section */}
-        <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-4 md:mt-8 font-sans flex flex-col items-center">
+        <section className="relative section-container px-0 md:px-12 lg:px-[6rem] mt-4 md:mt-8 font-sans flex flex-col items-center">
           <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-4 md:mb-6">
             Adviser
           </h3>
@@ -123,7 +123,7 @@ export default function Council() {
         </section>
 
         {/* Officers Section */}
-        <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 md:mt-12 lg:mt-[3.4rem] mb-6 md:mb-8 lg:mb-[2rem] font-sans">
+        <section className="relative section-container px-0 md:px-12 lg:px-[6rem] mt-8 md:mt-12 lg:mt-[3.4rem] mb-6 md:mb-8 lg:mb-[2rem] font-sans">
           <div className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-[6rem]">
             {/* Executive Column */}
             <div className="flex flex-col">
@@ -145,7 +145,7 @@ export default function Council() {
 
             {/* Officers Column */}
             <div className="flex flex-col flex-1 overflow-hidden">
-              <div className="flex items-center justify-between mb-4 md:mb-6 lg:mb-[2rem] pr-2">
+              <div className="flex items-center justify-between mb-4 md:mb-6 lg:mb-[2rem]">
                 <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
                   Officers
                 </h3>

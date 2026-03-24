@@ -167,9 +167,8 @@ function AppInner({ Component, pageProps }) {
         </Head>
 
         <motion.header
-          className={`w-full transition-colors duration-300 ${
-            (isAtTop && !menuOpen && !headerHovered) ? "z-[10]" : "z-[100]"
-          }`}
+          className={`w-full transition-colors duration-300 ${(isAtTop && !menuOpen && !headerHovered) ? "z-[10]" : "z-[100]"
+            }`}
           onMouseEnter={() => {
             if (headerHoverTimer.current) clearTimeout(headerHoverTimer.current);
             setHeaderHovered(true);
@@ -192,17 +191,17 @@ function AppInner({ Component, pageProps }) {
             {/* Logo Group */}
             <Link
               href="/"
-              className="flex items-center gap-[0.8rem] group cursor-pointer"
+              className="flex items-center gap-[0.5rem] z-index-999 md:gap-[0.6rem] lg:gap-[0.8rem] group cursor-pointer"
             >
               <Image
-                className="w-8 h-8 [filter:brightness(0)_invert(var(--logo-invert,0))] group-hover:opacity-80 transition-opacity"
+                className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 [filter:brightness(0)_invert(var(--logo-invert,0))] group-hover:opacity-80 transition-opacity"
                 src="/branding/logo.svg"
                 alt="Logo"
                 width={32}
                 height={32}
                 priority
               />
-              <span className="whitespace-nowrap font-sans font-semibold text-[1.2rem] tracking-normal text-[var(--color-text)]">
+              <span className="whitespace-nowrap font-sans font-semibold text-[1rem] md:text-[1.1rem] lg:text-[1.2rem] tracking-normal text-[var(--color-text)]">
                 uccingo
               </span>
             </Link>
@@ -230,7 +229,6 @@ function AppInner({ Component, pageProps }) {
               />
             </button>
 
-            {/* Absolutely Centered Navigation Menu */}
             {/* Desktop nav - hidden on mobile */}
             <div className="hidden md:block absolute left-1/2 -translate-x-1/2 mt-[0.1rem]">
               <NavigationMenu
@@ -240,11 +238,10 @@ function AppInner({ Component, pageProps }) {
                 <NavigationMenuList className="gap-[2rem]">
                   {navLinks.map((link) => {
                     const isActive = router.pathname === link.href || router.pathname.startsWith(link.href + "/");
-                    const linkClass = `nav-link flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent ${
-                      isActive
-                        ? "active text-[#FF5154]"
-                        : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
-                    }`;
+                    const linkClass = `nav-link flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent ${isActive
+                      ? "active text-[#FF5154]"
+                      : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
+                      }`;
 
                     if (link.label === "Blog") {
                       return (
@@ -515,7 +512,6 @@ function AppInner({ Component, pageProps }) {
               </NavigationMenu>
             </div>
 
-            {/* Actions Group */}
             {/* Desktop actions - hidden on mobile */}
             <div className="hidden md:flex items-center justify-end gap-[1.2rem]">
               {/* <div
@@ -603,11 +599,10 @@ function AppInner({ Component, pageProps }) {
                         <Link
                           key={link.href}
                           href={link.href}
-                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${
-                            isActive
-                              ? "active text-[#FF5154]"
-                              : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
-                          }`}
+                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${isActive
+                            ? "active text-[#FF5154]"
+                            : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
+                            }`}
                         >
                           {link.label}
                         </Link>
@@ -665,8 +660,8 @@ function AppInner({ Component, pageProps }) {
                   </div>
 
                   {/* Drawer handle visual */}
-                  <div className="flex justify-center mt-1 pb-3">
-                    <div className="w-16 h-[3px] bg-[#333333] rounded-full"></div>
+                  <div className="flex justify-center mt-2 pb-0">
+                    <div className="w-[50%] h-[4px] bg-[#333333]/60 rounded-full"></div>
                   </div>
                 </div>
               </motion.div>

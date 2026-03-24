@@ -39,7 +39,7 @@ export default function Hero() {
   return (
     <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 lg:mt-[2.6rem] mb-[2rem] font-sans">
       {/* Background Ambient Glow */}
-      <div className="absolute opacity-[0.14] top-[-6%] -left-[200px] md:-left-[480px] w-[400px] md:w-[600px] h-[600px] md:h-[800px] rounded-full bg-gradient-to-br from-[#B9171A] to-[#FF3538] blur-[100px] md:blur-[134px] pointer-events-none z-[20]" />
+      <div className="absolute opacity-[0.14] top-[-50%] md:top-[-6%] -left-[190px] md:-left-[480px] w-[400px] md:w-[600px] h-[600px] md:h-[800px] rounded-full bg-gradient-to-br from-[#B9171A] to-[#FF3538] blur-[100px] md:blur-[134px] pointer-events-none z-[20]" />
 
       <div className="relative z-[30] grid grid-cols-1 lg:grid-cols-[1.1fr_1.05fr] gap-[3rem] lg:gap-[2rem] items-center">
         {/* Left Column: Hero Content */}

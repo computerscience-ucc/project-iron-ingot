@@ -109,7 +109,7 @@ export default function CouncilAbout() {
             />
           </div>
 
-          <h2 className="text-2xl md:text-3xl whitespace-nowrap font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center justify-center text-center gap-[0.5rem] lg:gap-[0.8rem] max-w-[14ch] md:max-w-[18ch] lg:max-w-none">
+          <h2 className="text-2xl md:text-3xl lg:text-[2.2rem] text-nowrap font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center justify-center text-center gap-[0.5rem] lg:gap-[0.8rem] max-w-[14ch] md:max-w-[18ch] lg:max-w-none">
             See more on{" "}
             <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.2rem] lg:translate-y-[0.38rem]">
               About

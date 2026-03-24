@@ -12,7 +12,7 @@ export default function CSBotSection() {
             className="object-contain"
           />
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] max-w-[20ch] md:max-w-[16ch] lg:max-w-[20ch]">
+        <h2 className="text-2xl md:text-3xl lg:text-[2.2rem] font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] max-w-[20ch] md:max-w-[16ch] lg:max-w-[20ch]">
           See what{" "}
           <span className="font-minecraft text-[#FF5154] font-normal">
             Ingo
