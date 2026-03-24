@@ -7,7 +7,14 @@ export default function ArticleCard({
   setHoveredCard,
   isCursorHidden,
   gridOrder,
+  cardIndex,
 }) {
+  // If it's the Bulletin card (index 3), use 9.png as explicitly requested.
+  // Otherwise, alternate based on index.
+  let placeholderImage = `/placeholders/${(cardIndex % 9) + 1}.png`;
+  if (cardIndex === 1) placeholderImage = "/placeholders/1.png";
+  if (cardIndex === 3) placeholderImage = "/placeholders/9.png";
+
   return (
     <div
       className={`${cardBaseClass} ${borderClass} ${gridOrder || ""} ${isCursorHidden ? "cursor-none" : ""}`}
@@ -26,14 +33,14 @@ export default function ArticleCard({
       <div
         className={`flex-1 relative overflow-hidden border-t border-[#2A2A2A] min-h-[200px] md:min-h-[250px] lg:min-h-0 ${row.articleBg || "bg-[#242424]"}`}
       >
-        {row.articleImage && (
-          <Image
-            src={row.articleImage}
-            alt={row.articleTitle}
-            fill
-            className="object-cover opacity-80"
-          />
-        )}
+        <Image
+          src={row.articleImage || placeholderImage}
+          alt={row.articleTitle}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1440px) 100vw, 800px"
+        />
+
         <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-10 flex flex-wrap gap-2">
           {row.articleTags &&
             row.articleTags.map((tag) => (
@@ -45,7 +52,7 @@ export default function ArticleCard({
               </span>
             ))}
         </div>
-        <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-[15%] bg-gradient-to-t from-[#121212]/40 via-[#121212]/20 to-transparent pointer-events-none" />
       </div>
     </div>
   );
