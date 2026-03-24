@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "@geist-ui/icons";
 import { motion, AnimatePresence } from "motion/react";
@@ -123,13 +124,17 @@ export default function Hero() {
 
           {/* Buttons */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 md:gap-3 lg:gap-4 w-full lg:w-auto">
-            <Button className="bg-[#333333] hover:bg-[#444444] text-[var(--color-text)] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-colors">
-              See whats new on the board
-            </Button>
-            <motion.div className="relative" initial="rest" whileHover="hover">
-              <Button className="bg-gradient-to-r from-[#FF3538] to-[#DE2528] hover:brightness-110 text-white border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-all flex items-center gap-[0.6rem]">
-                2026 Thesis <ArrowRight size={18} />
+            <Link href="/#latest">
+              <Button className="bg-[#333333] hover:bg-[#444444] text-[var(--color-text)] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-colors">
+                See whats new on the board
               </Button>
+            </Link>
+            <motion.div className="relative" initial="rest" whileHover="hover">
+             <Link href="/thesis?year=2025-2026" scroll={false}>
+                <Button className="bg-gradient-to-r from-[#FF3538] to-[#DE2528] hover:brightness-110 text-white border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-all flex items-center gap-[0.6rem]">
+                  2026 Thesis <ArrowRight size={18} />
+                </Button>
+              </Link>
               <motion.div
                 className="absolute -top-[0.8rem] -right-[1.4rem] lg:-top-[1.2rem] lg:-right-[2.4rem] bg-white/60 rounded-[1.5px] px-[0.4rem] pt-[0.14rem] pb-[0.04rem] lg:px-[0.6rem] lg:py-[0.1rem] whitespace-nowrap pointer-events-none z-10 outline-[1px] lg:outline-[2px] outline-dashed outline-white flex items-center justify-center"
                 variants={{

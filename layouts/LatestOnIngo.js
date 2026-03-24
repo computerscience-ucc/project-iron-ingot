@@ -94,7 +94,7 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
   ];
 
   return (
-    <div className="w-full font-sans bg-[#181818] relative overflow-hidden">
+    <div id="latest" className="w-full font-sans bg-[#181818] relative overflow-hidden">
       {/* Shared Custom Cursor */}
       <LatestOnCursor
         hoveredCard={hoveredCard}

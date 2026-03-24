@@ -69,7 +69,10 @@ export default function Thesis() {
   const listFilteredByYearAndDept = useMemo(() => {
     let list = thesisList;
     if (selectedYear !== ALL) {
-      list = list.filter((t) => (t.academicYear || "Unknown") === selectedYear);
+      list = list.filter((t) => {
+        const yearVal = String(t.academicYear || "Unknown");
+        return yearVal === String(selectedYear) || yearVal.includes(String(selectedYear));
+      });
     }
     if (selectedDepartment !== ALL) {
       const deptMap = {
@@ -169,7 +172,7 @@ export default function Thesis() {
             >
               <div className="flex flex-col">
                 {years.map((y) => {
-                  const isActive = selectedYear === y;
+                  const isActive = selectedYear === y || (selectedYear && y.includes(selectedYear));
                   return (
                     <button
                       key={y}

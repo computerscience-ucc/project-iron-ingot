@@ -11,19 +11,19 @@ const footerLinks = {
     { label: "Bulletin", href: "/bulletin" },
   ],
   UCC: [
-    { label: "CS Council Facebook", href: "#" },
-    { label: "Registrar's Office", href: "#" },
-    { label: "Supreme Student Council", href: "#" },
-    { label: "TNC of the North", href: "#" },
+    { label: "CS Council Facebook", href: "https://www.facebook.com/UCCBSCS2022" },
+    { label: "Registrar's Office", href: "https://facebook.com/uccregistrarnorth" },
+    { label: "Supreme Student Council", href: "https://facebook.com/uccsscouncil" },
+    { label: "TNC of the North", href: "https://facebook.com/TNCoftheNorthOfficial" },
   ],
   External: [
-    { label: "UCC Website", href: "https://uccalookca.edu.ph" },
-    { label: "UCC Alumnus", href: "#" },
+    { label: "UCC Website", href: "https://www.ucc-caloocan.edu.ph" },
+    { label: "UCC Alumnus", href: "https://ucc-alumnus.vercel.app" },
   ],
 };
 
 const socialLinks = [
-  { icon: SiFacebook, label: "Facebook", href: "#" },
+  { icon: SiFacebook, label: "Facebook", href: "https://www.facebook.com/UCCBSCS2022" },
   { icon: SiDiscord, label: "Discord", href: "#" },
   { icon: SiGithub, label: "Github", href: "#" },
 ];
@@ -100,9 +100,20 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright Text */}
-        <div className="text-[0.85rem] md:text-[1rem] font-sans font-normal leading-tight text-[#434343] pb-8 md:pb-[3.4rem] pt-[1.5rem] md:pt-[2rem]">
-          @ 2026 CS Council and Technical Committee. All rights reserved
+        {/* Contact & Copyright */}
+        <div className="flex flex-col gap-2 pb-8 md:pb-[3.4rem] pt-[1.5rem] md:pt-[2rem]">
+          <p className="text-[0.85rem] md:text-[1rem] font-sans font-normal text-[#8C8C8C]">
+            Questions & Suggestions?{" "}
+            <a
+              href="mailto:ucc.computersciencecouncil@gmail.com"
+              className="text-[#FF5154] hover:underline underline-offset-4 transition-all"
+            >
+              Email us by clicking here
+            </a>
+          </p>
+          <div className="text-[0.85rem] md:text-[1rem] font-sans font-normal leading-tight text-[#434343]">
+            @ 2026 CS Council and Technical Committee. All rights reserved
+          </div>
         </div>
       </div>
 
