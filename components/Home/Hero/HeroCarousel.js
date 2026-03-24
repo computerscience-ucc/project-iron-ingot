@@ -61,8 +61,29 @@ export default function HeroCarousel() {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const handleDragEnd = (e, { offset, velocity }) => {
+    const swipe = Math.abs(offset.x) * Math.abs(velocity.x);
+
+    if (offset.x < -50 || swipe > 3000) {
+      if (offset.x < 0) nextSlide();
+      else prevSlide();
+    } else if (offset.x > 50 || swipe > 3000) {
+      if (offset.x > 0) prevSlide();
+      else nextSlide();
+    }
+  };
+
   return (
-    <div className="relative w-full aspect-square bg-[#1D1D1D] rounded-[12px] flex flex-col items-center justify-end overflow-hidden group">
+    <div className="relative w-[calc(100%+3rem)] md:w-[calc(100%+6rem)] lg:w-full -mx-6 md:-mx-12 lg:mx-0 aspect-square bg-[#1D1D1D] rounded-[11.67px] flex flex-col items-center justify-end overflow-hidden group touch-none">
       {/* Image Carousel */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
@@ -72,7 +93,11 @@ export default function HeroCarousel() {
           initial="initial"
           animate="animate"
           exit="exit"
-          className="absolute inset-0 w-full h-full"
+          drag={isMobile ? "x" : false}
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragEnd={handleDragEnd}
+          className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-0 lg:z-10"
         >
           <Image
             src={images[currentIndex]}
@@ -80,12 +105,13 @@ export default function HeroCarousel() {
             fill
             className="object-cover"
             priority={currentIndex === 0}
+            draggable={false}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* Left, Center, and Right Hit Zones for Custom Cursor */}
-      <div className="absolute inset-0 z-10 flex cursor-none">
+      {/* Hit Zones for Custom Cursor - Desktop only */}
+      <div className="absolute inset-0 z-20 hidden lg:flex cursor-none">
         <div
           className="w-[30%] h-full pointer-events-auto"
           onMouseEnter={() => setHoveredSide("left")}
@@ -133,7 +159,7 @@ export default function HeroCarousel() {
 
       {/* Custom Cursor Overlay */}
       <motion.div
-        className="hidden md:block"
+        className="hidden lg:block"
         style={{
           position: "fixed",
           left: springX,

@@ -44,24 +44,24 @@ export default function CouncilParallaxText() {
   });
 
   const TickerGroup = () => (
-    <div className="flex items-center gap-10">
+    <div className="flex items-center gap-4 md:gap-6 lg:gap-10">
       {Array.from({ length: 10 }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-10 font-minecraft tracking-[0.34%] uppercase"
+          className="flex items-center gap-4 md:gap-6 lg:gap-10 font-minecraft tracking-[0.34%] uppercase"
         >
-          <div className="flex items-center gap-4 text-[3.2rem] leading-none whitespace-nowrap">
+          <div className="flex items-center gap-4 text-3xl md:text-5xl lg:text-[3.2rem] leading-none whitespace-nowrap">
             <span className="text-white">MEET THE</span>
             <span className="text-[#FF5154]">COUNCIL</span>
           </div>
-          <span className="text-white text-[2.4rem]">✱</span>
+          <span className="text-white text-xl md:text-3xl lg:text-[2.4rem]">✱</span>
         </div>
       ))}
     </div>
   );
 
   return (
-    <div className="w-full bg-transparent h-[8rem] flex items-center overflow-hidden relative mt-[2.4rem]">
+    <div className="w-full bg-transparent h-[4rem] md:h-[6rem] lg:h-[8rem] flex items-center overflow-hidden relative mt-8 md:mt-12 lg:mt-[2.4rem]">
       <motion.div className="flex whitespace-nowrap gap-10" style={{ x }}>
         <TickerGroup />
         <TickerGroup />

@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "@geist-ui/icons";
 export default function AwardCursor({ hoveredSide, springX, springY }) {
   return (
     <motion.div
+      className="hidden lg:block"
       style={{
         position: "fixed",
         left: springX,

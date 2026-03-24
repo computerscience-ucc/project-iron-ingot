@@ -5,6 +5,7 @@ import { ArrowRight } from "@geist-ui/icons";
 export default function LatestOnCursor({ hoveredCard, springX, springY }) {
   return (
     <motion.div
+      className="hidden lg:block"
       style={{
         position: "fixed",
         left: springX,
