@@ -917,7 +917,10 @@ const ChatBot = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 custom-scrollbar">
+            <div 
+              className="flex-1 overflow-y-auto px-5 py-4 space-y-4 custom-scrollbar"
+              data-lenis-prevent
+            >
               {messages.map((msg, i) => (
                 <div
                   key={i}
@@ -1042,6 +1045,7 @@ const ChatBot = () => {
                   }}
                 />
                 <textarea
+                  data-lenis-prevent
                   ref={inputRef}
                   rows={1}
                   value={input}
