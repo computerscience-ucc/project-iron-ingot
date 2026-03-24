@@ -41,18 +41,16 @@ export default function AwardsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative section-container px-[6rem]  mb-[1.5rem] font-sans overflow-visible py-[1.5rem]"
+      className="relative section-container px-6 md:px-12 lg:px-[6rem] mb-[1.5rem] font-sans overflow-visible py-[1.5rem]"
     >
       {/* Custom Cursor Circle */}
       <motion.div
+        className="hidden md:block lg:w-[8.4rem] lg:h-[8.4rem] fixed pointer-events-none z-[9999]"
         style={{
-          position: "fixed",
           left: springX,
           top: springY,
-          pointerEvents: "none",
-          zIndex: 9999,
-          width: "8.4rem",
-          height: "8.4rem",
+          width: "6rem",
+          height: "6rem",
         }}
         initial={{ scale: 0, x: "-50%", y: "-50%" }}
         animate={{
@@ -67,9 +65,9 @@ export default function AwardsSection() {
           y: { duration: 0 },
         }}
       >
-        <div className="w-full h-full rounded-full bg-gradient-to-r from-[#FF3538] to-[#DE2528] flex items-center justify-center text-white shadow-xl overflow-hidden p-3">
+        <div className="w-full h-full rounded-full bg-gradient-to-r from-[#FF3538] to-[#DE2528] flex items-center justify-center text-white shadow-xl overflow-hidden p-2 lg:p-3">
           <motion.div
-            className="relative w-full h-full translate-x-[-0.34rem] translate-y-[-0.4rem]"
+            className="relative w-full h-full translate-x-[-0.34rem] translate-y-[-0.4rem] lg:translate-x-[-0.34rem] lg:translate-y-[-0.4rem]"
             animate={
               isHovered ? { rotate: [0, -5, 8, -5, 8, 0] } : { rotate: 0 }
             }
@@ -95,19 +93,18 @@ export default function AwardsSection() {
         <div
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className={`flex flex-col items-center justify-center text-center gap-[0.8rem] relative z-[1] w-fit mx-auto ${
-            isCursorHidden ? "cursor-none" : ""
-          }`}
+          className={`flex flex-col items-center justify-center text-center gap-[0.8rem] relative z-[1] w-fit mx-auto ${isCursorHidden ? "md:cursor-none" : ""
+            }`}
         >
-          <h2 className="text-[2.2rem] font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center gap-[0.8rem]">
+          <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center justify-center text-center gap-[0.5rem] lg:gap-[0.8rem] max-w-[14ch] md:max-w-[18ch] lg:max-w-none">
             Awards
-            <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.38rem]">
+            <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.34rem] lg:translate-y-[0.38rem]">
               &
             </span>
             Achievements
-            <ArrowRight size={28} className="-ml-1 text-[var(--color-text)]" />
+            <ArrowRight size={24} className="lg:size-[32px] -ml-1 text-[var(--color-text)] flex-shrink-0" />
           </h2>
-          <p className="text-[#8C8C8C] text-[1.1rem] max-w-[50ch] leading-relaxed font-normal">
+          <p className="text-[#EFEFEF] text-sm md:text-[1rem] lg:text-[1.1rem] max-w-[30ch] md:max-w-[40ch] lg:max-w-[50ch] leading-relaxed font-normal">
             Discover awards, milestones, and technical achievements achieved
             during the BSCS Program journey.
           </p>

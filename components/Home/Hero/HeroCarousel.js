@@ -105,8 +105,35 @@ export default function HeroCarousel() {
         />
       </div>
 
+      {/* Mobile/Tablet Arrow Navigation - Visible only on small screens */}
+      <div className="md:hidden absolute inset-y-0 left-3 flex items-center z-30">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            prevSlide();
+          }}
+          className="w-9 h-9 rounded-[6px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all"
+          aria-label="Previous slide"
+        >
+          <ArrowLeft size={18} strokeWidth={2.5} />
+        </button>
+      </div>
+      <div className="md:hidden absolute inset-y-0 right-3 flex items-center z-30">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            nextSlide();
+          }}
+          className="w-9 h-9 rounded-[6px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all"
+          aria-label="Next slide"
+        >
+          <ArrowRight size={18} strokeWidth={2.5} />
+        </button>
+      </div>
+
       {/* Custom Cursor Overlay */}
       <motion.div
+        className="hidden md:block"
         style={{
           position: "fixed",
           left: springX,
@@ -166,17 +193,17 @@ export default function HeroCarousel() {
               initial={false}
               animate={{
                 width: isActive ? 64 : dist === 1 ? 32 : dist === 2 ? 24 : 16,
-                backgroundColor: isActive ? "rgba(239, 239, 239, 0.9)" : "rgba(68, 68, 68, 0.7)",
+                backgroundColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(100, 100, 100, 0.35)",
               }}
               transition={{
                 width: { type: "spring", stiffness: 300, damping: 20 },
-                backgroundColor: { duration: 0 },
+                backgroundColor: { duration: 0.2 },
               }}
               onClick={() => {
                 setDirection(index > currentIndex ? 1 : -1);
                 setCurrentIndex(index);
               }}
-              className="h-1.5 rounded-full backdrop-blur-sm focus:outline-none"
+              className="h-1.5 rounded-full backdrop-blur-md focus:outline-none"
               aria-label={`Go to slide ${index + 1}`}
             />
           );

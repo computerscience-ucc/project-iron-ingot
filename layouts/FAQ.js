@@ -82,11 +82,11 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(-1);
 
   return (
-    <section className="relative section-container px-[6rem] mt-[3rem] mb-[6rem] font-sans">
+    <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-10 lg:mt-[3rem] mb-12 lg:mb-[6rem] font-sans">
       <div className="flex flex-col w-full max-w-[900px] mx-auto">
         {/* Header Section */}
-        <div className="flex items-center gap-[0.8rem] mb-[2rem] -ml-[1.2rem]">
-          <div className="relative w-[110px] h-[110px]">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-[0.8rem] mb-8 md:mb-[2rem] md:-ml-[1.2rem]">
+          <div className="relative w-[80px] h-[80px] md:w-[110px] md:h-[110px] shrink-0">
             <Image
               src="/mascot/study-bot.png"
               alt="Study Bot"
@@ -94,7 +94,7 @@ export default function FAQ() {
               className="object-contain"
             />
           </div>
-          <h2 className="text-[2.2rem] font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%]">
+          <h2 className="text-3xl md:text-[2.2rem] text-center md:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%]">
             Frequently Asked Questions
           </h2>
         </div>

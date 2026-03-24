@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function OfficerCard({ name, role, photo, className, imageClassName, onClick }) {
   return (
     <div
-      className={`flex flex-col ${className || "min-w-[25rem] w-[25rem]"} ${onClick ? "cursor-pointer group" : ""}`}
+      className={`flex flex-col ${className || "min-w-[16rem] w-[16rem] lg:min-w-[25rem] lg:w-[25rem]"} ${onClick ? "cursor-pointer group" : ""}`}
       onClick={onClick}
     >
       <div className="relative w-full aspect-square bg-[#242424] border border-dashed border-[#8E8E8E] flex items-center justify-center mb-[1.2rem] overflow-hidden">

@@ -30,7 +30,16 @@ export default function AwardGallery() {
   const [isCursorHidden, setIsCursorHidden] = useState(false);
   const [isRayVisible, setIsRayVisible] = useState(true);
   const [isSwitching, setIsSwitching] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
+
+  // Track viewport for responsive card sizing
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Fetch awards from Sanity
   useEffect(() => {
@@ -79,9 +88,9 @@ export default function AwardGallery() {
     return () => clearTimeout(timer);
   }, [hoveredSide]);
 
-  const cardWidth = 1000;
-  const rayHeight = 220;
-  const rayTopWidth = 50;
+  const cardWidth = isMobile ? 340 : 1000;
+  const rayHeight = isMobile ? 120 : 220;
+  const rayTopWidth = isMobile ? 30 : 50;
 
   const getPosition = (itemIndex) => {
     const len = awards.length;
@@ -123,16 +132,18 @@ export default function AwardGallery() {
       ref={sectionRef}
       className="relative w-full flex flex-col items-center pt-4 pb-2 overflow-hidden"
     >
-      {/* Custom Cursor Circle */}
-      <AwardCursor
-        hoveredSide={hoveredSide}
-        springX={springX}
-        springY={springY}
-      />
+      {/* Custom Cursor Circle - hidden on mobile */}
+      {!isMobile && (
+        <AwardCursor
+          hoveredSide={hoveredSide}
+          springX={springX}
+          springY={springY}
+        />
+      )}
 
       {/* Robot Head */}
-      <div className="relative z-30 mb-[-3.5rem]">
-        <div className="relative w-[14rem] h-[14rem]">
+      <div className="relative z-30 mb-[-2rem] md:mb-[-3.5rem]">
+        <div className="relative w-[10rem] h-[10rem] md:w-[14rem] md:h-[14rem]">
           <Image
             src="/mascot/awards-bot.png"
             alt="Award Bot"

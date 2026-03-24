@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useState, useEffect } from "react";
 
 const LogoMask = ({ stack }) => (
   <motion.div
@@ -23,6 +24,15 @@ const LogoMask = ({ stack }) => (
 );
 
 export default function HeroFooterStripe() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const stackLogos = [
     {
       src: "/stack/nextjs.svg",
@@ -69,23 +79,27 @@ export default function HeroFooterStripe() {
   ];
 
   return (
-    <div className="w-full relative h-[3.2rem] mt-[4rem] overflow-hidden">
+    <div className="w-full relative min-h-[2.8rem] md:min-h-[3.2rem] mt-[4rem] overflow-hidden">
       <div className="stripe-banner absolute inset-0 z-0"></div>
       <div className="absolute top-0 left-0 w-full border-dashed-long-h text-[#2A2A2A]"></div>
       <div className="absolute bottom-0 left-0 w-full border-dashed-long-h text-[#2A2A2A]"></div>
 
       <div className="relative z-10 w-full h-full flex items-center justify-center">
-        <div className="flex items-center h-full border-l border-dashed border-[#2A2A2A]">
-          {stackLogos.map((stack, i) => (
+        <div className="flex flex-wrap justify-center items-center py-2 md:py-3 lg:py-0 lg:border-l border-dashed border-[#2A2A2A] lg:w-auto">
+          {stackLogos.map((stack, i) => {
+            const currentW = isMobile ? `${parseFloat(stack.w) * 0.75}rem` : stack.w;
+            const currentH = isMobile ? `${parseFloat(stack.h) * 0.75}rem` : stack.h;
+
+            return (
             <motion.div
               key={i}
-              className="relative flex items-center justify-center px-6 h-full border-r border-dashed border-[#2A2A2A] overflow-hidden cursor-pointer"
+              className="relative flex items-center justify-center px-2 md:px-4 lg:px-6 h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem] border-none lg:border-r lg:border-dashed lg:border-[#2A2A2A] overflow-hidden cursor-pointer"
               initial="initial"
               whileHover="hover"
             >
               {/* Invisible spacer to maintain layout width exactly */}
-              <div style={{ width: stack.w, height: stack.h, opacity: 0 }} />
-
+              <div style={{ width: currentW, height: currentH, opacity: 0 }} />
+ 
               {/* Animating container moving from 0 to -50% to show the cloned logo below */}
               <motion.div
                 className="absolute top-0 left-0 w-full flex flex-col"
@@ -101,16 +115,17 @@ export default function HeroFooterStripe() {
                 }}
               >
                 {/* Original Logo taking exactly the visual bounds of the stripe */}
-                <div className="flex items-center justify-center w-full h-[3.2rem]">
-                  <LogoMask stack={stack} />
+                <div className="flex items-center justify-center w-full h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem]">
+                  <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
                 </div>
                 {/* Clone Logo sitting just underneath it */}
-                <div className="flex items-center justify-center w-full h-[3.2rem]">
-                  <LogoMask stack={stack} />
+                <div className="flex items-center justify-center w-full h-[1.8rem] md:h-[2.4rem] lg:h-[3.2rem]">
+                  <LogoMask stack={{ ...stack, w: currentW, h: currentH }} />
                 </div>
               </motion.div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

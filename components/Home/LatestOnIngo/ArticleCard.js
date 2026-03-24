@@ -13,8 +13,8 @@ export default function ArticleCard({
       onMouseEnter={() => setHoveredCard("article")}
       onMouseLeave={() => setHoveredCard(null)}
     >
-      <div className="p-[1.8rem] pb-8 text-left">
-        <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-2">
+      <div className="p-6 pb-8 md:p-[1.8rem] md:pb-8 text-left">
+        <h3 className="text-2xl md:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-2">
           {row.articleTitle}
         </h3>
         <p className="text-[#8C8C8C] text-[1.1rem] leading-tight font-normal">

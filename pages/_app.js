@@ -103,7 +103,7 @@ function AppInner({ Component, pageProps }) {
 
   return (
     <>
-      <div className="app-root">
+      <div className="app-root overflow-x-hidden">
         {/* Mobile Backdrop Overlay - Dim background when menu is open */}
         <AnimatePresence>
           {menuOpen && (

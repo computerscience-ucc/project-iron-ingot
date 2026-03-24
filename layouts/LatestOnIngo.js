@@ -44,7 +44,8 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
   const rows = [
     {
       id: 1,
-      href: `/blog/${blog?.slug || ""}`,
+      articleHref: `/blog/${blog?.slug || ""}`,
+      blogHref: "/blog",
       blogImage: "/mascot/vibe-bot.png",
       blogAlt: "Vibe Bot",
       blogTitle: "Blog",
@@ -58,7 +59,8 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
     },
     {
       id: 2,
-      href: `/thesis/${thesis?.slug || ""}`,
+      articleHref: `/thesis/${thesis?.slug || ""}`,
+      blogHref: "/thesis",
       blogImage: "/mascot/thesis-bot.png",
       blogAlt: "Thesis Bot",
       blogTitle: "Thesis Showcase",
@@ -76,7 +78,8 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
     },
     {
       id: 3,
-      href: `/bulletin/${bulletin?.slug || ""}`,
+      articleHref: `/bulletin/${bulletin?.slug || ""}`,
+      blogHref: "/bulletin",
       blogImage: "/mascot/bulletin-bot.png",
       blogAlt: "Bulletin Bot",
       blogTitle: "Bulletin Board",
@@ -100,8 +103,8 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
       />
 
       {/* Header Section */}
-      <section className="relative w-full py-[3.4rem] flex justify-center items-center">
-        <h2 className="text-[2.2rem] font-bold text-white flex items-center gap-[0.8rem] leading-[1.1] tracking-[0.34%]">
+      <section className="relative w-full py-10 md:py-[3.4rem] flex justify-center items-center px-4 md:px-0 text-center">
+        <h2 className="text-3xl md:text-[2.2rem] font-bold text-white flex items-center justify-center gap-[0.8rem] leading-[1.1] tracking-[0.34%] flex-wrap">
           Latest on
           <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.38rem]">
             Ingo
@@ -121,29 +124,29 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
               idx === 0 ? "border-t" : "-mt-px"
             }`}
           >
-            <div className="relative section-container grid grid-cols-[12rem_1fr_1fr_12rem]">
-              {/* Left Side Gutter (Stripe visible) */}
-              <div className="border-l border-r border-dashed border-[#2A2A2A] relative z-0 overflow-hidden min-h-[480px]">
+            <div className="relative section-container grid grid-cols-1 lg:grid-cols-[12rem_1fr_1fr_12rem]">
+              {/* Left Side Gutter (Stripe visible on large screens) */}
+              <div className="hidden lg:block border-l border-r border-dashed border-[#2A2A2A] relative z-0 overflow-hidden min-h-[480px]">
                 <div className="stripe-banner absolute inset-0"></div>
               </div>
 
               {/* Central Cards - Alternating Order */}
               {isEven ? (
                 <>
-                  <Link href={row.href} className="contents">
+                  <Link href={row.articleHref} className="contents">
                     <ArticleCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-x"
+                      borderClass="border-none lg:border-x border-b lg:border-b-0"
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
                     />
                   </Link>
-                  <Link href={row.href} className="contents">
+                  <Link href={row.blogHref} className="contents">
                     <BlogCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-r"
+                      borderClass="border-none lg:border-r"
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
                     />
@@ -151,20 +154,20 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
                 </>
               ) : (
                 <>
-                  <Link href={row.href} className="contents">
+                  <Link href={row.blogHref} className="contents">
                     <BlogCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-x"
+                      borderClass="border-none lg:border-x border-b lg:border-b-0"
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
                     />
                   </Link>
-                  <Link href={row.href} className="contents">
+                  <Link href={row.articleHref} className="contents">
                     <ArticleCard
                       row={row}
                       cardBaseClass={cardBaseClass}
-                      borderClass="border-r"
+                      borderClass="border-none lg:border-r"
                       setHoveredCard={setHoveredCard}
                       isCursorHidden={isCursorHidden}
                     />
@@ -172,8 +175,8 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
                 </>
               )}
 
-              {/* Right Side Gutter (Stripe visible) */}
-              <div className="border-l border-r border-dashed border-[#2A2A2A] relative z-0 overflow-hidden">
+              {/* Right Side Gutter (Stripe visible on large screens) */}
+              <div className="hidden lg:block border-l border-r border-dashed border-[#2A2A2A] relative z-0 overflow-hidden">
                 <div className="stripe-banner absolute inset-0"></div>
               </div>
             </div>

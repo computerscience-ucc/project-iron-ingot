@@ -41,10 +41,11 @@ export default function CouncilAbout() {
   return (
     <section
       ref={sectionRef}
-      className="relative section-container px-[6rem] mb-[2rem] font-sans py-[1.5rem] overflow-visible"
+      className="relative section-container px-6 md:px-12 lg:px-[6rem] mb-[2rem] font-sans py-[1.5rem] overflow-visible"
     >
       {/* Custom Cursor Circle */}
       <motion.div
+        className="hidden md:block"
         style={{
           position: "fixed",
           left: springX,
@@ -96,11 +97,11 @@ export default function CouncilAbout() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           className={`flex flex-col items-center justify-center text-center relative z-[1] w-fit mx-auto cursor-pointer ${
-            isCursorHidden ? "cursor-none" : ""
+            isCursorHidden ? "md:cursor-none" : ""
           }`}
         >
           {/* Robot Image */}
-          <div className="relative w-[340px] h-[200px]">
+          <div className="relative w-[220px] h-[140px] md:w-[340px] md:h-[200px]">
             <Image
               src="/mascot/hero-bot.png"
               alt="Hero Bot"
@@ -109,7 +110,7 @@ export default function CouncilAbout() {
             />
           </div>
 
-          <h2 className="text-[2.2rem] font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center gap-[0.4rem]">
+          <h2 className="text-3xl md:text-[2.2rem] font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center gap-[0.4rem]">
             See more on{" "}
             <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.38rem]">
               About

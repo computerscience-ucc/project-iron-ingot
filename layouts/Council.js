@@ -73,12 +73,12 @@ export default function Council() {
 
       <div className="w-full flex flex-col items-center">
         {/* Adviser Section */}
-        <section className="relative section-container px-[6rem] mt-[1.4rem] font-sans flex flex-col items-center">
-          <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.5rem]">
+        <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-[1.4rem] font-sans flex flex-col items-center">
+          <h3 className="text-2xl md:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.5rem]">
             Adviser
           </h3>
 
-          <div className="relative w-full max-w-[28rem] aspect-square bg-[#242424] border border-dashed border-[#8E8E8E] flex items-center justify-center overflow-hidden">
+          <div className="relative w-full max-w-[20rem] md:max-w-[28rem] aspect-square bg-[#242424] border border-dashed border-[#8E8E8E] flex items-center justify-center overflow-hidden">
             {/* Corner alignment markers */}
             <div className="absolute top-[-1px] left-[-1px] w-[8px] h-[8px] bg-[#FF5154] z-10"></div>
             <div className="absolute top-[-1px] right-[-1px] w-[8px] h-[8px] bg-[#FF5154] z-10"></div>
@@ -105,14 +105,14 @@ export default function Council() {
         </section>
 
         {/* Officers Section */}
-        <section className="relative section-container px-[6rem] mt-[3.4rem] mb-[2rem] font-sans">
-          <div className="flex gap-[6rem]">
+        <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 md:mt-[3.4rem] mb-[2rem] font-sans">
+          <div className="flex flex-col lg:flex-row gap-10 lg:gap-[6rem]">
             {/* Executive Column */}
             <div className="flex flex-col">
-              <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[2rem]">
+              <h3 className="text-2xl md:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-6 md:mb-[2rem]">
                 Executive
               </h3>
-              <div className="flex gap-[1.5rem]">
+              <div className="grid grid-cols-2 lg:flex gap-4 lg:gap-[1.5rem]">
                 {executives.map((exec, idx) => (
                   <OfficerCard
                     key={idx}
@@ -126,8 +126,8 @@ export default function Council() {
 
             {/* Officers Column */}
             <div className="flex flex-col flex-1 overflow-hidden">
-              <div className="flex items-center justify-between mb-[2rem] pr-2">
-                <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
+              <div className="flex items-center justify-between mb-6 md:mb-[2rem] pr-2">
+                <h3 className="text-2xl md:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
                   Officers
                 </h3>
                 <div className="flex gap-2">
@@ -181,8 +181,8 @@ export default function Council() {
               {/* Carousel Slider */}
               <div className="relative w-full flex-1">
                 <motion.div
-                  className="flex gap-[1.5rem]"
-                  animate={{ x: `calc(-${currentIndex} * (25rem + 1.5rem))` }}
+                  className="flex gap-4 lg:gap-[1.5rem]"
+                  animate={{ x: `calc(-${currentIndex} * (18rem + 1rem))` }}
                   transition={{ type: "spring", stiffness: 350, damping: 35 }}
                 >
                   {officersList.map((officer, idx) => (

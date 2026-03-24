@@ -49,12 +49,12 @@ export default function FeaturesList() {
 
   return (
     <div className="w-full font-sans mb-[2rem]">
-      <Stripe className="m-0" />
+      <Stripe className="mb-4 lg:mb-0" />
 
       <section className="relative section-container">
-        <div className="relative z-10 flex pointer-events-none">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:block pointer-events-none">
           {/* Left Column: 3D Scene */}
-          <div className="absolute top-1/2 -translate-y-1/2 left-[4rem] right-[54rem] h-[80vh] flex items-center justify-center overflow-visible pointer-events-auto">
+          <div className="relative lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:left-[4rem] lg:right-[54rem] h-[300px] md:h-[400px] lg:h-[80vh] w-full lg:w-auto flex items-center justify-center overflow-visible pointer-events-auto z-20 mb-2 lg:mb-0">
             <Scene3D
               activeIndex={activeIndex}
               scrollYProgress={scrollYProgress}
@@ -64,10 +64,10 @@ export default function FeaturesList() {
           {/* Right Column: Features List */}
           <div
             ref={containerRef}
-            className="shrink-0 ml-auto flex flex-col border-x border-dashed border-[#2A2A2A] w-[42rem] mr-[10rem] pointer-events-auto"
+            className="shrink-0 lg:ml-auto flex flex-col border-x border-dashed border-[#2A2A2A] w-full lg:w-[42rem] lg:mr-[10rem] pointer-events-auto relative z-10 px-0"
           >
             {/* Stripe background block at the top */}
-            <div className="relative min-h-[200px] border-b border-dashed border-[#2A2A2A] overflow-hidden">
+            <div className="hidden lg:block relative min-h-[200px] border-b border-dashed border-[#2A2A2A] overflow-hidden">
               <div className="stripe-banner absolute inset-0 z-0"></div>
             </div>
             {features.map((feature, idx) => {
@@ -76,30 +76,26 @@ export default function FeaturesList() {
                 <div
                   key={idx}
                   onClick={() => handleFeatureClick(idx)}
-                  className={`feature-item flex flex-col p-[2rem] border-b border-dashed border-[#2A2A2A] last:border-b-0 transition-colors duration-500 cursor-pointer ${
-                    isActive ? "bg-[#242424]" : "bg-[#1C1C1C]"
-                  }`}
+                  className={`feature-item flex flex-col p-6 md:p-8 lg:p-[2rem] border-b border-dashed border-[#2A2A2A] last:border-b-0 transition-colors duration-500 cursor-pointer ${isActive ? "bg-[#242424]" : "bg-[#1C1C1C]"
+                    }`}
                 >
-                  <div className="flex justify-between items-start mb-3">
+                  <div className="flex justify-between items-start mb-3 gap-4">
                     <span
-                      className={`font-minecraft text-[3.6rem] leading-none transition-colors duration-500 ${
-                        isActive ? "text-[#EFEFEF]" : "text-[#434343]"
-                      }`}
+                      className={`font-minecraft text-5xl md:text-5xl lg:text-[3.6rem] leading-none transition-colors duration-500 ${isActive ? "text-[#EFEFEF]" : "text-[#434343]"
+                        }`}
                     >
                       {feature.num}
                     </span>
                     <h3
-                      className={`text-[1.6rem] font-semibold text-right leading-none transition-colors duration-500 ${
-                        isActive ? "text-[#EFEFEF]" : "text-[#434343]"
-                      }`}
+                      className={`text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-right leading-none transition-colors duration-500 ${isActive ? "text-[#EFEFEF]" : "text-[#434343]"
+                        }`}
                     >
                       {feature.title}
                     </h3>
                   </div>
                   <p
-                    className={`text-[1.1rem] leading-tight font-normal transition-colors duration-500 ${
-                      isActive ? "text-[#8C8C8C]" : "text-[#2A2A2A]"
-                    }`}
+                    className={`text-sm md:text-base lg:text-[1.1rem] leading-tight font-normal transition-colors duration-500 ${isActive ? "text-[#8C8C8C]" : "text-[#2A2A2A]"
+                      }`}
                   >
                     {feature.desc}
                   </p>
@@ -107,7 +103,7 @@ export default function FeaturesList() {
               );
             })}
             {/* Stripe background block at the bottom */}
-            <div className="relative min-h-[200px] border-t border-dashed border-[#2A2A2A] overflow-hidden">
+            <div className="hidden lg:block relative min-h-[200px] border-t border-dashed border-[#2A2A2A] overflow-hidden">
               <div className="stripe-banner absolute inset-0 z-0"></div>
             </div>
           </div>
