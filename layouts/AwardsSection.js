@@ -45,12 +45,10 @@ export default function AwardsSection() {
     >
       {/* Custom Cursor Circle */}
       <motion.div
-        className="hidden md:block lg:w-[8.4rem] lg:h-[8.4rem] fixed pointer-events-none z-[9999]"
+        className="hidden lg:block lg:w-[8.4rem] lg:h-[8.4rem] fixed pointer-events-none z-[9999]"
         style={{
           left: springX,
           top: springY,
-          width: "6rem",
-          height: "6rem",
         }}
         initial={{ scale: 0, x: "-50%", y: "-50%" }}
         animate={{
@@ -91,14 +89,14 @@ export default function AwardsSection() {
 
       <Link href="/awards" className="block no-underline">
         <div
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseEnter={() => window.innerWidth >= 1024 && setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className={`flex flex-col items-center justify-center text-center gap-[0.8rem] relative z-[1] w-fit mx-auto ${isCursorHidden ? "md:cursor-none" : ""
+          className={`flex flex-col items-center justify-center text-center gap-[0.8rem] relative z-[1] w-fit mx-auto ${isCursorHidden ? "lg:cursor-none" : ""
             }`}
         >
           <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] flex items-center justify-center text-center gap-[0.5rem] lg:gap-[0.8rem] max-w-[14ch] md:max-w-[18ch] lg:max-w-none">
             Awards
-            <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.34rem] lg:translate-y-[0.38rem]">
+            <span className="font-minecraft text-[#FF5154] font-normal inline-block translate-y-[0.1rem] lg:translate-y-[0.38rem]">
               &
             </span>
             Achievements
