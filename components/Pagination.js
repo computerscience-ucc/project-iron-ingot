@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "@geist-ui/icons";
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, className }) => {
   const isLastPage = currentPage === totalPages || totalPages === 0;
 
   const renderPageNumbers = () => {
@@ -40,7 +40,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="flex items-center justify-center mt-12 gap-3 pb-8">
+    <div className={`flex items-center mt-12 gap-3 pb-8 ${className || "justify-center"}`}>
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
