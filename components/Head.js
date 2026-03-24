@@ -19,9 +19,16 @@ const Head = ({
   const defaultDescription = cfg.siteDescription || "Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects.";
   const defaultKeywords = cfg.siteKeywords?.join(", ") || "BSCS, Computer Science, Information Board, Student Portal, Academic Blog, Thesis Projects, University Updates, Ingo, UCC, University of Caloocan City";
 
-  // Vercel auto-provides NEXT_PUBLIC_VERCEL_URL which is essential for OG images in preview deployments
-  const envUrl = process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "https://uccingo.tech";
-  const siteUrl = cfg.siteUrl || envUrl;
+  // Vercel server-side variables for guaranteed absolute OG URLs during SSG/SSR
+  const getBaseUrl = () => {
+    if (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
+    if (process.env.NEXT_PUBLIC_VERCEL_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+    return "https://uccingo.tech";
+  };
+  
+  const siteUrl = cfg.siteUrl || getBaseUrl();
 
   const defaultOgImage = cfg.ogImage || "/branding/og-image.png";
   const faviconUrl = cfg.logo || "/branding/logo.svg";
