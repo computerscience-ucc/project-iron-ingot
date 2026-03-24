@@ -24,8 +24,8 @@ const footerLinks = {
 
 const socialLinks = [
   { icon: SiFacebook, label: "Facebook", href: "https://www.facebook.com/UCCBSCS2022" },
-  { icon: SiDiscord, label: "Discord", href: "#" },
-  { icon: SiGithub, label: "Github", href: "#" },
+  { icon: SiDiscord, label: "Discord", href: "https://discord.com/invite/krnGXBmp3h" },
+  { icon: SiGithub, label: "Github", href: "https://github.com/computerscience-ucc/project-iron-ingot" },
 ];
 
 export default function Footer() {
