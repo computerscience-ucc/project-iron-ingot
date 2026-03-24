@@ -36,7 +36,7 @@ export default function Home() {
       />
       <SectionStripe className="mt-[5rem]" />
       <Council />
-      <SectionStripe className="mt-[4rem]" />
+      <SectionStripe className="mt-[2rem] md:mt-[3rem]" />
       <FAQ />
       <HappyCodingSection />
     </>

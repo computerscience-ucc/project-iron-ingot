@@ -217,7 +217,7 @@ export default function GalleryPage() {
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] md:gap-[4rem] min-h-full">
           {/* Sidebar */}
           <aside className="flex flex-col w-full relative lg:sticky lg:top-[4rem] h-fit pr-4 md:pr-0 pb-4 md:pb-0 z-20">
-            <h1 className="text-[2rem] text-[#ffffff] font-semibold mb-4 tracking-normal leading-tight">
+            <h1 className="text-[1.6rem] md:text-[1.8rem] lg:text-[2rem] text-[#ffffff] font-semibold mb-4 tracking-normal leading-tight">
               Gallery of Projects
             </h1>
             <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal mb-4 md:mb-10 max-w-[95%]">

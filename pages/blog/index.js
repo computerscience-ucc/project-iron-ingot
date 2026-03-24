@@ -53,7 +53,7 @@ export default function BlogPage() {
         className="max-w-[1200px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
       >
         <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">
-          <h1 className="text-[2rem] text-[#ffffff] font-semibold tracking-normal">
+          <h1 className="text-[1.6rem] md:text-[1.8rem] lg:text-[2rem] text-[#ffffff] font-semibold tracking-normal">
             Blog
           </h1>
           <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal max-w-[600px]">

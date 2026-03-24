@@ -177,7 +177,7 @@ const BulletinPage = ({ bulletinPost }) => {
             </Link>
           </div>
 
-          <h1 className="text-[2rem] text-[#ffffff] font-semibold tracking-normal leading-tight mb-[0.5rem]">
+          <h1 className="text-[1.25rem] md:text-[1.5rem] lg:text-[2rem] text-[#ffffff] font-semibold tracking-normal leading-tight mb-[0.5rem]">
             {post?.title}
           </h1>
 
