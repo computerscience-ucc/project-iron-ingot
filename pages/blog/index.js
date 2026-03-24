@@ -87,7 +87,7 @@ export default function BlogPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] md:gap-[4rem] min-h-full">
           {/* Sidebar */}
-          <aside className="flex flex-col w-full relative lg:sticky lg:top-[4rem] h-fit pr-4 md:pr-0 pb-10 md:pb-0 z-20">
+          <aside className="flex flex-col w-full relative lg:sticky lg:top-[4rem] h-fit pr-4 md:pr-0 pb-4 md:pb-0 z-20">
             <h1 className="text-[2rem] text-[#ffffff] font-semibold mb-4 tracking-normal">
               Blog
             </h1>
@@ -97,8 +97,8 @@ export default function BlogPage() {
 
             <div className="flex flex-col gap-[1.5rem]">
               {/* Mobile / Tablet Filter + Sort */}
-              <div className="lg:hidden flex flex-col gap-3">
-                <div className="flex items-center justify-between gap-4">
+              <div className="lg:hidden flex flex-col gap-5">
+                <div className="flex flex-col items-start gap-4">
                   <div className="flex flex-wrap items-center gap-2">
                     {years.map((y) => {
                       const isActive = selectedYear === y;
@@ -117,7 +117,7 @@ export default function BlogPage() {
                     })}
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0 relative z-10">
+                  <div className="flex items-center gap-1.5 relative z-10 pl-1">
                     <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
                       Sort by:
                     </span>
@@ -195,7 +195,7 @@ export default function BlogPage() {
 
           {/* Main Content Area */}
           <section className="flex flex-col w-full relative min-h-full">
-            <div className="lg:hidden mb-[1.5rem]" />
+            <div className="hidden lg:block lg:mb-[1.5rem]" />
 
             {/* Desktop Sort By Container */}
             <div className="hidden lg:flex items-center justify-end mb-[1rem] w-full relative z-30">
