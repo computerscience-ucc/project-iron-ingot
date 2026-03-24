@@ -1063,7 +1063,7 @@ const ChatBot = () => {
                         ? flowInputNode.placeholder
                         : "Or type a question..."
                   }
-                  className={`flex-1 bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] rounded-lg px-3 py-2.5 md:px-4 md:py-[10px] outline-none placeholder-gray-500 transition-colors resize-none overflow-y-auto leading-relaxed font-normal ${cooldown ? "opacity-50 cursor-not-allowed" : ""
+                  className={`flex-1 bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] rounded-lg px-3 py-2.5 md:px-4 md:py-[10px] outline-none placeholder-gray-500 transition-colors resize-none overflow-y-auto leading-relaxed font-normal custom-scrollbar ${cooldown ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                   style={{ minHeight: "44px", maxHeight: "128px" }}
                   disabled={isLoading || cooldown > 0}

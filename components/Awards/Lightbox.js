@@ -96,7 +96,7 @@ const Lightbox = ({ award, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[200] flex justify-center bg-black/92 backdrop-blur-md overflow-y-auto p-4 sm:p-10"
+      className="fixed inset-0 z-[200] flex justify-center bg-black/92 backdrop-blur-md overflow-y-auto p-4 sm:p-10 custom-scrollbar"
       onClick={onClose}
       data-lenis-prevent
     >
@@ -183,7 +183,7 @@ const Lightbox = ({ award, onClose }) => {
         {/* thumb strip */}
         {images.length > 1 && (
           <div 
-            className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#1A1A1A] border-t border-[#5B5B5B] border-dashed shrink-0"
+            className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#1A1A1A] border-t border-[#5B5B5B] border-dashed shrink-0 custom-scrollbar"
             data-lenis-prevent
           >
             {images.map((img, i) => (
