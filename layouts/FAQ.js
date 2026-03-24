@@ -14,9 +14,9 @@ const faqs = [
       "You can submit your project through our official Ingo submission form. Selected projects will be featured in the 'Latest on Ingo' section and highlighted during our monthly assemblies.",
   },
   {
-    question: "Do you provide training for competitions?",
+    question: "What kind of projects can I work on?",
     answer:
-      "Yes! We regularly hold training blocks and mock hackathons for students interested in joining external competitions like Hack4Gov. Reach out to the executive committee for the latest schedule.",
+      "You can work on anything from web apps and mobile apps to AI, games, or even hardware-related projects. As long as it’s tech-related, it’s good.",
   },
   {
     question: "Is the content beginner-friendly?",
