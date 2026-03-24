@@ -147,9 +147,7 @@ const Home = () => {
               <figure className="md:mb-4 text-red-600">
                 <AiOutlineInfoCircle size={40} />
               </figure>
-              <p className="text-xl text-left">
-                Online Public Information Board
-              </p>
+              <p className="text-xl text-left">Public Information Board</p>
               <p className="opacity-50">
                 See what is happening in the BSCS Program and learn more about
                 the people who are working there
