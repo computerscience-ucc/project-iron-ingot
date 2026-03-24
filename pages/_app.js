@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ChatBot from "../components/ChatBot";
 import SearchModal from "../components/SearchModal";
@@ -45,10 +45,14 @@ function AppInner({ Component, pageProps }) {
   const [showBanner, setShowBanner] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerHovered, setHeaderHovered] = useState(false);
+  const headerHoverTimer = useRef(null);
   const [yPos, setYPos] = useState(0);
   const { scrollY } = useScroll();
 
+  const [isAtTop, setIsAtTop] = useState(true);
   useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsAtTop(latest < 50);
     const previous = scrollY.getPrevious();
     // Hide immediately when scrolling down
     // Show back immediately when scrolling up
@@ -103,7 +107,7 @@ function AppInner({ Component, pageProps }) {
 
   return (
     <>
-      <div className="app-root overflow-x-hidden">
+      <div className="app-root overflow-x-clip">
         {/* Mobile Backdrop Overlay - Dim background when menu is open */}
         <AnimatePresence>
           {menuOpen && (
@@ -163,11 +167,20 @@ function AppInner({ Component, pageProps }) {
         </Head>
 
         <motion.header
-          className="w-full relative z-[50]"
+          className={`w-full transition-colors duration-300 ${
+            (isAtTop && !menuOpen && !headerHovered) ? "z-[10]" : "z-[100]"
+          }`}
+          onMouseEnter={() => {
+            if (headerHoverTimer.current) clearTimeout(headerHoverTimer.current);
+            setHeaderHovered(true);
+          }}
+          onMouseLeave={() => {
+            headerHoverTimer.current = setTimeout(() => setHeaderHovered(false), 400);
+          }}
           style={{
             position: "sticky",
             top: 0,
-            background: "var(--color-bg)",
+            background: (isAtTop && !menuOpen && !headerHovered) ? "transparent" : "var(--color-bg)",
           }}
           initial={{ y: 0 }}
           animate={{ y: yPos }}
@@ -265,7 +278,7 @@ function AppInner({ Component, pageProps }) {
                               )}
                             </NavigationMenuTrigger>
                           </Link>
-                          <NavigationMenuContent className="p-0 border-none bg-transparent shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[1px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+                          <NavigationMenuContent className="p-0 border-none shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[1px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 z-[150]">
                             <div className="relative pt-[10px] flex justify-center">
                               {/* SVG Pointer precisely above the card */}
                               <div className="absolute top-[1px] left-1/2 -translate-x-1/2 z-[51]">
@@ -353,7 +366,7 @@ function AppInner({ Component, pageProps }) {
                               )}
                             </NavigationMenuTrigger>
                           </Link>
-                          <NavigationMenuContent className="p-0 border-none bg-transparent shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[1px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+                          <NavigationMenuContent className="p-0 border-none shadow-none absolute top-full left-1/2 -translate-x-1/2 mt-[1px] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 z-[150]">
                             <div className="relative pt-[10px] flex justify-center">
                               {/* SVG Pointer precisely above the card */}
                               <div className="absolute top-[1px] left-1/2 -translate-x-1/2 z-[51]">
@@ -581,7 +594,7 @@ function AppInner({ Component, pageProps }) {
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                <div className="flex flex-col max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto px-[1.4rem] pt-4 pb-6 gap-4">
+                <div className="flex flex-col max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto px-[0.6rem] pt-4 pb-3 gap-4">
                   {/* Nav links section */}
                   <nav className="flex flex-col">
                     {navLinks.map((link) => {
@@ -590,7 +603,7 @@ function AppInner({ Component, pageProps }) {
                         <Link
                           key={link.href}
                           href={link.href}
-                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[1.1rem] ${
+                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${
                             isActive
                               ? "active text-[#FF5154]"
                               : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
@@ -649,6 +662,11 @@ function AppInner({ Component, pageProps }) {
                         <SiGithub size={24} />
                       </a>
                     </div>
+                  </div>
+
+                  {/* Drawer handle visual */}
+                  <div className="flex justify-center mt-1 pb-3">
+                    <div className="w-16 h-[3px] bg-[#333333] rounded-full"></div>
                   </div>
                 </div>
               </motion.div>
