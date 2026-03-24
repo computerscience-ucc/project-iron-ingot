@@ -10,6 +10,8 @@ import SearchModal from "../components/SearchModal";
 import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
 import SectionStripe from "@/components/SectionStripe";
 import Footer from "@/layouts/Footer";
+import SmoothScroll from "@/components/SmoothScroll";
+
 
 import { Search, X } from "@geist-ui/icons";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
@@ -722,6 +724,7 @@ function AppInner({ Component, pageProps }) {
 export default function App(props) {
   return (
     <PrefetcherWrapper>
+      <SmoothScroll />
       <AppInner {...props} />
     </PrefetcherWrapper>
   );
