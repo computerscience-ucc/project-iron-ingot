@@ -593,19 +593,30 @@ function AppInner({ Component, pageProps }) {
                 <div className="flex flex-col max-w-[var(--container-max-width)] w-[var(--container-width)] mx-auto px-[0.6rem] pt-4 pb-3 gap-4">
                   {/* Nav links section */}
                   <nav className="flex flex-col">
-                    {navLinks.map((link) => {
+                    {navLinks.map((link, index) => {
                       const isActive = router.pathname === link.href || router.pathname.startsWith(link.href + "/");
                       return (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${isActive
-                            ? "active text-[#FF5154]"
-                            : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
-                            }`}
-                        >
-                          {link.label}
-                        </Link>
+                        <div key={link.href} className="overflow-hidden">
+                          <motion.div
+                            initial={{ y: "110%" }}
+                            animate={{ y: 0 }}
+                            transition={{
+                              duration: 0.95,
+                              ease: [0.22, 1, 0.36, 1],
+                              delay: index * 0.06,
+                            }}
+                          >
+                            <Link
+                              href={link.href}
+                              className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${isActive
+                                ? "active text-[#FF5154]"
+                                : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
+                                }`}
+                            >
+                              {link.label}
+                            </Link>
+                          </motion.div>
+                        </div>
                       );
                     })}
                   </nav>

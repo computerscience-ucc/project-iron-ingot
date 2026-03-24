@@ -150,36 +150,43 @@ const PrefetcherWrapper = ({ children }) => {
           <motion.main
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-[#0A0C10] flex justify-center items-center "
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-2"
+            style={{ backgroundColor: "#181818" }}
           >
-            <p className="text-4xl relative font-extrabold text-transparent select-none">
+            {/* Brand label */}
+            <div className="overflow-hidden">
               <motion.span
-                animate={{
-                  backgroundPosition: [
-                    "0% 0%",
-                    "100% 0%",
-                    "100% 100%",
-                    "0% 100%",
-                    "0% 0%",
-                  ],
-                }}
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
                 transition={{
-                  duration: 10,
-                  ease: "linear",
+                  duration: 0.95,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="block font-sans font-semibold text-[1.1rem] tracking-wide text-[#EFEFEF] select-none"
+              >
+                uccingo
+              </motion.span>
+            </div>
+
+            {/* Loading bar track */}
+            <div className="relative w-[180px] h-[3px] rounded-full overflow-hidden bg-[#2A2A2A]">
+              {/* Fill bar */}
+              <motion.div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, #FF3538, #FF6B6B, #FF3538)",
+                  boxShadow: "0 0 12px rgba(255, 53, 56, 0.4)",
+                }}
+                initial={{ x: "-100%" }}
+                animate={{ x: "100%" }}
+                transition={{
+                  duration: 1.4,
+                  ease: [0.45, 0, 0.55, 1],
                   repeat: Infinity,
                 }}
-                style={{
-                  backgroundSize: "1000px 1000px",
-
-                  backgroundColor: "rgb(6, 182, 212)",
-                  backgroundImage:
-                    "radial-gradient(at 0% 100%, rgb(244, 63, 94) 0, transparent 50%), radial-gradient(at 90% 0%, rgb(16, 185, 129) 0, transparent 50%), radial-gradient(at 100% 100%, rgb(217, 70, 239) 0, transparent 50%), radial-gradient(at 0% 0%, rgb(249, 115, 22) 0, transparent 58%)",
-                }}
-                className="bg-clip-text bg-transparent"
-              >
-                ingo
-              </motion.span>
-            </p>
+              />
+            </div>
           </motion.main>
         )}
       </AnimatePresence>
