@@ -66,7 +66,7 @@ function AppInner({ Component, pageProps }) {
   const [isHeroSection, setIsHeroSection] = useState(true);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsAtTop(latest < 50);
+    setIsAtTop(latest < 5);
     setIsHeroSection(latest < 800);
     const previous = scrollY.getPrevious();
     // Hide immediately when scrolling down
@@ -183,11 +183,7 @@ function AppInner({ Component, pageProps }) {
 
         <motion.header
           className={`w-full transition-colors duration-300 ${
-            (isAtTop || (router.pathname === "/" && isHeroSection)) &&
-            !menuOpen &&
-            !headerHovered
-              ? "z-[10]"
-              : "z-[100]"
+            isAtTop && !menuOpen && !headerHovered ? "z-[10]" : "z-[100]"
           }`}
           onMouseEnter={() => {
             if (headerHoverTimer.current)
