@@ -131,7 +131,7 @@ const AboutPage = () => {
       >
         {/* Header */}
         <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">
-          <h1 className="text-[2rem] text-[#ffffff] font-semibold tracking-normal">
+          <h1 className="text-[1.6rem] md:text-[1.8rem] lg:text-[2rem] text-[#ffffff] font-semibold tracking-normal">
             About
           </h1>
           <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal max-w-[600px]">
@@ -282,7 +282,7 @@ const AboutPage = () => {
                   <div className="flex flex-col xl:flex-row gap-[4rem] xl:gap-[6rem] w-full items-start justify-start">
                     {/* Adviser */}
                     <div className="flex flex-col w-full xl:w-auto">
-                      <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+                      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
                         Adviser
                       </h3>
                       <OfficerCard
@@ -295,7 +295,7 @@ const AboutPage = () => {
 
                     {/* Executive */}
                     <div className="flex flex-col w-full xl:w-auto">
-                      <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+                      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
                         Executive
                       </h3>
                       <div className="flex gap-[1.5rem] flex-wrap xl:flex-nowrap w-full">
@@ -315,7 +315,7 @@ const AboutPage = () => {
                   {/* Officers */}
                   {council.officers && council.officers.length > 0 && (
                     <div className="flex flex-col mt-12">
-                      <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+                      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
                         Officers
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
@@ -340,7 +340,7 @@ const AboutPage = () => {
                   {/* Class Presidents */}
                   {council.classPresidents && council.classPresidents.length > 0 && (
                     <div className="flex flex-col mt-12">
-                      <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+                      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
                         Class Presidents
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">

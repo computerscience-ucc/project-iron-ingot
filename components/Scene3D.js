@@ -8,8 +8,10 @@ const W = 4,
   D = 4;
 
 const BASE_ZOOM = 110;
-const BASE_WIDTH = 600;
-const BASE_HEIGHT = 800;
+
+// Approximate projected scene dimensions in world units (isometric 45° view)
+const SCENE_WIDTH = 6.5;
+const SCENE_HEIGHT = 7;
 
 /* ── Responsive zoom ────────────────────────────── */
 
@@ -17,10 +19,10 @@ function ResponsiveZoom() {
   const { camera, size } = useThree();
 
   useEffect(() => {
-    const scaleW = size.width / BASE_WIDTH;
-    const scaleH = size.height / BASE_HEIGHT;
-    const scale = Math.min(scaleW, scaleH, 1);
-    camera.zoom = BASE_ZOOM * scale;
+    // Fit the scene within the canvas, capped at BASE_ZOOM for large screens
+    const zoomByWidth = size.width / SCENE_WIDTH;
+    const zoomByHeight = size.height / SCENE_HEIGHT;
+    camera.zoom = Math.min(zoomByWidth, zoomByHeight, BASE_ZOOM);
     camera.updateProjectionMatrix();
   }, [size.width, size.height, camera]);
 
@@ -133,7 +135,7 @@ function useMarquee(text, active, sides) {
   );
 }
 
-/* ── E-shaped box ────────────────────────────────── */
+/* ── CS-logo box ────────────────────────────────── */
 
 const EBOX_SIDES = [
   { w: W, o: 0 },
@@ -308,33 +310,9 @@ function BoxMesh({
 
 /* ── Exported scene wrapper ──────────────────────── */
 
-function SceneContent({ activeIndex, scrollYProgress }) {
-  const groupRef = useRef();
-
-  useFrame(() => {
-    if (groupRef.current && scrollYProgress) {
-      const p = scrollYProgress.get();
-      // Add a subtle smooth rotation/tilt based on scroll
-      // Y rotation follows scroll progress
-      // X tilt peaks at the middle of the scroll
-      const targetRotY = (p - 0.5) * Math.PI * 0.15;
-      const targetRotX = (p - 0.5) * 0.1;
-
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(
-        groupRef.current.rotation.y,
-        targetRotY,
-        0.1,
-      );
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        targetRotX,
-        0.1,
-      );
-    }
-  });
-
+function SceneContent({ activeIndex }) {
   return (
-    <group ref={groupRef}>
+    <group>
       <ResponsiveZoom />
       <EBoxMesh position={[0, 1.3, 0]} active={activeIndex === 0} />
       <BoxMesh position={[0, 0, 0]} active={activeIndex === 1} />

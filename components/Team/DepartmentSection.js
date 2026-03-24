@@ -12,7 +12,7 @@ const DepartmentSection = ({ dept, onPersonClick }) => {
       className="flex flex-col w-full"
     >
       {/* dept header */}
-      <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
         {dept.departmentName}
       </h3>
 

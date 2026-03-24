@@ -1,4 +1,4 @@
-﻿import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Breadcrumbs,
   Chip,
@@ -833,7 +833,7 @@ const AwardPage = ({
 
             {/* Title with Back Link */}
             <Link href="/awards" scroll={false}>
-              <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold flex flex-col md:flex-row gap-2 cursor-pointer transition hover:-translate-x-3">
+              <h1 className="text-2xl md:text-3xl lg:text-6xl font-bold flex flex-col md:flex-row gap-2 cursor-pointer transition hover:-translate-x-3">
                 <span className="flex items-center">
                   <CgChevronLeft size={30} />
                 </span>
