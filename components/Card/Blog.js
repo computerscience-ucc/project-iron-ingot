@@ -6,7 +6,7 @@ import Image from "next/image";
 const BLOG_PLACEHOLDER_COUNT = 6;
 
 const BlogCard = ({ blog, index }) => {
-  const { _id, _createdAt, authors, title, tags, slug, headerImage, owners } = blog;
+  const { _createdAt, authors, title, tags, slug, headerImage, owners } = blog;
 
   const placeholderImage = `/placeholders/blog/${(index % BLOG_PLACEHOLDER_COUNT) + 1}.png`;
 

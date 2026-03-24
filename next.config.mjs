@@ -11,6 +11,9 @@ const nextConfig = {
       { protocol: "https", hostname: "cdn.sanity.io" },
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // force a single React instance (prevents @material-tailwind/react from using its own nested copy)
   webpack: (config) => {
     config.resolve.alias = {

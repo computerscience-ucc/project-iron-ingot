@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Head from "../../components/Head";
-import Page_MIS from "./page/mis";
-import Page_Team from "./page/team";
+import Page_MIS from "../../components/About/SubPages/mis";
+import Page_Team from "../../components/About/SubPages/team";
 import { _Transition_Page } from "../../lib/animations";
 import { useEffect, useState } from "react";
 import { client } from "../../lib/sanity";

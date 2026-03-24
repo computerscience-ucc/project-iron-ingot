@@ -7,7 +7,6 @@ const GALLERY_PLACEHOLDER_COUNT = 5;
 
 const GalleryCard = ({ project, index = 0 }) => {
   const {
-    _id,
     _createdAt,
     projectDate,
     title,
