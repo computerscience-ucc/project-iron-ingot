@@ -45,6 +45,13 @@ export default function HeroCarousel() {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

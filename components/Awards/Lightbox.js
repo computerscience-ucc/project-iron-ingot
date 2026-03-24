@@ -76,6 +76,14 @@ const Lightbox = ({ award, onClose }) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, go]);
 
+  // body lock
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   const slideVariants = {
     enter: (d) => ({ x: d > 0 ? 50 : -50, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -90,6 +98,7 @@ const Lightbox = ({ award, onClose }) => {
       transition={{ duration: 0.18 }}
       className="fixed inset-0 z-[200] flex justify-center bg-black/92 backdrop-blur-md overflow-y-auto p-4 sm:p-10"
       onClick={onClose}
+      data-lenis-prevent
     >
       <motion.div
         initial={{ scale: 0.94, opacity: 0 }}
@@ -173,7 +182,10 @@ const Lightbox = ({ award, onClose }) => {
 
         {/* thumb strip */}
         {images.length > 1 && (
-          <div className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#1A1A1A] border-t border-[#5B5B5B] border-dashed shrink-0">
+          <div 
+            className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#1A1A1A] border-t border-[#5B5B5B] border-dashed shrink-0"
+            data-lenis-prevent
+          >
             {images.map((img, i) => (
               <button
                 key={i}
@@ -198,9 +210,9 @@ const Lightbox = ({ award, onClose }) => {
         {/* info */}
         <div className="px-4 py-4 sm:px-5 sm:py-6 border-t border-[#5B5B5B] border-dashed shrink-0">
           <div className="mb-3 sm:mb-4">
-            <h2 className="text-[1.1rem] sm:text-[1.6rem] font-semibold text-white tracking-tight leading-tight mb-2 sm:mb-3">{award.title}</h2>
+            <h2 className="text-[1rem] sm:text-[1.25rem] font-semibold text-white tracking-tight leading-tight mb-2 sm:mb-3">{award.title}</h2>
             {award.description && (
-              <p className="text-[#EFEFEF] text-[0.875rem] sm:text-[1rem] leading-relaxed font-normal whitespace-pre-wrap">
+              <p className="text-[#EFEFEF] text-[0.8rem] sm:text-[0.9rem] leading-relaxed font-normal whitespace-pre-wrap">
                 {formatDescription(award.description)}
               </p>
             )}
@@ -208,22 +220,22 @@ const Lightbox = ({ award, onClose }) => {
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {award.category && (
-              <span className="px-1.5 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              <span className="px-1.5 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.65rem] sm:text-[0.75rem] font-sans font-medium uppercase tracking-wide">
                 {award.category}
               </span>
             )}
             {award.badges && award.badges.length > 0 && award.badges.map((b, i) => (
-              <span key={i} className="px-1.5 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              <span key={i} className="px-1.5 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.65rem] sm:text-[0.75rem] font-sans font-medium uppercase tracking-wide">
                 {b}
               </span>
             ))}
             {award.academicYear && (
-              <span className="px-1.5 py-0.5 bg-[#F02E31] text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium tracking-wide">
+              <span className="px-1.5 py-0.5 bg-[#F02E31] text-[#EFEFEF] text-[0.65rem] sm:text-[0.75rem] font-sans font-medium tracking-wide">
                 {award.academicYear}
               </span>
             )}
             {award.tags && award.tags.length > 0 && award.tags.map((t, i) => (
-              <span key={i} className="px-1.5 py-0.5 bg-[#121212] border border-[#5B5B5B] border-dashed text-[#EFEFEF] text-[0.7rem] sm:text-[0.8rem] font-sans font-medium uppercase tracking-wide">
+              <span key={i} className="px-1.5 py-0.5 bg-[#121212] border border-[#5B5B5B] border-dashed text-[#EFEFEF] text-[0.65rem] sm:text-[0.75rem] font-sans font-medium uppercase tracking-wide">
                 {t}
               </span>
             ))}

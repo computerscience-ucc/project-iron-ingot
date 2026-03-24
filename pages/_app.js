@@ -11,10 +11,13 @@ import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
 import SectionStripe from "@/components/SectionStripe";
 import Footer from "@/layouts/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
-
-
 import { Search, X } from "@geist-ui/icons";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "motion/react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -36,15 +39,22 @@ function AppInner({ Component, pageProps }) {
   const { blogs, thesis } = usePrefetcher();
 
   const dynamicAcademicYears = useMemo(() => {
-    return [...new Set((thesis || []).map(t => t.academicYear).filter(Boolean))].sort().reverse().slice(0, 5);
+    return [
+      ...new Set((thesis || []).map((t) => t.academicYear).filter(Boolean)),
+    ]
+      .sort()
+      .reverse()
+      .slice(0, 5);
   }, [thesis]);
 
   const dynamicCategories = useMemo(() => {
-    return [...new Set((thesis || []).flatMap(t => t.tags || []).filter(Boolean))].slice(0, 5);
+    return [
+      ...new Set((thesis || []).flatMap((t) => t.tags || []).filter(Boolean)),
+    ].slice(0, 5);
   }, [thesis]);
   const [theme, setTheme] = useState("dark");
   const [showGrid, setShowGrid] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
+  const [showBanner, setShowBanner] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [headerHovered, setHeaderHovered] = useState(false);
@@ -172,19 +182,31 @@ function AppInner({ Component, pageProps }) {
         </Head>
 
         <motion.header
-          className={`w-full transition-colors duration-300 ${((isAtTop || (router.pathname === "/" && isHeroSection)) && !menuOpen && !headerHovered) ? "z-[10]" : "z-[100]"
+          className={`w-full transition-colors duration-300 ${
+            (isAtTop || (router.pathname === "/" && isHeroSection)) &&
+            !menuOpen &&
+            !headerHovered
+              ? "z-[10]"
+              : "z-[100]"
           }`}
           onMouseEnter={() => {
-            if (headerHoverTimer.current) clearTimeout(headerHoverTimer.current);
+            if (headerHoverTimer.current)
+              clearTimeout(headerHoverTimer.current);
             setHeaderHovered(true);
           }}
           onMouseLeave={() => {
-            headerHoverTimer.current = setTimeout(() => setHeaderHovered(false), 400);
+            headerHoverTimer.current = setTimeout(
+              () => setHeaderHovered(false),
+              400,
+            );
           }}
           style={{
             position: "sticky",
             top: 0,
-            background: (isAtTop && !menuOpen && !headerHovered) ? "transparent" : "var(--color-bg)",
+            background:
+              isAtTop && !menuOpen && !headerHovered
+                ? "transparent"
+                : "var(--color-bg)",
           }}
           initial={{ y: 0 }}
           animate={{ y: yPos }}
@@ -219,7 +241,9 @@ function AppInner({ Component, pageProps }) {
             >
               <motion.span
                 className="block w-5 h-[1.5px] bg-[var(--color-text)] origin-center"
-                animate={menuOpen ? { rotate: 45, y: 6.5 } : { rotate: 0, y: 0 }}
+                animate={
+                  menuOpen ? { rotate: 45, y: 6.5 } : { rotate: 0, y: 0 }
+                }
                 transition={{ duration: 0.25 }}
               />
               <motion.span
@@ -229,7 +253,9 @@ function AppInner({ Component, pageProps }) {
               />
               <motion.span
                 className="block w-5 h-[1.5px] bg-[var(--color-text)] origin-center"
-                animate={menuOpen ? { rotate: -45, y: -6.5 } : { rotate: 0, y: 0 }}
+                animate={
+                  menuOpen ? { rotate: -45, y: -6.5 } : { rotate: 0, y: 0 }
+                }
                 transition={{ duration: 0.25 }}
               />
             </button>
@@ -242,10 +268,13 @@ function AppInner({ Component, pageProps }) {
               >
                 <NavigationMenuList className="gap-[2rem]">
                   {navLinks.map((link) => {
-                    const isActive = router.pathname === link.href || router.pathname.startsWith(link.href + "/");
-                    const linkClass = `nav-link flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent ${isActive
-                      ? "active text-[#FF5154]"
-                      : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
+                    const isActive =
+                      router.pathname === link.href ||
+                      router.pathname.startsWith(link.href + "/");
+                    const linkClass = `nav-link flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent ${
+                      isActive
+                        ? "active text-[#FF5154]"
+                        : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
                     }`;
 
                     if (link.label === "Blog") {
@@ -599,7 +628,9 @@ function AppInner({ Component, pageProps }) {
                   {/* Nav links section */}
                   <nav className="flex flex-col">
                     {navLinks.map((link, index) => {
-                      const isActive = router.pathname === link.href || router.pathname.startsWith(link.href + "/");
+                      const isActive =
+                        router.pathname === link.href ||
+                        router.pathname.startsWith(link.href + "/");
                       return (
                         <div key={link.href} className="overflow-hidden">
                           <motion.div
@@ -613,9 +644,10 @@ function AppInner({ Component, pageProps }) {
                           >
                             <Link
                               href={link.href}
-                              className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${isActive
-                                ? "active text-[#FF5154]"
-                                : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
+                              className={`w-fit flex items-center gap-[0.4rem] cursor-pointer transition-colors duration-200 bg-transparent hover:bg-transparent py-1 font-sans font-normal text-[0.95rem] ${
+                                isActive
+                                  ? "active text-[#FF5154]"
+                                  : "text-[var(--color-text-muted)] hover:text-[#FF5154]"
                               }`}
                             >
                               {link.label}
