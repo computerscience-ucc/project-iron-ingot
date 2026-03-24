@@ -17,6 +17,7 @@ const images = [
 export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [direction, setDirection] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const slideVariants = {
     initial: (dir) => ({
@@ -46,11 +47,12 @@ export default function HeroCarousel() {
   };
 
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       nextSlide();
     }, 3000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -74,7 +76,13 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative w-[calc(100%+1.5rem)] md:w-[calc(100%+3rem)] lg:w-full -mx-3 md:-mx-6 lg:mx-0 aspect-square bg-[#1D1D1D] rounded-[11.67px] flex flex-col items-center justify-end overflow-hidden group touch-none">
+    <div 
+      className="relative w-[calc(100%+1.5rem)] md:w-[calc(100%+3rem)] lg:w-full -mx-3 md:-mx-6 lg:mx-0 aspect-square bg-[#1D1D1D] rounded-[11.67px] flex flex-col items-center justify-end overflow-hidden group touch-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onPointerDown={() => setIsPaused(true)}
+      onPointerUp={() => setIsPaused(false)}
+    >
       {/* Image Carousel */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.div

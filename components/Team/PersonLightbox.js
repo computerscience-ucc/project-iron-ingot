@@ -34,13 +34,16 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
   const person = people[idx];
   const gradient = getGradient(person?.name);
 
-  const go = (d) => { setDir(d); setIdx((i) => (i + d + people.length) % people.length); };
+  const go = (d) => { 
+    setDir(d); 
+    setIdx((i) => (i + d + people.length) % people.length); 
+  };
 
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") { setDir(1);  setIdx((i) => (i + 1 + people.length) % people.length); }
-      if (e.key === "ArrowLeft")  { setDir(-1); setIdx((i) => (i - 1 + people.length) % people.length); }
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "ArrowLeft")  go(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -56,28 +59,34 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
 
   if (!person) return null;
 
+  const handleDragEnd = (e, { offset, velocity }) => {
+    const swipe = Math.abs(offset.x) * Math.abs(velocity.x);
+    if (offset.x < -50 || swipe > 3000) go(1);
+    else if (offset.x > 50 || swipe > 3000) go(-1);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/92 backdrop-blur-md p-4 overflow-y-auto custom-scrollbar"
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-sm touch-none"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.94, opacity: 0 }}
+        initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.94, opacity: 0 }}
+        exit={{ scale: 0.9, opacity: 0 }}
         transition={{ duration: 0.18, ease: "easeOut" }}
-        className="relative w-full max-w-lg bg-[#121212] border border-[#5B5B5B] border-dashed flex flex-col my-auto shadow-2xl"
+        className="relative w-full max-w-lg bg-[#121212] border border-[#333] shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Corner Markers */}
-        <div className="absolute top-0 left-0 w-2 h-2 bg-[#FF5154] z-50 transform -translate-x-[1px] -translate-y-[1px]" />
-        <div className="absolute top-0 right-0 w-2 h-2 bg-[#FF5154] z-50 transform translate-x-[1px] -translate-y-[1px]" />
-        <div className="absolute bottom-0 left-0 w-2 h-2 bg-[#FF5154] z-50 transform -translate-x-[1px] translate-y-[1px]" />
-        <div className="absolute bottom-0 right-0 w-2 h-2 bg-[#FF5154] z-50 transform translate-x-[1px] translate-y-[1px]" />
+        <div className="absolute top-0 left-0 w-2 h-2 bg-[#FF5154] z-40" />
+        <div className="absolute top-0 right-0 w-2 h-2 bg-[#FF5154] z-40" />
+        <div className="absolute bottom-0 left-0 w-2 h-2 bg-[#FF5154] z-40" />
+        <div className="absolute bottom-0 right-0 w-2 h-2 bg-[#FF5154] z-40" />
 
         {/* close */}
         <button
@@ -123,17 +132,22 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.22, ease: "easeInOut" }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                className="cursor-grab active:cursor-grabbing"
                 style={{ gridArea: "1 / 1" }}
               >
                 {person.photo ? (
                   <div className="w-full aspect-square overflow-hidden bg-black flex items-center justify-center relative border-b border-[#5B5B5B] border-dashed">
-                    <Image src={person.photo} alt={person.name} fill style={{ objectFit: "cover" }} sizes="100vw" priority />
+                    <Image src={person.photo} alt={person.name} fill style={{ objectFit: "cover" }} sizes="100vw" priority draggable={false} />
                   </div>
                 ) : (
                   <div
                     className={`w-full aspect-square flex items-center justify-center bg-gradient-to-br ${gradient} border-b border-[#5B5B5B] border-dashed`}
                   >
-                    <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || "?"}</span>
+                    <span className="text-9xl font-bold opacity-70 select-none">{person.name?.charAt(0) || "?"}</span>
                   </div>
                 )}
 
