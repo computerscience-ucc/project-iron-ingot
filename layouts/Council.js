@@ -122,13 +122,15 @@ export default function Council() {
         </section>
 
         {/* Officers Section */}
-        <section className="relative section-container px-0 md:px-12 lg:px-[6rem] mt-8 md:mt-12 lg:mt-[3.4rem] mb-6 md:mb-8 lg:mb-[2rem] font-sans">
+        <section className="relative section-container px-0 md:px-12 lg:mt-6 lg:px-[6rem] mt-8 md:mt-12 lg:mt-[3.4rem] mb-6 md:mb-8 lg:mb-[2rem] font-sans">
           <div className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-[6rem]">
             {/* Executive Column */}
             <div className="flex flex-col">
-              <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-4 md:mb-6 lg:mb-[2rem]">
-                Executive
-              </h3>
+              <div className="flex items-center mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
+                <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
+                  Executive
+                </h3>
+              </div>
               <div className="grid grid-cols-2 lg:flex gap-4 md:gap-6 lg:gap-[1.5rem]">
                 {executives.map((exec, idx) => (
                   <OfficerCard
@@ -144,18 +146,17 @@ export default function Council() {
 
             {/* Officers Column */}
             <div className="flex flex-col flex-1 overflow-hidden">
-              <div className="flex items-center justify-between mb-4 md:mb-6 lg:mb-[2rem]">
+              <div className="flex items-center justify-between mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
                 <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
                   Officers
                 </h3>
                 <div className="flex gap-2">
                   <Button
                     onClick={prev}
-                    className={`w-10 h-10 flex items-center justify-center rounded-[4px] border-none shadow-none ${
-                      !canScrollLeft
-                        ? "bg-[#333333] text-gray-600 cursor-not-allowed"
-                        : "bg-[#F02E31] text-white hover:bg-[#F02E31]/90"
-                    }`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-[4px] border-none shadow-none ${!canScrollLeft
+                      ? "bg-[#333333] text-gray-600 cursor-not-allowed"
+                      : "bg-[#F02E31] text-white hover:bg-[#F02E31]/90"
+                      }`}
                     disabled={!canScrollLeft}
                   >
                     <svg
@@ -173,11 +174,10 @@ export default function Council() {
                   </Button>
                   <Button
                     onClick={next}
-                    className={`w-10 h-10 flex items-center justify-center rounded-[4px] border-none shadow-none ${
-                      !canScrollRight
-                        ? "bg-[#333333] text-gray-600 cursor-not-allowed"
-                        : "bg-[#F02E31] text-white hover:bg-[#F02E31]/90"
-                    }`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-[4px] border-none shadow-none ${!canScrollRight
+                      ? "bg-[#333333] text-gray-600 cursor-not-allowed"
+                      : "bg-[#F02E31] text-white hover:bg-[#F02E31]/90"
+                      }`}
                     disabled={!canScrollRight}
                   >
                     <svg
