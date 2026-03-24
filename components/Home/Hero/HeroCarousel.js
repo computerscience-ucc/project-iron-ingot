@@ -7,10 +7,10 @@ import { ArrowLeft, ArrowRight } from "@geist-ui/icons";
 
 const images = [
   "/samples/team2.png",
+  "/samples/team3.png",
+  "/samples/team1.png",
   "/samples/disk.png",
   "/samples/disk2.png",
-  "/samples/team1.png",
-  "/samples/team3.png",
   "/samples/team4.png",
 ];
 
