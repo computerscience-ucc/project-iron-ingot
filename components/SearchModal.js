@@ -96,7 +96,7 @@ const SearchModal = ({ isOpen, onClose }) => {
             </div>
 
             {/* Results */}
-            <div className="max-h-[60vh] overflow-y-auto">
+            <div className="max-h-[60vh] overflow-y-auto" data-lenis-prevent>
               {results.length > 0 && (
                 <div className="">
                   {results.map((item, i) => (
