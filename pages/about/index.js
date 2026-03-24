@@ -413,7 +413,7 @@ const AboutPage = () => {
                       <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
                         Officers
                       </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
+                      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
                         {council.officers.map((officer, idx) => (
                           <OfficerCard
                             key={idx}
@@ -445,7 +445,7 @@ const AboutPage = () => {
                         <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
                           Class Presidents
                         </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
                           {council.classPresidents.map((cp, idx) => (
                             <OfficerCard
                               key={idx}

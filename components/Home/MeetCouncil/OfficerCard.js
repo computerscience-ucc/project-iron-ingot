@@ -1,6 +1,15 @@
 import Image from "next/image";
 
-export default function OfficerCard({ name, role, photo, className, imageClassName, onClick }) {
+export default function OfficerCard({ 
+  name, 
+  role, 
+  photo, 
+  className, 
+  imageClassName, 
+  nameClassName,
+  roleClassName,
+  onClick 
+}) {
   return (
     <div
       className={`flex flex-col ${className || "min-w-[8.5rem] w-[8.5rem] md:min-w-[11.5rem] md:w-[11.5rem] lg:min-w-[25rem] lg:w-[25rem]"} ${onClick ? "cursor-pointer group" : ""}`}
@@ -23,10 +32,10 @@ export default function OfficerCard({ name, role, photo, className, imageClassNa
       </div>
 
       <div className="flex flex-col items-start gap-0.5 md:gap-1">
-        <h4 className="text-base md:text-lg lg:text-[1.25rem] font-semibold text-white tracking-wide leading-[1.2] text-left">
+        <h4 className={`font-semibold text-white tracking-wide leading-[1.2] text-left ${nameClassName || "text-base md:text-lg lg:text-[1.15rem]"}`}>
           {name}
         </h4>
-        <p className="text-[#8C8C8C] text-[0.8rem] md:text-sm lg:text-[0.9rem] leading-relaxed font-normal text-left">
+        <p className={`text-[#8C8C8C] leading-relaxed font-normal text-left ${roleClassName || "text-[0.8rem] md:text-sm lg:text-[0.9rem]"}`}>
           {role}
         </p>
       </div>
