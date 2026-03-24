@@ -3,8 +3,11 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import Image from "next/image";
 
-const GalleryCard = ({ project }) => {
+const GALLERY_PLACEHOLDER_COUNT = 5;
+
+const GalleryCard = ({ project, index = 0 }) => {
   const {
+    _id,
     _createdAt,
     projectDate,
     title,
@@ -15,6 +18,8 @@ const GalleryCard = ({ project }) => {
     personName,
     headerImage,
   } = project;
+
+  const placeholderImage = `/placeholders/gallery/${(index % GALLERY_PLACEHOLDER_COUNT) + 1}.png`;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,20 +57,13 @@ const GalleryCard = ({ project }) => {
             sizes="(max-width: 1024px) 100vw, 300px"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-[#333333]">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
-          </div>
+          <Image
+            src={placeholderImage}
+            alt="Project Placeholder"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 1024px) 100vw, 300px"
+          />
         )}
       </div>
 

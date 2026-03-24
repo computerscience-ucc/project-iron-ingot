@@ -55,7 +55,7 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
       articleAuthor: `By ${blog?.authors?.[0]?.fullName?.firstName || "Ingo"} ${blog?.authors?.[0]?.fullName?.lastName || ""} on ${formatDate(blog?._createdAt) || "Jul 29, 2022"}`,
       articleTags: blog?.tags?.slice(0, 3) || ["COMPUTER NETWORKS"],
       articleBg: "bg-[#242424]",
-      articleImage: null,
+      articleImage: blog?.headerImage || null,
     },
     {
       id: 2,
@@ -89,7 +89,7 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
       articleAuthor: `By ${bulletin?.authors?.[0]?.fullName?.firstName || "Ingo"} ${bulletin?.authors?.[0]?.fullName?.lastName || ""} on ${formatDate(bulletin?._createdAt) || "Aug 05, 2024"}`,
       articleTags: bulletin?.tags?.slice(0, 3) || ["RESUMPTION OF CLASSES"],
       articleBg: "bg-[#242424]",
-      articleImage: null,
+      articleImage: bulletin?.headerImage || null,
     },
   ];
 
@@ -136,6 +136,7 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
                   <Link href={row.articleHref} className="contents">
                     <ArticleCard
                       row={row}
+                      cardIndex={row.id}
                       cardBaseClass={cardBaseClass}
                       borderClass={`border-x border-b ${idx === rows.length - 1 ? "" : "lg:border-b-0"}`}
                       setHoveredCard={setHoveredCard}
@@ -169,6 +170,7 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
                   <Link href={row.articleHref} className="contents">
                     <ArticleCard
                       row={row}
+                      cardIndex={row.id}
                       cardBaseClass={cardBaseClass}
                       borderClass={`border-x lg:border-l-0 border-b ${idx === rows.length - 1 ? "" : "lg:border-b-0"}`}
                       setHoveredCard={setHoveredCard}

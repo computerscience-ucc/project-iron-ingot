@@ -328,9 +328,10 @@ export default function GalleryPage() {
                     No projects found.
                   </p>
                 ) : (
-                  displayList.map((project, i) => (
-                    <GalleryCard key={project._id || i} project={project} />
-                  ))
+                  displayList.map((project, i) => {
+                    const globalIndex = (currentPage - 1) * ITEMS_PER_PAGE + i;
+                    return <GalleryCard key={project._id || i} project={project} index={globalIndex} />;
+                  })
                 )}
               </motion.div>
             </AnimatePresence>
