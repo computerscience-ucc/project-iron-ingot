@@ -29,7 +29,7 @@ const CommitteeSection = ({ committees }) => {
     <div className="flex flex-col mt-16 w-full">
       {/* Committee Header: Title & Tabs */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-        <h3 className="text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
+        <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
           Committee Members
         </h3>
 
