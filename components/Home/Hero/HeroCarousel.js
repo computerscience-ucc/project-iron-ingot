@@ -2,37 +2,21 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, ArrowRight } from "@geist-ui/icons";
 
 const images = [
-  "/samples/disk2.png",
+  "/samples/team2.png",
   "/samples/disk.png",
-  "/samples/finals.png",
-  "/samples/midterms.png",
-  "/samples/stress.png",
+  "/samples/disk2.png",
+  "/samples/team1.png",
+  "/samples/team3.png",
+  "/samples/team4.png",
 ];
 
 export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [direction, setDirection] = useState(0);
-  const [hoveredSide, setHoveredSide] = useState(null);
-
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-
-  const springConfig = { damping: 25, stiffness: 200 };
-  const springX = useSpring(cursorX, springConfig);
-  const springY = useSpring(cursorY, springConfig);
-
-  useEffect(() => {
-    const moveCursor = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
-    window.addEventListener("mousemove", moveCursor);
-    return () => window.removeEventListener("mousemove", moveCursor);
-  }, [cursorX, cursorY]);
 
   const slideVariants = {
     initial: (dir) => ({
@@ -83,7 +67,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative w-[calc(100%+3rem)] md:w-[calc(100%+6rem)] lg:w-full -mx-6 md:-mx-12 lg:mx-0 aspect-square bg-[#1D1D1D] rounded-[11.67px] flex flex-col items-center justify-end overflow-hidden group touch-none">
+    <div className="relative w-[calc(100%+1.5rem)] md:w-[calc(100%+3rem)] lg:w-full -mx-3 md:-mx-6 lg:mx-0 aspect-square bg-[#1D1D1D] rounded-[11.67px] flex flex-col items-center justify-end overflow-hidden group touch-none">
       {/* Image Carousel */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
@@ -93,7 +77,7 @@ export default function HeroCarousel() {
           initial="initial"
           animate="animate"
           exit="exit"
-          drag={isMobile ? "x" : false}
+          drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.2}
           onDragEnd={handleDragEnd}
@@ -103,108 +87,38 @@ export default function HeroCarousel() {
             src={images[currentIndex]}
             alt={`Hero Carousel Image ${currentIndex + 1}`}
             fill
-            className="object-cover"
+            className="object-cover object-top"
             priority={currentIndex === 0}
             draggable={false}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* Hit Zones for Custom Cursor - Desktop only */}
-      <div className="absolute inset-0 z-20 hidden lg:flex cursor-none">
-        <div
-          className="w-[30%] h-full pointer-events-auto"
-          onMouseEnter={() => setHoveredSide("left")}
-          onMouseLeave={() => setHoveredSide(null)}
-          onClick={prevSlide}
-        />
-        <div
-          className="w-[40%] h-full pointer-events-auto"
-          onMouseEnter={() => setHoveredSide("center")}
-          onMouseLeave={() => setHoveredSide(null)}
-        />
-        <div
-          className="w-[30%] h-full pointer-events-auto"
-          onMouseEnter={() => setHoveredSide("right")}
-          onMouseLeave={() => setHoveredSide(null)}
-          onClick={nextSlide}
-        />
-      </div>
-
-      {/* Mobile/Tablet Arrow Navigation - Visible only on small screens */}
-      <div className="md:hidden absolute inset-y-0 left-3 flex items-center z-30">
+      {/* Navigation Arrows */}
+      <div className="absolute inset-y-0 left-2 md:left-3 flex items-center z-30">
         <button
           onClick={(e) => {
             e.stopPropagation();
             prevSlide();
           }}
-          className="w-9 h-9 rounded-[6px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all"
+          className="w-9 h-9 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Previous slide"
         >
-          <ArrowLeft size={18} strokeWidth={2.5} />
+          <ArrowLeft size={isMobile ? 18 : 24} strokeWidth={2.5} />
         </button>
       </div>
-      <div className="md:hidden absolute inset-y-0 right-3 flex items-center z-30">
+      <div className="absolute inset-y-0 right-2 md:right-3 flex items-center z-30">
         <button
           onClick={(e) => {
             e.stopPropagation();
             nextSlide();
           }}
-          className="w-9 h-9 rounded-[6px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all"
+          className="w-9 h-9 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Next slide"
         >
-          <ArrowRight size={18} strokeWidth={2.5} />
+          <ArrowRight size={isMobile ? 18 : 24} strokeWidth={2.5} />
         </button>
       </div>
-
-      {/* Custom Cursor Overlay */}
-      <motion.div
-        className="hidden lg:block"
-        style={{
-          position: "fixed",
-          left: springX,
-          top: springY,
-          pointerEvents: "none",
-          zIndex: 9999,
-          overflow: "hidden",
-        }}
-        initial={{ scale: 0, x: "-50%", y: "-50%" }}
-        animate={{
-          scale: hoveredSide ? 1 : 0,
-          x: "-50%",
-          y: "-50%",
-          width: hoveredSide === "center" ? "8.4rem" : "7.2rem",
-          height: hoveredSide === "center" ? "8.4rem" : "7.2rem",
-          borderRadius: "9999px",
-        }}
-        transition={{
-          scale: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
-        }}
-      >
-        <div className="w-full h-full bg-gradient-to-r from-[#FF3538] to-[#DE2528] flex items-center justify-center text-white shadow-xl overflow-hidden p-3 pointer-events-none">
-          {hoveredSide === "left" && <ArrowLeft size={44} strokeWidth={2.2} />}
-          {hoveredSide === "right" && <ArrowRight size={44} strokeWidth={2.2} />}
-          {hoveredSide === "center" && (
-            <motion.div
-              className="relative w-full h-full translate-x-[-0.34rem] translate-y-[-0.4rem]"
-              animate={{ rotate: [0, -5, 8, -5, 8, 0] }}
-              transition={{
-                duration: 0.7,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatDelay: 1.5,
-              }}
-            >
-              <Image
-                src="/mascot/curious-bot.png"
-                alt="Curious Bot"
-                fill
-                className="object-contain"
-              />
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
 
       {/* Pagination Indicators */}
       <div className="absolute bottom-6 flex items-center justify-center gap-[0.4rem] z-20 pointer-events-auto">
@@ -219,7 +133,9 @@ export default function HeroCarousel() {
               initial={false}
               animate={{
                 width: isActive ? 64 : dist === 1 ? 32 : dist === 2 ? 24 : 16,
-                backgroundColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(100, 100, 100, 0.35)",
+                backgroundColor: isActive
+                  ? "rgba(255, 255, 255, 0.95)"
+                  : "rgba(100, 100, 100, 0.35)",
               }}
               transition={{
                 width: { type: "spring", stiffness: 300, damping: 20 },
