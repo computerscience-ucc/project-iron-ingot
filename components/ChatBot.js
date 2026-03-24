@@ -74,7 +74,7 @@ function parseInline(text) {
         tokens.push(
           <code
             key={k++}
-            className="text-[0.9375rem] bg-gray-800 text-red-300 px-1 py-0.5 rounded font-mono"
+            className="text-[0.85rem] md:text-[0.9375rem] bg-gray-800 text-red-300 px-1 py-0.5 rounded font-mono"
           >
             {s.slice(i + 1, end)}
           </code>,
@@ -110,7 +110,7 @@ const MarkdownText = ({ text }) => {
           );
         if (line.startsWith("# "))
           return (
-            <p key={i} className="text-[0.9375rem] font-bold text-gray-100 mt-1">
+            <p key={i} className="text-[0.85rem] md:text-[0.9375rem] font-bold text-gray-100 mt-1">
               {parseInline(line.slice(2))}
             </p>
           );
@@ -122,7 +122,7 @@ const MarkdownText = ({ text }) => {
             </div>
           );
         if (line.trim() === "") return <div key={i} className="h-1" />;
-        return <p key={i} className="text-[0.9375rem] text-[#EFEFEF]">{parseInline(line)}</p>;
+        return <p key={i} className="text-[0.85rem] md:text-[0.9375rem] text-[#EFEFEF]">{parseInline(line)}</p>;
       })}
     </div>
   );
@@ -346,11 +346,11 @@ const ChatThesisCard = ({ card, onNavigate }) => {
       )}
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-[0.9375rem] text-[#EFEFEF] font-semibold leading-relaxed">
+          <span className="text-[0.85rem] md:text-[0.9375rem] text-[#EFEFEF] font-semibold leading-relaxed">
             Thesis
           </span>
           {card.department && (
-            <span className="text-[0.9375rem] text-[#EFEFEF] font-semibold leading-relaxed">
+            <span className="text-[0.85rem] md:text-[0.9375rem] text-[#EFEFEF] font-semibold leading-relaxed">
               {card.department}
             </span>
           )}
@@ -361,20 +361,20 @@ const ChatThesisCard = ({ card, onNavigate }) => {
           )}
         </div>
 
-        <p className="text-[0.9375rem] font-normal text-[#EFEFEF] group-hover:text-white transition-colors leading-relaxed">
+        <p className="text-[0.85rem] md:text-[0.9375rem] font-normal text-[#EFEFEF] group-hover:text-white transition-colors leading-relaxed">
           {card.title}
         </p>
 
         {/* Members — prioritise owners (thesis authors), fall back to post authors */}
         {(card.owners || card.authors) && (
-          <p className="text-[0.875rem] text-[#8C8C8C] mt-1.5 leading-snug font-normal">
+          <p className="text-[0.8rem] md:text-[0.875rem] text-[#8C8C8C] mt-1.5 leading-snug font-normal">
             By {card.owners || card.authors}
           </p>
         )}
 
         {/* IMRAD summary snippet */}
         {card.summary && (
-          <p className="text-[0.9375rem] text-[#8C8C8C] mt-2.5 leading-relaxed line-clamp-3 font-normal">
+          <p className="text-[0.85rem] md:text-[0.9375rem] text-[#8C8C8C] mt-2.5 leading-relaxed line-clamp-3 font-normal">
             {card.summary}
           </p>
         )}
@@ -398,7 +398,7 @@ const ChatThesisCard = ({ card, onNavigate }) => {
         )}
       </div>
       <div className="px-4 py-3 border-t border-[#2A2A2A] group-hover:border-[#3A3A3A] mt-auto transition-colors flex items-center justify-between shrink-0">
-        <span className="text-[0.875rem] text-[#8C8C8C] group-hover:text-[#EFEFEF] transition-colors font-normal">
+        <span className="text-[0.8rem] md:text-[0.875rem] text-[#8C8C8C] group-hover:text-[#EFEFEF] transition-colors font-normal">
           View full thesis
         </span>
         <svg
@@ -426,9 +426,8 @@ const BotMessage = ({
   <div className="flex flex-col gap-1 w-full relative">
     <div className="relative w-full">
       <div
-        className={`${
-          isFullscreen ? "max-w-[85%] md:max-w-2xl" : "max-w-[88%]"
-        } w-fit px-4 py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.9375rem] leading-relaxed font-normal relative z-10`}
+        className={`${isFullscreen ? "max-w-[85%] md:max-w-2xl" : "max-w-[88%]"
+          } w-fit px-3 py-2.5 md:px-4 md:py-3 rounded-2xl rounded-bl-none bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] leading-relaxed font-normal relative z-10`}
       >
         {isStreaming ? (
           <StreamingMessage text={text} onDone={onStreamDone} />
@@ -516,13 +515,13 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
     className="flex flex-col gap-2 pt-1"
   >
     {node.prompt && (
-      <p className="text-[0.9375rem] text-[#8C8C8C] mb-1 px-1 font-normal">{node.prompt}</p>
+      <p className="text-[0.85rem] md:text-[0.9375rem] text-[#8C8C8C] mb-1 px-1 font-normal">{node.prompt}</p>
     )}
     <div className="flex flex-wrap gap-2">
       {canGoBack && (
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[0.9375rem] font-normal bg-[#333333] hover:bg-[#3d3d3d] text-gray-200 transition-colors"
+          className="flex items-center gap-1.5 px-2 py-1.5 md:px-2.5 md:py-1.5 rounded-lg text-[0.85rem] md:text-[0.9375rem] font-normal bg-[#333333] hover:bg-[#3d3d3d] text-gray-200 transition-colors"
         >
           <ChevronLeft size={16} strokeWidth={2} />
           <span>Back</span>
@@ -534,7 +533,7 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
           <button
             key={child.id}
             onClick={() => onSelect(child)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[0.9375rem] font-normal bg-[#333333] hover:bg-[#3d3d3d] text-gray-200 transition-colors"
+            className="flex items-center gap-1.5 px-2 py-1.5 md:px-2.5 md:py-1.5 rounded-lg text-[0.85rem] md:text-[0.9375rem] font-normal bg-[#333333] hover:bg-[#3d3d3d] text-gray-200 transition-colors"
           >
             {Icon && <Icon size={16} strokeWidth={2} />}
             <span>{child.label}</span>
@@ -815,7 +814,7 @@ const ChatBot = () => {
       {/* ── Floating Action Button ── */}
       <AnimatePresence>
         {!isOpen && (
-          <div className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-[4.25rem] h-[4.25rem] pointer-events-none">
+          <div className="fixed bottom-4 right-4 z-50 flex items-center justify-center w-[4.25rem] h-[4.25rem] pointer-events-none">
             {/* Background Ambient Glow (Hero Style) */}
             <motion.div
               initial={{ scale: 0, opacity: 0, y: 30 }}
@@ -826,7 +825,7 @@ const ChatBot = () => {
             />
             {/* Glow Background */}
             <motion.div
-              animate={{ scale: 1, opacity: 0.6, y: 4.3 }}
+              animate={{ scale: 1, opacity: 0.5, y: 4.3 }}
               exit={{ scale: 0, opacity: 0, y: 40 }}
               transition={{ duration: 0.18, delay: isOpen ? 0 : 0.06 }}
               className="absolute inset-0 bg-[linear-gradient(135deg,#FF3538_0%,#FF4346_50%,#FF5154_100%)] rounded-full blur-[8px] opacity-10"
@@ -865,11 +864,10 @@ const ChatBot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`${
-              isFullscreen
-                ? "fixed inset-0 z-[100] rounded-none"
-                : "fixed bottom-5 right-5 z-50 w-[380px] h-[540px] rounded-xl border border-[#2A2A2A]"
-            } flex flex-col overflow-hidden bg-[#181818] font-sans`}
+            className={`${isFullscreen
+              ? "fixed inset-0 z-[100] rounded-none"
+              : "fixed bottom-4 right-4 z-50 w-[380px] h-[540px] rounded-xl border border-[#2A2A2A]"
+              } flex flex-col overflow-hidden bg-[#181818] font-sans`}
             style={{ background: "#181818" }}
           >
             {/* Header */}
@@ -885,12 +883,12 @@ const ChatBot = () => {
                   className="object-contain transform-gpu"
                 />
                 <div className="flex flex-col gap-[4px]">
-                  <span className="font-semibold text-[0.9375rem] text-gray-100">
+                  <span className="font-semibold text-[0.85rem] md:text-[0.9375rem] text-gray-100">
                     {chatbotName}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                    <span className="text-[0.875rem] text-gray-400 font-normal leading-none">
+                    <span className="text-[0.8rem] md:text-[0.875rem] text-gray-400 font-normal leading-none">
                       Assistance on the Go!
                     </span>
                   </div>
@@ -927,7 +925,7 @@ const ChatBot = () => {
                 >
                   {msg.role === "user" ? (
                     <div className="flex flex-col gap-1 w-full relative items-end">
-                      <div className="w-fit max-w-[85%] px-4 py-2.5 rounded-2xl rounded-br-none bg-[#EA2B2E] text-white text-[0.9375rem] leading-relaxed font-normal whitespace-pre-wrap relative z-10 [word-break:break-word] hyphens-auto">
+                      <div className="w-fit max-w-[85%] px-3 py-2 md:px-4 md:py-2.5 rounded-2xl rounded-br-none bg-[#EA2B2E] text-white text-[0.85rem] md:text-[0.9375rem] leading-relaxed font-normal whitespace-pre-wrap relative z-10 [word-break:break-word] hyphens-auto">
                         {msg.text}
                       </div>
                       <div className="absolute -right-[5.5px] bottom-0 z-0">
@@ -989,7 +987,7 @@ const ChatBot = () => {
                   exit={{ height: 0, opacity: 0 }}
                   className="px-4 py-2 bg-[#121212] border-t border-[#2A2A2A] flex items-center justify-between overflow-hidden shrink-0"
                 >
-                  <span className="text-[0.9375rem] text-[#8C8C8C] truncate font-normal">
+                  <span className="text-[0.85rem] md:text-[0.9375rem] text-[#8C8C8C] truncate font-normal">
                     {flowInputNode.prompt || flowInputNode.placeholder || "Type your question..."}
                   </span>
                   <button
@@ -1061,9 +1059,8 @@ const ChatBot = () => {
                         ? flowInputNode.placeholder
                         : "Or type a question..."
                   }
-                  className={`flex-1 bg-[#252525] text-[#EFEFEF] text-[0.9375rem] rounded-lg px-4 py-[10px] outline-none placeholder-gray-500 transition-colors resize-none overflow-y-auto leading-relaxed font-normal ${
-                    cooldown ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`flex-1 bg-[#252525] text-[#EFEFEF] text-[0.85rem] md:text-[0.9375rem] rounded-lg px-3 py-2.5 md:px-4 md:py-[10px] outline-none placeholder-gray-500 transition-colors resize-none overflow-y-auto leading-relaxed font-normal ${cooldown ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   style={{ minHeight: "44px", maxHeight: "128px" }}
                   disabled={isLoading || cooldown > 0}
                 />
