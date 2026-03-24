@@ -104,16 +104,16 @@ export default function AwardGallery() {
 
   // The side cards stick out by ~9% on each side due to scaling and x-offset.
   // We use a scale factor to ensure the cards don't feel overwhelming and fit nicely.
-  const layoutScaleFactor = isMobile ? 1.8 : isTablet ? 2.2 : 2.6;
+  const layoutScaleFactor = isMobile ? 1.2 : isTablet ? 1.45 : 1.8;
   const baseCardWidth = containerWidth / layoutScaleFactor;
   
-  // Cap the card width to 480px on desktop to prevent it from getting too large.
-  const cardWidth = !isMobile && !isTablet ? Math.min(baseCardWidth, 480) : baseCardWidth;
+  // Cap the card width to 640px on desktop to prevent it from getting too large.
+  const cardWidth = !isMobile && !isTablet ? Math.min(baseCardWidth, 640) : baseCardWidth;
 
   // Squre aspect ratio as requested.
   const cardHeight = cardWidth;
 
-  const dynamicRayHeight = isMobile ? cardWidth * 0.5 : isTablet ? cardWidth * 0.4 : 160;
+  const dynamicRayHeight = isMobile ? cardWidth * 0.4 : isTablet ? cardWidth * 0.35 : 180;
 
   const rayHeight = dynamicRayHeight;
   const rayTopWidth = isMobile ? 24 : isTablet ? 32 : 40;

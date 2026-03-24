@@ -103,7 +103,7 @@ export default function AwardCard({
           <div className="absolute inset-x-0 bottom-0 top-1/3 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent z-10" />
 
           {/* Content Area */}
-          <div className="flex-1 px-4 py-2.5 lg:p-5 flex flex-col justify-end relative z-20">
+          <div className="flex-1 px-6 py-4 lg:p-7 flex flex-col justify-end relative z-20">
             {isCenter && (
               <motion.div
                 key={award._id}
@@ -128,7 +128,7 @@ export default function AwardCard({
                       duration: 0.95,
                       ease: [0.22, 1, 0.36, 1], // Smooth easeOutQuart
                     }}
-                    className="text-sm md:text-lg lg:text-[1.15rem] font-semibold text-white tracking-tight leading-tight line-clamp-2"
+                    className="text-base md:text-xl lg:text-[1.4rem] font-semibold text-white tracking-tight leading-tight line-clamp-2"
                   >
                     {award.title}
                   </motion.h3>
@@ -144,7 +144,7 @@ export default function AwardCard({
                       duration: 0.95,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="text-[#EFEFEF] text-[0.7rem] md:text-xs lg:text-[0.85rem] leading-relaxed font-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden"
+                    className="text-[#EFEFEF] text-sm md:text-[0.9rem] lg:text-[1rem] leading-relaxed font-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden"
                   >
                     {formatDescription(award.description)}
                   </motion.p>
