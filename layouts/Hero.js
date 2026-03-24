@@ -1,24 +1,64 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "@geist-ui/icons";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import HeroCarousel from "@/components/Home/Hero/HeroCarousel";
+import { useState, useEffect } from "react";
 
 export default function Hero() {
+  const mascots = [
+    { src: "welcome-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "awards-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "bulletin-bot.png", size: "w-[115px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "chat-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "chitchat-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "cs-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "curious-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "grad-bot.png", size: "w-[120px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "study-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "thesis-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+    { src: "vibe-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
+  ];
+
+  const [currentMascot, setCurrentMascot] = useState(mascots[0]);
+  const [welcomeText, setWelcomeText] = useState("WELCOME!");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWelcomeText((prev) => prev === "WELCOME!" ? "CLICK ME<3" : "WELCOME!");
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const changeMascot = () => {
+    const available = mascots.filter((m) => m.src !== currentMascot.src);
+    const randomMascot = available[Math.floor(Math.random() * available.length)];
+    setCurrentMascot(randomMascot);
+  };
+
   return (
     <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 lg:mt-[2.6rem] mb-[2rem] font-sans">
       {/* Background Ambient Glow */}
-      <div className="absolute opacity-[0.14] top-[-6%] -left-[200px] md:-left-[480px] w-[400px] md:w-[600px] h-[600px] md:h-[800px] rounded-full bg-gradient-to-br from-[#B9171A] to-[#FF3538] blur-[100px] md:blur-[134px] pointer-events-none z-0" />
+      <div className="absolute opacity-[0.14] top-[-6%] -left-[200px] md:-left-[480px] w-[400px] md:w-[600px] h-[600px] md:h-[800px] rounded-full bg-gradient-to-br from-[#B9171A] to-[#FF3538] blur-[100px] md:blur-[134px] pointer-events-none z-[20]" />
 
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.1fr_1.05fr] gap-[3rem] lg:gap-[2rem] items-center">
+      <div className="relative z-[30] grid grid-cols-1 lg:grid-cols-[1.1fr_1.05fr] gap-[3rem] lg:gap-[2rem] items-center">
         {/* Left Column: Hero Content */}
         <div className="flex flex-col items-center lg:items-start gap-2 lg:pr-[2rem] lg:-mt-16">
           {/* Welcome Tag */}
           <div className="flex flex-col lg:flex-row lg:-ml-10 items-center justify-center lg:justify-start gap-0 lg:gap-4 w-full lg:w-auto">
             <div className="flex flex-col lg:flex-row items-center mb-[-0.8rem] md:mb-[-1.2rem] lg:mb-0 lg:-mt-16 gap-0 lg:gap-[1rem] text-[var(--color-text)] order-1 lg:order-2">
-              <span className="font-minecraft text-base md:text-[1.2rem] lg:text-[1.4rem] tracking-widest mt-1 order-1 lg:order-2">
-                WELCOME!
-              </span>
+              <AnimatePresence mode="popLayout">
+                <motion.span
+                  key={welcomeText}
+                  className="font-minecraft text-base md:text-[1.2rem] lg:text-[1.4rem] tracking-widest mt-1 order-1 lg:order-2 inline-block"
+                  initial={{ scale: 0, opacity: 0, rotate: -15 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0.5, opacity: 0, rotate: 15 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                >
+                  {welcomeText}
+                </motion.span>
+              </AnimatePresence>
               <svg
                 width="5.5"
                 height="9.5"
@@ -33,19 +73,37 @@ export default function Hero() {
                 />
               </svg>
             </div>
-            <div className="relative w-[140px] h-[140px] md:w-[180px] md:h-[180px] order-2 lg:order-1">
-              <Image
-                src="/mascot/welcome-bot.png"
-                alt="Welcome Bot"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
+            <motion.div
+              layout
+              className={`relative flex-shrink-0 order-2 lg:order-1 cursor-pointer ${currentMascot.size}`}
+              onClick={changeMascot}
+              whileHover={{ scale: 1.12, rotate: -6, y: -6 }}
+              whileTap={{ scale: 0.85, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 600, damping: 12, mass: 0.8 }}
+            >
+              <AnimatePresence mode="popLayout">
+                <motion.div
+                  key={currentMascot.src}
+                  initial={{ scale: 0, opacity: 0, rotate: -20, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0, y: 0 }}
+                  exit={{ scale: 0.5, opacity: 0, rotate: 20, y: -20 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={`/mascot/${currentMascot.src}`}
+                    alt="Ingo Bot"
+                    fill
+                    className="object-contain drop-shadow-lg"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
           </div>
 
           {/* Headline */}
-          <h1 className="text-2xl md:text-[2.4rem] lg:text-[2.9rem] text-center lg:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] mb-2 mt-[-0.5rem] lg:mt-0">
+          <h1 className="text-[1.7rem] md:text-[2.4rem] lg:text-[2.9rem] text-center lg:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] mb-2 mt-[-0.5rem] lg:mt-0">
             Your CS{" "}
             <span className="font-minecraft text-[#FF5154] font-normal">
               In
