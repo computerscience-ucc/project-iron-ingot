@@ -146,7 +146,7 @@ const EBOX_SIDES = [
 function EBoxMesh({
   position,
   active,
-  text = "ONLINE PUBLIC INFORMATION BOARD",
+  text = "PUBLIC INFORMATION BOARD",
 }) {
   const groupRef = useRef();
   const rot = useSpinOnActive(active, Math.PI * 2, 5, 1.5, 1);
@@ -246,7 +246,7 @@ const BOX_SIDES = [
 function BoxMesh({
   position,
   active,
-  text = "SENIOR PROJECT DISCOVERY SHOWCASE",
+  text = "PROJECT DISCOVERY SHOWCASE",
 }) {
   const groupRef = useRef();
   const rot = useSpinOnActive(active, Math.PI, 3.4, 3, 1);

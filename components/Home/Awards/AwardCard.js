@@ -128,7 +128,7 @@ export default function AwardCard({
                       duration: 0.95,
                       ease: [0.22, 1, 0.36, 1], // Smooth easeOutQuart
                     }}
-                    className="text-lg md:text-2xl lg:text-[1.6rem] font-semibold text-white tracking-tight leading-tight line-clamp-2"
+                    className="text-base md:text-xl lg:text-[1.35rem] font-semibold text-white tracking-tight leading-tight line-clamp-2"
                   >
                     {award.title}
                   </motion.h3>
@@ -144,7 +144,7 @@ export default function AwardCard({
                       duration: 0.95,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="text-[#EFEFEF] text-xs md:text-sm lg:text-[1rem] leading-relaxed font-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden"
+                    className="text-[#EFEFEF] text-[0.7rem] md:text-xs lg:text-[0.9rem] leading-relaxed font-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden"
                   >
                     {formatDescription(award.description)}
                   </motion.p>
@@ -163,7 +163,7 @@ export default function AwardCard({
                     className="flex flex-wrap items-center gap-2 overflow-hidden h-6 md:h-7 lg:h-8"
                   >
                     {award.category && (
-                      <div className="shrink-0 px-1.5 py-0.5 md:px-2 bg-[#333333] text-[#EFEFEF] text-[0.6rem] md:text-[0.7rem] lg:text-[0.8rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap">
+                      <div className="shrink-0 px-1.5 py-0.5 md:px-2 bg-[#333333] text-[#EFEFEF] text-[0.6rem] md:text-[0.65rem] lg:text-[0.75rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap">
                         {award.category}
                       </div>
                     )}
@@ -171,13 +171,13 @@ export default function AwardCard({
                       award.badges.map((badge) => (
                         <div
                           key={badge}
-                          className="shrink-0 px-1.5 py-0.5 md:px-2 bg-[#333333] text-[#EFEFEF] text-[0.6rem] md:text-[0.7rem] lg:text-[0.8rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap"
+                          className="shrink-0 px-1.5 py-0.5 md:px-2 bg-[#333333] text-[#EFEFEF] text-[0.6rem] md:text-[0.65rem] lg:text-[0.75rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap"
                         >
                           {badge}
                         </div>
                       ))}
                     {award.academicYear && (
-                      <div className="shrink-0 px-1.5 py-0.5 md:px-2 bg-[#F02E31] text-[#EFEFEF] text-[0.6rem] md:text-[0.7rem] lg:text-[0.8rem] font-sans font-medium tracking-wide whitespace-nowrap">
+                      <div className="shrink-0 px-1.5 py-0.5 md:px-2 bg-[#F02E31] text-[#EFEFEF] text-[0.6rem] md:text-[0.65rem] lg:text-[0.75rem] font-sans font-medium tracking-wide whitespace-nowrap">
                         {award.academicYear}
                       </div>
                     )}

@@ -102,20 +102,22 @@ export default function AwardGallery() {
     return () => clearTimeout(timer);
   }, [hoveredSide]);
 
-  // The side cards stick out by ~9% on each side due to scaling and x-offset (0.18 + 0.82/2 = 0.59 vs 0.5 center).
-  // We divide by 1.18 to ensure the entire visual carousel perfectly touches the grid lines.
-  const maxAvailableWidth = isMobile || isTablet ? containerWidth : 1000;
-  const layoutScaleFactor = (isMobile || isTablet) ? 1.18 : 1;
-  const cardWidth = maxAvailableWidth / layoutScaleFactor;
+  // The side cards stick out by ~9% on each side due to scaling and x-offset.
+  // We use a scale factor to ensure the cards don't feel overwhelming and fit nicely.
+  const layoutScaleFactor = isMobile ? 1.15 : isTablet ? 1.2 : 1.25;
+  const baseCardWidth = containerWidth / layoutScaleFactor;
+  
+  // Cap the card width to 800px on desktop to prevent it from getting too large.
+  const cardWidth = !isMobile && !isTablet ? Math.min(baseCardWidth, 800) : baseCardWidth;
 
   // Dynamically increase card height on smaller screens.
-  // Mobile uses a 4:3 aspect ratio, tablet uses 16:10, and desktop uses the original 16:9.
-  const cardHeight = isMobile ? cardWidth * (3 / 4) : isTablet ? cardWidth * (10 / 16) : cardWidth * (11 / 16);
+  // Mobile uses a 4:3 aspect ratio, tablet uses 16:10, and desktop uses 16:9.
+  const cardHeight = isMobile ? cardWidth * (3 / 4) : isTablet ? cardWidth * (10 / 16) : cardWidth * (9 / 16);
 
-  const dynamicRayHeight = isMobile ? cardWidth * 0.35 : isTablet ? cardWidth * 0.25 : 220;
+  const dynamicRayHeight = isMobile ? cardWidth * 0.4 : isTablet ? cardWidth * 0.3 : 180;
 
-  const rayHeight = isMobile ? dynamicRayHeight : isTablet ? dynamicRayHeight : 220;
-  const rayTopWidth = isMobile ? 30 : isTablet ? 40 : 50;
+  const rayHeight = dynamicRayHeight;
+  const rayTopWidth = isMobile ? 24 : isTablet ? 32 : 40;
 
   const getPosition = (itemIndex) => {
     const len = awards.length;

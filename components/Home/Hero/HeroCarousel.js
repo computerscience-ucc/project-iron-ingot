@@ -111,7 +111,7 @@ export default function HeroCarousel() {
           className="w-9 h-9 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Previous slide"
         >
-          <ArrowLeft size={isMobile ? 18 : 24} strokeWidth={2.5} />
+          <ArrowLeft size={isMobile ? 16 : 20} strokeWidth={2.5} />
         </button>
       </div>
       <div className="absolute inset-y-0 right-2 md:right-3 flex items-center z-30">
@@ -123,7 +123,7 @@ export default function HeroCarousel() {
           className="w-9 h-9 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Next slide"
         >
-          <ArrowRight size={isMobile ? 18 : 24} strokeWidth={2.5} />
+          <ArrowRight size={isMobile ? 16 : 20} strokeWidth={2.5} />
         </button>
       </div>
 
