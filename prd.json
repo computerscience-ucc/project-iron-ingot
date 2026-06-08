@@ -1,13 +1,11 @@
 {
   "title": "Facebook Messenger Customer Chat Integration",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "created": "2026-06-09",
   "status": "planning",
   "author": "UCC INGO Dev Team",
   "description": "Integrate the Facebook Messenger Customer Chat Plugin into the UCC INGO website so visitors can directly chat with the UCC BSCS Facebook page from the browser without leaving the site.",
-
   "background": "The UCC INGO website currently has an AI chatbot (CSBot powered by Google Gemini) and social media links to the Facebook page (https://www.facebook.com/UCCBSCS2022). However, visitors who want to message the page directly must leave the site and open Facebook Messenger separately. This integration adds a persistent Messenger chat bubble on the website, enabling real-time conversations between visitors and the CS Council's Facebook page admins.",
-
   "goals": [
     "Allow website visitors to chat directly to the UCC BSCS Facebook page from the website",
     "Keep visitors on the site while enabling Messenger communication",
@@ -16,14 +14,12 @@
     "Ensure the widget does not conflict with the existing CSBot AI chatbot",
     "Mobile-responsive and performant (lazy-loaded SDK)"
   ],
-
   "non_goals": [
     "Building a custom chat system (using Facebook's official plugin instead)",
     "Replacing the existing AI chatbot (CSBot) — both coexist",
     "Facebook Login / OAuth flows",
     "Automated bot responses via Facebook Send/Receive API (future enhancement)"
   ],
-
   "technical_approach": {
     "method": "Facebook Customer Chat Plugin (official SDK)",
     "sdk_url": "https://connect.facebook.net/en_US/sdk.js",
@@ -37,65 +33,82 @@
       "Page admins receive messages in their Facebook Page inbox / Messenger"
     ]
   },
-
   "prerequisites": {
     "facebook_page_id": "REQUIRED — Numeric Page ID from the UCC BSCS Facebook page (found in Page Settings > General > Page ID)",
     "facebook_app_id": "RECOMMENDED — App ID from Meta Developers (https://developers.facebook.com) — Required for SDK initialization. Create a 'Consumer' type app if you don't have one.",
     "messenger_plugin_enabled": "In Facebook Page Settings > Messenger Platform > Whitelisted Domains, add the website domain (e.g., uccingo.tech)"
   },
-
   "implementation_slices": [
     {
       "id": "slice-01",
       "title": "Environment Variables & Config",
       "description": "Add FB_PAGE_ID and FB_APP_ID to .env file and expose them via next.config.mjs",
-      "files_changed": [".env", "next.config.mjs"],
+      "files_changed": [
+        ".env",
+        "next.config.mjs"
+      ],
       "commit_message": "feat(messenger): add Facebook env vars and Next.js config"
     },
     {
       "id": "slice-02",
       "title": "Facebook Messenger Component",
       "description": "Create the core FacebookMessenger React component that loads the FB SDK, initializes the Customer Chat Plugin, and handles cleanup on unmount",
-      "files_changed": ["components/FacebookMessenger.js"],
+      "files_changed": [
+        "components/FacebookMessenger.js"
+      ],
       "commit_message": "feat(messenger): create FacebookMessenger component with SDK loader"
     },
     {
       "id": "slice-03",
       "title": "Component Styling",
       "description": "Create CSS module for positioning, z-index management, and responsive tweaks to ensure the Messenger bubble doesn't overlap the CSBot widget",
-      "files_changed": ["components/FacebookMessenger.module.css"],
+      "files_changed": [
+        "components/FacebookMessenger.module.css"
+      ],
       "commit_message": "style(messenger): add positioning and z-index styles for Messenger widget"
     },
     {
       "id": "slice-04",
       "title": "Integration into _app.js",
       "description": "Import and render FacebookMessenger in the AppInner layout, respecting siteConfig toggles and ensuring proper z-index stacking with CSBot",
-      "files_changed": ["pages/_app.js"],
+      "files_changed": [
+        "pages/_app.js"
+      ],
       "commit_message": "feat(messenger): integrate FacebookMessenger into app layout"
     },
     {
       "id": "slice-05",
       "title": "CMS Schema for Facebook Settings",
       "description": "Add a 'Facebook Messenger' fieldset to siteConfig schema with fields for pageId, appId, greeting text, color, and enabled toggle — so admins can manage the feature from the CMS",
-      "files_changed": ["studio/schemas/siteConfig.js"],
-      "commit_message": "feat(messenger): add Facebook Messenger fields to CMS siteConfig schema"
+      "files_changed": [
+        "studio/schemas/siteConfig.js"
+      ],
+      "commit_message": "feat(messenger): add Facebook Messenger fields to CMS siteConfig schema",
+      "status": "in_progress"
     },
     {
       "id": "slice-06",
       "title": "CMS-Driven Configuration",
       "description": "Update FacebookMessenger component to read configuration from siteConfig (via Prefetcher) instead of hardcoded env vars, with env vars as fallback",
-      "files_changed": ["components/FacebookMessenger.js", "pages/_app.js"],
-      "commit_message": "feat(messenger): read Messenger config from CMS siteConfig with env fallback"
+      "files_changed": [
+        "components/FacebookMessenger.js",
+        "pages/_app.js"
+      ],
+      "commit_message": "feat(messenger): read Messenger config from CMS siteConfig with env fallback",
+      "status": "pending"
     },
     {
       "id": "slice-07",
       "title": "Z-Index & Coexistence Polish",
       "description": "Fine-tune z-index stacking so both CSBot and Messenger bubbles are visible, adjust Messenger position on mobile to avoid overlap, add loading/error states",
-      "files_changed": ["components/FacebookMessenger.js", "components/FacebookMessenger.module.css"],
-      "commit_message": "fix(messenger): resolve z-index conflicts and mobile positioning with CSBot"
+      "files_changed": [
+        "components/FacebookMessenger.js",
+        "components/FacebookMessenger.module.css"
+      ],
+      "commit_message": "fix(messenger): resolve z-index conflicts and mobile positioning with CSBot",
+      "status": "pending"
     }
   ],
-
   "z_index_strategy": {
     "description": "Both chat widgets live in the bottom-right corner. They must coexist without overlapping.",
     "stacking": {
@@ -106,7 +119,6 @@
     },
     "mobile_adjustment": "On screens < 768px, Messenger bubble shifts to bottom-left to avoid overlapping the CSBot FAB"
   },
-
   "facebook_page_setup_checklist": [
     "1. Go to https://www.facebook.com/UCCBSCS2022/settings",
     "2. Navigate to Settings > Messenger Platform",
@@ -116,7 +128,6 @@
     "6. Create a Meta Developer App at https://developers.facebook.com if no App ID exists",
     "7. Add the Facebook SDK snippet to verify the app is connected"
   ],
-
   "testing_plan": {
     "local": [
       "npm run dev — open localhost:3000",
@@ -137,7 +148,6 @@
       "Test on Chrome, Safari, Firefox, mobile browsers"
     ]
   },
-
   "risks": [
     {
       "risk": "Facebook SDK blocked by ad-blockers",
@@ -156,7 +166,6 @@
       "mitigation": "Widget only works after domain is added in Facebook Page Settings > Messenger Platform"
     }
   ],
-
   "future_enhancements": [
     "Facebook Send/Receive API for automated bot replies",
     "Custom greeting text that changes based on page context (e.g., thesis page vs blog)",
