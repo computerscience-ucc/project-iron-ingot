@@ -11,13 +11,7 @@ import { PortableText } from "@portabletext/react";
 import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import dayjs from "dayjs";
-import urlBuilder from "@sanity/image-url";
-
-const urlFor = (source) =>
-  urlBuilder({
-    projectId: "gjvp776o",
-    dataset: "production",
-  }).image(source);
+import { urlFor } from "../../lib/sanity";
 
 const blockComponents = {
   types: {

@@ -11,14 +11,11 @@ import { PortableText } from "@portabletext/react";
 import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import dayjs from "dayjs";
-import urlBuilder from "@sanity/image-url";
+import { urlFor } from "../../lib/sanity";
 import MaterialsList from "../../components/Thesis/MaterialsList";
 import HeroCarousel from "../../components/Thesis/HeroCarousel";
 import MemberStrip from "../../components/Thesis/MemberStrip";
 import RightPanel from "../../components/Thesis/RightPanel";
-
-const urlFor = (source) =>
-  urlBuilder({ projectId: "gjvp776o", dataset: "production" }).image(source);
 
 function getYouTubeId(url) {
   if (!url) return null;
