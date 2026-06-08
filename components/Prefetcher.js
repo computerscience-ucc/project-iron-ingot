@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-import { client } from "../lib/sanity";
+import { client, listenSanity, refetchType } from "../lib/sanity";
 import { SITE_CONFIG_QUERY } from "../lib/siteConfig";
 
 // queries
@@ -133,6 +133,33 @@ const PrefetcherWrapper = ({ children }) => {
 
   useEffect(() => {
     fetchInitialData();
+  }, []);
+
+  const setterMap = useRef({
+    blog: (data) => { setBlogs(data); updateGlobal(data, "blog"); },
+    bulletin: (data) => { setBulletins(data); updateGlobal(data, "bulletin"); },
+    thesis: (data) => { setThesis(data); updateGlobal(data, "thesis"); },
+    award: (data) => { setAwards(data); updateGlobal(data, "award"); },
+    gallery: (data) => { setGallery(data); updateGlobal(data, "gallery"); },
+  });
+
+  function updateGlobal(data, type) {
+    setGlobalSearchItems((prev) => {
+      const filtered = prev.filter((item) => item._type !== type);
+      return [...filtered, ...data];
+    });
+  }
+
+  useEffect(() => {
+    const sub = listenSanity((type) => {
+      const setter = setterMap.current[type];
+      if (setter) {
+        refetchType(type).then((data) => {
+          if (data) setter(data);
+        });
+      }
+    });
+    return () => sub.unsubscribe();
   }, []);
 
   return (
