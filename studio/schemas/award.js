@@ -12,6 +12,10 @@ export default defineType({
     { name: "content", title: "Content" },
     { name: "metadata", title: "Metadata" },
   ],
+  orderings: [
+    { title: "Date Awarded (Newest)", name: "dateDesc", by: [{ field: "dateAwarded", direction: "desc" }] },
+    { title: "Date Awarded (Oldest)", name: "dateAsc", by: [{ field: "dateAwarded", direction: "asc" }] },
+  ],
   fields: [
     { title: "Award Title", name: "awardTitle", type: "string", group: "basic", validation: req },
     { title: "Slug", name: "slug", type: "slug", group: "basic", options: { source: "awardTitle", maxLength: 100 }, validation: req },

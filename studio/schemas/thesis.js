@@ -11,6 +11,9 @@ export default defineType({
     { name: "members", title: "Members & Materials" },
     { name: "metadata", title: "Metadata" },
   ],
+  orderings: [
+    { title: "Academic Year (Newest)", name: "yearDesc", by: [{ field: "academicYear", direction: "desc" }, { field: "_createdAt", direction: "desc" }] },
+  ],
   fields: [
     {
       type: "image",

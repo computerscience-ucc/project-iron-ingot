@@ -9,6 +9,9 @@ export default defineType({
     { name: "details", title: "Details" },
     { name: "links", title: "Links" },
   ],
+  orderings: [
+    { title: "Project Date (Newest)", name: "dateDesc", by: [{ field: "projectDate", direction: "desc" }] },
+  ],
   fields: [
     {
       title: "Project Title",

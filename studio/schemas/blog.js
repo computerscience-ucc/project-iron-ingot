@@ -13,6 +13,9 @@ export default defineType({
   initialValue: {
     academicYear: "2025-2026",
   },
+  orderings: [
+    { title: "Newest First", name: "createdDesc", by: [{ field: "_createdAt", direction: "desc" }] },
+  ],
   fields: [
     {
       title: "Blog Header Image",

@@ -4,6 +4,9 @@ export default defineType({
   type: "document",
   name: "author",
   title: "Author",
+  orderings: [
+    { title: "Last Name (A-Z)", name: "lastNameAsc", by: [{ field: "fullName.lastName", direction: "asc" }] },
+  ],
   fields: [
     {
       type: "object",

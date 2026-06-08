@@ -10,6 +10,9 @@ export default defineType({
     { name: "metadata", title: "Metadata" },
     { name: "content", title: "Content" },
   ],
+  orderings: [
+    { title: "Newest First", name: "createdDesc", by: [{ field: "_createdAt", direction: "desc" }] },
+  ],
   fields: [
     {
       title: "Bulletin Header Image",
