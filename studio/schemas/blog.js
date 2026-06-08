@@ -4,6 +4,12 @@ export default defineType({
   type: "document",
   name: "blog",
   title: "Blog",
+  groups: [
+    { name: "basic", title: "Basic Info" },
+    { name: "authors", title: "Authors" },
+    { name: "metadata", title: "Metadata" },
+    { name: "content", title: "Content" },
+  ],
   initialValue: {
     academicYear: "2025-2026",
   },
@@ -12,18 +18,21 @@ export default defineType({
       title: "Blog Header Image",
       name: "headerImage",
       type: "image",
+      group: "basic",
       options: { hotspot: true },
     },
     {
       title: "Blog Title",
       name: "blogTitle",
       type: "string",
+      group: "basic",
       validation: Rule => Rule.required(),
     },
     {
       title: "Slug",
       name: "slug",
       type: "slug",
+      group: "basic",
       validation: Rule => Rule.required(),
       options: {
         source: "blogTitle",
@@ -34,14 +43,11 @@ export default defineType({
       title: "Blog Author",
       name: "blogAuthor",
       type: "array",
+      group: "authors",
       of: [
         {
           type: "reference",
-          to: [
-            {
-              type: "author",
-            },
-          ],
+          to: [{ type: "author" }],
         },
       ],
     },
@@ -49,6 +55,7 @@ export default defineType({
       title: "Academic Year",
       name: "academicYear",
       type: "string",
+      group: "metadata",
       description: "e.g. 2024-2025",
       options: {
         list: [
@@ -66,28 +73,19 @@ export default defineType({
       name: "tags",
       title: "Tags",
       type: "array",
+      group: "metadata",
       description: "Enter searcheable keywords for the blog",
-      of: [
-        {
-          type: "string",
-        },
-      ],
+      of: [{ type: "string" }],
     },
     {
       name: "blogContent",
       title: "Blog Content",
       type: "array",
+      group: "content",
       validation: Rule => Rule.required(),
       of: [
-        {
-          type: "block",
-        },
-        {
-          type: "image",
-          options: {
-            hotspot: true,
-          },
-        },
+        { type: "block" },
+        { type: "image", options: { hotspot: true } },
       ],
     },
   ],
