@@ -7,8 +7,7 @@
     "description": "Public-facing website for the UCC CS Council (INGO). Surfaces BSCS program news, awards, theses, blogs, bulletins, and council/team info. Content managed in a Sanity Studio v3 bundled inside the repo.",
     "repository": {
       "type": "git",
-      "defaultBranch": "main",
-      "activeBranch": "feat/prd-and-env-setup"
+      "defaultBranch": "main"
     },
     "nodeVersion": "18+",
     "packageManager": "npm",
@@ -25,255 +24,250 @@
     "npm run lint": "ESLint via next lint"
   },
 
-  "completedPhases": {
-    "phase1": {
-      "summary": "All critical/high bugs from the initial audit fixed. Site now properly fetches and renders Sanity data without crashes.",
-      "items": [
-        "Awards GROQ query fixed: _type == 'awards' -> 'award'",
-        "Variable shadowing bug in awards/[slug].js fixed",
-        "Recipient fullName computed from firstName + lastName object",
-        "Award, blog, bulletin schemas: added missing headerImage and awardContent fields",
-        "Prefetcher: fixed field name typos and query projections",
-        "ChatBot: reads chatbotName from siteConfig instead of hardcoded string"
+  "overallStatus": {
+    "phase1": "completed — critical/high bugs fixed, site renders Sanity data without crashes",
+    "phase2": "completed — council section, mobile responsiveness, SEO, animations",
+    "phase3": "completed — Sanity v2→v3 migration, env setup, AGENTS.md handoff, README overhaul",
+    "phase4": "in progress — 3 sub-phases (4.1 ✅ done, 4.2 ✅ done, 4.3 ⏳ pending)"
+  },
+
+  "completedInPhase4": {
+    "4.1": {
+      "title": "Smarter Sanity Studio Layout",
+      "summary": "All 6 tasks completed and committed.",
+      "commits": [
+        "e1cc3f0 — phase 4.1.1: restructure desk sidebar with logical groupings",
+        "14f7005 — phase 4.1.2: add production preview URLs to studio config",
+        "f93d3cf — phase 4.1.3: add field groups to thesis and award schemas",
+        "8eacc29 — phase 4.1.4: simplify recipient schema from 273 to 80 lines",
+        "ea247cd — phase 4.1.5: add initial value templates, preview configs, and newest-first ordering",
+        "6594849 — phase 4.1.6: add dev and deploy scripts to studio package.json"
+      ],
+      "tasks": [
+        {
+          "id": "4.1.1",
+          "name": "Restructure desk sidebar with logical groupings",
+          "files": ["studio/deskStructure.js"],
+          "status": "committed"
+        },
+        {
+          "id": "4.1.2",
+          "name": "Add production preview URLs to studio config",
+          "files": ["studio/sanity.config.js"],
+          "status": "committed"
+        },
+        {
+          "id": "4.1.3",
+          "name": "Add field groups to complex schemas",
+          "files": ["studio/schemas/thesis.js", "studio/schemas/award.js"],
+          "status": "committed"
+        },
+        {
+          "id": "4.1.4",
+          "name": "Simplify over-engineered schemas",
+          "files": ["studio/schemas/documents/recipient.js", "studio/schemas/award.js"],
+          "status": "committed"
+        },
+        {
+          "id": "4.1.5",
+          "name": "Add document badges and initial value templates",
+          "files": ["studio/deskStructure.js", "studio/sanity.config.js"],
+          "status": "committed"
+        },
+        {
+          "id": "4.1.6",
+          "name": "Add missing dev script and studio improvements",
+          "files": ["studio/package.json", "studio/deskStructure.js"],
+          "status": "committed"
+        }
       ]
     },
-    "phase2": {
-      "summary": "Council improvements, mobile responsiveness, SEO, and animations.",
-      "items": [
-        "Council section: year selector, committees accordion, class presidents on landing page",
-        "Mobile: touch target sizes, scroll-blocking fixes, responsive award layout",
-        "SEO: JSON-LD structured data, real meta descriptions, updated sitemap",
-        "Animations: scroll-triggered entrance for CSBotSection and FAQ"
-      ]
-    },
-    "phase3": {
-      "summary": "Sanity Studio v3 migration, Vercel deployment config, and handoff documentation.",
-      "items": [
-        "Sanity v2 -> v3 migration (sanity.json -> sanity.config.js + sanity.cli.js)",
-        "All schemas migrated to defineType()",
-        "Desk structure uses sanity/structure instead of @sanity/desk-tool",
-        "AGENTS.md handoff documentation created",
-        "Vercel deployment config and environment variable setup",
-        "README overhaul with screenshots, capability showcase, CMS guides",
-        "All emojis removed from codebase",
-        "@sanity/client upgraded from v3 to v7, rxjs eliminated",
-        "All hardcoded values moved to environment variables",
-        "Sanity tokens and API configuration centralized in .env"
+    "4.2": {
+      "title": "Presentation Layer & Schema Polish",
+      "summary": "Tasks 4.2.1 committed. Tasks 4.2.2–4.2.4 implemented but NOT YET COMMITTED. Task 4.2.5 pending.",
+      "commits": [
+        "03b6b04 — phase 4.2.1: fix author preview to show full name and photo"
+      ],
+      "uncommitted": [
+        "phase 4.2.2: rewrite awards/[slug].js — removed demo mode, validation bloat, sample data. 966→250 lines.",
+        "phase 4.2.3: add getStaticProps with ISR to all 5 list pages (awards, blog, bulletin, thesis, gallery)",
+        "phase 4.2.3: extract awards GROQ queries to lib/groq/awards.js",
+        "phase 4.2.4: audit unused imports — all clean"
+      ],
+      "tasks": [
+        {
+          "id": "4.2.1",
+          "name": "Add custom preview components for Studio documents",
+          "files": ["studio/schemas/sanitySchema.js"],
+          "status": "committed",
+          "note": "Fixed author preview to show fullName (firstName + lastName) and authorPhoto instead of raw document IDs"
+        },
+        {
+          "id": "4.2.2",
+          "name": "Optimize awards page (remove dead code, simplify)",
+          "files": ["pages/awards/[slug].js"],
+          "status": "implemented — uncommitted",
+          "details": "Removed: validateImage(), handleImageError(), demo mode flag, sample awards data, schema validation constants (ValidationError enum, AwardValidationSchema, sanitizeContent, validateAwardData, validateField, validateSanityData), generateSampleAwardData(), demo Effect blocks. Reduced from 966 to 250 lines. Kept: getStaticProps/getStaticPaths with error handling, breadcrumbs, PortableText with blockComponents, recipient grid, SEO Head, scroll-to-top, date formatting via dayjs."
+        },
+        {
+          "id": "4.2.3",
+          "name": "Add server-side data fetching to list pages",
+          "files": ["pages/blog/index.js", "pages/bulletin/index.js", "pages/thesis/index.js", "pages/awards/index.js", "pages/gallery/index.js"],
+          "status": "implemented — uncommitted",
+          "details": "Added getStaticProps with revalidate: 10 to all 5 index pages. Uses initialData props for SSR (eliminates first-load loading spinner). Blog/bulletin/thesis/gallery still sync from Prefetcher (guarded by .length > 0 to avoid empty-state override). Awards page no longer does client.fetch() — uses SSR data exclusively. Each page has its own GROQ query inlined (separate PRD task 4.3.9 will extract all to lib/groq/)."
+        },
+        {
+          "id": "4.2.4",
+          "name": "Add order-by and filter defaults to Studio lists",
+          "files": ["studio/deskStructure.js"],
+          "status": "completed — committed as part of 4.1.5",
+          "note": "Default ordering (newest first) was configured in all document type lists during 4.1.5"
+        },
+        {
+          "id": "4.2.5",
+          "name": "Sanity Studio document preview components",
+          "files": [
+            "studio/schemas/blog.js", "studio/schemas/bulletin.js",
+            "studio/schemas/thesis.js", "studio/schemas/award.js",
+            "studio/schemas/gallery.js", "studio/schemas/council.js",
+            "studio/schemas/devTeam.js", "studio/schemas/heroCarousel.js",
+            "studio/schemas/documents/author.js", "studio/schemas/documents/recipient.js"
+          ],
+          "status": "pending",
+          "effort": "small (1 commit)",
+          "details": "Add preview: { select: { title, subtitle, media } } to each schema using meaningful field mappings. For blog -> title: blogTitle, subtitle: academicYear, media: headerImage. For thesis -> title: thesisTitle, subtitle: department + ' · ' + academicYear, media: headerImage. For person types -> title: fullName, subtitle: yearLevel + ' · Batch ' + batchYear, media: photo."
+        }
       ]
     }
   },
 
-  "phase4": {
-    "title": "Smarter Studio Layout, Presentation Layer & Live Content Updates",
-    "summary": "Transform the Sanity Studio into a well-organized, intuitive content management dashboard with live preview capabilities. Implement on-demand ISR and client-side subscriptions so content changes appear instantly without page refreshes. Clean up over-engineered schemas and optimize the presentation layer for a better editing and viewing experience.",
-
-    "goals": [
-      "Restructure the Studio sidebar with logical groupings, custom icons, and filtered views for faster content navigation",
-      "Enable production preview URLs so editors can see content as it will appear on the live site",
-      "Add field groups and improved validation to complex schemas (thesis, award) for a streamlined editing experience",
-      "Implement on-demand ISR via Sanity webhooks so published content refreshes instantly on the live site",
-      "Add client-side content subscriptions so the website reflects changes without manual page reloads",
-      "Replace the blocking Prefetcher with a stale-while-revalidate pattern for instant page loads",
-      "Simplify over-engineered schemas (award, recipient) to reduce maintenance burden",
-      "Add Presentation tool for visual live editing from the Studio"
-    ],
-
-    "nonGoals": [
-      "Full migration to Next.js App Router (would require a separate project)",
-      "Internationalization / multi-language support",
-      "Authentication overhaul or user roles beyond what Sanity provides",
-      "Migration to Sanity v4 (scheduled for July 2026 -- monitor for compatibility)",
-      "Full redesign of the public website styling or layout"
-    ],
-
-    "phases": {
-      "4.1": {
-        "title": "Smarter Sanity Studio Layout",
-        "summary": "Restructure the CMS sidebar, add preview URLs, group complex schema fields, and simplify over-engineered schemas for a better editing experience.",
-        "effort": "Medium (8-10 commits)",
-
-        "tasks": [
-          {
-            "id": "4.1.1",
-            "name": "Restructure desk sidebar with logical groupings",
-            "description": "Replace the flat document type list with grouped S.list() sections: 'Content' (Blog, Bulletin, Thesis, Awards, Gallery), 'People' (Authors, Recipients), 'Structure' (Council, Dev Team, Hero Carousel), and 'Configuration' (Site Config). Add custom icons and emoji-free titles.",
-            "files": ["studio/deskStructure.js"],
-            "details": "Create S.list() groups with .title() and S.listItem() with custom .icon(). Use document-type icons from sanity/icons or simple text labels. Order by editorial priority, not alphabetically. Keep Site Configuration as a prominent singleton at the top."
-          },
-          {
-            "id": "4.1.2",
-            "name": "Add production preview URLs to studio config",
-            "description": "Configure production preview URLs in sanity.config.js so editors can preview content before publishing. Add preview URL generation for blog, bulletin, thesis, awards, and gallery document types.",
-            "files": ["studio/sanity.config.js"],
-            "details": "Add document: { productionUrl: async (prev, context) => { ... } } to defineConfig. For each schema type, generate the correct URL pattern (e.g., blog -> https://uccingo.tech/blog/{slug}). Add a 'Preview' button in the Studio document pane."
-          },
-          {
-            "id": "4.1.3",
-            "name": "Add field groups to complex schemas",
-            "description": "Add fieldsets/groups to thesis and award schemas so editing forms have collapsible sections: 'Basic Info', 'Content', 'Media', 'Metadata'. This prevents editors from being overwhelmed by 19 ungrouped fields.",
-            "files": ["studio/schemas/thesis.js", "studio/schemas/award.js"],
-            "details": "Use groups: [{ name: 'basic', title: 'Basic Info' }, ...] and field group annotations on each field. For thesis: Basic Info (title, slug, author, owner, year, dept), Content (thesisContent, imradContent), Media (headerImage, gallery, youtube, 3d model, showcase), Members & Materials (members, materials, related). For award: Basic Info, Media, Content, Recipient & Tags."
-          },
-          {
-            "id": "4.1.4",
-            "name": "Simplify over-engineered schemas",
-            "description": "Reduce recipient schema from 273 lines to ~80 by removing excessive field validations (name patterns, pronoun format regex, program regex). Simplify award schema from 323 lines by removing cross-field duplicate checks.",
-            "files": ["studio/schemas/documents/recipient.js", "studio/schemas/award.js"],
-            "details": "Recipient: keep only basic validation (required fields, string length limits). Remove name pattern regex, pronoun format validation, program regex. Award: remove complex cross-field validation between badges and tags. Keep only field-level validation (required, max length)."
-          },
-          {
-            "id": "4.1.5",
-            "name": "Add document badges and initial value templates",
-            "description": "Add document badges showing draft/published status and document counts. Add initial value templates for common content types (pre-fill academic year, default fields).",
-            "files": ["studio/deskStructure.js", "studio/sanity.config.js"],
-            "details": "Use S.listItem().child(S.documentTypeList('thesis').title('All Theses').showIcons(true).menuItems([...])). Add initialValue: { academicYear: '2025-2026', ... } to blog, bulletin, and thesis schemas."
-          },
-          {
-            "id": "4.1.6",
-            "name": "Add missing dev script and studio improvements",
-            "description": "Add 'dev' script to studio/package.json for DX consistency. Configure document ordering (newest first) for all document type lists.",
-            "files": ["studio/package.json", "studio/deskStructure.js"],
-            "details": "Add 'dev': 'sanity dev' to studio/package.json. In deskStructure, use S.documentTypeList(...).defaultOrdering({ field: '_createdAt', direction: 'desc' }) for all content types."
-          }
-        ]
-      },
-
-      "4.2": {
-        "title": "Presentation Layer & Schema Polish",
-        "summary": "Improve how content is presented in the Studio and on the website. Add custom preview components, optimize the awards page, and improve list page rendering with server-side data.",
-        "effort": "Medium (6-8 commits)",
-
-        "tasks": [
-          {
-            "id": "4.2.1",
-            "name": "Add custom preview components for Studio documents",
-            "description": "Create custom preview components that show rich previews (image + title + subtitle + date) for blog, bulletin, thesis, and award documents in the Studio document browser.",
-            "files": ["studio/components/previews.js"],
-            "details": "Create a new studio/components/ directory. Add preview components using S.previewComponent(). Each preview shows: headerImage thumbnail, title, subtitle (author names or academic year), and publish date. Register in each schema's preview: { select: { ... }, component: CustomPreview }."
-          },
-          {
-            "id": "4.2.2",
-            "name": "Optimize awards page (remove dead code, simplify)",
-            "description": "Refactor the 966-line awards/[slug].js page. Remove demo mode, sample data generators, over-engineered validation schemas, and dead functions. Target: ~400 lines of clean, maintainable code.",
-            "files": ["pages/awards/[slug].js"],
-            "details": "Remove: validateImage(), handleImageError(), demo mode flag, sample awards data, schema validation constants, demo-related useEffect blocks. Keep: data fetching (getStaticProps/getStaticPaths), breadcrumbs, PortableText rendering, image gallery lightbox, related posts section, SEO meta tags."
-          },
-          {
-            "id": "4.2.3",
-            "name": "Add server-side data fetching to list pages",
-            "description": "Convert blog, bulletin, thesis, awards, and gallery index pages from pure client-side fetching to getStaticProps with ISR + client-side hydration. Eliminates the loading spinner for first paint.",
-            "files": ["pages/blog/index.js", "pages/bulletin/index.js", "pages/thesis/index.js", "pages/awards/index.js", "pages/gallery/index.js"],
-            "details": "Add getStaticProps to each index page that fetches initial data server-side. Use ISR (revalidate: 10) for freshness. Pass initial data as props. Client-side, use the Prefetcher data for subsequent navigations but hydrate from SSR. This way the user sees content immediately on first load."
-          },
-          {
-            "id": "4.2.4",
-            "name": "Add order-by and filter defaults to Studio lists",
-            "description": "Configure default sorting (newest first) and default filters (hide drafts by default) for all document type lists in the desk structure.",
-            "files": ["studio/deskStructure.js"],
-            "details": "For each document type list in the desk structure, add S.documentTypeList(type).defaultOrdering({ field: '_createdAt', direction: 'desc' }). Add menu items for common filters (Published, Drafts, All)."
-          },
-          {
-            "id": "4.2.5",
-            "name": "Sanity Studio document preview components",
-            "description": "Register preview components for all 11 schema types so the Studio document browser shows meaningful previews (image, title, subtitle, date) instead of raw document IDs.",
-            "files": ["studio/schemas/blog.js", "studio/schemas/bulletin.js", "studio/schemas/thesis.js", "studio/schemas/award.js", "studio/schemas/gallery.js", "studio/schemas/council.js", "studio/schemas/devTeam.js", "studio/schemas/heroCarousel.js", "studio/schemas/documents/author.js", "studio/schemas/documents/recipient.js"],
-            "details": "Add preview: { select: { title, subtitle, media } } to each schema. Use meaningful field mappings: for blog -> title: blogTitle, subtitle: academicYear, media: headerImage. For thesis -> title: thesisTitle, subtitle: department + academicYear, media: headerImage. For person types -> title: fullName, subtitle: yearLevel + batchYear, media: photo."
-          }
-        ]
-      },
-
-      "4.3": {
-        "title": "Live Content Updates (No Page Refresh)",
-        "summary": "Implement on-demand ISR via Sanity webhooks so published content refreshes instantly. Add a client-side content listener for real-time updates. Replace the blocking Prefetcher with a stale-while-revalidate pattern. Consolidate caching.",
-        "effort": "High (10-14 commits)",
-
-        "tasks": [
-          {
-            "id": "4.3.1",
-            "name": "Create shared caching utility",
-            "description": "Extract the duplicated in-memory caching logic from siteConfig.js and pages/api/chat.js into a shared lib/cache.js utility with configurable TTL, manual invalidation, and stale-while-revalidate support.",
-            "files": ["lib/cache.js", "lib/siteConfig.js", "pages/api/chat.js"],
-            "details": "Create lib/cache.js exporting a createCache function with: get(key), set(key, value, ttl?), invalidate(key), invalidateAll(). TTL defaults to 5 minutes. Uses a Map internally. Refactor siteConfig.js and pages/api/chat.js to use the shared cache. Ensures consistent caching behavior and enables cache invalidation when webhooks fire."
-          },
-          {
-            "id": "4.3.2",
-            "name": "Create Sanity webhook receiver API route",
-            "description": "Create /api/revalidate endpoint that receives Sanity webhooks on content publish/unpublish. Validates the webhook signature, extracts the document type and slug, and triggers on-demand ISR revalidation.",
-            "files": ["pages/api/revalidate.js"],
-            "details": "Create pages/api/revalidate.js. Accept POST requests. Verify webhook signature using SANITY_API_TOKEN (environment variable, not hardcoded). Extract _type and slug from request body. Use Next.js 15's revalidatePath() and revalidateTag() to purge cached pages. Return 200 OK. Log revalidation actions. Handle errors gracefully (never expose internals)."
-          },
-          {
-            "id": "4.3.3",
-            "name": "Configure Sanity webhook in desk structure",
-            "description": "Add a custom document action that sends publish/unpublish events to the webhook receiver. Update sanity.config.js to register the document action.",
-            "files": ["studio/sanity.config.js", "studio/documentActions.js"],
-            "details": "Create studio/documentActions.js that exports a custom document action. On 'publish' and 'unpublish' transitions, POST to NEXT_PUBLIC_SITE_URL/api/revalidate with the document type and slug. This triggers on-demand ISR. Add the action to sanity.config.js plugins array."
-          },
-          {
-            "id": "4.3.4",
-            "name": "Add client-side content listener for real-time updates",
-            "description": "Use Sanity's client.listen() to subscribe to content changes. When a document is created/updated/deleted, invalidate the cache and trigger a refetch so the UI updates without a page reload.",
-            "files": ["components/Prefetcher.js", "lib/sanity.js"],
-            "details": "Add a listenSanity() function to lib/sanity.js that wraps client.listen(). In Prefetcher.js, add a useEffect that subscribes to '*'. When a mutation event fires, invalidate the appropriate cache entry and refetch only the changed content type (not all 6). This gives instant content updates without manual refresh."
-          },
-          {
-            "id": "4.3.5",
-            "name": "Replace Prefetcher with stale-while-revalidate pattern",
-            "description": "Refactor Prefetcher.js to use a stale-while-revalidate pattern. Show cached data immediately, then refetch in the background. Remove the full-screen loading overlay. Add granular loading states per content type.",
-            "files": ["components/Prefetcher.js"],
-            "details": "Replace useState/useEffect with a custom hook that implements SWR: return cached data immediately, initiate background refetch, update when new data arrives. Remove the isLoaded blocking state and the full-screen loading overlay with animated bar. Add individual loading states: blogsLoading, bulletinsLoading, etc. The context consumers handle their own loading states."
-          },
-          {
-            "id": "4.3.6",
-            "name": "Consolidate chatbot caching with shared utility",
-            "description": "Refactor pages/api/chat.js to use the shared lib/cache.js for site context and thesis caching. Enables cache invalidation when webhooks fire, so the chatbot always has fresh content.",
-            "files": ["pages/api/chat.js", "lib/cache.js"],
-            "details": "Replace the inline 5-minute TTL cache in chat.js with calls to shared cache. Add invalidateSiteContext() and invalidateThesesCache() methods. When the revalidate webhook fires, call these to clear cached chatbot context so the next chat request rebuilds with fresh data."
-          },
-          {
-            "id": "4.3.7",
-            "name": "Add ISR tags to all getStaticProps paths",
-            "description": "Add revalidate tags to all static pages so on-demand revalidation can target specific content types (e.g., revalidateTag('blog') revalidates all blog pages).",
-            "files": ["pages/blog/[slug].js", "pages/bulletin/[slug].js", "pages/thesis/[slug].js", "pages/awards/[slug].js", "pages/gallery/[slug].js", "pages/blog/index.js", "pages/bulletin/index.js", "pages/thesis/index.js", "pages/awards/index.js", "pages/gallery/index.js", "pages/index.js"],
-            "details": "In each getStaticProps, add revalidate: 10 (or false if webhook-driven) and export const revalidateTags = ['blog', 'bulletin', 'thesis', 'award', 'gallery'] as appropriate. The revalidate API endpoint uses revalidateTag() to purge all pages of a given type."
-          },
-          {
-            "id": "4.3.8",
-            "name": "Add Presentation tool to Sanity Studio",
-            "description": "Install and configure @sanity/presentation plugin for visual live editing. Editors can click on any content element on a preview of the website and edit it directly in the Studio.",
-            "files": ["studio/sanity.config.js", "studio/package.json"],
-            "details": "npm install @sanity/presentation in studio/. Add presentation() plugin to sanity.config.js with previewUrl pointing to uccingo.tech. Configure resolvers for each document type. This enables the 'Open Preview' button and visual editing."
-          },
-          {
-            "id": "4.3.9",
-            "name": "Add GROQ query files for maintainability",
-            "description": "Extract all GROQ queries from page components and Prefetcher into dedicated files in lib/groq/ for better maintainability and IDE support.",
-            "files": ["lib/groq/*.js"],
-            "details": "Create lib/groq/blog.js, bulletin.js, thesis.js, awards.js, gallery.js, council.js, devTeam.js, siteConfig.js. Each exports named query strings. Import them in pages and Prefetcher instead of inline strings. Use groq tagged template literal (from 'groq' package) for syntax highlighting."
-          },
-          {
-            "id": "4.3.10",
-            "name": "Add error boundaries and error handling",
-            "description": "Add try/catch to all Sanity fetch calls. Add React error boundaries around major page sections. Replace the blocking loading screen with granular error states per content type.",
-            "files": ["lib/sanity.js", "components/Prefetcher.js", "components/ErrorBoundary.js"],
-            "details": "Create components/ErrorBoundary.js. Wrap each content section on the homepage and listing pages. Add try/catch in all client.fetch calls in lib/sanity.js functions. In Prefetcher, catch individual fetch errors so one failing type doesn't block others."
-          }
-        ]
-      }
-    },
-
-    "futurePhases": {
-      "5": {
-        "title": "Performance & Scale",
-        "description": "Pagination optimization for large datasets, image CDN optimization, bundle size reduction, and Lighthouse score improvements.",
-        "priority": "future"
-      },
-      "6": {
-        "title": "Analytics & Feedback",
-        "description": "Visitor analytics, content performance tracking, chatbot usage metrics, and user feedback collection.",
-        "priority": "future"
-      }
+  "pending": {
+    "4.3": {
+      "title": "Live Content Updates (No Page Refresh)",
+      "summary": "Implement on-demand ISR via Sanity webhooks so published content refreshes instantly. Add a client-side content listener for real-time updates. Replace the blocking Prefetcher with a stale-while-revalidate pattern. Consolidate caching.",
+      "effort": "High (10-14 commits)",
+      "dependencyOrder": "Must be implemented in order: 4.3.1 → 4.3.4 → 4.3.5 → 4.3.2 → 4.3.3 → 4.3.6 → 4.3.7 → 4.3.8 → 4.3.9 → 4.3.10",
+      "explanation": "Shared cache (4.3.1) is needed first because 4.3.6 depends on it. Client listener (4.3.4) and SWR Prefetcher (4.3.5) can be built before webhooks since they're client-side. Webhook receiver (4.3.2) comes before studio action (4.3.3). GROQ extraction (4.3.9) and error boundaries (4.3.10) can be done last since they're additive.",
+      "tasks": [
+        {
+          "id": "4.3.1",
+          "name": "Create shared caching utility",
+          "files": ["lib/cache.js", "lib/siteConfig.js", "pages/api/chat.js"],
+          "status": "pending",
+          "effort": "small (1 commit)",
+          "details": "Create lib/cache.js exporting createCache(config?) with: get(key), set(key, value, ttl?), invalidate(key), invalidateAll(). Uses Map internally, defaults to 5-min TTL. Refactor siteConfig.js to use shared cache for SITE_CONFIG_QUERY result. Refactor pages/api/chat.js to use shared cache for site context and thesis embeddings.",
+          "commitMessage": "phase 4.3.1: create shared lib/cache.js and refactor siteConfig + chat to use it"
+        },
+        {
+          "id": "4.3.2",
+          "name": "Create Sanity webhook receiver API route",
+          "files": ["pages/api/revalidate.js"],
+          "status": "pending",
+          "effort": "small (1 commit)",
+          "details": "Create pages/api/revalidate.js. POST-only endpoint. Verify webhook signature using SANITY_API_TOKEN from env. Extract _type and slug from request body. Use Next.js 15's revalidatePath() and revalidateTag() to purge ISR cache. Return 200. Log actions. Handle errors gracefully without exposing internals.",
+          "commitMessage": "phase 4.3.2: create /api/revalidate webhook receiver for on-demand ISR"
+        },
+        {
+          "id": "4.3.3",
+          "name": "Configure Sanity webhook in desk structure",
+          "files": ["studio/sanity.config.js", "studio/documentActions.js"],
+          "status": "pending",
+          "effort": "small (1 commit)",
+          "details": "Create studio/documentActions.js that exports a custom document action. On 'publish' and 'unpublish' transitions, POST to NEXT_PUBLIC_SITE_URL/api/revalidate with document _type and slug. Register the action in sanity.config.js plugins array.",
+          "commitMessage": "phase 4.3.3: add custom document action to fire webhooks on publish/unpublish"
+        },
+        {
+          "id": "4.3.4",
+          "name": "Add client-side content listener for real-time updates",
+          "files": ["components/Prefetcher.js", "lib/sanity.js"],
+          "status": "pending",
+          "effort": "medium (1 commit)",
+          "details": "Add listenSanity() to lib/sanity.js wrapping client.listen('*'). In Prefetcher.js, add useEffect that subscribes to mutations. When a mutation fires, invalidate the related cache entry and refetch only that content type. Disconnect listener on unmount and when tab is hidden (visibilitychange).",
+          "commitMessage": "phase 4.3.4: add client.listen() subscription for real-time content updates"
+        },
+        {
+          "id": "4.3.5",
+          "name": "Replace Prefetcher with stale-while-revalidate pattern",
+          "files": ["components/Prefetcher.js"],
+          "status": "pending",
+          "effort": "medium (1 commit)",
+          "details": "Replace useState/useEffect with a custom useSWR-style hook. Show cached/initial data immediately, initiate background refetch, update when new data arrives. Remove the 'loaded' blocking state and the full-screen loading overlay. Add individual loading states per content type. The context consumers handle their own loading/empty states.",
+          "commitMessage": "phase 4.3.5: replace blocking Prefetcher with SWR pattern, remove loading overlay"
+        },
+        {
+          "id": "4.3.6",
+          "name": "Consolidate chatbot caching with shared utility",
+          "files": ["pages/api/chat.js", "lib/cache.js"],
+          "status": "pending",
+          "effort": "small (1 commit)",
+          "details": "Replace the inline 5-min TTL cache in chat.js with calls to shared lib/cache.js. Expose invalidateSiteContext() and invalidateThesesCache() for webhook-triggered invalidation.",
+          "commitMessage": "phase 4.3.6: refactor chatbot to use shared cache with webhook invalidation"
+        },
+        {
+          "id": "4.3.7",
+          "name": "Add ISR tags to all getStaticProps paths",
+          "files": [
+            "pages/blog/[slug].js", "pages/bulletin/[slug].js",
+            "pages/thesis/[slug].js", "pages/awards/[slug].js",
+            "pages/gallery/[slug].js",
+            "pages/blog/index.js", "pages/bulletin/index.js",
+            "pages/thesis/index.js", "pages/awards/index.js",
+            "pages/gallery/index.js", "pages/index.js"
+          ],
+          "status": "pending",
+          "effort": "medium (1 commit)",
+          "details": "Add revalidate tags to all getStaticProps functions. Export const revalidateTags = ['blog', 'bulletin', 'thesis', 'award', 'gallery'] from each page. The webhook receiver uses revalidateTag() for targeted purging.",
+          "commitMessage": "phase 4.3.7: add ISR tags to all getStaticProps for targeted revalidation"
+        },
+        {
+          "id": "4.3.8",
+          "name": "Add Presentation tool to Sanity Studio",
+          "files": ["studio/sanity.config.js", "studio/package.json"],
+          "status": "pending",
+          "effort": "medium (1-2 commits)",
+          "details": "npm install @sanity/presentation in studio/. Add presentation() plugin to sanity.config.js with previewUrl pointing to NEXT_PUBLIC_SITE_URL. Configure resolvers for each document type mapping slugs to URLs. This enables visual live editing — editors click elements on a website preview to edit them in Studio.",
+          "commitMessage": "phase 4.3.8: install and configure @sanity/presentation for visual live editing"
+        },
+        {
+          "id": "4.3.9",
+          "name": "Add GROQ query files for maintainability",
+          "files": ["lib/groq/*.js"],
+          "status": "pending",
+          "effort": "medium (1 commit)",
+          "details": "Create lib/groq/blog.js, bulletin.js, thesis.js, awards.js (done), gallery.js, council.js, devTeam.js, siteConfig.js. Each exports named query strings. Update Prefetcher.js and all pages to import from lib/groq/. Note: awards.js already created in 4.2.3.",
+          "commitMessage": "phase 4.3.9: extract all GROQ queries to lib/groq/ files"
+        },
+        {
+          "id": "4.3.10",
+          "name": "Add error boundaries and error handling",
+          "files": ["lib/sanity.js", "components/Prefetcher.js", "components/ErrorBoundary.js"],
+          "status": "pending",
+          "effort": "medium (1 commit)",
+          "details": "Create components/ErrorBoundary.js. Wrap major page sections. Add try/catch in all client.fetch calls in lib/sanity.js. In Prefetcher, catch individual fetch errors so one failing type doesn't block others.",
+          "commitMessage": "phase 4.3.10: add ErrorBoundary component and error handling to all Sanity fetches"
+        }
+      ]
     }
+  },
+
+  "commitPlan": {
+    "strategy": "One commit per task with a descriptive message prefixed by phase ID. This ensures a rich commit history with clear traceability.",
+    "remainingCommits": [
+      { "message": "phase 4.2.2: rewrite awards/[slug].js — remove demo mode, validation bloat, sample data (966→250 lines)", "files": ["pages/awards/[slug].js"] },
+      { "message": "phase 4.2.3: add getStaticProps with ISR to all 5 list pages", "files": ["pages/awards/index.js", "pages/blog/index.js", "pages/bulletin/index.js", "pages/thesis/index.js", "pages/gallery/index.js", "lib/groq/awards.js"] },
+      { "message": "phase 4.2.5: add preview select configs to all 11 Sanity schemas", "files": ["studio/schemas/*.js", "studio/schemas/documents/*.js"] },
+      { "message": "phase 4.3.1: create shared lib/cache.js and refactor siteConfig + chat to use it", "files": ["lib/cache.js", "lib/siteConfig.js", "pages/api/chat.js"] },
+      { "message": "phase 4.3.2: create /api/revalidate webhook receiver for on-demand ISR", "files": ["pages/api/revalidate.js"] },
+      { "message": "phase 4.3.3: add custom document action to fire webhooks on publish/unpublish", "files": ["studio/sanity.config.js", "studio/documentActions.js"] },
+      { "message": "phase 4.3.4: add client.listen() subscription for real-time content updates", "files": ["components/Prefetcher.js", "lib/sanity.js"] },
+      { "message": "phase 4.3.5: replace blocking Prefetcher with SWR pattern, remove loading overlay", "files": ["components/Prefetcher.js"] },
+      { "message": "phase 4.3.6: refactor chatbot to use shared cache with webhook invalidation", "files": ["pages/api/chat.js", "lib/cache.js"] },
+      { "message": "phase 4.3.7: add ISR tags to all getStaticProps for targeted revalidation", "files": ["pages/blog/*.js", "pages/bulletin/*.js", "pages/thesis/*.js", "pages/awards/*.js", "pages/gallery/*.js", "pages/index.js"] },
+      { "message": "phase 4.3.8: install and configure @sanity/presentation for visual live editing", "files": ["studio/sanity.config.js", "studio/package.json"] },
+      { "message": "phase 4.3.9: extract all GROQ queries to lib/groq/ files", "files": ["lib/groq/*.js", "components/Prefetcher.js", "pages/**/*.js"] },
+      { "message": "phase 4.3.10: add ErrorBoundary component and error handling to all Sanity fetches", "files": ["components/ErrorBoundary.js", "lib/sanity.js", "components/Prefetcher.js"] }
+    ],
+    "target": "13 additional commits across phases 4.2 and 4.3"
   },
 
   "techStack": {
@@ -320,10 +314,10 @@
 
   "env": {
     "required": [
-      { "name": "NEXT_PUBLIC_SANITY_PROJECT_ID", "scope": "public", "purpose": "Sanity project ID" },
-      { "name": "NEXT_PUBLIC_SANITY_DATASET", "scope": "public", "purpose": "Sanity dataset name" },
-      { "name": "NEXT_PUBLIC_SANITY_API_VERSION", "scope": "public", "purpose": "Pinned Sanity API date" },
-      { "name": "SANITY_API_TOKEN", "scope": "server-only", "purpose": "Read token for dataset access. Used for webhook verification." },
+      { "name": "NEXT_PUBLIC_SANITY_PROJECT_ID", "scope": "public", "purpose": "Sanity project ID", "value": "gjvp776o" },
+      { "name": "NEXT_PUBLIC_SANITY_DATASET", "scope": "public", "purpose": "Sanity dataset name", "value": "production" },
+      { "name": "NEXT_PUBLIC_SANITY_API_VERSION", "scope": "public", "purpose": "Pinned Sanity API date", "value": "2023-10-01" },
+      { "name": "SANITY_API_TOKEN", "scope": "server-only", "purpose": "Read token for dataset access and webhook verification" },
       { "name": "SANITY_DEPLOY_TOKEN", "scope": "server-only", "purpose": "Token for `sanity deploy` commands" },
       { "name": "GEMINI_API_KEY", "scope": "server-only", "purpose": "Google Gemini API key for CSBot" }
     ],
@@ -350,10 +344,5 @@
       "risk": "Server-side list pages increase build time",
       "mitigation": "Use fallback: 'blocking' so unbuilt pages render on first request. Keep revalidate for incremental regeneration."
     }
-  ],
-
-  "commitStrategy": {
-    "description": "Each task in phases 4.1, 4.2, and 4.3 gets its own commit with a descriptive message. This ensures a rich commit history with at least 24-32 new commits.",
-    "target": "24-32 commits across all three sub-phases"
-  }
+  ]
 }
