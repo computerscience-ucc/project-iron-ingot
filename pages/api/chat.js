@@ -5,6 +5,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildSiteContext, fetchAllTheses } from "../../lib/sanity";
 import { fetchSiteConfig } from "../../lib/siteConfig";
+import { createCache } from "../../lib/cache";
 
 // ────────────────────────────────────────────────────────────
 // Rate limiting & IP protection
@@ -108,24 +109,22 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-// Cache site context for 5 minutes to avoid hitting Sanity on every message
-let cachedContext = null;
-let cachedTheses = null;
-let cacheTimestamp = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const chatCache = createCache();
+const CACHE_KEY_CONTEXT = "siteContext";
+const CACHE_KEY_THESES = "theses";
 
 async function getSiteData() {
-  const now = Date.now();
-  if (cachedContext && now - cacheTimestamp < CACHE_TTL) {
+  const cachedContext = chatCache.get(CACHE_KEY_CONTEXT);
+  const cachedTheses = chatCache.get(CACHE_KEY_THESES);
+  if (cachedContext && cachedTheses) {
     return { context: cachedContext, theses: cachedTheses };
   }
   const [context, theses] = await Promise.all([
     buildSiteContext(),
     fetchAllTheses(),
   ]);
-  cachedContext = context;
-  cachedTheses = theses;
-  cacheTimestamp = now;
+  chatCache.set(CACHE_KEY_CONTEXT, context);
+  chatCache.set(CACHE_KEY_THESES, theses);
   return { context, theses };
 }
 
