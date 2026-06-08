@@ -9,16 +9,18 @@ import { revalidateOnPublish } from "./documentActions";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://uccingo.tech";
 
 const resolveProductionUrl = (doc) => {
-  if (!doc?.slug?.current) return undefined;
   const type = doc._type;
-  const slug = doc.slug.current;
+  const slug = doc?.slug?.current;
 
   const routes = {
-    blog: `/blog/${slug}`,
-    bulletin: `/bulletin/${slug}`,
-    thesis: `/thesis/${slug}`,
-    award: `/awards/${slug}`,
-    gallery: `/gallery/${slug}`,
+    blog: slug && `/blog/${slug}`,
+    bulletin: slug && `/bulletin/${slug}`,
+    thesis: slug && `/thesis/${slug}`,
+    award: slug && `/awards/${slug}`,
+    gallery: slug && `/gallery/${slug}`,
+    council: `/council`,
+    devTeam: `/about`,
+    heroCarousel: `/`,
   };
 
   const path = routes[type];

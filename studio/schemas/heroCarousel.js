@@ -48,4 +48,13 @@ export default defineType({
       ],
     },
   ],
+  preview: {
+    select: { slideCount: "slides" },
+    prepare({ slideCount }) {
+      return {
+        title: "Hero Carousel",
+        subtitle: `${slideCount?.length || 0} slide(s) configured`,
+      };
+    },
+  },
 };
