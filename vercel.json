@@ -2,10 +2,5 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install",
-  "env": {
-    "NEXT_PUBLIC_SANITY_PROJECT_ID": "gjvp776o",
-    "NEXT_PUBLIC_SANITY_DATASET": "production",
-    "NEXT_PUBLIC_SANITY_API_VERSION": "2023-10-01"
-  }
+  "installCommand": "npm install"
 }
