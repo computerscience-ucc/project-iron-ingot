@@ -22,6 +22,7 @@
     "@react-three/drei": "^9.120.4",
     "@react-three/fiber": "^8.18.0",
     "@sanity/client": "^7.22.1",
+    "@sanity/image-url": "^1.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.4",
@@ -42,7 +43,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@portabletext/react": "^6.0.3",
-    "@sanity/image-url": "^1.0.1",
     "autoprefixer": "^10.4.7",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
