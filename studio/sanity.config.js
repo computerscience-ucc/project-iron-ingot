@@ -3,6 +3,7 @@ import { deskTool } from "sanity/desk";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemas/schema";
 import { deskStructure } from "./deskStructure";
+import { revalidateOnPublish } from "./documentActions";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://uccingo.tech";
 
@@ -32,5 +33,6 @@ export default defineConfig({
   schema: { types: schemaTypes },
   document: {
     productionUrl: async (prev, context) => resolveProductionUrl(context.document),
+    actions: [revalidateOnPublish],
   },
 });
