@@ -71,4 +71,10 @@ export default defineType({
       ],
     },
   ],
+  preview: {
+    select: { title: "bulletinTitle", media: "headerImage" },
+    prepare({ title, media }) {
+      return { title: title || "Untitled Bulletin", media };
+    },
+  },
 };

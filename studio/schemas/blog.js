@@ -4,6 +4,9 @@ export default defineType({
   type: "document",
   name: "blog",
   title: "Blog",
+  initialValue: {
+    academicYear: "2025-2026",
+  },
   fields: [
     {
       title: "Blog Header Image",
@@ -88,4 +91,10 @@ export default defineType({
       ],
     },
   ],
+  preview: {
+    select: { title: "blogTitle", subtitle: "academicYear", media: "headerImage" },
+    prepare({ title, subtitle, media }) {
+      return { title: title || "Untitled Blog", subtitle: subtitle || "", media };
+    },
+  },
 };
