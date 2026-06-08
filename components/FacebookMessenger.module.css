@@ -2,13 +2,14 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 999;
   pointer-events: auto;
 }
 
+/* Adjust for mobile to avoid overlapping with CSBot widget */
 @media (max-width: 767px) {
   .messengerWidget {
-    bottom: 0;
-    right: 0;
+    right: auto;
+    left: 0;
   }
 }
