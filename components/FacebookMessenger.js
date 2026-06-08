@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import styles from "./FacebookMessenger.module.css";
 
 const FB_SDK_URL = "https://connect.facebook.net/en_US/sdk.js";
 const FB_SDK_VERSION = "v21.0";
@@ -113,8 +114,7 @@ export default function FacebookMessenger({
   return (
     <div
       ref={containerRef}
-      className={`facebook-messenger-widget ${className}`}
-      style={{ position: "fixed", bottom: 0, right: 0, zIndex: 9999 }}
+      className={`${styles.messengerWidget} ${className}`}
     />
   );
 }

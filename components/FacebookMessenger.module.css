@@ -1,0 +1,14 @@
+.messengerWidget {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  .messengerWidget {
+    bottom: 0;
+    right: 0;
+  }
+}
