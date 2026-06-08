@@ -4,21 +4,21 @@
     "codename": "project-iron-ingot-web",
     "organization": "University of Caloocan City — Computer Science Council",
     "tagline": "Your CS Information Board on the Go.",
-    "description": "Public-facing website for the UCC CS Council (INGO). Surfaces BSCS program news, awards, theses, blogs, bulletins, and council/team info. Content managed in a Sanity Studio bundled inside the repo.",
+    "description": "Public-facing website for the UCC CS Council (INGO). Surfaces BSCS program news, awards, theses, blogs, bulletins, and council/team info. Content managed in a Sanity Studio v3 bundled inside the repo.",
     "repository": {
       "type": "git",
       "defaultBranch": "main"
     },
-    "nodeVersion": "16.17.0",
+    "nodeVersion": "18+",
     "packageManager": "npm",
-    "deploymentTarget": "Vercel",
+    "deploymentTarget": "Vercel (front-end) + Sanity Hosting (CMS)",
     "maintainers": "Future CS Council officers (handoff-ready)"
   },
 
   "devCommands": {
     "npm run dev": "Start Next.js (3000) AND Sanity Studio (3333) concurrently",
     "npm run dev:next": "Start only Next.js on :3000",
-    "npm run dev:studio": "Start only Sanity Studio on :3333",
+    "npm run dev:studio": "Start only Sanity Studio on :3333 (v3: sanity dev)",
     "npm run build": "Production Next.js build",
     "npm run start": "Run the production build",
     "npm run lint": "ESLint via next lint"
@@ -85,6 +85,53 @@
     ]
   },
 
+  "phase2Completed": {
+    "summary": "Council improvements, mobile responsiveness, SEO, and animations implemented.",
+    "items": [
+      {
+        "id": "P2-1",
+        "name": "Improve Council section",
+        "description": "Expandable officer details, year selector for past councils, committee display, class presidents on landing page"
+      },
+      {
+        "id": "P2-2",
+        "name": "Mobile responsiveness audit",
+        "description": "Touch target sizes, scroll-blocking touchAction:none fixes, award description layout on tablet"
+      },
+      {
+        "id": "P2-3",
+        "name": "SEO improvements",
+        "description": "JSON-LD structured data in Head, real meta descriptions on thesis/gallery details, sitemap updated"
+      },
+      {
+        "id": "P2-4",
+        "name": "Animations & interactions",
+        "description": "Scroll-triggered entrance animations for CSBotSection and FAQ"
+      }
+    ]
+  },
+
+  "phase3Completed": {
+    "summary": "Sanity v3 migration, Vercel deployment config, and handoff documentation complete.",
+    "items": [
+      {
+        "id": "P3-1",
+        "name": "Sanity v3 migration",
+        "description": "Migrated from @sanity/base v2 to Sanity Studio v3. sanity.json → sanity.config.js + sanity.cli.js. All schemas use defineType(). Desk structure uses sanity/structure."
+      },
+      {
+        "id": "P3-2",
+        "name": "Vercel deployment setup",
+        "description": "vercel.json with Next.js framework + env vars. Front-end deploys to Vercel; CMS deploys via `sanity deploy`."
+      },
+      {
+        "id": "P3-3",
+        "name": "Handoff documentation",
+        "description": "AGENTS.md with architecture, setup, deploy, troubleshooting guides. README updated with quick start."
+      }
+    ]
+  },
+
   "remainingIssues": [
     {
       "issue": "Awards index page fetches from Sanity independently despite Prefetcher also loading awards. Low priority — index needs richer image metadata (dimensions) than Prefetcher provides.",
@@ -95,11 +142,6 @@
       "issue": "About page fetches council + devTeam data directly via Sanity; not integrated with Prefetcher.",
       "severity": "low",
       "suggestion": "Keep as-is since council/team data changes infrequently."
-    },
-    {
-      "issue": "Sanity Studio v2 is in legacy maintenance mode.",
-      "severity": "medium",
-      "suggestion": "Plan migration to Sanity v3 when resources allow."
     },
     {
       "issue": "Footer copyright year is hardcoded to 2026 instead of dynamic.",
@@ -147,12 +189,12 @@
       "utilities": ["dayjs", "clsx", "tailwind-merge", "class-variance-authority"]
     },
     "cms": {
-      "name": "Sanity v2 (legacy studio, @sanity/base)",
+      "name": "Sanity Studio v3",
       "projectId": "gjvp776o",
       "dataset": "production",
-      "studioLocation": "/studio (embedded, run via `npm run dev:studio`)",
+      "studioLocation": "studio/ (standalone Vite dev server, port 3333)",
       "schemas": ["award", "blog", "bulletin", "council", "devTeam", "gallery", "heroCarousel", "siteConfig", "thesis", "recipient", "author"],
-      "migration": "Plan upgrade to Sanity v3"
+      "migration": "Completed June 2026 — migrated from v2 to v3"
     },
     "integrations": [
       { "name": "Google Gemini", "purpose": "ChatBot (CSBot) replies", "envVar": "GEMINI_API_KEY" }
@@ -175,7 +217,7 @@
       { "path": "/about", "page": "pages/about/index.js", "purpose": "About the council — council roster, committees, dev team" }
     ],
     "studio": [
-      { "path": "/studio or http://localhost:3333", "purpose": "Sanity Studio v2 — content management" }
+      { "path": "http://localhost:3333 or deployed Sanity hostname", "purpose": "Sanity Studio v3 — content management" }
     ]
   },
 
@@ -192,58 +234,6 @@
     "prefetcher": "Client-side context (Prefetcher.js) loads blogs, bulletins, thesis, awards, gallery, siteConfig on app mount. Used by: landing page, list pages, search modal, navbar dropdowns.",
     "ssg": "Detail pages (blog/[slug], bulletin/[slug], thesis/[slug], awards/[slug], gallery/[slug]) use getStaticProps + getStaticPaths with ISR (revalidate: 10s).",
     "directFetch": "About page fetches council + devTeam directly via client.fetch(). Awards index fetches independently for richer image data."
-  },
-
-  "phase2Planned": {
-    "summary": "Improvements to be tackled after Phase 1 bug fixes are verified.",
-    "items": [
-      {
-        "id": "P2-1",
-        "name": "Improve Council section",
-        "description": "Expandable officer details, year selector for past councils, committee display on landing page",
-        "estimate": "2-3 hours"
-      },
-      {
-        "id": "P2-2",
-        "name": "Mobile responsiveness audit",
-        "description": "Review and fix breakpoint issues across all pages",
-        "estimate": "1-2 hours"
-      },
-      {
-        "id": "P2-3",
-        "name": "SEO improvements",
-        "description": "Structured data (JSON-LD), improved meta tags, sitemap optimization",
-        "estimate": "1 hour"
-      },
-      {
-        "id": "P2-4",
-        "name": "Animations & interactions",
-        "description": "Page transitions, micro-interactions, loading states",
-        "estimate": "2 hours"
-      }
-    ]
-  },
-
-  "phase3Planned": {
-    "summary": "Future work for handoff-ready project.",
-    "items": [
-      {
-        "id": "P3-1",
-        "name": "Sanity v3 migration",
-        "description": "Migrate from @sanity/base v2 to Sanity Studio v3",
-        "notes": "Requires separate effort — breaking changes in plugin system"
-      },
-      {
-        "id": "P3-2",
-        "name": "Vercel deployment setup",
-        "description": "Configure Vercel project, env vars, custom domain, CI/CD"
-      },
-      {
-        "id": "P3-3",
-        "name": "Handoff documentation",
-        "description": "README with setup guide, architecture docs, maintenance guide for future council officers"
-      }
-    ]
   },
 
   "env": {
