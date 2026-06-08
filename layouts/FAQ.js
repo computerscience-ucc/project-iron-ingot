@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useInView } from "motion/react";
 
 const faqs = [
   {
@@ -80,10 +80,20 @@ const FAQItem = ({ faq, isOpen, onClick }) => {
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(-1);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
-    <section className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 md:mt-10 lg:mt-[3rem] mb-12 lg:mb-[6rem] font-sans flex flex-col items-center">
-      <div className="flex flex-col w-full md:w-[54rem] mx-auto">
+    <section
+      ref={ref}
+      className="relative section-container px-6 md:px-12 lg:px-[6rem] mt-8 md:mt-10 lg:mt-[3rem] mb-12 lg:mb-[6rem] font-sans flex flex-col items-center"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="flex flex-col w-full md:w-[54rem] mx-auto"
+      >
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-[0.8rem] mb-8 md:mb-[2rem]">
           <div className="relative w-[100px] h-[100px] md:w-[80px] md:h-[80px] md:w-[110px] md:h-[110px] shrink-0">
@@ -102,15 +112,21 @@ export default function FAQ() {
         {/* FAQ Accordion List */}
         <div className="flex flex-col -mx-6 md:-mx-12 lg:mx-0">
           {faqs.map((faq, index) => (
-            <FAQItem
+            <motion.div
               key={index}
-              faq={faq}
-              isOpen={index === openIndex}
-              onClick={() => setOpenIndex(index === openIndex ? -1 : index)}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.1 * index, ease: "easeOut" }}
+            >
+              <FAQItem
+                faq={faq}
+                isOpen={index === openIndex}
+                onClick={() => setOpenIndex(index === openIndex ? -1 : index)}
+              />
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
