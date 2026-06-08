@@ -6,13 +6,35 @@ import { usePrefetcher } from "../../components/Prefetcher";
 import dayjs from "dayjs";
 import Link from "next/link";
 import Pagination from "../../components/Pagination";
+import { client } from "../../lib/sanity";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-export default function Bulletin() {
+const BULLETIN_QUERY = `
+  *[_type == 'bulletin'] | order(_createdAt desc, _updatedAt desc) {
+    _id, _createdAt, _updatedAt, _type,
+    "headerImage": headerImage.asset -> url,
+    "title": bulletinTitle,
+    "slug": slug.current,
+    "authors": bulletinAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    tags
+  }
+`;
+
+export async function getStaticProps() {
+  try {
+    const bulletins = await client.fetch(BULLETIN_QUERY);
+    return { props: { initialBulletins: bulletins || [] }, revalidate: 10 };
+  } catch (error) {
+    console.error("Error fetching bulletins:", error);
+    return { props: { initialBulletins: [] }, revalidate: 10 };
+  }
+}
+
+export default function Bulletin({ initialBulletins }) {
   const { bulletins } = usePrefetcher();
-  const [bulletinList, setBulletinList] = useState([]);
+  const [bulletinList, setBulletinList] = useState(initialBulletins);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +44,7 @@ export default function Bulletin() {
   }, [selectedYear, sortLatest]);
 
   useEffect(() => {
-    setBulletinList(bulletins || []);
+    if (bulletins?.length > 0) setBulletinList(bulletins);
   }, [bulletins]);
 
   useEffect(() => {

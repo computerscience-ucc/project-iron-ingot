@@ -5,16 +5,38 @@ import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import { useRouter } from "next/router";
-
+import { client } from "../../lib/sanity";
 import Pagination from "../../components/Pagination";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-export default function Thesis() {
+const THESIS_QUERY = `
+  *[_type == 'thesis'] | order(academicYear desc, _createdAt desc) {
+    _id, _createdAt, _updatedAt, _type,
+    "headerImage": headerImage.asset -> url,
+    "title": thesisTitle,
+    "slug": slug.current,
+    "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    "description": pt::text(thesisContent),
+    academicYear, department, tags
+  }
+`;
+
+export async function getStaticProps() {
+  try {
+    const thesis = await client.fetch(THESIS_QUERY);
+    return { props: { initialThesis: thesis || [] }, revalidate: 10 };
+  } catch (error) {
+    console.error("Error fetching thesis:", error);
+    return { props: { initialThesis: [] }, revalidate: 10 };
+  }
+}
+
+export default function Thesis({ initialThesis }) {
   const router = useRouter();
   const { thesis } = usePrefetcher();
-  const [thesisList, setThesisList] = useState([]);
+  const [thesisList, setThesisList] = useState(initialThesis);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [selectedDepartment, setSelectedDepartment] = useState(ALL);
   const [selectedCategory, setSelectedCategory] = useState(ALL);
@@ -33,7 +55,7 @@ export default function Thesis() {
   const departments = [ALL, "BSCS", "BSEMC", "BSIT", "BSIS", "Other"];
 
   useEffect(() => {
-    setThesisList(thesis || []);
+    if (thesis?.length > 0) setThesisList(thesis);
   }, [thesis]);
 
   useEffect(() => {

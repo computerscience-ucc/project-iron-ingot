@@ -5,18 +5,40 @@ import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import Pagination from "../../components/Pagination";
+import { client } from "../../lib/sanity";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
+
+const BLOG_QUERY = `
+  *[_type == 'blog'] | order(_createdAt desc, _updatedAt desc) {
+    _id, _createdAt, _updatedAt, _type,
+    "headerImage": headerImage.asset -> url,
+    "title": blogTitle,
+    "slug": slug.current,
+    "authors": blogAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
+    academicYear, tags
+  }
+`;
+
+export async function getStaticProps() {
+  try {
+    const blogs = await client.fetch(BLOG_QUERY);
+    return { props: { initialBlogs: blogs || [] }, revalidate: 10 };
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return { props: { initialBlogs: [] }, revalidate: 10 };
+  }
+}
 
 function getYears(blogs) {
   const years = [...new Set(blogs.map((b) => b.academicYear || "Unknown"))].sort().reverse();
   return [ALL, ...years];
 }
 
-export default function BlogPage() {
+export default function BlogPage({ initialBlogs }) {
   const { blogs } = usePrefetcher();
-  const [blogList, setBlogList] = useState([]);
+  const [blogList, setBlogList] = useState(initialBlogs);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,7 +49,7 @@ export default function BlogPage() {
   }, [selectedYear, sortLatest]);
 
   useEffect(() => {
-    setBlogList(blogs || []);
+    if (blogs?.length > 0) setBlogList(blogs);
   }, [blogs]);
 
   const years = useMemo(() => getYears(blogList), [blogList]);

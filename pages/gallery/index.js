@@ -5,13 +5,35 @@ import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import Pagination from "../../components/Pagination";
+import { client } from "../../lib/sanity";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-export default function GalleryPage() {
+const GALLERY_QUERY = `
+  *[_type == 'gallery'] | order(projectDate desc, _createdAt desc) {
+    _id, _createdAt, _updatedAt, _type,
+    "title": projectTitle,
+    "slug": slug.current,
+    personName,
+    "profilePicture": profilePicture.asset -> url,
+    projectDate, youtubeEmbedLink, githubUrl, linkedinProfile, tags
+  }
+`;
+
+export async function getStaticProps() {
+  try {
+    const gallery = await client.fetch(GALLERY_QUERY);
+    return { props: { initialGallery: gallery || [] }, revalidate: 10 };
+  } catch (error) {
+    console.error("Error fetching gallery:", error);
+    return { props: { initialGallery: [] }, revalidate: 10 };
+  }
+}
+
+export default function GalleryPage({ initialGallery }) {
   const { gallery } = usePrefetcher();
-  const [projectList, setProjectList] = useState([]);
+  const [projectList, setProjectList] = useState(initialGallery);
   const [selectedYear, setSelectedYear] = useState(ALL);
   const [selectedCategory, setSelectedCategory] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
@@ -26,7 +48,7 @@ export default function GalleryPage() {
   }, [selectedYear, selectedCategory, sortLatest]);
 
   useEffect(() => {
-    setProjectList(gallery || []);
+    if (gallery?.length > 0) setProjectList(gallery);
   }, [gallery]);
 
   // Extract unique years dynamically based on provided projects

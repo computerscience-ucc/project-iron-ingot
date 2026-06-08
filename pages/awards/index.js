@@ -6,52 +6,38 @@ import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import Card from "../../components/Awards/Card";
 import Lightbox from "../../components/Awards/Lightbox";
-
-// ─────────────────────────────────────
-// Sanity GROQ query
-// ─────────────────────────────────────
-const QUERY = `
-  *[_type == 'award'] | order(academicYear desc, dateAwarded desc) {
-    _id,
-    "title": awardTitle,
-    "slug": slug.current,
-    "headerImage": headerImage.asset->{url, "metadata": metadata.dimensions},
-    "images": awardImages[].asset->{url, "metadata": metadata.dimensions},
-    "category": awardCategory,
-    "badges": awardBadges,
-    "description": awardDescription,
-    academicYear,
-    dateAwarded,
-    tags
-  }
-`;
+import { AWARDS_LIST_QUERY } from "../../lib/groq/awards";
 
 // ─────────────────────────────────────
 // Year pill
 // ─────────────────────────────────────
 
-const Awards = () => {
-  const [awards, setAwards] = useState([]);
-  const [loading, setLoading] = useState(true);
+export async function getStaticProps() {
+  try {
+    const awards = await client.fetch(AWARDS_LIST_QUERY);
+    return {
+      props: { initialAwards: awards || [] },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.error("Error fetching awards list:", error);
+    return { props: { initialAwards: [] }, revalidate: 10 };
+  }
+}
+
+const Awards = ({ initialAwards }) => {
+  const [awards] = useState(initialAwards);
   const [selectedYear, setSelectedYear] = useState("All");
   const [sortAsc, setSortAsc] = useState(false);
   const [lightbox, setLightbox] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    setLoading(true);
-    client.fetch(QUERY).then((data) => {
-      const result = data || [];
-      setAwards(result);
-      setLoading(false);
-
-      // Check if there's an ID in the query to open immediately
-      if (router.query.id) {
-        const award = result.find((a) => a._id === router.query.id);
-        if (award) setLightbox(award);
-      }
-    });
-  }, [router.query.id]);
+    if (router.query.id && awards.length > 0) {
+      const award = awards.find((a) => a._id === router.query.id);
+      if (award) setLightbox(award);
+    }
+  }, [awards, router.query.id]);
 
   // Unique years derived from data
   const years = useMemo(() => {
@@ -149,28 +135,15 @@ const Awards = () => {
           )}
         </div>
 
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="columns-2 lg:columns-4 gap-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-[4px] bg-[#262626] opacity-50 animate-pulse mb-4"
-                style={{ height: `${200 + (i % 3) * 100}px` }}
-              />
-            ))}
-          </div>
-        )}
-
         {/* Empty state */}
-        {!loading && filtered.length === 0 && (
+        {filtered.length === 0 && (
           <div className="text-[#8C8C8C] text-[1rem] font-normal leading-normal py-10 text-center border-b border-dashed border-[#2F2F2F]">
             No awards found{selectedYear !== "All" ? ` for ${selectedYear}` : ""}.
           </div>
         )}
 
         {/* Masonry-like Columns */}
-        {!loading && filtered.length > 0 && (
+        {filtered.length > 0 && (
           <div className="columns-2 lg:columns-4 gap-4 space-y-4">
             {filtered.map((award) => (
               <Card
