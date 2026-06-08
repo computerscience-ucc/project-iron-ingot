@@ -125,13 +125,13 @@ export default function Hero() {
           {/* Buttons */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 md:gap-3 lg:gap-4 w-full lg:w-auto">
             <Link href="/#latest">
-              <Button className="bg-[#333333] hover:bg-[#444444] text-[var(--color-text)] border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-colors">
+              <Button className="bg-[#333333] hover:bg-[#444444] text-[var(--color-text)] border-none h-11 md:h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-colors">
                 See whats new on the board
               </Button>
             </Link>
             <motion.div className="relative" initial="rest" whileHover="hover">
               <Link href="/thesis?year=2025-2026" scroll={false}>
-                <Button className="bg-gradient-to-r from-[#FF3538] to-[#DE2528] hover:brightness-110 text-white border-none h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-all flex items-center gap-[0.6rem]">
+                <Button className="bg-gradient-to-r from-[#FF3538] to-[#DE2528] hover:brightness-110 text-white border-none h-11 md:h-[40px] px-4 rounded-[4px] font-sans font-medium text-sm md:text-[0.9375rem] transition-all flex items-center gap-[0.6rem]">
                   2026 Thesis <ArrowRight size={18} />
                 </Button>
               </Link>

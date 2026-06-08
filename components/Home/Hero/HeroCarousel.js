@@ -116,7 +116,7 @@ export default function HeroCarousel() {
             e.stopPropagation();
             prevSlide();
           }}
-          className="w-9 h-9 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
+          className="w-11 h-11 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Previous slide"
         >
           <ArrowLeft size={isMobile ? 16 : 20} strokeWidth={2.5} />
@@ -128,7 +128,7 @@ export default function HeroCarousel() {
             e.stopPropagation();
             nextSlide();
           }}
-          className="w-9 h-9 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
+          className="w-11 h-11 md:w-12 md:h-12 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Next slide"
         >
           <ArrowRight size={isMobile ? 16 : 20} strokeWidth={2.5} />
@@ -160,7 +160,7 @@ export default function HeroCarousel() {
                 setDirection(index > currentIndex ? 1 : -1);
                 setCurrentIndex(index);
               }}
-              className="h-1.5 rounded-full backdrop-blur-md focus:outline-none"
+              className="h-1.5 rounded-full backdrop-blur-md focus:outline-none py-3.5 box-content"
               aria-label={`Go to slide ${index + 1}`}
             />
           );

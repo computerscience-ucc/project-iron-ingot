@@ -214,7 +214,7 @@ export default function AwardGallery() {
 
         {/* Carousel */}
         <motion.div
-          className="relative w-full flex justify-center items-center mt-[-1px] z-20 touch-none md:touch-pan-y"
+          className="relative w-full flex justify-center items-center mt-[-1px] z-20 touch-pan-y"
           style={{ height: `${cardHeight}px` }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}

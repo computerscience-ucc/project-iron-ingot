@@ -45,7 +45,6 @@ export default function HappyCodingSection() {
       initial="rest"
       whileHover="hover"
       whileTap="hover"
-      style={{ touchAction: "none" }} // improves swiping on touch devices
     >
       {/* Centered Content Container */}
       <div className="section-container px-6 md:px-12 lg:px-[6rem] relative z-[10] pointer-events-none">

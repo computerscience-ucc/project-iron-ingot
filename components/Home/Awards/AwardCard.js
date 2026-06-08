@@ -134,7 +134,7 @@ export default function AwardCard({
                   </motion.h3>
                 </div>
 
-                <div className="hidden lg:block overflow-hidden mb-2 md:mb-3 lg:mb-4">
+                <div className="hidden md:block overflow-hidden mb-2 md:mb-3 lg:mb-4">
                   <motion.p
                     variants={{
                       initial: { y: "110%" },
