@@ -74,8 +74,17 @@ export default defineType({
   ],
   preview: {
     select: {
-      title: "fullName.lastName",
-      subtitle: "author",
+      firstName: "fullName.firstName",
+      lastName: "fullName.lastName",
+      yearLevel: "yearLevel",
+      media: "authorPhoto",
+    },
+    prepare({ firstName, lastName, yearLevel, media }) {
+      return {
+        title: [firstName, lastName].filter(Boolean).join(" ") || "Unnamed Author",
+        subtitle: yearLevel || "",
+        media,
+      };
     },
   },
 };
