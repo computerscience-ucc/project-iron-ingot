@@ -1,6 +1,7 @@
 import { defineConfig } from "sanity";
 import { deskTool } from "sanity/desk";
 import { visionTool } from "@sanity/vision";
+import { presentationTool } from "@sanity/presentation";
 import { schemaTypes } from "./schemas/schema";
 import { deskStructure } from "./deskStructure";
 import { revalidateOnPublish } from "./documentActions";
@@ -29,7 +30,16 @@ export default defineConfig({
   title: "UCC INGO - Content Studio",
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.SANITY_STUDIO_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET,
-  plugins: [deskTool({ structure: deskStructure }), visionTool()],
+  plugins: [
+    deskTool({ structure: deskStructure }),
+    visionTool(),
+    presentationTool({
+      previewUrl: {
+        origin: process.env.SANITY_STUDIO_PREVIEW_URL || siteUrl,
+        preview: "/",
+      },
+    }),
+  ],
   schema: { types: schemaTypes },
   document: {
     productionUrl: async (prev, context) => resolveProductionUrl(context.document),
