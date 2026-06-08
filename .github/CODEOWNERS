@@ -1,0 +1,22 @@
+# UCC INGO Code Ownership
+# Default ownership for all files
+* @computerscience-ucc
+
+# CI / workflow ownership
+.github/workflows/* @computerscience-ucc
+
+# Front-end code
+pages/** @computerscience-ucc
+components/** @computerscience-ucc
+layouts/** @computerscience-ucc
+
+# Data and utilities
+lib/** @computerscience-ucc
+
+# Sanity Studio
+studio/** @computerscience-ucc
+
+# Configuration files
+*.config.js @computerscience-ucc
+*.config.mjs @computerscience-ucc
+*.json @computerscience-ucc
