@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"cd studio && sanity dev\"",
-    "dev:next": "next dev",
-    "dev:studio": "cd studio && sanity dev",
+"dev": "concurrently \"next dev\" \"cd studio && npx sanity dev\"",
+"dev:next": "next dev",
+"dev:studio": "cd studio && npx sanity dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
