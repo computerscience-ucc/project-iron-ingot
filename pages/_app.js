@@ -8,6 +8,7 @@ import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { ThemeProvider } from "@material-tailwind/react";
 import ChatBot from "../components/ChatBot";
+import FacebookMessenger from "../components/FacebookMessenger";
 import SearchModal from "../components/SearchModal";
 import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
 import SectionStripe from "@/components/SectionStripe";
@@ -742,6 +743,12 @@ function AppInner({ Component, pageProps }) {
 
         {/* Render ChatBot conditionally */}
         <AppChatBot />
+
+        {/* Render Facebook Messenger Customer Chat */}
+        <FacebookMessenger
+          pageId={process.env.NEXT_PUBLIC_FB_PAGE_ID}
+          appId={process.env.NEXT_PUBLIC_FB_APP_ID}
+        />
 
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
