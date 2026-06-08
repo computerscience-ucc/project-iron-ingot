@@ -9,6 +9,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "cdn.sanity.io" },
+      { protocol: "https", hostname: "platform-lookaside.fbsbx.com" },
+      { protocol: "https", hostname: "*.fbcdn.net" },
     ],
   },
   eslint: {
