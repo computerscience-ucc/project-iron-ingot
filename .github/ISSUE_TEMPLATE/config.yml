@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability
+    url: mailto:ucc.computersciencecouncil@gmail.com
+    about: Report security vulnerabilities privately via email. Do not open public issues for security concerns.
+  - name: Documentation
+    url: https://github.com/computerscience-ucc/project-iron-ingot/blob/main/AGENTS.md
+    about: Check the maintenance guide before opening an issue.
