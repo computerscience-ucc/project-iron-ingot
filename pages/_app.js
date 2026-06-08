@@ -63,11 +63,9 @@ function AppInner({ Component, pageProps }) {
   const { scrollY } = useScroll();
 
   const [isAtTop, setIsAtTop] = useState(true);
-  const [isHeroSection, setIsHeroSection] = useState(true);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsAtTop(latest < 5);
-    setIsHeroSection(latest < 800);
     const previous = scrollY.getPrevious();
     // Hide immediately when scrolling down
     // Show back immediately when scrolling up

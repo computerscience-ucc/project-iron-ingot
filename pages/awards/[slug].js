@@ -122,30 +122,6 @@ const sanitizeContent = (content) => {
   }
 };
 
-// Image validation function
-const validateImage = (imageUrl, fieldName = "image") => {
-  if (!imageUrl) return { isValid: true, error: null }; // Optional field
-
-  try {
-    const url = new URL(imageUrl);
-    const extension = url.pathname.split(".").pop()?.toLowerCase();
-
-    if (!AwardValidationSchema.imageFormats.includes(extension)) {
-      return {
-        isValid: false,
-        error: `Invalid ${fieldName} format. Supported: ${AwardValidationSchema.imageFormats.join(", ")}`
-      };
-    }
-
-    return { isValid: true, error: null };
-  } catch {
-    return {
-      isValid: false,
-      error: `Invalid ${fieldName} URL format`
-    };
-  }
-};
-
 // Award data validation
 const validateAwardData = (data) => {
   const errors = [];
@@ -567,17 +543,6 @@ const AwardPage = ({
       setLoading(false);
     }
   };
-
-  // Image error handler with fallback
-  const handleImageError = (e, fallbackSrc = null) => {
-    console.warn("Image failed to load:", e.target.src);
-    if (fallbackSrc) {
-      e.target.src = fallbackSrc;
-    } else {
-      e.target.style.display = "none";
-    }
-  };
-
   // Safe date formatting with validation
   const formatDate = (dateString) => {
     try {
