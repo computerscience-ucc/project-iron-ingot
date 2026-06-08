@@ -59,7 +59,7 @@ const query_award = `
     "slug": slug.current,
     "category": awardCategory,
     "badges": awardBadges,
-    "recipients": awardRecipients[] -> { fullName, pronouns, batchYear, yearLeve, program, "recipientPhoto": recipientPhoto.asset -> url },
+    "recipients": recipients[] -> { "fullName": fullName.firstName ++ " " ++ fullName.lastName, pronouns, batchYear, yearLevel, program, "recipientPhoto": recipientPhoto.asset -> url },
     "images": awardImages[].asset->url,
     "description": awardDescription,
     academicYear,

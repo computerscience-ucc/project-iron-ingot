@@ -106,6 +106,8 @@ const recipient = {
       description: "Pronouns for the recipient",
       validation: (Rule) => [
         Rule.custom((value) => {
+          if (!value) return true;
+
           const pronounPattern = /^[a-zA-Z]+\/[a-zA-Z]+$/;
           if (!pronounPattern.test(value)) {
             return "Pronouns must be in format 'pronoun/pronoun' (e.g., 'she/her')";

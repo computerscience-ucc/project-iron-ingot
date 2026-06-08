@@ -216,6 +216,33 @@ const award = {
       ],
     },
     {
+      title: "Award Content",
+      name: "awardContent",
+      type: "array",
+      description: "Rich text content describing the award in detail",
+      of: [
+        {
+          type: "block",
+        },
+        {
+          type: "image",
+          options: { hotspot: true },
+        },
+      ],
+    },
+    {
+      title: "Recipients",
+      name: "recipients",
+      type: "array",
+      description: "Individuals or groups who received this award",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "recipient" }],
+        },
+      ],
+    },
+    {
       title: "Tags",
       name: "tags",
       type: "array",

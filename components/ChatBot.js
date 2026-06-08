@@ -550,7 +550,7 @@ const FlowButtons = ({ node, onSelect, onBack, canGoBack }) => (
 
 const ChatBot = () => {
   const { siteConfig } = usePrefetcher() || {};
-  const [chatbotName] = useState("Ingo Bot");
+  const chatbotName = siteConfig?.chatbotName || "Ingo Bot";
   const defaultWelcome =
     "Hi, I'm the Ingo Bot. Use the buttons below to explore, or type a question directly.";
 

@@ -1,0 +1,262 @@
+{
+  "project": {
+    "name": "Project Iron Ingot (UCC INGO)",
+    "codename": "project-iron-ingot-web",
+    "organization": "University of Caloocan City — Computer Science Council",
+    "tagline": "Your CS Information Board on the Go.",
+    "description": "Public-facing website for the UCC CS Council (INGO). Surfaces BSCS program news, awards, theses, blogs, bulletins, and council/team info. Content managed in a Sanity Studio bundled inside the repo.",
+    "repository": {
+      "type": "git",
+      "defaultBranch": "main"
+    },
+    "nodeVersion": "16.17.0",
+    "packageManager": "npm",
+    "deploymentTarget": "Vercel",
+    "maintainers": "Future CS Council officers (handoff-ready)"
+  },
+
+  "devCommands": {
+    "npm run dev": "Start Next.js (3000) AND Sanity Studio (3333) concurrently",
+    "npm run dev:next": "Start only Next.js on :3000",
+    "npm run dev:studio": "Start only Sanity Studio on :3333",
+    "npm run build": "Production Next.js build",
+    "npm run start": "Run the production build",
+    "npm run lint": "ESLint via next lint"
+  },
+
+  "phase1Completed": {
+    "summary": "All critical/high bugs from the initial audit have been fixed. The site now properly fetches and renders Sanity data without crashes.",
+    "fixes": [
+      {
+        "file": "pages/awards/[slug].js",
+        "fix": "Changed GROQ `_type == \"awards\"` (plural) → `_type == \"award\"` (singular) in both getStaticPaths and getStaticProps queries. Fixes: the query now matches actual Sanity documents.",
+        "severity": "critical"
+      },
+      {
+        "file": "pages/awards/[slug].js",
+        "fix": "Fixed variable shadowing bug: inner `const awardPost` was shadowing outer `let awardPost`. Changed to direct assignment so fetched data reaches the page component.",
+        "severity": "critical"
+      },
+      {
+        "file": "pages/awards/[slug].js",
+        "fix": "Fixed GROQ `recipients[] -> { fullName }` to compute fullName as a string from the recipient object's firstName + lastName fields (recipient schema stores name as an object).",
+        "severity": "high"
+      },
+      {
+        "file": "pages/awards/[slug].js",
+        "fix": "Removed dead code: module-level calls to `validateImage()` and `handleImageError()` that were called without arguments and would throw runtime errors.",
+        "severity": "medium"
+      },
+      {
+        "file": "pages/awards/[slug].js",
+        "fix": "Fixed scroll event listener leak: extracted handler to named variable for proper cleanup in useEffect.",
+        "severity": "medium"
+      },
+      {
+        "file": "studio/schemas/award.js",
+        "fix": "Added missing `awardContent` field (PortableText/block array) for rich text award descriptions. Added missing `recipients` field (array of references to `recipient` documents).",
+        "severity": "high"
+      },
+      {
+        "file": "studio/schemas/blog.js",
+        "fix": "Added missing `headerImage` field (image type) to match Prefetcher query projection.",
+        "severity": "high"
+      },
+      {
+        "file": "studio/schemas/bulletin.js",
+        "fix": "Added missing `headerImage` field (image type) to match Prefetcher query projection.",
+        "severity": "high"
+      },
+      {
+        "file": "studio/schemas/documents/recipient.js",
+        "fix": "Fixed pronoun validation: added `if (!value) return true` so optional field doesn't incorrectly reject empty values.",
+        "severity": "low"
+      },
+      {
+        "file": "components/Prefetcher.js",
+        "fix": "Changed award query field from `awardRecipients[]` (nonexistent) to `recipients[]` (now added to schema). Fixed `fullName` to compute string from object. Fixed typo `yearLeve` → `yearLevel`.",
+        "severity": "high"
+      },
+      {
+        "file": "components/ChatBot.js",
+        "fix": "Changed hardcoded `useState(\"Ingo Bot\")` to read `siteConfig?.chatbotName` from CMS, falling back to \"Ingo Bot\".",
+        "severity": "medium"
+      }
+    ]
+  },
+
+  "remainingIssues": [
+    {
+      "issue": "Awards index page fetches from Sanity independently despite Prefetcher also loading awards. Low priority — index needs richer image metadata (dimensions) than Prefetcher provides.",
+      "severity": "low",
+      "suggestion": "Either extend Prefetcher query to include image dimensions, or accept the separate fetch."
+    },
+    {
+      "issue": "About page fetches council + devTeam data directly via Sanity; not integrated with Prefetcher.",
+      "severity": "low",
+      "suggestion": "Keep as-is since council/team data changes infrequently."
+    },
+    {
+      "issue": "Sanity Studio v2 is in legacy maintenance mode.",
+      "severity": "medium",
+      "suggestion": "Plan migration to Sanity v3 when resources allow."
+    },
+    {
+      "issue": "Footer copyright year is hardcoded to 2026 instead of dynamic.",
+      "severity": "low",
+      "suggestion": "Use `new Date().getFullYear()` or read from siteConfig."
+    }
+  ],
+
+  "goals": [
+    "Single source of truth for CS Council information (awards, blogs, bulletins, theses, council, gallery).",
+    "Editorial team can update content via Sanity Studio without touching code.",
+    "Fast, animated, responsive site with strong SEO and accessibility.",
+    "Local development should boot both the website and the Studio in one command.",
+    "Handoff-ready for future CS Council officers to maintain."
+  ],
+
+  "nonGoals": [
+    "Authentication / user accounts (public site only).",
+    "Payments, e-commerce, or transaction processing.",
+    "Server-side personalization or analytics dashboards in v1."
+  ],
+
+  "audiences": [
+    {
+      "name": "BSCS Students",
+      "needs": ["Latest news", "Thesis archive", "Awards recognition", "Council contacts"]
+    },
+    {
+      "name": "Faculty & Staff",
+      "needs": ["Bulletin announcements", "Council roster", "Events"]
+    },
+    {
+      "name": "Editorial Team (Council officers)",
+      "needs": ["Author and publish blogs/bulletins/awards in Sanity", "Upload gallery photos"]
+    }
+  ],
+
+  "techStack": {
+    "frontend": {
+      "framework": "Next.js 15.5.12",
+      "router": "Pages Router (pages/)",
+      "ui": ["React 18", "Tailwind CSS 3", "shadcn/ui", "@material-tailwind/react", "@mui/material", "framer-motion"],
+      "animationAnd3D": ["three.js", "@react-three/fiber", "@react-three/drei", "lenis (smooth scroll)"],
+      "icons": ["@hugeicons/react", "@geist-ui/icons", "lucide-react", "react-icons"],
+      "utilities": ["dayjs", "clsx", "tailwind-merge", "class-variance-authority"]
+    },
+    "cms": {
+      "name": "Sanity v2 (legacy studio, @sanity/base)",
+      "projectId": "gjvp776o",
+      "dataset": "production",
+      "studioLocation": "/studio (embedded, run via `npm run dev:studio`)",
+      "schemas": ["award", "blog", "bulletin", "council", "devTeam", "gallery", "heroCarousel", "siteConfig", "thesis", "recipient", "author"],
+      "migration": "Plan upgrade to Sanity v3"
+    },
+    "integrations": [
+      { "name": "Google Gemini", "purpose": "ChatBot (CSBot) replies", "envVar": "GEMINI_API_KEY" }
+    ]
+  },
+
+  "routes": {
+    "website": [
+      { "path": "/", "page": "pages/index.js", "purpose": "Landing — hero, features, awards, gallery, latest content, council, FAQ" },
+      { "path": "/awards", "page": "pages/awards/index.js", "purpose": "Awards listing with year filter, sort, lightbox" },
+      { "path": "/awards/[slug]", "page": "pages/awards/[slug].js", "purpose": "Award detail page with PortableText content, recipients, images" },
+      { "path": "/blog", "page": "pages/blog/index.js", "purpose": "Blog posts listing (Sanity-backed)" },
+      { "path": "/blog/[slug]", "page": "pages/blog/[slug].js", "purpose": "Blog post detail (SSG with ISR)" },
+      { "path": "/bulletin", "page": "pages/bulletin/index.js", "purpose": "Announcements listing (Sanity-backed)" },
+      { "path": "/bulletin/[slug]", "page": "pages/bulletin/[slug].js", "purpose": "Bulletin detail (SSG with ISR)" },
+      { "path": "/gallery", "page": "pages/gallery/index.js", "purpose": "Photo gallery (Sanity-backed)" },
+      { "path": "/gallery/[slug]", "page": "pages/gallery/[slug].js", "purpose": "Gallery project detail (SSG with ISR)" },
+      { "path": "/thesis", "page": "pages/thesis/index.js", "purpose": "Thesis archive with filters (Sanity-backed)" },
+      { "path": "/thesis/[slug]", "page": "pages/thesis/[slug].js", "purpose": "Thesis detail (SSG with ISR)" },
+      { "path": "/about", "page": "pages/about/index.js", "purpose": "About the council — council roster, committees, dev team" }
+    ],
+    "studio": [
+      { "path": "/studio or http://localhost:3333", "purpose": "Sanity Studio v2 — content management" }
+    ]
+  },
+
+  "contentSchemas": {
+    "award": { "fields": ["headerImage", "awardTitle", "slug", "awardCategory", "awardBadges", "awardImages", "dateAwarded", "academicYear", "awardDescription", "awardContent (rich text)", "recipients (refs to recipient)", "tags"] },
+    "blog": { "fields": ["headerImage", "blogTitle", "slug", "blogAuthor (refs to author)", "academicYear", "tags", "blogContent (rich text)"] },
+    "bulletin": { "fields": ["headerImage", "bulletinTitle", "slug", "bulletinAuthor (refs to author)", "tags", "bulletinContent (rich text)"] },
+    "thesis": { "fields": ["headerImage", "thesisTitle", "slug", "postAuthor (refs to author)", "academicYear", "department", "tags", "thesisContent (rich text)"] },
+    "council": { "fields": ["academicYear", "isCurrent", "adviser", "president", "vicePresident", "officers", "yearRepresentatives", "committees", "classPresidents"] },
+    "gallery": { "fields": ["projectTitle", "slug", "personName", "profilePicture", "projectDate", "youtubeEmbedLink", "githubUrl", "linkedinProfile", "tags"] }
+  },
+
+  "dataFlow": {
+    "prefetcher": "Client-side context (Prefetcher.js) loads blogs, bulletins, thesis, awards, gallery, siteConfig on app mount. Used by: landing page, list pages, search modal, navbar dropdowns.",
+    "ssg": "Detail pages (blog/[slug], bulletin/[slug], thesis/[slug], awards/[slug], gallery/[slug]) use getStaticProps + getStaticPaths with ISR (revalidate: 10s).",
+    "directFetch": "About page fetches council + devTeam directly via client.fetch(). Awards index fetches independently for richer image data."
+  },
+
+  "phase2Planned": {
+    "summary": "Improvements to be tackled after Phase 1 bug fixes are verified.",
+    "items": [
+      {
+        "id": "P2-1",
+        "name": "Improve Council section",
+        "description": "Expandable officer details, year selector for past councils, committee display on landing page",
+        "estimate": "2-3 hours"
+      },
+      {
+        "id": "P2-2",
+        "name": "Mobile responsiveness audit",
+        "description": "Review and fix breakpoint issues across all pages",
+        "estimate": "1-2 hours"
+      },
+      {
+        "id": "P2-3",
+        "name": "SEO improvements",
+        "description": "Structured data (JSON-LD), improved meta tags, sitemap optimization",
+        "estimate": "1 hour"
+      },
+      {
+        "id": "P2-4",
+        "name": "Animations & interactions",
+        "description": "Page transitions, micro-interactions, loading states",
+        "estimate": "2 hours"
+      }
+    ]
+  },
+
+  "phase3Planned": {
+    "summary": "Future work for handoff-ready project.",
+    "items": [
+      {
+        "id": "P3-1",
+        "name": "Sanity v3 migration",
+        "description": "Migrate from @sanity/base v2 to Sanity Studio v3",
+        "notes": "Requires separate effort — breaking changes in plugin system"
+      },
+      {
+        "id": "P3-2",
+        "name": "Vercel deployment setup",
+        "description": "Configure Vercel project, env vars, custom domain, CI/CD"
+      },
+      {
+        "id": "P3-3",
+        "name": "Handoff documentation",
+        "description": "README with setup guide, architecture docs, maintenance guide for future council officers"
+      }
+    ]
+  },
+
+  "env": {
+    "required": [
+      { "name": "NEXT_PUBLIC_SANITY_PROJECT_ID", "value": "gjvp776o", "scope": "public", "purpose": "Sanity project ID" },
+      { "name": "NEXT_PUBLIC_SANITY_DATASET", "value": "production", "scope": "public", "purpose": "Sanity dataset name" },
+      { "name": "NEXT_PUBLIC_SANITY_API_VERSION", "value": "2023-10-01", "scope": "public", "purpose": "Pinned Sanity API date" },
+      { "name": "SANITY_API_TOKEN", "value": "<read-token>", "scope": "server-only", "purpose": "Optional read token for private datasets" },
+      { "name": "GEMINI_API_KEY", "value": "<key-from-aistudio.google.com>", "scope": "server-only", "purpose": "Google Gemini API key for CSBot" }
+    ],
+    "files": {
+      ".env": "Local-only, gitignored",
+      ".env.example": "Committed template"
+    }
+  }
+}

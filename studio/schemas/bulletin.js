@@ -4,6 +4,12 @@ const bulletin = {
   title: "Bulletin",
   fields: [
     {
+      title: "Bulletin Header Image",
+      name: "headerImage",
+      type: "image",
+      options: { hotspot: true },
+    },
+    {
       title: "Bulletin Title",
       name: "bulletinTitle",
       type: "string",

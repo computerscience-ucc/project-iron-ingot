@@ -259,7 +259,7 @@ const generateSampleAwardData = (slug) => {
   const sampleData = {
     "excellence-award-2024": {
       _id: "sample-001",
-      _type: "awards",
+      _type: "award",
       _createdAt: "2024-08-27T10:00:00Z",
       _updatedAt: "2024-08-27T10:00:00Z",
       title: "Excellence in Computer Science Award 2024",
@@ -318,7 +318,7 @@ const generateSampleAwardData = (slug) => {
     },
     "invalid-data-example": {
       _id: null, // Missing required field
-      _type: "awards",
+      _type: "award",
       title: "", // Empty required field
       slug: "invalid data example!", // Invalid slug format
       category: "This category name is way too long and exceeds the maximum allowed length limit",
@@ -333,7 +333,7 @@ const generateSampleAwardData = (slug) => {
     },
     "missing-content-example": {
       _id: "sample-003",
-      _type: "awards",
+      _type: "award",
       _createdAt: "2024-08-27T10:00:00Z",
       title: "Award with Missing Content",
       slug: "missing-content-example",
@@ -348,7 +348,7 @@ const generateSampleAwardData = (slug) => {
 export const getStaticPaths = async () => {
   try {
     const awardPosts = await client.fetch(
-      `*[_type == "awards" && defined(slug.current)]{
+      `*[_type == "award" && defined(slug.current)]{
         "slug": slug.current,
       }`
     );
@@ -400,8 +400,8 @@ export const getStaticProps = async (context) => {
 
     try {
       // Try to fetch from Sanity first
-      const awardPost = await client.fetch(
-        `*[_type == "awards" && slug.current == $slug][0]{
+      awardPost = await client.fetch(
+        `*[_type == "award" && slug.current == $slug][0]{
           _id,
           _createdAt,
           _updatedAt,
@@ -412,7 +412,7 @@ export const getStaticProps = async (context) => {
           "content": awardContent,
           "category": awardCategory,
           "recipients": recipients[] -> {
-            fullName,
+            "fullName": fullName.firstName ++ " " ++ fullName.lastName,
             "recipientPhoto": recipientPhoto.asset -> url,
             yearLevel,
             batchYear,
@@ -578,9 +578,6 @@ const AwardPage = ({
     }
   };
 
-  validateImage();
-  handleImageError();
-
   // Safe date formatting with validation
   const formatDate = (dateString) => {
     try {
@@ -619,16 +616,17 @@ const AwardPage = ({
 
   // listen for scroll events
   useEffect(() => {
-    window.addEventListener("scroll", () => {
+    const handleScroll = () => {
       // show scroll to top button if user has scrolled down by 20% to 80% of the page
       setScrollToTopButtonShown(
         window.scrollY > mainDocument.current?.scrollHeight * 0.2 &&
           window.scrollY < mainDocument.current?.scrollHeight - 700
       );
-    });
+    };
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", () => {});
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 

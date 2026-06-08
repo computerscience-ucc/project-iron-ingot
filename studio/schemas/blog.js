@@ -4,6 +4,12 @@ const blog = {
   title: "Blog",
   fields: [
     {
+      title: "Blog Header Image",
+      name: "headerImage",
+      type: "image",
+      options: { hotspot: true },
+    },
+    {
       title: "Blog Title",
       name: "blogTitle",
       type: "string",
