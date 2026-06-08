@@ -1,248 +1,166 @@
 {
-  "title": "UCC INGO — Product Roadmap: Smarter Studio + Presentation + Live Updates",
+  "title": "Facebook Messenger Customer Chat Integration",
   "version": "1.0.0",
-  "date": "2026-06-08",
+  "created": "2026-06-09",
+  "status": "planning",
+  "author": "UCC INGO Dev Team",
+  "description": "Integrate the Facebook Messenger Customer Chat Plugin into the UCC INGO website so visitors can directly chat with the UCC BSCS Facebook page from the browser without leaving the site.",
 
-  "overview": "Evolution of UCC INGO from a static CMS-backed website to a dynamic, real-time content platform. Three phases: (1) Smarter Sanity Studio Layout — organize the CMS for editor productivity, (2) Presentation Layer — rich previews and refactored front-end, (3) Live Content Updates — real-time pushes from CMS to website without manual refresh.",
+  "background": "The UCC INGO website currently has an AI chatbot (CSBot powered by Google Gemini) and social media links to the Facebook page (https://www.facebook.com/UCCBSCS2022). However, visitors who want to message the page directly must leave the site and open Facebook Messenger separately. This integration adds a persistent Messenger chat bubble on the website, enabling real-time conversations between visitors and the CS Council's Facebook page admins.",
 
-  "current_state": {
-    "what_exists": [
-      "Sanity Studio v3 with deskTool, presentationTool, visionTool",
-      "Grouped desk structure: Content / People / Structure (in deskStructure.js)",
-      "Field groups on thesis (5 groups: basic, content, media, members, metadata)",
-      "Field groups on award (4 groups: basic, media, content, metadata)",
-      "Document action revalidateOnPublish that calls /api/revalidate",
-      "productionUrl resolver for all content types",
-      "Prefetcher component with client-side data fetching on mount",
-      "listenSanity() stub with incomplete typeQueryMap (empty query bodies)",
-      "lib/cache.js — generic TTL cache utility",
-      "GROQ query files in lib/groq/ (blog, bulletin, thesis, awards, gallery)",
-      "ErrorBoundary component wrapping the app"
-    ],
-    "what_needs_improvement": [
-      "No custom preview components for any schema type",
-      "award.js schema is 117 lines, recipient.js is 85 lines — could be simplified",
-      "Awards slug page is 232 lines using @material-tailwind/react (causes build issues)",
-      "Awards list page uses client-only data (Prefetcher), shows spinner on first load",
-      "listenSanity() has empty query strings in typeQueryMap — subscriptions don't work",
-      "No preview thumbnails in Studio document browser",
-      "No initial value templates beyond basic defaults",
-      "No document badges on schemas",
-      "No default ordering in studio document lists (ordering exists in deskStructure)",
-      "No webhook receiver endpoint for on-demand ISR from external services",
-      "Prefetcher shows blocking loading overlay (no stale-while-revalidate pattern)",
-      "No presentation tool for visual live editing on the front-end"
+  "goals": [
+    "Allow website visitors to chat directly to the UCC BSCS Facebook page from the website",
+    "Keep visitors on the site while enabling Messenger communication",
+    "Provide a familiar Facebook Messenger experience (blue chat bubble, Messenger UI)",
+    "Allow CMS admins to toggle the feature on/off without code changes",
+    "Ensure the widget does not conflict with the existing CSBot AI chatbot",
+    "Mobile-responsive and performant (lazy-loaded SDK)"
+  ],
+
+  "non_goals": [
+    "Building a custom chat system (using Facebook's official plugin instead)",
+    "Replacing the existing AI chatbot (CSBot) — both coexist",
+    "Facebook Login / OAuth flows",
+    "Automated bot responses via Facebook Send/Receive API (future enhancement)"
+  ],
+
+  "technical_approach": {
+    "method": "Facebook Customer Chat Plugin (official SDK)",
+    "sdk_url": "https://connect.facebook.net/en_US/sdk.js",
+    "sdk_version": "v21.0",
+    "how_it_works": [
+      "Load the Facebook JS SDK asynchronously on page load",
+      "Initialize with the Facebook Page ID and App ID",
+      "The SDK auto-renders a Messenger chat bubble (bottom-right corner)",
+      "Clicking the bubble opens a Messenger chat window embedded in-page",
+      "Visitors can send messages directly to the Facebook page inbox",
+      "Page admins receive messages in their Facebook Page inbox / Messenger"
     ]
   },
 
-  "phases": {
-    "4.1": {
-      "name": "Smarter Sanity Studio Layout",
-      "objective": "Optimize the CMS for editor productivity — organized sidebar, production previews, field grouping, simplified schemas, document badges, initial value templates, and newest-first ordering.",
-      "tasks": [
-        {
-          "id": "4.1.1",
-          "title": "Production preview URLs for every content type",
-          "description": "Verify resolveProductionUrl covers all 6 content types (blog, bulletin, thesis, award, gallery, council). Add preview components to each schema using S.preview() or custom prepare(). Ensure the 'Open preview' button appears in the Studio document pane for every type.",
-          "files": ["studio/sanity.config.js", "studio/schemas/blog.js", "studio/schemas/bulletin.js", "studio/schemas/thesis.js", "studio/schemas/award.js", "studio/schemas/gallery.js", "studio/schemas/council.js", "studio/schemas/devTeam.js", "studio/schemas/heroCarousel.js"],
-          "acceptance": "Every document type in Studio shows a working 'Open preview' button linking to the correct front-end URL."
-        },
-        {
-          "id": "4.1.2",
-          "title": "Field groups on all applicable schemas",
-          "description": "Thesis already has 5 field groups. Award already has 4. Add field groups to blog (basic, content, metadata), bulletin (basic, content, metadata), gallery (basic, links, media). Ensure the groups are logically organized for content editors.",
-          "files": ["studio/schemas/blog.js", "studio/schemas/bulletin.js", "studio/schemas/gallery.js"],
-          "acceptance": "Every schema with 6+ fields has field groups that collapse related fields."
-        },
-        {
-          "id": "4.1.3",
-          "title": "Simplify recipient schema (85 -> ~40 lines)",
-          "description": "Current recipient.js is 85 lines with nested fullName object. Flatten to single fullName string field. Remove middleInitial (rarely used). Simplify preview preparation. Keep slug auto-generation from fullName.",
-          "files": ["studio/schemas/documents/recipient.js"],
-          "acceptance": "recipient.js reduced to ~40 lines while preserving all functionality."
-        },
-        {
-          "id": "4.1.4",
-          "title": "Simplify award schema (117 -> ~90 lines)",
-          "description": "Current award.js is 117 lines. Consolidate validation rules, simplify field definitions. Remove redundant 'required' validators where schema type already implies requirement. Merge dateAwarded and academicYear into metadata group. Simplify tags and badges arrays.",
-          "files": ["studio/schemas/award.js"],
-          "acceptance": "award.js reduced to ~90 lines with cleaner field organization."
-        },
-        {
-          "id": "4.1.5",
-          "title": "Document badges, initial value templates, newest-first ordering",
-          "description": "Add document badges to schemas (e.g., 'Published' badge for published docs). Add initialValue templates for common patterns (e.g., academic year default). Add default orderings to every schema type so Studio lists show newest first by default.",
-          "files": ["studio/schemas/blog.js", "studio/schemas/bulletin.js", "studio/schemas/thesis.js", "studio/schemas/award.js", "studio/schemas/gallery.js", "studio/schemas/council.js", "studio/schemas/devTeam.js", "studio/schemas/documents/recipient.js", "studio/schemas/documents/author.js"],
-          "acceptance": "Every document type shows a descriptive badge, has newest-first ordering, and sensible initial values."
-        },
-        {
-          "id": "4.1.6",
-          "title": "Add missing dev script for studio",
-          "description": "Studio package.json has 'dev': 'sanity dev' but the root concurrently command fails on Windows because 'sanity' isn't in PATH. Update the root package.json dev:studio script to use 'npx sanity dev' from the studio directory.",
-          "files": ["package.json"],
-          "acceptance": "npm run dev:studio starts Sanity Studio without 'sanity not recognized' error."
-        }
-      ]
-    },
+  "prerequisites": {
+    "facebook_page_id": "REQUIRED — Numeric Page ID from the UCC BSCS Facebook page (found in Page Settings > General > Page ID)",
+    "facebook_app_id": "RECOMMENDED — App ID from Meta Developers (https://developers.facebook.com) — Required for SDK initialization. Create a 'Consumer' type app if you don't have one.",
+    "messenger_plugin_enabled": "In Facebook Page Settings > Messenger Platform > Whitelisted Domains, add the website domain (e.g., uccingo.tech)"
+  },
 
-    "4.2": {
-      "name": "Presentation Layer",
-      "objective": "Rich visual previews in the Studio document browser, refactored front-end pages, server-side data fetching for instant page loads, and organized filtering in desk structure.",
-      "tasks": [
-        {
-          "id": "4.2.1",
-          "title": "Custom preview thumbnails in Studio document browser",
-          "description": "Create preview components for all 11 schema types. Each preview shows a thumbnail image (if available), title, subtitle with key metadata (e.g., academic year, department, category), and a status badge. Use Sanity's preview.select and prepare() for each schema.",
-          "files": ["studio/schemas/blog.js", "studio/schemas/bulletin.js", "studio/schemas/thesis.js", "studio/schemas/award.js", "studio/schemas/gallery.js", "studio/schemas/council.js", "studio/schemas/devTeam.js", "studio/schemas/documents/recipient.js", "studio/schemas/documents/author.js", "studio/schemas/heroCarousel.js", "studio/schemas/siteConfig.js"],
-          "acceptance": "Every schema type shows a rich preview card in the Studio document browser with image, title, and metadata subtitle."
-        },
-        {
-          "id": "4.2.2",
-          "title": "Refactor awards slug page (232 -> ~120 lines)",
-          "description": "Current awards/[slug].js is 232 lines with @material-tailwind/react components that break prerendering. Replace Tooltip/IconButton/Breadcrumbs/Chip with custom lightweight alternatives. Extract blockComponents to a shared file. Simplify the layout while preserving all functionality and visual design.",
-          "files": ["pages/awards/[slug].js", "lib/portableTextComponents.js"],
-          "acceptance": "Awards slug page is ~120 lines, builds without errors, and renders identically."
-        },
-        {
-          "id": "4.2.3",
-          "title": "Server-side data fetching for all list pages",
-          "description": "Convert all list pages (awards, blog, bulletin, thesis, gallery) to use getServerSideProps or getStaticProps with revalidation. Remove dependency on Prefetcher for initial data load. Each page fetches its own data at request time, eliminating the first-load spinner.",
-          "files": ["pages/awards/index.js", "pages/blog/index.js", "pages/bulletin/index.js", "pages/thesis/index.js", "pages/gallery/index.js", "pages/index.js"],
-          "acceptance": "All list pages render with full data on first paint — no loading spinner on initial navigation."
-        },
-        {
-          "id": "4.2.4",
-          "title": "Default ordering and filters in desk structure",
-          "description": "Add year-filter dropdowns to desk structure for thesis (by academic year) and awards (by category). Add searchable document lists for all content types. Ensure deskStructure.js uses S.documentTypeList() with proper filtering and ordering for every type.",
-          "files": ["studio/deskStructure.js"],
-          "acceptance": "Editors can filter thesis by year and awards by category directly from the Studio sidebar."
-        },
-        {
-          "id": "4.2.5",
-          "title": "Preview components for all 11 schema types",
-          "description": "Build React preview components that render inside Sanity Studio's preview pane. Each preview shows a live-like rendering of the content: blog posts show title, header image, first paragraph; awards show title, image, recipients; thesis show title, department, members. Use sanity's component resolver for live preview.",
-          "files": ["studio/components/previews/BlogPreview.js", "studio/components/previews/BulletinPreview.js", "studio/components/previews/ThesisPreview.js", "studio/components/previews/AwardPreview.js", "studio/components/previews/GalleryPreview.js", "studio/components/previews/CouncilPreview.js", "studio/components/previews/DevTeamPreview.js", "studio/components/previews/HeroPreview.js", "studio/components/previews/AuthorPreview.js", "studio/components/previews/RecipientPreview.js", "studio/components/previews/SiteConfigPreview.js"],
-          "acceptance": "Each schema type has a live preview component that renders realistic content previews in the Studio."
-        }
-      ]
+  "implementation_slices": [
+    {
+      "id": "slice-01",
+      "title": "Environment Variables & Config",
+      "description": "Add FB_PAGE_ID and FB_APP_ID to .env file and expose them via next.config.mjs",
+      "files_changed": [".env", "next.config.mjs"],
+      "commit_message": "feat(messenger): add Facebook env vars and Next.js config"
     },
-
-    "4.3": {
-      "name": "Live Content Updates",
-      "objective": "Real-time content synchronization from Sanity to the website — no manual refresh needed. Includes shared caching, on-demand ISR via webhooks, real-time client subscriptions, stale-while-revalidate pattern, and presentation tool for visual live editing.",
-      "tasks": [
-        {
-          "id": "4.3.1",
-          "title": "Shared cache utility in lib/cache.js",
-          "description": "The current lib/cache.js is already a generic TTL cache. Enhance it with: (1) LRU eviction when cache exceeds maxSize, (2) stats tracking (hit/miss counts), (3) multi-key invalidation by tag pattern, (4) async get-or-set helper. Replace the 3 existing ad-hoc caching patterns (siteConfig, chat API, prefetcher) to use this shared utility.",
-          "files": ["lib/cache.js", "lib/siteConfig.js", "pages/api/chat.js", "components/Prefetcher.js"],
-          "acceptance": "lib/cache.js is the single source of truth for all client-side caching. Old ad-hoc caches are removed."
-        },
-        {
-          "id": "4.3.2",
-          "title": "Enhance /api/revalidate webhook receiver",
-          "description": "Current revalidate endpoint exists but uses 'revalidatePath' from 'next/server' (App Router API in a Pages Router project). Fix to use 'res.unstable_revalidate()' or the Pages Router equivalent. Add support for revalidating the homepage and sitemap. Add proper secret validation with SANITY_WEBHOOK_SECRET. Add better error logging.",
-          "files": ["pages/api/revalidate.js"],
-          "acceptance": "POST /api/revalidate correctly purges ISR cache for the specified type/slug on Vercel."
-        },
-        {
-          "id": "4.3.3",
-          "title": "Sanity Studio document action to fire webhooks on publish",
-          "description": "Current documentActions.js does a client-side fetch from the browser to /api/revalidate. This fails if the studio is on a different origin (CORS) or the site is behind auth. Fix to use Sanity's API directly via the Sanity client (using SANITY_API_TOKEN) to trigger revalidation server-side, or use Sanity's native webhook system instead.",
-          "files": ["studio/documentActions.js", "pages/api/revalidate.js"],
-          "acceptance": "Publishing a document in Studio triggers ISR cache invalidation reliably (not via CORS fetch from browser)."
-        },
-        {
-          "id": "4.3.4",
-          "title": "client.listen() subscription for real-time client updates",
-          "description": "Fix the listenSanity() function in lib/sanity.js — the typeQueryMap currently has empty string queries for all types. Fill in the actual GROQ queries that match the list queries. Add reconnection logic (with exponential backoff). Add visibility-based pause/resume (don't listen when tab is hidden).",
-          "files": ["lib/sanity.js"],
-          "acceptance": "When content is published/updated in Sanity, the website receives the update in real-time without a page refresh."
-        },
-        {
-          "id": "4.3.5",
-          "title": "Stale-while-revalidate Prefetcher",
-          "description": "Refactor Prefetcher.js to implement stale-while-revalidate pattern: (1) Show cached/stale data immediately on mount, (2) Fetch fresh data in background, (3) Update UI when fresh data arrives. No more blocking loading state. Add error boundaries around each data type so one failure doesn't crash the whole app.",
-          "files": ["components/Prefetcher.js"],
-          "acceptance": "Navigating to any page shows content immediately (from cache) while updating in the background."
-        },
-        {
-          "id": "4.3.6",
-          "title": "Presentation tool for visual live editing",
-          "description": "The studio already has presentationTool configured. Enhance it with: (1) Custom preview URL resolvers for all content types, (2) Focused preview that auto-scrolls to the edited content on the page, (3) Iframe communication between Studio and the front-end for real-time cursor/selection sync.",
-          "files": ["studio/sanity.config.js"],
-          "acceptance": "Editors can use Presentation mode to see live changes as they type, with auto-scroll to the edited section."
-        },
-        {
-          "id": "4.3.7",
-          "title": "GROQ query files in lib/groq/",
-          "description": "All lib/groq/ files already exist. Audit them for: (1) Consistent field naming across queries, (2) Proper image URL resolutions for all image fields, (3) Coverage for all content types including siteConfig and council queries, (4) Add helper query fragments to reduce duplication.",
-          "files": ["lib/groq/blog.js", "lib/groq/bulletin.js", "lib/groq/thesis.js", "lib/groq/awards.js", "lib/groq/gallery.js"],
-          "acceptance": "All GROQ queries follow a consistent pattern, include image URLs, and cover every content type."
-        },
-        {
-          "id": "4.3.8",
-          "title": "Error boundaries and error handling",
-          "description": "ErrorBoundary component already exists and wraps the app. Enhance with: (1) Sanity error logging (log errors to Sanity dataset for admin visibility), (2) Per-section error boundaries around each major content area (thesis list, blog list, awards, etc.), (3) Graceful degradation — if one section fails, the rest of the page still works.",
-          "files": ["components/ErrorBoundary.js", "pages/_app.js", "pages/awards/index.js", "pages/blog/index.js", "pages/bulletin/index.js", "pages/thesis/index.js", "pages/gallery/index.js"],
-          "acceptance": "If Sanity API is down, individual sections show a friendly error message while the rest of the page works."
-        },
-        {
-          "id": "4.3.9",
-          "title": "Sanity Admin write client (lib/sanity-admin.js)",
-          "description": "restore the lib/sanity-admin.js with a write-enabled Sanity client using SANITY_API_TOKEN. This is needed for server-side mutations like error logging, creating audit records, and triggering revalidation from server contexts.",
-          "files": ["lib/sanity-admin.js"],
-          "acceptance": "Serverside code can write to Sanity using the admin client with proper token auth."
-        },
-        {
-          "id": "4.3.10",
-          "title": "End-to-end data flow documentation",
-          "description": "Update AGENTS.md with the new architecture. Document: (1) How content flows from Sanity → Webhook → ISR → Website, (2) How real-time updates work via client.listen(), (3) How Presentation mode works for editors, (4) Troubleshooting guide for each live-update layer.",
-          "files": ["AGENTS.md"],
-          "acceptance": "AGENTS.md has a complete 'Live Content Updates' section covering all new architecture."
-        }
-      ]
+    {
+      "id": "slice-02",
+      "title": "Facebook Messenger Component",
+      "description": "Create the core FacebookMessenger React component that loads the FB SDK, initializes the Customer Chat Plugin, and handles cleanup on unmount",
+      "files_changed": ["components/FacebookMessenger.js"],
+      "commit_message": "feat(messenger): create FacebookMessenger component with SDK loader"
+    },
+    {
+      "id": "slice-03",
+      "title": "Component Styling",
+      "description": "Create CSS module for positioning, z-index management, and responsive tweaks to ensure the Messenger bubble doesn't overlap the CSBot widget",
+      "files_changed": ["components/FacebookMessenger.module.css"],
+      "commit_message": "style(messenger): add positioning and z-index styles for Messenger widget"
+    },
+    {
+      "id": "slice-04",
+      "title": "Integration into _app.js",
+      "description": "Import and render FacebookMessenger in the AppInner layout, respecting siteConfig toggles and ensuring proper z-index stacking with CSBot",
+      "files_changed": ["pages/_app.js"],
+      "commit_message": "feat(messenger): integrate FacebookMessenger into app layout"
+    },
+    {
+      "id": "slice-05",
+      "title": "CMS Schema for Facebook Settings",
+      "description": "Add a 'Facebook Messenger' fieldset to siteConfig schema with fields for pageId, appId, greeting text, color, and enabled toggle — so admins can manage the feature from the CMS",
+      "files_changed": ["studio/schemas/siteConfig.js"],
+      "commit_message": "feat(messenger): add Facebook Messenger fields to CMS siteConfig schema"
+    },
+    {
+      "id": "slice-06",
+      "title": "CMS-Driven Configuration",
+      "description": "Update FacebookMessenger component to read configuration from siteConfig (via Prefetcher) instead of hardcoded env vars, with env vars as fallback",
+      "files_changed": ["components/FacebookMessenger.js", "pages/_app.js"],
+      "commit_message": "feat(messenger): read Messenger config from CMS siteConfig with env fallback"
+    },
+    {
+      "id": "slice-07",
+      "title": "Z-Index & Coexistence Polish",
+      "description": "Fine-tune z-index stacking so both CSBot and Messenger bubbles are visible, adjust Messenger position on mobile to avoid overlap, add loading/error states",
+      "files_changed": ["components/FacebookMessenger.js", "components/FacebookMessenger.module.css"],
+      "commit_message": "fix(messenger): resolve z-index conflicts and mobile positioning with CSBot"
     }
+  ],
+
+  "z_index_strategy": {
+    "description": "Both chat widgets live in the bottom-right corner. They must coexist without overlapping.",
+    "stacking": {
+      "csbot_fab": "z-index: 50 (existing)",
+      "messenger_bubble": "z-index: 999 (Facebook SDK default — higher than CSBot)",
+      "csbot_chat_window": "z-index: 1000 (existing)",
+      "messenger_chat_window": "z-index: 1001 (Facebook SDK default — opens above everything)"
+    },
+    "mobile_adjustment": "On screens < 768px, Messenger bubble shifts to bottom-left to avoid overlapping the CSBot FAB"
   },
 
-  "commit_strategy": {
-    "pattern": "One commit per task (21 total commits across 3 phases)",
-    "commit_prefixes": {
-      "4.1": "studio(smarter): ",
-      "4.2": "feat(presentation): ",
-      "4.3": "feat(live): "
-    },
-    "example_commits": [
-      "studio(smarter): add production preview URLs for all content types",
-      "studio(smarter): add field groups to blog, bulletin, and gallery schemas",
-      "studio(smarter): simplify recipient schema to ~40 lines",
-      "studio(smarter): simplify award schema to ~90 lines",
-      "studio(smarter): add badges, initial values, and default ordering",
-      "studio(smarter): fix studio dev script for Windows (npx sanity)",
-      "feat(presentation): add custom preview thumbnails to all schema types",
-      "feat(presentation): refactor awards slug page to ~120 lines",
-      "feat(presentation): add server-side data fetching for list pages",
-      "feat(presentation): add year/category filters to desk structure",
-      "feat(presentation): add preview components for all 11 schema types",
-      "feat(live): enhance shared cache utility with LRU and stats",
-      "feat(live): fix revalidate webhook for Pages Router",
-      "feat(live): fix document action to revalidate via API reliably",
-      "feat(live): implement real-time client.listen() subscription",
-      "feat(live): refactor Prefetcher with stale-while-revalidate",
-      "feat(live): enhance presentation tool with per-type preview",
-      "feat(live): audit and standardize GROQ query files",
-      "feat(live): add per-section error boundaries and error logging",
-      "feat(live): create Sanity admin write client",
-      "docs: update AGENTS.md with live content update architecture"
+  "facebook_page_setup_checklist": [
+    "1. Go to https://www.facebook.com/UCCBSCS2022/settings",
+    "2. Navigate to Settings > Messenger Platform",
+    "3. Under 'Whitelisted Domains', add: uccingo.tech (and localhost:3000 for dev)",
+    "4. Under 'Customer Chat Plugin', toggle ON",
+    "5. Copy the Page ID from Settings > General > Page ID",
+    "6. Create a Meta Developer App at https://developers.facebook.com if no App ID exists",
+    "7. Add the Facebook SDK snippet to verify the app is connected"
+  ],
+
+  "testing_plan": {
+    "local": [
+      "npm run dev — open localhost:3000",
+      "Messenger bubble appears in bottom-right (bottom-left on mobile)",
+      "Clicking bubble opens Messenger chat window",
+      "Can type and send a message to the Facebook page",
+      "CSBot still works independently in bottom-right",
+      "No console errors related to FB SDK"
+    ],
+    "staging": [
+      "Deploy to Vercel preview URL",
+      "Add Vercel domain to Facebook whitelisted domains",
+      "Full end-to-end test: send message → appears in FB page inbox"
+    ],
+    "production": [
+      "Add uccingo.tech to Facebook whitelisted domains",
+      "Verify Messenger bubble loads on live site",
+      "Test on Chrome, Safari, Firefox, mobile browsers"
     ]
   },
 
-  "technical_notes": {
-    "material_tailwind_issue": "Awards slug page breaks build with 'Cannot read properties of null (reading useContext)' due to @material-tailwind/react SSR incompatibility. Fix: replace with custom lightweight components or use next/dynamic with ssr: false.",
-    "revalidate_path_issue": "pages/api/revalidate.js uses 'revalidatePath' from 'next/server' which is App Router only. For Pages Router, need to use 'res.unstable_revalidate()' pattern or the proper Pages Router ISR API.",
-    "listen_sanity_fix": "The typeQueryMap in lib/sanity.js has empty query strings. Need to reference the actual GROQ queries from lib/groq/ or inline the list queries.",
-    "prefetcher_optimization": "Current Prefetcher blocks rendering until all data is fetched. Should show cached data immediately and refresh in background (stale-while-revalidate).",
-    "studio_preview_setup": "Presentation tool is configured but preview URL resolver needs to return correct URLs for all 6 content types. The resolveProductionUrl function already handles blog, bulletin, thesis, award, gallery — verify coverage.",
-    "windows_path_note": "Root dev:studio script uses 'cd studio && sanity dev' but 'sanity' isn't in PATH on Windows. Fix: 'npx sanity dev' or use workspace script: 'npm run dev' from studio directory."
-  }
+  "risks": [
+    {
+      "risk": "Facebook SDK blocked by ad-blockers",
+      "mitigation": "Graceful degradation — component renders nothing if SDK fails to load"
+    },
+    {
+      "risk": "SDK increases page load time",
+      "mitigation": "SDK is loaded asynchronously (async/defer) and only initializes after DOM ready"
+    },
+    {
+      "risk": "Messenger bubble overlaps CSBot",
+      "mitigation": "CSS positioning shifts Messenger to bottom-left on mobile; z-index management ensures both are accessible"
+    },
+    {
+      "risk": "Domain not whitelisted in Facebook",
+      "mitigation": "Widget only works after domain is added in Facebook Page Settings > Messenger Platform"
+    }
+  ],
+
+  "future_enhancements": [
+    "Facebook Send/Receive API for automated bot replies",
+    "Custom greeting text that changes based on page context (e.g., thesis page vs blog)",
+    "Analytics tracking — count Messenger opens and messages sent",
+    "Integration with the existing CSBot — CSBot can hand off to Messenger for human support"
+  ]
 }
