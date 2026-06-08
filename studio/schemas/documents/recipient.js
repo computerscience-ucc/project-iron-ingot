@@ -1,4 +1,6 @@
-const recipient = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "recipient",
   title: "Recipient",
@@ -269,5 +271,3 @@ const recipient = {
     },
   },
 };
-
-export default recipient;

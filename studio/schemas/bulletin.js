@@ -1,4 +1,6 @@
-const bulletin = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "bulletin",
   title: "Bulletin",
@@ -70,5 +72,3 @@ const bulletin = {
     },
   ],
 };
-
-export default bulletin;

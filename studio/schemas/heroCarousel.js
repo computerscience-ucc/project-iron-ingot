@@ -1,4 +1,6 @@
-const heroCarousel = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "heroCarousel",
   title: "Hero Carousel",
@@ -47,5 +49,3 @@ const heroCarousel = {
     },
   ],
 };
-
-export default heroCarousel;

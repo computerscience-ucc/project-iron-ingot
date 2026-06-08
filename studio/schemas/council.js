@@ -1,4 +1,6 @@
-const council = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "council",
   title: "CS Council",
@@ -180,5 +182,3 @@ const council = {
     },
   },
 };
-
-export default council;

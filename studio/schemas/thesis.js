@@ -1,4 +1,6 @@
-const thesis = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "thesis",
   title: "Thesis",
@@ -270,5 +272,3 @@ const thesis = {
     },
   ],
 };
-
-export default thesis;

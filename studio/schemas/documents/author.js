@@ -1,4 +1,6 @@
-const author = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "author",
   title: "Author",
@@ -77,5 +79,3 @@ const author = {
     },
   },
 };
-
-export default author;

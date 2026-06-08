@@ -1,8 +1,3 @@
-// First, we must import the schema creator
-import createSchema from "part:@sanity/base/schema-creator";
-
-// Then import schema types from any plugins that might expose them
-import schemaTypes from "all:part:@sanity/base/schema-type";
 import author from "./documents/author";
 import blog from "./blog";
 import bulletin from "./bulletin";
@@ -14,10 +9,6 @@ import siteConfig from "./siteConfig";
 import council from "./council";
 import devTeam from "./devTeam";
 
-const schema = createSchema({
-  name: "default",
+import heroCarousel from "./heroCarousel";
 
-  types: schemaTypes.concat([blog, author, bulletin, thesis, award, gallery, recipient, siteConfig, council, devTeam]),
-});
-
-export default schema;
+export const schemaTypes = [blog, author, bulletin, thesis, award, gallery, recipient, siteConfig, council, devTeam, heroCarousel];

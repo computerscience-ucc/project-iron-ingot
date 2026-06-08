@@ -1,4 +1,6 @@
-const siteConfig = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "siteConfig",
   title: "Site Configuration",
@@ -254,5 +256,3 @@ const siteConfig = {
     },
   },
 };
-
-export default siteConfig;

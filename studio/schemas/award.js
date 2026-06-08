@@ -1,4 +1,6 @@
-const award = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "award",
   title: "Award",
@@ -319,5 +321,3 @@ const award = {
     },
   },
 };
-
-export default award;

@@ -1,4 +1,6 @@
-const gallery = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "gallery",
   title: "Gallery of Works",
@@ -79,5 +81,3 @@ const gallery = {
     },
   },
 };
-
-export default gallery;
