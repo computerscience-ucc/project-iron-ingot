@@ -12,6 +12,7 @@ import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import dayjs from "dayjs";
 import { urlFor } from "../../lib/sanity";
+import { THESIS_PATHS_QUERY } from "../../lib/groq/thesis";
 import MaterialsList from "../../components/Thesis/MaterialsList";
 import HeroCarousel from "../../components/Thesis/HeroCarousel";
 import MemberStrip from "../../components/Thesis/MemberStrip";
@@ -75,11 +76,8 @@ const DEPT_LABEL = {
 };
 
 export const getStaticPaths = async () => {
-  const posts = await client.fetch("*[_type == \"thesis\"]{ \"slug\": slug.current }");
-  return {
-    paths: posts.map((p) => ({ params: { slug: p.slug } })),
-    fallback: "blocking",
-  };
+  const posts = await client.fetch(THESIS_PATHS_QUERY);
+  return { paths: posts.map((p) => ({ params: { slug: p.slug } })), fallback: "blocking" };
 };
 
 export const getStaticProps = async ({ params }) => {

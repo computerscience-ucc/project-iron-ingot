@@ -12,6 +12,7 @@ import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import dayjs from "dayjs";
 import { urlFor } from "../../lib/sanity";
+import { BULLETIN_PATHS_QUERY, BULLETIN_DETAIL_QUERY } from "../../lib/groq/bulletin";
 
 const blockComponents = {
   types: {
@@ -70,41 +71,15 @@ const blockComponents = {
 };
 
 export const getStaticPaths = async () => {
-  const bulletinPosts = await client.fetch(
-    `*[_type == "bulletin"]{  
-      "slug": slug.current,
-    }`
-  );
-  const paths = bulletinPosts.map((post) => ({
-    params: { slug: post.slug },
-  }));
-  return {
-    paths,
-    fallback: "blocking", // enable incremental static regeneration
-  };
+  const bulletinPosts = await client.fetch(BULLETIN_PATHS_QUERY);
+  const paths = bulletinPosts.map((post) => ({ params: { slug: post.slug } }));
+  return { paths, fallback: "blocking" };
 };
 
 export const getStaticProps = async (context) => {
   const { slug } = context.params;
-  const bulletinPost = await client.fetch(
-    `*[_type == "bulletin" && slug.current == "${slug}"]{
-      _id,
-      _createdAt,
-      _updatedAt,
-      "title": bulletinTitle,
-      "slug": slug.current,
-      "headerImage": headerImage.asset->url,
-      "content": bulletinContent,
-      "authors": bulletinAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
-      tags
-    }`
-  );
-  return {
-    props: {
-      bulletinPost: bulletinPost[0],
-    },
-    revalidate: 10,
-  };
+  const bulletinPost = await client.fetch(BULLETIN_DETAIL_QUERY, { slug });
+  return { props: { bulletinPost }, revalidate: 10 };
 };
 
 const BulletinPage = ({ bulletinPost }) => {

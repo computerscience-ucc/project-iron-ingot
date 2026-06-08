@@ -10,6 +10,7 @@ import { SiGithub, SiLinkedin } from "react-icons/si";
 import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import dayjs from "dayjs";
+import { GALLERY_PATHS_QUERY, GALLERY_DETAIL_QUERY } from "../../lib/groq/gallery";
 
 function getYouTubeEmbedUrl(url) {
   if (!url) return null;
@@ -33,31 +34,12 @@ function getYouTubeEmbedUrl(url) {
 }
 
 export const getStaticPaths = async () => {
-  const projects = await client.fetch(
-    "*[_type == \"gallery\"]{ \"slug\": slug.current }"
-  );
-  return {
-    paths: projects.map((p) => ({ params: { slug: p.slug } })),
-    fallback: "blocking",
-  };
+  const projects = await client.fetch(GALLERY_PATHS_QUERY);
+  return { paths: projects.map((p) => ({ params: { slug: p.slug } })), fallback: "blocking" };
 };
 
 export const getStaticProps = async ({ params }) => {
-  const project = await client.fetch(
-    `*[_type == "gallery" && slug.current == $slug]{
-      _id, _createdAt, _updatedAt,
-      "title": projectTitle,
-      "slug": slug.current,
-      personName,
-      "profilePicture": profilePicture.asset -> url,
-      projectDate,
-      youtubeEmbedLink,
-      githubUrl,
-      linkedinProfile,
-      tags
-    }[0]`,
-    { slug: params.slug }
-  );
+  const project = await client.fetch(GALLERY_DETAIL_QUERY, { slug: params.slug });
   if (!project) return { notFound: true };
   return { props: { project }, revalidate: 10 };
 };

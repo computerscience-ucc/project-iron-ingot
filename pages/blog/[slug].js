@@ -12,6 +12,7 @@ import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
 import dayjs from "dayjs";
 import { urlFor } from "../../lib/sanity";
+import { BLOG_PATHS_QUERY, BLOG_DETAIL_QUERY } from "../../lib/groq/blog";
 
 const blockComponents = {
   types: {
@@ -70,41 +71,15 @@ const blockComponents = {
 };
 
 export const getStaticPaths = async () => {
-  const blogPosts = await client.fetch(
-    `*[_type == "blog"]{  
-      "slug": slug.current,
-    }`
-  );
-  const paths = blogPosts.map((post) => ({
-    params: { slug: post.slug },
-  }));
-  return {
-    paths,
-    fallback: "blocking", // enable incremental static regeneration
-  };
+  const blogPosts = await client.fetch(BLOG_PATHS_QUERY);
+  const paths = blogPosts.map((post) => ({ params: { slug: post.slug } }));
+  return { paths, fallback: "blocking" };
 };
 
 export const getStaticProps = async (context) => {
   const { slug } = context.params;
-  const blogPost = await client.fetch(
-    `*[_type == "blog" && slug.current == "${slug}"]{
-      _id,
-      _createdAt,
-      _updatedAt,
-      "title": blogTitle,
-      "slug": slug.current,
-      "headerImage": headerImage.asset->url,
-      "content": blogContent,
-      "authors": blogAuthor[] -> {fullName, pronouns, "authorPhoto": authorPhoto.asset -> url, yearLevel, batchYear},
-      tags
-    }`
-  );
-  return {
-    props: {
-      blogPost: blogPost[0],
-    },
-    revalidate: 10,
-  };
+  const blogPost = await client.fetch(BLOG_DETAIL_QUERY, { slug });
+  return { props: { blogPost }, revalidate: 10 };
 };
 
 const BlogPage = ({ blogPost }) => {
