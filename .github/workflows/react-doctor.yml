@@ -1,0 +1,96 @@
+name: React Doctor
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: react-doctor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+env:
+  NODE_VERSION: '22'
+  THRESHOLD: '100'
+
+jobs:
+  react-doctor:
+    name: React Doctor Score
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run React Doctor
+        id: doctor
+        run: |
+          set -e
+          npm run doctor:json
+          node -e "
+            const r = require('./.react-doctor/report.json');
+            const errs = r.summary.errorCount || 0;
+            const warns = r.summary.warningCount || 0;
+            const total = errs + warns;
+            const threshold = parseInt(process.env.THRESHOLD, 10);
+            console.log('react-doctor: ' + errs + ' errors, ' + warns + ' warnings (' + total + ' total)');
+            if (total > 0) {
+              console.log('---');
+              r.diagnostics.slice(0, 20).forEach(d => {
+                console.log(d.filePath + ':' + d.line + ':' + d.column + ' [' + d.severity + '] ' + d.rule + ' — ' + d.title);
+              });
+              if (r.diagnostics.length > 20) console.log('...and ' + (r.diagnostics.length - 20) + ' more');
+            }
+            console.log('---');
+            if (total > threshold) {
+              console.error('FAILED: ' + total + ' findings exceeds threshold ' + threshold);
+              process.exit(1);
+            }
+            console.log('PASSED: ' + total + ' findings at or below threshold ' + threshold);
+          "
+
+      - name: Post PR comment
+        if: github.event_name == 'pull_request' && steps.doctor.outcome == 'failure' && github.event.pull_request.head.repo.fork == false
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = [
+              '## React Doctor — regression detected',
+              '',
+              '```',
+              '${{ steps.doctor.outputs.summary || "see action log" }}',
+              '```',
+              '',
+              'Threshold: **' + process.env.THRESHOLD + '/100** (0 findings).',
+              'See `docs/react-doctor/scoreboard.md` and the `run-react-doctor` skill.'
+            ].join('\n');
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body
+              });
+            } catch (e) {
+              core.warning('comment skipped: ' + e.message);
+            }
