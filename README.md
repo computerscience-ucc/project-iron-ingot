@@ -1,251 +1,356 @@
-<div align="center">
-  <img src="./public/branding/logo.svg" alt="INGO Logo" width="80" />
-  <h1>UCC INGO</h1>
-  <p><strong>BSCS Information Board - Your CS Information on the Go</strong></p>
-  <p>
-    <a href="https://uccingo.tech" target="_blank">Website</a> |
-    <a href="#-content-management-guide">Content Guide</a> |
-    <a href="./AGENTS.md">Maintenance Guide</a> |
-    <a href="https://github.com/computerscience-ucc/project-iron-ingot" target="_blank">GitHub</a>
-  </p>
-</div>
+# UCC INGO
 
----
+> **Branch note:** `main` is the stable production branch and auto-deploys to Vercel. For active development, use `feat/*` or `fix/*` branches and merge via pull requests.
 
-## Preview
+```
+                      .--.
+                     /    \
+         ____       |      |
+        |    |      |      |
+        |    |      |      |      ___
+        |    |      |      |     |   |
+        |____|      |      |     |___|
+        |    |      |      |         |
+        |    |      |      |         |
+        |    |      |      |         |
+        |____|      |______|     ____|____
+   U   C     C       I  N  G   O
+```
 
-| Homepage | Thesis Detail | Sanity Studio (CMS) |
-|:---:|:---:|:---:|
-| Landing page with hero, awards, latest content, council, FAQ | Full thesis view with 3D models, galleries, materials | Content editor for blogs, theses, awards, council |
-| ![Homepage Preview](./public/samples/disk2.png) | ![Thesis Preview](./public/samples/team1.png) | *(See Content Management Guide below)* |
+**BSCS Information Board -- Your CS Information on the Go.** A digital hub for the University of Caloocan City BSCS program: thesis archive, blog, bulletins, awards, gallery, and AI chatbot -- all managed through a Sanity CMS.
 
 ---
 
 ## Live Links
 
 | Service | URL | Purpose |
-|:---|---|:---|
-| **Website** | [https://uccingo.tech](https://uccingo.tech) | Public BSCS information board |
-| **Sanity CMS** | *(deploy with `sanity deploy`)* | Content management backend |
+|:--------|:----|:--------|
+| **Website** | [uccingo.tech](https://uccingo.tech) | Public BSCS information board |
+| **Sanity CMS** | [ucc-ingo.sanity.studio](https://ucc-ingo.sanity.studio) | Content management dashboard |
 | **GitHub** | [github.com/computerscience-ucc/project-iron-ingot](https://github.com/computerscience-ucc/project-iron-ingot) | Source code repository |
 | **CS Council FB** | [facebook.com/UCCBSCS2022](https://www.facebook.com/UCCBSCS2022) | Official CS Council page |
+| **CS Council Email** | [ucc.computersciencecouncil@gmail.com](mailto:ucc.computersciencecouncil@gmail.com) | Contact the CS Council |
 | **UCC Website** | [ucc-caloocan.edu.ph](https://www.ucc-caloocan.edu.ph) | University of Caloocan City |
+| **Google AI Studio** | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) | Get Gemini API key for chatbot |
 
 ---
 
 ## Features
 
-- **Blog & Bulletin System** - Publish articles and official announcements via Sanity CMS
-- **Thesis Archive** - Browse, filter by year/department/tag, and view full thesis details with 3D models, image galleries, YouTube embeds, and downloadable materials
-- **Awards Hub** - Showcase achievements with rich text, image lightbox, and recipient profiles
-- **CS Council & Dev Team** - Dynamic rosters with year selector, committees, class presidents, and person lightbox
-- **AI ChatBot (Ingo Bot)** - Guided conversation tree that answers questions about theses, blogs, bulletins, and awards using Google Gemini 2.5 Flash
-- **Global Search** - Press `Ctrl+K` to search across all content types (blogs, bulletins, theses, awards, gallery)
-- **Fully Responsive** - Optimized for mobile, tablet, and desktop with smooth scroll (Lenis)
-- **3D Visuals** - Three.js scene and 3D model viewer for thesis projects with GLB/GLTF support
-- **Dark Theme** - Modern dark UI with customizable theme colors via Sanity Site Configuration
-- **Social Integration** - Facebook, Discord, GitHub links in navbar and footer
-- **Fast** - Static Site Generation with Incremental Static Regeneration (ISR revalidates every 10s)
+### Website (`uccingo.tech`)
+
+<details open>
+<summary><b>Thesis Archive</b> -- searchable capstone project library</summary>
+
+- Filter by year, department (BSCS/BSEMC/BSIT/BSIS), and tags
+- Detail pages with: hero carousel, IMRaD content, materials list, members grid
+- 3D model viewer (GLB/GLTF) and showcase image gallery in a tabbed panel
+- YouTube video embeds and related thesis links
+- Downloadable materials with labeled icons (Document, GitHub, Dataset, Video)
+</details>
+
+<details open>
+<summary><b>Blog & Bulletin System</b> -- articles and announcements</summary>
+
+- Rich text with images (PortableText) and author profiles
+- Year filters, sort by date, paginated listing (10 per page)
+- Tags for cross-content search
+</details>
+
+<details open>
+<summary><b>Awards Hub</b> -- achievement showcase</summary>
+
+- Masonry grid layout with year filters
+- Image lightbox with keyboard navigation
+- Recipient profiles with photos and batch info
+- Badges, categories, rich-text descriptions
+</details>
+
+<details open>
+<summary><b>Gallery of Works</b> -- student project showcase</summary>
+
+- YouTube video embeds, GitHub repository links, LinkedIn profiles
+- Year and category filters with pagination
+</details>
+
+<details open>
+<summary><b>CS Council & Dev Team Rosters</b> -- dynamic org charts</summary>
+
+- Organized by academic year with year selector
+- Pyramid layout: Adviser -> President -> VP -> Officers -> Committees
+- Person lightbox with photo, keyboard navigation, swipe gestures
+- Auto-scrolling carousels for large committees
+</details>
+
+<details open>
+<summary><b>AI ChatBot (Ingo Bot)</b> -- thesis-aware assistant</summary>
+
+- Powered by Google Gemini 2.5 Flash with full thesis context
+- Commands: `/blog`, `/thesis`, `/bulletin`, `/awards`, `/gallery`, `/about`, `/help`, `/clear`
+- Rate-limited (10 msg/min), 600-char max, auto-ban at abuse thresholds
+- Sliding drawer UI with typing indicators and suggestion chips
+- Chat history persisted in sessionStorage
+</details>
+
+<details open>
+<summary><b>Global Search</b> -- <code>Ctrl+K</code> / <code>Cmd+K</code></summary>
+
+- Searches all content types by title and tags
+- Results grouped by type with keyboard navigation
+</details>
+
+<details open>
+<summary><b>Design & UX</b></summary>
+
+- Dark theme with light mode toggle (colors customizable via CMS)
+- Smooth scroll (Lenis, 1.2s duration)
+- Responsive: mobile, tablet, desktop
+- Custom pixel fonts (GeistPixel, Advine-Pixel, Minecraft)
+- Three.js background scene (rotating cube with thesis marquee)
+- Mouse-following mascot trail on the homepage
+</details>
+
+<details open>
+<summary><b>SEO & Performance</b></summary>
+
+- Static Site Generation (SSG) with 10-second ISR revalidation
+- Open Graph, Twitter Cards, JSON-LD structured data
+- Customizable meta tags via CMS Site Configuration
+- XML sitemap and robots.txt
+</details>
+
+---
+
+## Screenshots
+
+<details>
+<summary>Click to expand screenshots</summary>
+
+### Homepage
+![Homepage](public/screenshots/website-home.png)
+
+### Thesis Archive
+![Thesis Listing](public/screenshots/website-thesis.png)
+
+### Blog
+![Blog Listing](public/screenshots/website-blog.png)
+
+### Awards
+![Awards](public/screenshots/website-awards.png)
+
+### About / Council
+![About Page](public/screenshots/website-about.png)
+
+### Sanity CMS (login)
+![CMS Login](public/screenshots/cms-login.png)
+
+</details>
 
 ---
 
 ## Tech Stack
 
-<div align="center">
-
 | Layer | Technology |
-|:---|---|
-| **Front-end** | Next.js 15, React 18, Tailwind CSS 3, shadcn/ui, Material Tailwind, MUI |
-| **CMS** | Sanity v3 |
+|:------|:-----------|
+| **Framework** | Next.js 15 (pages router), React 18 |
+| **Styling** | Tailwind CSS 3, shadcn/ui, Material Tailwind |
+| **CMS** | Sanity Studio v3 (standalone deployment) |
 | **AI** | Google Gemini 2.5 Flash |
-| **Animations** | Framer Motion, Three.js |
+| **Animations** | Framer Motion 12, Three.js (React Three Fiber), Lenis |
+| **Icons** | Lucide React, Geist Icons, React Icons |
+| **Fonts** | Geist (body), GeistPixel (display), Advine-Pixel, Minecraft |
 | **Deployment** | Vercel (website), Sanity Hosting (CMS) |
+| **Database** | Sanity CDN -- project `gjvp776o`, dataset `production` |
 
-</div>
+---
+
+## Architecture
+
+```
++------------------+       +------------------+
+|  Content Editors |       |  Website Visitors |
+|  (CS Council)    |       |  (public)         |
++--------+---------+       +--------+---------+
+         |                          |
+         v                          v
++------------------+       +------------------+
+|  Sanity Studio   |       |  Next.js 15      |
+|  (CMS)           |---.   |  (SSG + ISR)     |
+|  ucc-ingo.sanity |   |   |  uccingo.tech    |
+|  .studio         |   |   +--------+---------+
++------------------+   |            |
+         |             |            v
+         v             |   +------------------+
++------------------+   |   |  Google Gemini   |
+|  Sanity CDN      |<--'   |  2.5 Flash       |
+|  (GROQ queries)  |       |  (/api/chat)     |
++------------------+       +------------------+
+```
+
+1. **Editors** publish content in the Sanity Studio
+2. **Sanity CDN** serves data via GROQ queries
+3. **Next.js** generates static pages at build time (SSG) with 10-second ISR
+4. **Google Gemini** powers the AI chatbot with thesis context injected
 
 ---
 
 ## Content Management Guide
 
-This guide shows **CS Council officers and editors** how to add and manage content using the Sanity Studio.
+The CMS at [ucc-ingo.sanity.studio](https://ucc-ingo.sanity.studio) lets CS Council officers manage all site content. You need a Sanity account invited to project `gjvp776o`.
 
-### Accessing the CMS
+### CMS Sidebar Layout
 
-**Locally:**
-```bash
-cd studio
-npx sanity dev
+When you log in, the sidebar lists all content types:
+
 ```
-Open [http://localhost:3333](http://localhost:3333) and log in with your Sanity account.
+Site Configuration     <- Global settings (singleton)
+Authors                <- Reusable person profiles
+Recipients             <- Award recipient profiles
+-----------------------
+Blog Posts             <- Articles and tutorials
+Bulletins              <- Official announcements
+Theses                 <- Capstone project archive
+Awards                 <- Achievements hub
+Gallery of Works       <- Student project showcase
+CS Council             <- Officer rosters by year
+Dev Team               <- Dev team by year
+Hero Carousel          <- Homepage banner slides
+```
 
-**In Production:**
-Deploy the studio with `npx sanity deploy` from the `studio/` directory. The first deploy will ask for a hostname (e.g., `ucc-ingo.sanity.studio`).
+Click any type to see documents. Click the **+** or **Create new** button to add content. All documents have a **Publish** button in the bottom-left corner.
 
-### What You Can Manage
+### How to Add a Thesis
 
-| Content Type | Description |
-|:---|---|
-| **Blog Posts** | Articles and tutorials written by CS students |
-| **Bulletins** | Official announcements from professors and the CS department |
-| **Theses** | Graduating / graduate CS student capstone projects with rich content |
-| **Awards** | Achievements and recognitions in the CS program |
-| **Gallery of Works** | Student project showcases with links to code, demo, and LinkedIn |
-| **CS Council** | Officer rosters, committees, class presidents organized by academic year |
-| **Dev Team** | Development team members organized by department/group |
-| **Site Configuration** | Global settings: site title, meta tags, theme colors, chatbot prompt |
-| **Hero Carousel** | Slides displayed in the homepage hero section |
+1. Sidebar -> **Theses** -> **Create new**
+2. Fill in:
 
-### How to Add a Thesis Project
-
-1. **Open the CMS** and go to **Thesis** in the sidebar menu
-2. Click **Create New** or the **+** button
-3. Fill in the fields:
-
-   | Field | Required | Description |
-   |:---|---:|:---|
-   | Thesis Image Header | Yes | Main banner image for the thesis page |
-   | Thesis Title | Yes | The full title of the thesis |
-   | Slug | Yes | URL-friendly identifier (auto-generated from title) |
-   | Post Author | No | Reference to an Author document (who posted this) |
-   | Owner's Information | Yes | Full names of the thesis owners/authors + their section |
+   | Field | Required | Details |
+   |:------|:--------:|:--------|
+   | Header Image | Yes | Main banner for the thesis page |
+   | Thesis Title | Yes | Full project title |
+   | Slug | Yes | URL path (auto-generates from title) |
+   | Owner's Info | Yes | Proponent names + section |
    | Academic Year | Yes | e.g. "2025-2026" |
-   | Department | Yes | CS / IT / IS / EMC / Other |
-   | Tags | No | Keywords for search and filtering |
-   | Thesis Members | No | Individual member profiles with photos, LinkedIn, website |
-   | Thesis Gallery Images | No | Photos shown in the hero carousel of the thesis page |
-   | YouTube Link | No | Embed a YouTube video on the thesis page |
-   | 3D Model File | No | Upload a `.glb` or `.gltf` file for the interactive 3D viewer |
-   | Project Showcase Images | No | Screenshots if no 3D model is available (shown in the right panel) |
-   | Materials & Resources | No | Links to paper PDFs, GitHub repos, datasets |
-   | Thesis Content | Yes | Main body content (rich text with images) |
-   | IMRAD Content | No | Full IMRAD text for the AI ChatBot knowledge base |
+   | Department | Yes | BSCS / BSEMC / BSIT / BSIS |
+   | Thesis Content | Yes | Main body (rich text + images) |
+   | IMRAD Content | No | Full paper text for chatbot Q&A |
+   | Members | No | Names, photos, LinkedIn, website |
+   | Gallery Images | No | Hero carousel photos |
+   | YouTube Link | No | Walkthrough video embed |
+   | 3D Model | No | GLB/GLTF file for interactive viewer |
+   | Showcase Images | No | Right panel gallery (fallback if no 3D model) |
+   | Materials | No | Downloadable resources (paper, GitHub, dataset, video) |
+   | Tags | No | Keywords for search/filtering |
 
-4. **Click Publish** - the new thesis appears on the website immediately
+3. Click **Publish**
+4. View at `uccingo.tech/thesis/[slug]`
 
-### How to Add a Blog Post / Bulletin
+### How to Add a Blog Post
 
-| Step | Blog | Bulletin |
-|:---:|:---|:---|
-| 1 | Go to **Blog** in the sidebar | Go to **Bulletin** in the sidebar |
-| 2 | Click **Create new** | Click **Create new** |
-| 3 | Add header image, title, slug | Add header image, title, slug |
-| 4 | Reference an **Author** | Reference an **Author** |
-| 5 | Select academic year | Add tags |
-| 6 | Add tags | Write **Bulletin Content** (rich text) |
-| 7 | Write **Blog Content** (rich text) | Publish |
-| 8 | Publish | |
+1. Sidebar -> **Blog Posts** -> **Create new**
+2. Add: header image, title, slug, author(s), academic year, tags
+3. Write **Blog Content** with the rich text editor
+4. **Publish** -- view at `uccingo.tech/blog/[slug]`
 
-### How to Add Awards
+### How to Add a Bulletin
 
-1. Go to **Award** -> **Create new**
-2. Fill in: Header Image, Title, Slug, Category, Badges, Images, Date Awarded
-3. Add **Recipients** by referencing existing Recipient documents (or create new ones)
-4. Write a **Description** and optional rich-text **Award Content**
-5. Add **Tags** for searchability
-6. **Publish**
+1. Sidebar -> **Bulletins** -> **Create new**
+2. Add: header image, title, slug, author(s), tags
+3. Write **Bulletin Content** -- **Publish**
+4. View at `uccingo.tech/bulletin/[slug]`
+
+### How to Add an Award
+
+1. Sidebar -> **Awards** -> **Create new**
+2. Add: header image, title, slug, category, badges, images, academic year
+3. Select or create a **Recipient** (name, photo, batch year)
+4. Write description, add tags -- **Publish**
+5. View at `uccingo.tech/awards/[slug]`
+
+### How to Add a Gallery Item
+
+1. Sidebar -> **Gallery of Works** -> **Create new**
+2. Add: project title, slug, person name, profile picture
+3. Paste the **YouTube embed URL** (full link, not just video ID)
+4. Add GitHub URL and LinkedIn profile URL
+5. Write project summary, add tags, upload images -- **Publish**
+6. View at `uccingo.tech/gallery/[slug]`
 
 ### How to Update the CS Council
 
-1. Go to **CS Council** -> **Create new** (or edit an existing year)
-2. Set the **Academic Year** (e.g., "2025-2026")
-3. Toggle **Current Year** to mark the active council
-4. Fill in: **Adviser**, **President**, **Vice President**, **Officers**, **Year Representatives**
-5. Add **Committees** (Creative, Program, Technical, etc.) with member names and photos
-6. Add **Class Presidents** with their section
-7. **Publish**
+1. Sidebar -> **CS Council** -> **Create new** (or edit existing)
+2. Set **Academic Year** (e.g. "2025-2026")
+3. Toggle **Current Year** ON for the active council
+4. Fill in: Adviser, President, VP, Officers, Committees, Year Reps, Class Presidents
+5. **Publish** -- view at `uccingo.tech/about`
 
-### Customizing the Site
+### How to Update the Dev Team
 
-The **Site Configuration** document lets you control:
-- **SEO** - Site title, tagline, meta description, keywords, and OG image
-- **Branding** - Logo, Apple touch icon
-- **Theme Colors** - Background, button, header, scrollbar colors (hex values)
-- **AI Chatbot** - Enable/disable, choose Gemini model, customize the system prompt and welcome message
-- **Social Links** - Facebook, Instagram, Twitter, contact email, copyright text
+1. Sidebar -> **Dev Team** -> **Create new**
+2. Add leadership and department sections with members
+3. **Publish**
+
+### Customizing Site Settings
+
+**Site Configuration** is a singleton. Click it in the sidebar to edit:
+
+| Section | What You Can Change |
+|:--------|:--------------------|
+| SEO & Metadata | Site title, tagline, description, keywords |
+| Branding | Logo, OG image, Apple touch icon, favicon |
+| Theme Colors | Background, button, nav bar, header, scrollbar (hex values) |
+| AI Chatbot | Enable/disable, model selection, system prompt, welcome message |
+| Social Links | Facebook, Twitter, Instagram URLs, contact email, copyright text |
+
+Changes go live site-wide immediately after **Publish**.
 
 ---
 
-## Local Development
+## Getting Started (Local Development)
 
 ### Prerequisites
 
 - Node.js 18+
 - npm
+- Gemini API key from [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 
 ### Setup
 
 ```bash
-# Clone the repo
 git clone https://github.com/computerscience-ucc/project-iron-ingot.git
 cd project-iron-ingot
 
-# Install dependencies (front-end + CMS)
+# Install front-end dependencies
 npm install
+
+# Install CMS dependencies
 cd studio && npm install && cd ..
 
-# Copy environment variables
-cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+# Create .env and add your Gemini key
+# Copy from .env.example or use:
+# GEMINI_API_KEY=your_key_here
+```
 
-# Start both servers
+### Start Development
+
+```bash
 npm run dev
 ```
 
-This starts:
+This starts both servers concurrently:
 - **Website** at [http://localhost:3000](http://localhost:3000)
 - **Sanity Studio** at [http://localhost:3333](http://localhost:3333)
 
 ### Available Commands
 
 | Command | Description |
-|:---|---|
-| `npm run dev` | Start website + CMS concurrently |
-| `npm run dev:next` | Start only the Next.js website on :3000 |
-| `npm run dev:studio` | Start only the Sanity Studio on :3333 |
-| `npm run build` | Build the Next.js site for production |
-| `npm run start` | Serve the production build |
+|:--------|:------------|
+| `npm run dev` | Start website + CMS |
+| `npm run dev:next` | Start only Next.js on :3000 |
+| `npm run dev:studio` | Start only Sanity Studio on :3333 |
+| `npm run build` | Build Next.js for production |
+| `npm run start` | Serve production build |
 | `npm run lint` | Run ESLint |
-
----
-
-## Project Structure
-
-```
-pages/              Next.js pages (file-based routing)
-  index.js          Landing page
-  blog/             Blog listing + detail
-  bulletin/         Bulletin listing + detail
-  thesis/           Thesis listing + detail
-  awards/           Awards listing + detail
-  gallery/          Gallery listing + detail
-  about/            About / Council / Dev Team / MIS-ACES
-  api/chat.js       ChatBot API (Gemini)
-components/         Reusable UI components
-  Prefetcher.js     Global data context (fetches all Sanity content)
-  ChatBot.js        AI ChatBot widget (guided flow + freeform)
-  Navbar.js         Navigation bar + mobile menu
-  SearchModal.js    Global search (Ctrl+K)
-  ...               Card components, thesis parts, team parts
-layouts/            Page section layouts (Hero, FAQ, Council, etc.)
-lib/                Utilities and shared logic
-  sanity.js         Sanity client + data fetching functions
-  siteConfig.js     Site configuration (cached)
-  animations.js     Shared animation variants
-studio/             Sanity Studio v3 (standalone CMS)
-  sanity.config.js  CMS configuration
-  sanity.cli.js     CLI config
-  deskStructure.js  Custom admin panel sidebar
-  schemas/          Content type definitions (11 schema types)
-public/             Static assets
-  branding/         Logo, favicon, OG image
-  mascot/           CS Bot mascot images
-  fonts/            Custom pixel fonts
-  placeholders/     Fallback images for blog, gallery
-  samples/          Preview images
-vercel.json         Vercel deployment config
-AGENTS.md           Maintenance guide (handoff docs)
-.env                Environment variables (gitignored)
-```
 
 ---
 
@@ -253,17 +358,17 @@ AGENTS.md           Maintenance guide (handoff docs)
 
 ### Website (Vercel)
 
-The `main` branch auto-deploys to Vercel. Manual deploy:
+The `main` branch auto-deploys. Manual deploy:
 
 ```bash
 npm run build
-vercel --prod
+npx vercel --prod
 ```
 
-Required environment variables:
+**Environment variables** (set in Vercel dashboard):
 
 | Variable | Value |
-|:---|---|
+|:---------|:------|
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `gjvp776o` |
 | `NEXT_PUBLIC_SANITY_DATASET` | `production` |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | `2023-10-01` |
@@ -273,38 +378,122 @@ Required environment variables:
 
 ```bash
 cd studio
-npx sanity deploy
+npm run deploy
+# or: npx sanity deploy
 ```
 
-Choose a hostname (e.g., `ucc-ingo.sanity.studio`) and your CMS is live.
-
----
-
-## Contributing
-
-1. Create a branch from `main`: `git checkout -b feat/your-feature`
-2. Make changes and commit
-3. Push and open a Pull Request
-4. The CS Council Dev Team lead reviews and merges
-
-See [AGENTS.md](./AGENTS.md) for detailed maintenance procedures.
+First deploy prompts for a hostname (e.g. `ucc-ingo`). The CMS is then live at:
+`https://<hostname>.sanity.studio`
 
 ---
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|:---|---:|:---|
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | Sanity project ID (`gjvp776o`) |
-| `NEXT_PUBLIC_SANITY_DATASET` | Yes | Dataset name (`production`) |
-| `NEXT_PUBLIC_SANITY_API_VERSION` | No | API date version (`2023-10-01`) |
-| `SANITY_API_TOKEN` | No | For private datasets (not needed for public) |
-| `GEMINI_API_KEY` | Yes | Google Gemini API key (get at [aistudio.google.com](https://aistudio.google.com/app/apikey)) |
+| Variable | Required | Default | Description |
+|:---------|:--------:|:--------|:------------|
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | `gjvp776o` | Sanity project identifier |
+| `NEXT_PUBLIC_SANITY_DATASET` | Yes | `production` | Sanity dataset name |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | No | `2023-10-01` | Sanity API version |
+| `SANITY_API_TOKEN` | No | *(blank)* | Only needed for private datasets |
+| `GEMINI_API_KEY` | Yes | *(none)* | Google Gemini API key |
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|:--------|:------|:----|
+| ChatBot returns errors | Missing or expired Gemini key | Update `GEMINI_API_KEY` in `.env` or Vercel |
+| Studio blank page / white screen | Schema JS syntax error | Check Vite console for the specific schema file |
+| Images not loading in production | CDN not whitelisted | Already configured in `next.config.mjs` |
+| `rxjs.shareReplay is not a function` | Old rxjs v6 in root `node_modules` | Delete `../node_modules/rxjs` and reinstall |
+| `sanity start` not recognized | v2 command with v3 CLI | Use `npx sanity dev` instead |
+| Build fails | Dependency mismatch | Run `npm install` in both root and `studio/` |
+
+---
+
+## Project Structure
+
+```
+pages/                    Next.js routes
+  index.js                Landing page
+  about/index.js          About / Council / Dev Team
+  blog/                   Blog listing + detail
+  bulletin/               Bulletin listing + detail
+  thesis/                 Thesis listing + detail
+  awards/                 Awards listing + detail
+  gallery/                Gallery listing + detail
+  api/chat.js             Gemini chatbot API
+
+components/               Reusable UI
+  Prefetcher.js           Global data context
+  ChatBot.js              AI ChatBot widget
+  Navbar.js               Navigation + mobile menu
+  SearchModal.js          Ctrl+K global search
+  Card/                   Content cards
+  Awards/                 Awards subcomponents
+  Thesis/                 Thesis subcomponents
+  Team/                   Council/Team subcomponents
+  Home/                   Homepage subcomponents
+  About/                  About page subcomponents
+  ui/                     shadcn/ui primitives
+
+layouts/                  Page sections
+  Hero.js, Footer.js, FeaturesList.js,
+  AwardsSection.js, LatestOnIngo.js,
+  Council.js, FAQ.js, HappyCodingSection.js
+
+lib/                      Shared utilities
+  sanity.js               Sanity client + data fetching
+  siteConfig.js           Cached site configuration
+  animations.js           Animation variants
+
+studio/                   Standalone Sanity CMS
+  sanity.config.js        CMS configuration
+  sanity.cli.js           CLI config
+  deskStructure.js        Custom sidebar
+  schemas/                11 schema types
+    schema.js             Schema registry
+    blog.js, bulletin.js, thesis.js,
+    award.js, gallery.js, council.js,
+    devTeam.js, heroCarousel.js, siteConfig.js
+    documents/author.js, documents/recipient.js
+
+public/                   Static assets
+  branding/               Logo, favicon, OG image
+  mascot/                 CS Bot mascot images
+  fonts/                  Custom pixel fonts
+  screenshots/            README screenshots
+  sitemap.xml, robots.txt
+
+styles/                   CSS
+  globals.css             Tailwind + custom styles
+  base/_colors.css        Theme color variables
+  base/_typography.css    Font definitions
+  layout/_containers.css  Container classes
+```
+
+---
+
+## Contributing
+
+1. Branch from `main`: `git checkout -b feat/your-feature`
+2. Make changes and commit
+3. Push and open a Pull Request
+4. CS Council Dev Team lead reviews and merges
+
+See [AGENTS.md](./AGENTS.md) for the full maintenance guide -- Sanity v3 migration notes, Git strategy, and key contacts.
 
 ---
 
 <div align="center">
   <sub>Built by the UCC Computer Science Council Dev Team</sub>
   <br>
-  <sub>University of Caloocan City - BSCS Program</sub>
+  <sub>University of Caloocan City -- BSCS Program</sub>
+  <br>
+  <sub>MIT License</sub>
 </div>
+
+---
+
+*Need help? Contact the CS Council at [ucc.computersciencecouncil@gmail.com](mailto:ucc.computersciencecouncil@gmail.com) or reach out to the current Dev Team lead.*
