@@ -228,11 +228,11 @@ export default defineType({
               description: "Choose an icon to represent this material.",
               options: {
                 list: [
-                  { title: "\uD83D\uDCC4 Document / Paper", value: "document" },
-                  { title: "\uD83D\uDCBB Code / GitHub", value: "github" },
-                  { title: "\uD83D\uDDC3\uFE0F Dataset", value: "dataset" },
-                  { title: "\uD83C\uDFAC Video / Demo", value: "video" },
-                  { title: "\uD83D\uDD17 Other", value: "other" },
+                  { title: "Document / Paper", value: "document" },
+                  { title: "Code / GitHub", value: "github" },
+                  { title: "Dataset", value: "dataset" },
+                  { title: "Video / Demo", value: "video" },
+                  { title: "Other", value: "other" },
                 ],
                 layout: "radio",
               },

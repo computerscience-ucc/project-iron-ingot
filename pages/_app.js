@@ -149,16 +149,16 @@ function AppInner({ Component, pageProps }) {
                   {[...Array(2)].map((_, i) => (
                     <div key={i} className="flex items-center gap-4">
                       {[
-                        "📅 Thesis Milestones → Proposal • Implementation • Final Defense",
-                        "🎓 BSCS Graduation 2026! Stay updated with important announcements",
-                        "📚 Thesis 2026 : Deadlines, proposals, and final defense schedules",
-                        "🚀 Celebrate the BSCS Class of 2026",
+                        "Thesis Milestones: Proposal / Implementation / Final Defense",
+                        "BSCS Graduation 2026! Stay updated with important announcements",
+                        "Thesis 2026: Deadlines, proposals, and final defense schedules",
+                        "Celebrate the BSCS Class of 2026",
                       ].map((text, idx) => (
                         <div key={idx} className="flex items-center gap-4">
                           <span className="text-white font-sans font-medium text-[0.875rem]">
                             {text}
                           </span>
-                          <span className="text-white">✱</span>
+                          <span className="text-white">*</span>
                         </div>
                       ))}
                     </div>

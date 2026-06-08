@@ -6,7 +6,7 @@ export const deskStructure = (S) =>
     .items([
       S.listItem()
         .title("Site Configuration")
-        .icon(() => "⚙️")
+        // icon removed (was gear emoji in v2)
         .child(
           S.document()
             .schemaType("siteConfig")

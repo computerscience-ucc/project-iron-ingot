@@ -286,7 +286,8 @@ const AboutPage = () => {
                       <span className="relative z-10 flex items-center">
                         {hasAsterisk && (
                           <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">
-                            ✱
+                            *
+                            
                           </span>
                         )}
                         {y}
@@ -332,7 +333,7 @@ const AboutPage = () => {
                     <span className="relative z-10 flex items-center">
                       {hasAsterisk && (
                         <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">
-                          ✱
+                          *
                         </span>
                       )}
                       {t.academicYear}

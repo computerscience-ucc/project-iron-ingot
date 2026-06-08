@@ -54,7 +54,7 @@ export default function CouncilParallaxText() {
             <span className="text-white">MEET THE</span>
             <span className="text-[#FF5154]">COUNCIL</span>
           </div>
-          <span className="text-white text-xl md:text-3xl lg:text-[2.4rem]">✱</span>
+          <span className="text-white text-xl md:text-3xl lg:text-[2.4rem]">*</span>
         </div>
       ))}
     </div>
