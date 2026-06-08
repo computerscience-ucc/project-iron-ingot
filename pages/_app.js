@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
+import ErrorBoundary from "../components/ErrorBoundary";
+import { ThemeProvider } from "@material-tailwind/react";
 import ChatBot from "../components/ChatBot";
 import SearchModal from "../components/SearchModal";
 import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
@@ -749,9 +751,13 @@ function AppInner({ Component, pageProps }) {
 
 export default function App(props) {
   return (
-    <PrefetcherWrapper>
-      <SmoothScroll />
-      <AppInner {...props} />
-    </PrefetcherWrapper>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <PrefetcherWrapper>
+          <SmoothScroll />
+          <AppInner {...props} />
+        </PrefetcherWrapper>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

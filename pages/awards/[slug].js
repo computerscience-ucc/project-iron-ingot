@@ -16,7 +16,7 @@ import { PortableText } from "@portabletext/react";
 import { _Transition_Page } from "../../lib/animations";
 import { client, urlFor } from "../../lib/sanity";
 import dayjs from "dayjs";
-import { AWARDS_PATHS_QUERY, AWARDS_DETAIL_QUERY } from "../../lib/groq/awards";
+import { AWARDS_DETAIL_QUERY } from "../../lib/groq/awards";
 
 const blockComponents = {
   types: {
@@ -59,32 +59,14 @@ const blockComponents = {
   },
 };
 
-export const getStaticPaths = async () => {
-  try {
-    const awardPosts = await client.fetch(AWARDS_PATHS_QUERY);
-    return {
-      paths: awardPosts.map((post) => ({ params: { slug: post.slug } })),
-      fallback: "blocking",
-    };
-  } catch (error) {
-    console.error("Error fetching award paths:", error);
-    return { paths: [], fallback: "blocking" };
-  }
-};
-
-export const getStaticProps = async (context) => {
+export const getServerSideProps = async (context) => {
   try {
     const { slug } = context.params;
     const awardPost = await client.fetch(AWARDS_DETAIL_QUERY, { slug });
-
     if (!awardPost) return { notFound: true };
-
-    return {
-      props: { awardPost },
-      revalidate: 10,
-    };
+    return { props: { awardPost } };
   } catch (error) {
-    console.error("Error in getStaticProps:", error);
+    console.error("Error in getServerSideProps:", error);
     return { notFound: true };
   }
 };
