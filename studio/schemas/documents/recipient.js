@@ -8,13 +8,8 @@ export default defineType({
     {
       title: "Full Name",
       name: "fullName",
-      type: "object",
-      options: { collapsed: true },
-      fields: [
-        { type: "string", name: "firstName", title: "First Name", validation: (Rule) => Rule.required() },
-        { type: "string", name: "middleInitial", title: "Middle Initial" },
-        { type: "string", name: "lastName", title: "Last Name", validation: (Rule) => Rule.required() },
-      ],
+      type: "string",
+      validation: (Rule) => Rule.required(),
     },
     {
       title: "Pronouns",
@@ -57,26 +52,20 @@ export default defineType({
       name: "slug",
       type: "slug",
       options: {
-        source: (doc) => {
-          if (doc?.fullName?.firstName && doc?.fullName?.lastName) {
-            return `${doc.fullName.lastName}-${doc.fullName.firstName}`;
-          }
-          return "";
-        },
+        source: "fullName",
         maxLength: 100,
       },
     },
   ],
   preview: {
     select: {
-      firstName: "fullName.firstName",
-      lastName: "fullName.lastName",
+      title: "fullName",
       yearLevel: "yearLevel",
       media: "recipientPhoto",
     },
-    prepare({ firstName, lastName, yearLevel, media }) {
+    prepare({ title, yearLevel, media }) {
       return {
-        title: [firstName, lastName].filter(Boolean).join(" ") || "Unnamed Recipient",
+        title: title || "Unnamed Recipient",
         subtitle: yearLevel || "",
         media,
       };
