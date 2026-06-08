@@ -7,8 +7,10 @@
   "author": "computerscience-ucc <ucc.computersciencecouncil@gmail.com>",
   "license": "UNLICENSED",
   "scripts": {
+    "dev": "sanity dev",
     "start": "sanity start",
-    "build": "sanity build"
+    "build": "sanity build",
+    "deploy": "sanity deploy"
   },
   "keywords": ["sanity"],
   "dependencies": {
