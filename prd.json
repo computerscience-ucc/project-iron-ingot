@@ -2,7 +2,7 @@
   "title": "Facebook Messenger Customer Chat Integration",
   "version": "1.1.0",
   "created": "2026-06-09",
-  "status": "planning",
+  "status": "completed",
   "author": "UCC INGO Dev Team",
   "description": "Integrate the Facebook Messenger Customer Chat Plugin into the UCC INGO website so visitors can directly chat with the UCC BSCS Facebook page from the browser without leaving the site.",
   "background": "The UCC INGO website currently has an AI chatbot (CSBot powered by Google Gemini) and social media links to the Facebook page (https://www.facebook.com/UCCBSCS2022). However, visitors who want to message the page directly must leave the site and open Facebook Messenger separately. This integration adds a persistent Messenger chat bubble on the website, enabling real-time conversations between visitors and the CS Council's Facebook page admins.",
@@ -47,7 +47,8 @@
         ".env",
         "next.config.mjs"
       ],
-      "commit_message": "feat(messenger): add Facebook env vars and Next.js config"
+      "commit_message": "feat(messenger): add Facebook env vars and Next.js config",
+      "status": "completed"
     },
     {
       "id": "slice-02",
@@ -56,7 +57,8 @@
       "files_changed": [
         "components/FacebookMessenger.js"
       ],
-      "commit_message": "feat(messenger): create FacebookMessenger component with SDK loader"
+      "commit_message": "feat(messenger): create FacebookMessenger component with SDK loader",
+      "status": "completed"
     },
     {
       "id": "slice-03",
@@ -65,7 +67,8 @@
       "files_changed": [
         "components/FacebookMessenger.module.css"
       ],
-      "commit_message": "style(messenger): add positioning and z-index styles for Messenger widget"
+      "commit_message": "style(messenger): add positioning and z-index styles for Messenger widget",
+      "status": "completed"
     },
     {
       "id": "slice-04",
@@ -74,7 +77,8 @@
       "files_changed": [
         "pages/_app.js"
       ],
-      "commit_message": "feat(messenger): integrate FacebookMessenger into app layout"
+      "commit_message": "feat(messenger): integrate FacebookMessenger into app layout",
+      "status": "completed"
     },
     {
       "id": "slice-05",
@@ -84,7 +88,7 @@
         "studio/schemas/siteConfig.js"
       ],
       "commit_message": "feat(messenger): add Facebook Messenger fields to CMS siteConfig schema",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "slice-06",
@@ -95,7 +99,7 @@
         "pages/_app.js"
       ],
       "commit_message": "feat(messenger): read Messenger config from CMS siteConfig with env fallback",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "slice-07",
@@ -106,7 +110,7 @@
         "components/FacebookMessenger.module.css"
       ],
       "commit_message": "fix(messenger): resolve z-index conflicts and mobile positioning with CSBot",
-      "status": "pending"
+      "status": "completed"
     }
   ],
   "z_index_strategy": {
