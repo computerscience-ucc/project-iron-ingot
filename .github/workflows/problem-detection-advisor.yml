@@ -1,0 +1,66 @@
+name: Problem Detection Advisor
+
+on:
+  workflow_run:
+    workflows: ["Build and Check", "PR Validation"]
+    types: [completed]
+
+jobs:
+  detect:
+    name: Detect Problems
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure'
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Get workflow details
+        uses: actions/github-script@v7
+        id: details
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            return {
+              name: run.name,
+              url: run.html_url,
+              branch: run.head_branch,
+              commit: run.head_sha,
+            };
+
+      - name: Find related PR
+        uses: actions/github-script@v7
+        id: pr
+        with:
+          script: |
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: '${{ steps.details.outputs.branch }}',
+            });
+            return prs.data.length > 0 ? prs.data[0].number : null;
+
+      - name: Create issue
+        uses: actions/github-script@v7
+        if: steps.pr.outputs.result == 'null'
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `CI Failure: ${{ steps.details.outputs.name }}`,
+              body: `## Workflow Failure\n\n**Workflow:** ${{ steps.details.outputs.name }}\n**Run:** ${{ steps.details.outputs.url }}\n**Branch:** ${{ steps.details.outputs.branch }}\n**Commit:** ${{ steps.details.outputs.commit }}\n\nPlease investigate and fix the failure.`,
+              labels: ['ci/cd', 'needs-triage'],
+            });
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        if: steps.pr.outputs.result != 'null'
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.pr.outputs.result }},
+              body: `## Workflow Failure\n\n**Workflow:** ${{ steps.details.outputs.name }}\n**Run:** ${{ steps.details.outputs.url }}\n\nPlease investigate and fix the failure.`,
+            });
