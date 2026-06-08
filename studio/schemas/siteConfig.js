@@ -11,6 +11,7 @@ export default defineType({
     { name: "branding", title: "Branding & Logos", options: { collapsible: true, collapsed: false } },
     { name: "colors", title: "Theme Colors", options: { collapsible: true, collapsed: false } },
     { name: "chatbot", title: "AI Chatbot", options: { collapsible: true, collapsed: true } },
+    { name: "messenger", title: "Facebook Messenger", options: { collapsible: true, collapsed: true } },
     { name: "social", title: "Social Links", options: { collapsible: true, collapsed: true } },
   ],
   fields: [
@@ -211,6 +212,57 @@ export default defineType({
       fieldset: "chatbot",
       description: "Custom icon for the floating chat button. Leave empty to use the default chat bubble icon. Recommended: square image, at least 56×56px.",
       options: { hotspot: true },
+    },
+
+    // ─── Facebook Messenger ───────────────────────────
+    {
+      name: "messengerEnabled",
+      title: "Enable Messenger Chat",
+      type: "boolean",
+      fieldset: "messenger",
+      description: "Toggle the Facebook Messenger Customer Chat widget on/off",
+      initialValue: false,
+    },
+    {
+      name: "messengerPageId",
+      title: "Facebook Page ID",
+      type: "string",
+      fieldset: "messenger",
+      description: "Numeric Page ID from your Facebook Page (Settings > General > Page ID)",
+    },
+    {
+      name: "messengerAppId",
+      title: "Facebook App ID",
+      type: "string",
+      fieldset: "messenger",
+      description: "App ID from Meta Developers (https://developers.facebook.com)",
+    },
+    {
+      name: "messengerColor",
+      title: "Theme Color",
+      type: "string",
+      fieldset: "messenger",
+      description: "Brand color for the Messenger chat bubble (hex, e.g. #0084FF)",
+      initialValue: "#0084FF",
+      validation: (Rule) => Rule.regex(/^#([0-9A-Fa-f]{3,8})$/, { name: "hex color" }),
+    },
+    {
+      name: "messengerGreetingText",
+      title: "Greeting Text (Logged Out)",
+      type: "text",
+      fieldset: "messenger",
+      rows: 2,
+      description: "Message shown to visitors who are not logged into Facebook",
+      initialValue: "Hi! How can we help you?",
+    },
+    {
+      name: "messengerLoggedInGreeting",
+      title: "Greeting Text (Logged In)",
+      type: "text",
+      fieldset: "messenger",
+      rows: 2,
+      description: "Message shown to visitors who are logged into Facebook",
+      initialValue: "Welcome! Send us a message.",
     },
 
     // ─── Social Links ─────────────────────────────────
