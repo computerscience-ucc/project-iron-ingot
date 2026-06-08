@@ -7,24 +7,14 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import Pagination from "../../components/Pagination";
 import { client } from "../../lib/sanity";
+import { BULLETIN_LIST_QUERY } from "../../lib/groq/bulletin";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-const BULLETIN_QUERY = `
-  *[_type == 'bulletin'] | order(_createdAt desc, _updatedAt desc) {
-    _id, _createdAt, _updatedAt, _type,
-    "headerImage": headerImage.asset -> url,
-    "title": bulletinTitle,
-    "slug": slug.current,
-    "authors": bulletinAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
-    tags
-  }
-`;
-
 export async function getStaticProps() {
   try {
-    const bulletins = await client.fetch(BULLETIN_QUERY);
+    const bulletins = await client.fetch(BULLETIN_LIST_QUERY);
     return { props: { initialBulletins: bulletins || [] }, revalidate: 10 };
   } catch (error) {
     console.error("Error fetching bulletins:", error);

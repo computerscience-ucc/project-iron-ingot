@@ -2,6 +2,11 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 import { client, listenSanity, refetchType } from "../lib/sanity";
 import { SITE_CONFIG_QUERY } from "../lib/siteConfig";
+import { BLOG_LIST_QUERY } from "../lib/groq/blog";
+import { BULLETIN_LIST_QUERY } from "../lib/groq/bulletin";
+import { THESIS_LIST_QUERY } from "../lib/groq/thesis";
+import { AWARDS_LIST_QUERY } from "../lib/groq/awards";
+import { GALLERY_LIST_QUERY } from "../lib/groq/gallery";
 
 const PrefetcherContext = createContext();
 
@@ -19,11 +24,11 @@ const PrefetcherWrapper = ({ children }) => {
   const fetchInitialData = async () => {
     try {
       const [res_blog, res_bulletin, res_thesis, res_awards, res_gallery, res_config] = await Promise.all([
-        client.fetch("*[_type == \"blog\"] | order(_createdAt desc, _updatedAt desc) { _id, _createdAt, _updatedAt, _type, \"headerImage\": headerImage.asset -> url, \"title\": blogTitle, \"slug\": slug.current, \"authors\": blogAuthor[] -> { fullName, pronouns, \"authorPhoto\": authorPhoto.asset -> url }, academicYear, tags }"),
-        client.fetch("*[_type == \"bulletin\"] | order(_createdAt desc, _updatedAt desc) { _id, _createdAt, _updatedAt, _type, \"headerImage\": headerImage.asset -> url, \"title\": bulletinTitle, \"slug\": slug.current, \"authors\": bulletinAuthor[] -> { fullName, pronouns, \"authorPhoto\": authorPhoto.asset -> url }, tags }"),
-        client.fetch("*[_type == \"thesis\"] | order(academicYear desc, _createdAt desc) { _id, _createdAt, _updatedAt, _type, \"headerImage\": headerImage.asset -> url, \"title\": thesisTitle, \"slug\": slug.current, \"authors\": postAuthor[] -> { fullName, pronouns, \"authorPhoto\": authorPhoto.asset -> url }, \"description\": pt::text(thesisContent), academicYear, department, tags }"),
-        client.fetch("*[_type == \"award\"] | order(academicYear desc, dateAwarded desc) { _id, _createdAt, _updatedAt, _type, \"headerImage\": headerImage.asset -> url, \"title\": awardTitle, \"slug\": slug.current, \"category\": awardCategory, \"badges\": awardBadges, \"recipients\": recipients[] -> { \"fullName\": fullName.firstName ++ \" \" ++ fullName.lastName, pronouns, batchYear, yearLevel, program, \"recipientPhoto\": recipientPhoto.asset -> url }, \"images\": awardImages[].asset->url, \"description\": awardDescription, academicYear, dateAwarded, tags }"),
-        client.fetch("*[_type == \"gallery\"] | order(projectDate desc, _createdAt desc) { _id, _createdAt, _updatedAt, _type, \"title\": projectTitle, \"slug\": slug.current, personName, \"profilePicture\": profilePicture.asset -> url, projectDate, youtubeEmbedLink, githubUrl, linkedinProfile, tags }"),
+        client.fetch(BLOG_LIST_QUERY),
+        client.fetch(BULLETIN_LIST_QUERY),
+        client.fetch(THESIS_LIST_QUERY),
+        client.fetch(AWARDS_LIST_QUERY),
+        client.fetch(GALLERY_LIST_QUERY),
         client.fetch(SITE_CONFIG_QUERY),
       ]);
       setBlogs(res_blog || []);

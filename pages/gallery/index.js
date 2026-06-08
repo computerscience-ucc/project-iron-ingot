@@ -6,24 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import Pagination from "../../components/Pagination";
 import { client } from "../../lib/sanity";
+import { GALLERY_LIST_QUERY } from "../../lib/groq/gallery";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-const GALLERY_QUERY = `
-  *[_type == 'gallery'] | order(projectDate desc, _createdAt desc) {
-    _id, _createdAt, _updatedAt, _type,
-    "title": projectTitle,
-    "slug": slug.current,
-    personName,
-    "profilePicture": profilePicture.asset -> url,
-    projectDate, youtubeEmbedLink, githubUrl, linkedinProfile, tags
-  }
-`;
-
 export async function getStaticProps() {
   try {
-    const gallery = await client.fetch(GALLERY_QUERY);
+    const gallery = await client.fetch(GALLERY_LIST_QUERY);
     return { props: { initialGallery: gallery || [] }, revalidate: 10 };
   } catch (error) {
     console.error("Error fetching gallery:", error);

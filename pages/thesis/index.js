@@ -6,26 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import { useRouter } from "next/router";
 import { client } from "../../lib/sanity";
+import { THESIS_LIST_QUERY } from "../../lib/groq/thesis";
 import Pagination from "../../components/Pagination";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-const THESIS_QUERY = `
-  *[_type == 'thesis'] | order(academicYear desc, _createdAt desc) {
-    _id, _createdAt, _updatedAt, _type,
-    "headerImage": headerImage.asset -> url,
-    "title": thesisTitle,
-    "slug": slug.current,
-    "authors": postAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
-    "description": pt::text(thesisContent),
-    academicYear, department, tags
-  }
-`;
-
 export async function getStaticProps() {
   try {
-    const thesis = await client.fetch(THESIS_QUERY);
+    const thesis = await client.fetch(THESIS_LIST_QUERY);
     return { props: { initialThesis: thesis || [] }, revalidate: 10 };
   } catch (error) {
     console.error("Error fetching thesis:", error);

@@ -6,24 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
 import Pagination from "../../components/Pagination";
 import { client } from "../../lib/sanity";
+import { BLOG_LIST_QUERY } from "../../lib/groq/blog";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
 
-const BLOG_QUERY = `
-  *[_type == 'blog'] | order(_createdAt desc, _updatedAt desc) {
-    _id, _createdAt, _updatedAt, _type,
-    "headerImage": headerImage.asset -> url,
-    "title": blogTitle,
-    "slug": slug.current,
-    "authors": blogAuthor[] -> { fullName, pronouns, "authorPhoto": authorPhoto.asset -> url },
-    academicYear, tags
-  }
-`;
-
 export async function getStaticProps() {
   try {
-    const blogs = await client.fetch(BLOG_QUERY);
+    const blogs = await client.fetch(BLOG_LIST_QUERY);
     return { props: { initialBlogs: blogs || [] }, revalidate: 10 };
   } catch (error) {
     console.error("Error fetching blogs:", error);
