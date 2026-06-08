@@ -37,6 +37,28 @@ const AppChatBot = () => {
   ) : null;
 };
 
+const AppFacebookMessenger = () => {
+  const { siteConfig } = usePrefetcher();
+  
+  // Wait for config if Prefetcher provides it
+  if (siteConfig && siteConfig.messengerEnabled === false) return null;
+  
+  const pageId = siteConfig?.messengerPageId || process.env.NEXT_PUBLIC_FB_PAGE_ID;
+  const appId = siteConfig?.messengerAppId || process.env.NEXT_PUBLIC_FB_APP_ID;
+  
+  if (!pageId) return null;
+  
+  return (
+    <FacebookMessenger 
+      pageId={pageId}
+      appId={appId}
+      color={siteConfig?.messengerColor}
+      greetingText={siteConfig?.messengerGreetingText}
+      loggedInGreeting={siteConfig?.messengerLoggedInGreeting}
+    />
+  );
+};
+
 function AppInner({ Component, pageProps }) {
   const router = useRouter();
   const { blogs, thesis } = usePrefetcher();
@@ -744,11 +766,8 @@ function AppInner({ Component, pageProps }) {
         {/* Render ChatBot conditionally */}
         <AppChatBot />
 
-        {/* Render Facebook Messenger Customer Chat */}
-        <FacebookMessenger
-          pageId={process.env.NEXT_PUBLIC_FB_PAGE_ID}
-          appId={process.env.NEXT_PUBLIC_FB_APP_ID}
-        />
+        {/* Render Facebook Messenger Customer Chat conditionally */}
+        <AppFacebookMessenger />
 
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
