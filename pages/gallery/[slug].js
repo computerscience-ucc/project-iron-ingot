@@ -81,7 +81,7 @@ const GalleryProjectPage = ({ project }) => {
     <>
       <Head
         title={`${project.title} | Gallery | Ingo`}
-        description={project.title}
+        description={`${project.title}${project.personName ? ` by ${project.personName}` : ""}`}
         ogImage={project.profilePicture}
         url={`/gallery/${project.slug}`}
       >

@@ -8,6 +8,7 @@ const Head = ({
   ogImage,
   url,
   type = "website",
+  jsonLd,
   children
 }) => {
   const { siteConfig } = usePrefetcher();
@@ -127,6 +128,11 @@ const Head = ({
           })
         }}
       />
+
+      {/* Page-specific JSON-LD */}
+      {jsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      )}
 
       {/* Page Specific Tags (Preconnects, Scripts, etc.) */}
       {children}

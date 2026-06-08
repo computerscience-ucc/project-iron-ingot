@@ -109,7 +109,8 @@ export const getStaticProps = async ({ params }) => {
       },
       "materials": materials[]{ label, url, icon },
       academicYear, department, tags,
-      "content": thesisContent
+      "content": thesisContent,
+      "description": pt::text(thesisContent)
     }[0]`,
     { slug }
   );
@@ -144,7 +145,7 @@ const ThesisPage = ({ post }) => {
     <>
       <Head
         title={`${post.title} | Ingo`}
-        description={post.title}
+        description={post.description || post.title}
         ogImage={post.headerImage}
         url={`/thesis/${post.slug}`}
       />
