@@ -93,4 +93,4 @@ export default defineType({
       media: "profilePicture",
     },
   },
-};
+});

@@ -98,4 +98,4 @@ export default defineType({
       return { title: title || "Untitled Blog", subtitle: subtitle || "", media };
     },
   },
-};
+});

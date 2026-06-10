@@ -1,6 +1,6 @@
 import { defineType } from "sanity";
 
-export default defineType({
+const thesis = defineType({
   type: "document",
   name: "thesis",
   title: "Thesis",
@@ -207,3 +207,5 @@ export default defineType({
     },
   },
 });
+
+export default thesis;

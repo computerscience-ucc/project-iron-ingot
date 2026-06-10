@@ -307,4 +307,4 @@ export default defineType({
       return { title: "Site Configuration" };
     },
   },
-};
+});

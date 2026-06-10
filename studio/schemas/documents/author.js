@@ -1,6 +1,6 @@
 import { defineType } from "sanity";
 
-export default defineType({
+const author = defineType({
   type: "document",
   name: "author",
   title: "Author",
@@ -20,21 +20,19 @@ export default defineType({
           type: "string",
           name: "firstName",
           title: "First name",
-          validation: Rule => Rule.required(),
+          validation: (Rule) => Rule.required(),
         },
         {
           type: "string",
           name: "middleInitial",
           title: "Middle initial",
-          validation: (Rule) => [
-            Rule.max(1).error("A middle initial of min. 1 character or none"),
-          ],
+          validation: (Rule) => Rule.max(1).error("A middle initial of min. 1 character or none"),
         },
         {
           type: "string",
           name: "lastName",
           title: "Last name",
-          validation: Rule => Rule.required(),
+          validation: (Rule) => Rule.required(),
         },
       ],
     },
@@ -68,7 +66,7 @@ export default defineType({
       title: "Slug",
       name: "slug",
       type: "slug",
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
       options: {
         source: (doc) => `${doc.fullName.lastName}-${doc.fullName.firstName}`,
         maxLength: 100,
@@ -90,4 +88,6 @@ export default defineType({
       };
     },
   },
-};
+});
+
+export default author;

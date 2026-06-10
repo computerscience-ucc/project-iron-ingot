@@ -74,4 +74,4 @@ export default defineType({
       return { title: title || "Untitled Bulletin", media };
     },
   },
-};
+});

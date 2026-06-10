@@ -2,7 +2,7 @@ import { defineType } from "sanity";
 
 const req = (Rule) => Rule.required();
 
-export default defineType({
+const award = defineType({
   type: "document",
   name: "award",
   title: "Award",
@@ -37,3 +37,5 @@ export default defineType({
     },
   },
 });
+
+export default award;
