@@ -51,11 +51,9 @@ export default function FacebookMessenger({
   greetingText = "Hi! How can we help you?",
   color: themeColor = "#0084FF",
   loggedInGreeting = "Welcome back! Send us a message.",
-  fontSize = 16,
   className = "",
 }) {
   const containerRef = useRef(null);
-  const [sdkReady, setSdkReady] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -67,7 +65,6 @@ export default function FacebookMessenger({
     loadFBSdk(appId)
       .then((FB) => {
         if (!mounted) return;
-        setSdkReady(true);
 
         const renderChat = () => {
           if (!containerRef.current) return;
