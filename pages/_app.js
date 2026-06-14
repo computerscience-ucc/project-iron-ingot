@@ -210,7 +210,6 @@ function AppInner({ Component, pageProps }) {
 
         <Head>
           <link rel="icon" href="/favicon.ico" />
-          <title>Ingo</title>
         </Head>
 
         <motion.header
