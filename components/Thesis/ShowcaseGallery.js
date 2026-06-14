@@ -52,11 +52,11 @@ const ShowcaseGallery = ({ images }) => {
 
         {images.length > 1 && (
           <>
-            <button onClick={() => go(-1)}
+            <button onClick={() => go(-1)} aria-label="Previous image"
               className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-[6px] rounded-[6px] bg-black/40 hover:bg-white/10 text-white transition-colors">
               <CgChevronLeft size={20} />
             </button>
-            <button onClick={() => go(1)}
+            <button onClick={() => go(1)} aria-label="Next image"
               className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-[6px] rounded-[6px] bg-black/40 hover:bg-white/10 text-white transition-colors">
               <CgChevronRight size={20} />
             </button>
@@ -82,7 +82,7 @@ const ShowcaseGallery = ({ images }) => {
                 i === idx ? "border-[#FF5154] opacity-100" : "border-transparent opacity-40 hover:opacity-100"
               }`}
             >
-              <Image src={img} width={48} height={36} style={{ objectFit: "cover" }} alt={`thumb-${i}`} />
+              <Image src={img} width={48} height={36} style={{ objectFit: "cover" }} alt={`Showcase thumbnail ${i + 1}`} />
             </button>
           ))}
         </div>
