@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   // Sanity connection check
   try {
-    const doc = await client.fetch(`count(*[_type == "siteConfig"])`);
+    await client.fetch('count(*[_type == "siteConfig"])');
     checks.sanity = {
       status: "ok",
       projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "not set",
