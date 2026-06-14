@@ -8,7 +8,12 @@ export default async function handler(req, res) {
   const token = process.env.SANITY_API_TOKEN;
   const signature = req.headers["authorization"];
 
-  if (token && (!signature || signature !== `Bearer ${token}`)) {
+  if (!token) {
+    console.error("[revalidate] SANITY_API_TOKEN is not configured");
+    return res.status(500).json({ error: "Server misconfigured" });
+  }
+
+  if (!signature || signature !== `Bearer ${token}`) {
     console.warn("[revalidate] Invalid webhook signature");
     return res.status(401).json({ error: "Unauthorized" });
   }
