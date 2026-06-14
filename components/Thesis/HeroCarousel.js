@@ -103,11 +103,11 @@ const HeroCarousel = ({ images, youtubeId }) => {
 
           {images.length > 1 && (
             <>
-              <button onClick={() => go(-1)}
+              <button onClick={() => go(-1)} aria-label="Previous image"
                 className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-black/40 hover:bg-white/10 flex items-center justify-center text-white transition-all backdrop-blur-sm">
                 <CgChevronLeft size={20} />
               </button>
-              <button onClick={() => go(1)}
+              <button onClick={() => go(1)} aria-label="Next image"
                 className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-black/40 hover:bg-white/10 flex items-center justify-center text-white transition-all backdrop-blur-sm">
                 <CgChevronRight size={20} />
               </button>
@@ -116,6 +116,7 @@ const HeroCarousel = ({ images, youtubeId }) => {
                   <button
                     key={i}
                     onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
+                    aria-label={`Go to image ${i + 1}`}
                     className={`h-1 rounded-full transition-all duration-300 ${
                       i === idx ? "bg-white w-8" : "bg-white/30 w-1.5 hover:bg-white/60"
                     }`}
