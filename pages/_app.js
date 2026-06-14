@@ -709,7 +709,7 @@ function AppInner({ Component, pageProps }) {
                     {/* Social icons - Desktop consistency */}
                     <div className="flex items-center gap-[0.2rem] text-[#515151]">
                       <a
-                        href="https://facebook.com"
+                        href="https://www.facebook.com/UCCBSCS2022"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
@@ -717,7 +717,7 @@ function AppInner({ Component, pageProps }) {
                         <SiFacebook size={24} />
                       </a>
                       <a
-                        href="https://discord.com"
+                        href="https://discord.com/invite/krnGXBmp3h"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
@@ -725,7 +725,7 @@ function AppInner({ Component, pageProps }) {
                         <SiDiscord size={24} />
                       </a>
                       <a
-                        href="https://github.com"
+                        href="https://github.com/computerscience-ucc/project-iron-ingot"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
