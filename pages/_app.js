@@ -598,6 +598,10 @@ function AppInner({ Component, pageProps }) {
 
               <div
                 onClick={() => setSearchOpen(true)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSearchOpen(true); } }}
+                role="button"
+                tabIndex={0}
+                aria-label="Open search"
                 className="relative group/search w-[160px] font-sans cursor-pointer"
               >
                 <Search
@@ -694,6 +698,16 @@ function AppInner({ Component, pageProps }) {
                         setMenuOpen(false);
                         setSearchOpen(true);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setMenuOpen(false);
+                          setSearchOpen(true);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Open search"
                       className="relative group/search w-full font-sans cursor-pointer"
                     >
                       <Search
