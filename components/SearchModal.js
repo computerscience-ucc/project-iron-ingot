@@ -85,6 +85,7 @@ const SearchModal = ({ isOpen, onClose }) => {
                 value={query}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search blogs, thesis, awards..."
+                aria-label="Search content"
                 className="flex-1 bg-transparent border-none outline-none text-[0.9375rem] text-[#EFEFEF] placeholder:text-[#8C8C8C] font-normal"
               />
               <button
