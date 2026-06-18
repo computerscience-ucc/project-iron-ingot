@@ -53,7 +53,7 @@ export default defineType({
       title: "Tags",
       type: "array",
       group: "metadata",
-      description: "Enter searcheable keywords for the bulletin",
+      description: "Enter searchable keywords for the bulletin",
       of: [{ type: "string" }],
     },
     {

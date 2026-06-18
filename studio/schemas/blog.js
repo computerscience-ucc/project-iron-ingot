@@ -77,7 +77,7 @@ export default defineType({
       title: "Tags",
       type: "array",
       group: "metadata",
-      description: "Enter searcheable keywords for the blog",
+      description: "Enter searchable keywords for the blog",
       of: [{ type: "string" }],
     },
     {
