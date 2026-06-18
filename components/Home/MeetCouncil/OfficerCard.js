@@ -1,14 +1,14 @@
 import Image from "next/image";
 
-export default function OfficerCard({ 
-  name, 
-  role, 
-  photo, 
-  className, 
-  imageClassName, 
+export default function OfficerCard({
+  name,
+  role,
+  photo,
+  className,
+  imageClassName,
   nameClassName,
   roleClassName,
-  onClick 
+  onClick
 }) {
   return (
     <div

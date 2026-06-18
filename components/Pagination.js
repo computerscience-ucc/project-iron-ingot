@@ -1,4 +1,3 @@
-import React from "react";
 import { ChevronLeft, ChevronRight } from "@geist-ui/icons";
 
 const Pagination = ({ currentPage, totalPages, onPageChange, className }) => {
