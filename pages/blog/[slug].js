@@ -71,15 +71,26 @@ const blockComponents = {
 };
 
 export const getStaticPaths = async () => {
-  const blogPosts = await client.fetch(BLOG_PATHS_QUERY);
-  const paths = blogPosts.map((post) => ({ params: { slug: post.slug } }));
-  return { paths, fallback: "blocking" };
+  try {
+    const blogPosts = await client.fetch(BLOG_PATHS_QUERY);
+    const paths = blogPosts.map((post) => ({ params: { slug: post.slug } }));
+    return { paths, fallback: "blocking" };
+  } catch (error) {
+    console.error("[blog] getStaticPaths error:", error);
+    return { paths: [], fallback: "blocking" };
+  }
 };
 
 export const getStaticProps = async (context) => {
-  const { slug } = context.params;
-  const blogPost = await client.fetch(BLOG_DETAIL_QUERY, { slug });
-  return { props: { blogPost }, revalidate: 10 };
+  try {
+    const { slug } = context.params;
+    const blogPost = await client.fetch(BLOG_DETAIL_QUERY, { slug });
+    if (!blogPost) return { notFound: true };
+    return { props: { blogPost }, revalidate: 10 };
+  } catch (error) {
+    console.error("[blog] getStaticProps error:", error);
+    return { notFound: true };
+  }
 };
 
 const BlogPage = ({ blogPost }) => {

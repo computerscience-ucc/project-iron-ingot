@@ -34,14 +34,24 @@ function getYouTubeEmbedUrl(url) {
 }
 
 export const getStaticPaths = async () => {
-  const projects = await client.fetch(GALLERY_PATHS_QUERY);
-  return { paths: projects.map((p) => ({ params: { slug: p.slug } })), fallback: "blocking" };
+  try {
+    const projects = await client.fetch(GALLERY_PATHS_QUERY);
+    return { paths: projects.map((p) => ({ params: { slug: p.slug } })), fallback: "blocking" };
+  } catch (error) {
+    console.error("[gallery] getStaticPaths error:", error);
+    return { paths: [], fallback: "blocking" };
+  }
 };
 
 export const getStaticProps = async ({ params }) => {
-  const project = await client.fetch(GALLERY_DETAIL_QUERY, { slug: params.slug });
-  if (!project) return { notFound: true };
-  return { props: { project }, revalidate: 10 };
+  try {
+    const project = await client.fetch(GALLERY_DETAIL_QUERY, { slug: params.slug });
+    if (!project) return { notFound: true };
+    return { props: { project }, revalidate: 10 };
+  } catch (error) {
+    console.error("[gallery] getStaticProps error:", error);
+    return { notFound: true };
+  }
 };
 
 const GalleryProjectPage = ({ project }) => {

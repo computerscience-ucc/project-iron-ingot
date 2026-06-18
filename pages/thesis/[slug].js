@@ -76,41 +76,51 @@ const DEPT_LABEL = {
 };
 
 export const getStaticPaths = async () => {
-  const posts = await client.fetch(THESIS_PATHS_QUERY);
-  return { paths: posts.map((p) => ({ params: { slug: p.slug } })), fallback: "blocking" };
+  try {
+    const posts = await client.fetch(THESIS_PATHS_QUERY);
+    return { paths: posts.map((p) => ({ params: { slug: p.slug } })), fallback: "blocking" };
+  } catch (error) {
+    console.error("[thesis] getStaticPaths error:", error);
+    return { paths: [], fallback: "blocking" };
+  }
 };
 
 export const getStaticProps = async ({ params }) => {
-  const { slug } = params;
-  const post = await client.fetch(
-    `*[_type == "thesis" && slug.current == $slug]{
-      _id, _createdAt, _type,
-      "title": thesisTitle,
-      "slug": slug.current,
-      "headerImage": headerImage.asset->url,
-      "images": thesisImages[].asset->url,
-      "showcase": showcaseImages[].asset->url,
-      "model3d": threeDModel.asset->url,
-      youtubeLink,
-      "authors": postAuthor[]->{
-        fullName, pronouns,
-        "authorPhoto": authorPhoto.asset->url,
-        yearLevel, batchYear
-      },
-      "owners": ownersInformation,
-      "members": thesisMembers[]{
-        fullName, section, linkedIn, website,
-        "photo": photo.asset->url
-      },
-      "materials": materials[]{ label, url, icon },
-      academicYear, department, tags,
-      "content": thesisContent,
-      "description": pt::text(thesisContent)
-    }[0]`,
-    { slug }
-  );
-  if (!post) return { notFound: true };
-  return { props: { post }, revalidate: 10 };
+  try {
+    const { slug } = params;
+    const post = await client.fetch(
+      `*[_type == "thesis" && slug.current == $slug]{
+        _id, _createdAt, _type,
+        "title": thesisTitle,
+        "slug": slug.current,
+        "headerImage": headerImage.asset->url,
+        "images": thesisImages[].asset->url,
+        "showcase": showcaseImages[].asset->url,
+        "model3d": threeDModel.asset->url,
+        youtubeLink,
+        "authors": postAuthor[]->{
+          fullName, pronouns,
+          "authorPhoto": authorPhoto.asset->url,
+          yearLevel, batchYear
+        },
+        "owners": ownersInformation,
+        "members": thesisMembers[]{
+          fullName, section, linkedIn, website,
+          "photo": photo.asset->url
+        },
+        "materials": materials[]{ label, url, icon },
+        academicYear, department, tags,
+        "content": thesisContent,
+        "description": pt::text(thesisContent)
+      }[0]`,
+      { slug }
+    );
+    if (!post) return { notFound: true };
+    return { props: { post }, revalidate: 10 };
+  } catch (error) {
+    console.error("[thesis] getStaticProps error:", error);
+    return { notFound: true };
+  }
 };
 
 const ThesisPage = ({ post }) => {

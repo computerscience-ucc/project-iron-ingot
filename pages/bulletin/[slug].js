@@ -71,15 +71,26 @@ const blockComponents = {
 };
 
 export const getStaticPaths = async () => {
-  const bulletinPosts = await client.fetch(BULLETIN_PATHS_QUERY);
-  const paths = bulletinPosts.map((post) => ({ params: { slug: post.slug } }));
-  return { paths, fallback: "blocking" };
+  try {
+    const bulletinPosts = await client.fetch(BULLETIN_PATHS_QUERY);
+    const paths = bulletinPosts.map((post) => ({ params: { slug: post.slug } }));
+    return { paths, fallback: "blocking" };
+  } catch (error) {
+    console.error("[bulletin] getStaticPaths error:", error);
+    return { paths: [], fallback: "blocking" };
+  }
 };
 
 export const getStaticProps = async (context) => {
-  const { slug } = context.params;
-  const bulletinPost = await client.fetch(BULLETIN_DETAIL_QUERY, { slug });
-  return { props: { bulletinPost }, revalidate: 10 };
+  try {
+    const { slug } = context.params;
+    const bulletinPost = await client.fetch(BULLETIN_DETAIL_QUERY, { slug });
+    if (!bulletinPost) return { notFound: true };
+    return { props: { bulletinPost }, revalidate: 10 };
+  } catch (error) {
+    console.error("[bulletin] getStaticProps error:", error);
+    return { notFound: true };
+  }
 };
 
 const BulletinPage = ({ bulletinPost }) => {
