@@ -621,6 +621,7 @@ function AppInner({ Component, pageProps }) {
                   href="https://www.facebook.com/UCCBSCS2022"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Facebook"
                   className="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
                 >
                   <SiFacebook size={20} />
@@ -629,6 +630,7 @@ function AppInner({ Component, pageProps }) {
                   href="https://discord.com/invite/krnGXBmp3h"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Discord"
                   className="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
                 >
                   <SiDiscord size={20} />
@@ -637,6 +639,7 @@ function AppInner({ Component, pageProps }) {
                   href="https://github.com/computerscience-ucc/project-iron-ingot"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="GitHub"
                   className="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
                 >
                   <SiGithub size={20} />
@@ -725,6 +728,7 @@ function AppInner({ Component, pageProps }) {
                         href="https://www.facebook.com/UCCBSCS2022"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Facebook"
                         className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
                       >
                         <SiFacebook size={24} />
@@ -733,6 +737,7 @@ function AppInner({ Component, pageProps }) {
                         href="https://discord.com/invite/krnGXBmp3h"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Discord"
                         className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
                       >
                         <SiDiscord size={24} />
@@ -741,6 +746,7 @@ function AppInner({ Component, pageProps }) {
                         href="https://github.com/computerscience-ucc/project-iron-ingot"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="GitHub"
                         className="w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 hover:text-[var(--color-text)]"
                       >
                         <SiGithub size={24} />
@@ -765,7 +771,14 @@ function AppInner({ Component, pageProps }) {
           </div>
         </div>
 
-        <main>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[99999] focus:bg-[#FF5154] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
+        >
+          Skip to main content
+        </a>
+
+        <main id="main-content">
           <Component {...pageProps} />
         </main>
         <SectionStripe className="mt-0" />
