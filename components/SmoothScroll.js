@@ -3,12 +3,11 @@ import Lenis from "lenis";
 
 export default function SmoothScroll() {
   useEffect(() => {
-    // Initialize Lenis
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
-      direction: "vertical", // vertical, horizontal
-      gestureDirection: "vertical", // vertical, horizontal, both
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: "vertical",
+      gestureDirection: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
       smoothTouch: false,
@@ -16,16 +15,16 @@ export default function SmoothScroll() {
       infinite: false,
     });
 
-    // raf loop
+    let rafId;
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
-    // Clean up
     return () => {
+      cancelAnimationFrame(rafId);
       lenis.destroy();
     };
   }, []);
