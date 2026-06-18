@@ -133,6 +133,7 @@ export default function Footer() {
             viewBox="0 -24 1000 140"
             className="w-full h-auto select-none pointer-events-none"
             preserveAspectRatio="xMidYMax meet"
+            aria-hidden="true"
           >
             <text
               x="49%"

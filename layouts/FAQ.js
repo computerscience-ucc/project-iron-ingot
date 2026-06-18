@@ -35,6 +35,7 @@ const FAQItem = ({ faq, isOpen, onClick }) => {
     <div className="border-b border-[#2A2A2A] overflow-hidden px-6 md:px-12 lg:px-0">
       <button
         onClick={onClick}
+        aria-expanded={isOpen}
         className="w-full flex items-center justify-between py-[0.9rem] lg:py-[1.4rem] text-left group transition-colors"
       >
         <span className="text-base md:text-lg lg:text-[1.25rem] font-semibold text-white tracking-wide transition-colors group-hover:text-white/80 pr-4">
