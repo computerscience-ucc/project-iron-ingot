@@ -847,8 +847,7 @@ const ChatBot = () => {
                 alt="Chat Bot Mascot"
                 width={56}
                 height={56}
-                priority
-                unoptimized
+                sizes="56px"
                 className="object-contain transform-gpu"
               />
             </motion.button>
@@ -878,8 +877,7 @@ const ChatBot = () => {
                   alt="Chat Bot Mascot"
                   width={64}
                   height={64}
-                  priority
-                  unoptimized
+                  sizes="64px"
                   className="object-contain transform-gpu"
                 />
                 <div className="flex flex-col gap-[4px]">
@@ -917,7 +915,7 @@ const ChatBot = () => {
             </div>
 
             {/* Messages */}
-            <div 
+            <div
               className="flex-1 overflow-y-auto px-5 py-4 space-y-4 custom-scrollbar"
               data-lenis-prevent
             >
@@ -1056,6 +1054,7 @@ const ChatBot = () => {
                       sendMessage(e);
                     }
                   }}
+                  aria-label="Type your message"
                   placeholder={
                     cooldown > 0
                       ? `Please wait ${cooldown}s...`

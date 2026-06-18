@@ -76,7 +76,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div 
+    <div
       className="relative w-[calc(100%+3rem)] md:w-[calc(100%+6rem)] lg:w-full -mx-6 md:-mx-12 lg:mx-0 aspect-square bg-[#1D1D1D] rounded-[11.67px] flex flex-col items-center justify-end overflow-hidden group touch-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -102,6 +102,7 @@ export default function HeroCarousel() {
             src={images[currentIndex]}
             alt={`Hero Carousel Image ${currentIndex + 1}`}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
             className="object-cover object-top"
             priority={currentIndex === 0}
             draggable={false}
