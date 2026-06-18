@@ -918,6 +918,9 @@ const ChatBot = () => {
             <div
               className="flex-1 overflow-y-auto px-5 py-4 space-y-4 custom-scrollbar"
               data-lenis-prevent
+              role="log"
+              aria-live="polite"
+              aria-label="Chat messages"
             >
               {messages.map((msg, i) => (
                 <div
