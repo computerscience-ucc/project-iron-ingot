@@ -8,6 +8,7 @@ mode: subagent
 You create React components for the UCC INGO project following established patterns.
 
 ## Location
+
 - Generic components: `components/`
 - Page-specific sections: `layouts/`
 - shadcn/ui primitives: `components/ui/`
@@ -15,21 +16,19 @@ You create React components for the UCC INGO project following established patte
 ## Component Patterns
 
 ### Simple component with CSS module
+
 ```jsx
 import styles from "./MyComponent.module.css";
 
 export default function MyComponent({ children, className = "" }) {
-  return (
-    <div className={`${styles.wrapper} ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`${styles.wrapper} ${className}`}>{children}</div>;
 }
 ```
 
 ### Component with framer-motion animations
+
 ```jsx
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AnimatedCard({ item, index }) {
   return (
@@ -46,6 +45,7 @@ export default function AnimatedCard({ item, index }) {
 ```
 
 ### Component using Prefetcher data
+
 ```jsx
 import { usePrefetcher } from "../components/Prefetcher";
 
@@ -54,7 +54,7 @@ export default function LatestPosts() {
   if (!blogs) return null;
   return (
     <div>
-      {blogs.slice(0, 3).map(blog => (
+      {blogs.slice(0, 3).map((blog) => (
         <div key={blog._id}>{blog.title}</div>
       ))}
     </div>
@@ -63,19 +63,22 @@ export default function LatestPosts() {
 ```
 
 ## Styling Conventions
+
 - Use CSS Modules (`*.module.css`) for component-specific styles
 - Use Tailwind utility classes for simple styling
 - Use CSS custom properties for theme colors: `var(--color-bg)`, `var(--color-text)`, `var(--color-text-muted)`, `var(--color-border)`
 - The project uses a dark theme by default (`data-theme="dark"`)
 
 ## Animation Conventions
-- Import from `"motion/react"` (not `"framer-motion"`)
+
+- Import from `"framer-motion"` (not `"motion/react"`)
 - Use `motion.div`, `motion.span`, etc. for animated elements
 - Use `AnimatePresence` for mount/unmount animations
 - Use `whileInView` for scroll-triggered animations
 - Use `viewport={{ once: true }}` to avoid re-triggering
 
 ## Component Architecture Rules
+
 - Keep components focused on a single responsibility
 - Props should have defaults where sensible
 - Use `className` prop for external styling overrides
