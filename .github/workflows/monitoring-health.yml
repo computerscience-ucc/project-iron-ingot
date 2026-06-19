@@ -31,11 +31,14 @@ jobs:
       - name: Create issue on failure
         uses: actions/github-script@v7
         if: steps.site.outcome == 'failure' || steps.chat.outcome == 'failure'
+        env:
+          SITE_OUTCOME: ${{ steps.site.outcome }}
+          CHAT_OUTCOME: ${{ steps.chat.outcome }}
         with:
           script: |
             const failures = [];
-            if ('${{ steps.site.outcome }}' === 'failure') failures.push('Main site');
-            if ('${{ steps.chat.outcome }}' === 'failure') failures.push('Chat endpoint');
+            if (process.env.SITE_OUTCOME === 'failure') failures.push('Main site');
+            if (process.env.CHAT_OUTCOME === 'failure') failures.push('Chat endpoint');
 
             await github.rest.issues.create({
               owner: context.repo.owner,
