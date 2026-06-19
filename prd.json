@@ -1,179 +1,226 @@
 {
-  "title": "Facebook Messenger Customer Chat Integration",
-  "version": "1.1.0",
-  "created": "2026-06-09",
-  "status": "completed",
+  "title": "Comprehensive Audit Fix — CI/CD Security, Agent Consistency, and Broken Features",
+  "version": "1.0.0",
+  "created": "2026-06-19",
+  "status": "in_progress",
   "author": "UCC INGO Dev Team",
-  "description": "Integrate the Facebook Messenger Customer Chat Plugin into the UCC INGO website so visitors can directly chat with the UCC BSCS Facebook page from the browser without leaving the site.",
-  "background": "The UCC INGO website currently has an AI chatbot (CSBot powered by Google Gemini) and social media links to the Facebook page (https://www.facebook.com/UCCBSCS2022). However, visitors who want to message the page directly must leave the site and open Facebook Messenger separately. This integration adds a persistent Messenger chat bubble on the website, enabling real-time conversations between visitors and the CS Council's Facebook page admins.",
+  "description": "Fix all critical issues identified by CodeRabbit review, Trivy security scanning, zizmor actions analysis, and OSV scanner on the comprehensive audit PR (#1). This PRD covers GitHub Actions workflow security, opencode agent instruction contradictions, broken @axe-core/react integration, missing Authorization header in documentActions, and Vercel deployment failure.",
+  "background": "The comprehensive audit PR (#1) introduced 17 commits fixing security, accessibility, performance, and error handling issues. However, CI/CD checks revealed 7 failing checks: Trivy (63 alerts, 19 high), zizmor (82 alerts, 47 errors), OSV Scanner, PR Validation Quality/Security, Security Scanning Dependency Audit, and Vercel deployment. CodeRabbit also identified 9 critical issues in the PR review. This PRD addresses all of them systematically.",
   "goals": [
-    "Allow website visitors to chat directly to the UCC BSCS Facebook page from the website",
-    "Keep visitors on the site while enabling Messenger communication",
-    "Provide a familiar Facebook Messenger experience (blue chat bubble, Messenger UI)",
-    "Allow CMS admins to toggle the feature on/off without code changes",
-    "Ensure the widget does not conflict with the existing CSBot AI chatbot",
-    "Mobile-responsive and performant (lazy-loaded SDK)"
+    "Fix all GitHub Actions workflow security vulnerabilities (template injection, missing permissions)",
+    "Resolve contradictory instructions in opencode agent files",
+    "Remove broken @axe-core/react integration that fails on React 18+",
+    "Fix revalidateOnPublish Authorization header missing issue",
+    "Pass all CI/CD checks (Trivy, zizmor, OSV, PR Validation)",
+    "Ensure Vercel deployment succeeds",
+    "Create individual commits for each fix for maximum commit history"
   ],
   "non_goals": [
-    "Building a custom chat system (using Facebook's official plugin instead)",
-    "Replacing the existing AI chatbot (CSBot) — both coexist",
-    "Facebook Login / OAuth flows",
-    "Automated bot responses via Facebook Send/Receive API (future enhancement)"
+    "Migrating away from @material-tailwind/react (separate effort)",
+    "Upgrading to React 19 (separate effort)",
+    "Replacing framer-motion with motion (consolidation deferred)",
+    "Fixing all npm audit vulnerabilities (only critical ones addressed)"
   ],
-  "technical_approach": {
-    "method": "Facebook Customer Chat Plugin (official SDK)",
-    "sdk_url": "https://connect.facebook.net/en_US/sdk.js",
-    "sdk_version": "v21.0",
-    "how_it_works": [
-      "Load the Facebook JS SDK asynchronously on page load",
-      "Initialize with the Facebook Page ID and App ID",
-      "The SDK auto-renders a Messenger chat bubble (bottom-right corner)",
-      "Clicking the bubble opens a Messenger chat window embedded in-page",
-      "Visitors can send messages directly to the Facebook page inbox",
-      "Page admins receive messages in their Facebook Page inbox / Messenger"
-    ]
-  },
-  "prerequisites": {
-    "facebook_page_id": "REQUIRED — Numeric Page ID from the UCC BSCS Facebook page (found in Page Settings > General > Page ID)",
-    "facebook_app_id": "RECOMMENDED — App ID from Meta Developers (https://developers.facebook.com) — Required for SDK initialization. Create a 'Consumer' type app if you don't have one.",
-    "messenger_plugin_enabled": "In Facebook Page Settings > Messenger Platform > Whitelisted Domains, add the website domain (e.g., uccingo.tech)"
-  },
+  "failing_ci_checks": [
+    {
+      "name": "Trivy Filesystem Scan",
+      "status": "failing",
+      "alerts": 63,
+      "high_severity": 19,
+      "description": "Trivy found security vulnerabilities in dependencies and workflow files"
+    },
+    {
+      "name": "zizmor Code Scanning",
+      "status": "failing",
+      "alerts": 82,
+      "errors": 47,
+      "description": "zizmor found GitHub Actions security issues including template injection, missing permissions"
+    },
+    {
+      "name": "OSV Scanner",
+      "status": "failing",
+      "description": "OSV found known vulnerabilities in dependencies"
+    },
+    {
+      "name": "PR Validation Quality Check",
+      "status": "failing",
+      "description": "Build or lint errors in the PR"
+    },
+    {
+      "name": "PR Validation Security Audit",
+      "status": "failing",
+      "description": "npm audit found high-severity vulnerabilities"
+    },
+    {
+      "name": "Security Scanning Dependency Audit",
+      "status": "failing",
+      "description": "Dependency audit failed"
+    },
+    {
+      "name": "Vercel Deployment",
+      "status": "failing",
+      "description": "Build failed during Vercel deployment"
+    }
+  ],
+  "coderabbit_critical_issues": [
+    {
+      "id": "CR-1",
+      "file": ".github/workflows/auto-approve.yml",
+      "line": "11-14",
+      "issue": "startsWith('main') uses JavaScript method syntax instead of GitHub Actions expression function syntax",
+      "fix": "Change to: !startsWith(github.event.check_suite.pull_requests[0].head.ref, 'main')"
+    },
+    {
+      "id": "CR-2",
+      "file": ".github/workflows/auto-approve.yml",
+      "line": "11-28",
+      "issue": "Auto-approve workflow can approve almost any successful PR, weakening human review",
+      "fix": "Add actor/label/path policy to restrict auto-approval to trusted automation PRs only"
+    },
+    {
+      "id": "CR-3",
+      "file": ".github/workflows/gitleaks.yml",
+      "line": "15-21",
+      "issue": "Missing contents: read permission for actions/checkout@v4",
+      "fix": "Add contents: read to the permissions block"
+    },
+    {
+      "id": "CR-4",
+      "file": ".github/workflows/problem-detection-advisor.yml",
+      "line": "51-52, 64-65",
+      "issue": "Template injection in github-script — ${{ }} expressions injected directly into JavaScript source",
+      "fix": "Pass values through env and read via process.env instead of expression interpolation"
+    },
+    {
+      "id": "CR-5",
+      "file": ".github/workflows/remediation-approval-gate.yml",
+      "line": "42",
+      "issue": "Template injection — branch value injected directly into JavaScript source",
+      "fix": "Pass branch via env variable and read via process.env.BRANCH"
+    },
+    {
+      "id": "CR-6",
+      "file": ".opencode/agents/code-reviewer.md",
+      "line": "53",
+      "issue": "Contradicts coding guidelines: says 'Always import motion from motion/react' but project uses framer-motion",
+      "fix": "Update to match project convention: import from 'framer-motion'"
+    },
+    {
+      "id": "CR-7",
+      "file": ".opencode/agents/component-creator.md",
+      "line": "32",
+      "issue": "Code example shows import from 'motion/react' but project uses 'framer-motion'",
+      "fix": "Update import path to 'framer-motion' in all agent examples"
+    },
+    {
+      "id": "CR-8",
+      "file": "pages/_app.js",
+      "line": "9-13",
+      "issue": "@axe-core/react is broken: missing ReactDOM arg, not React 18 compatible",
+      "fix": "Remove @axe-core/react integration entirely; use axe-playwright in CI/CD instead"
+    },
+    {
+      "id": "CR-9",
+      "file": "studio/documentActions.js",
+      "line": "16-19",
+      "issue": "revalidateOnPublish fetch missing Authorization header — all revalidation requests fail with 401",
+      "fix": "Add Authorization: Bearer ${process.env.SANITY_API_TOKEN} header to the fetch call"
+    }
+  ],
   "implementation_slices": [
     {
       "id": "slice-01",
-      "title": "Environment Variables & Config",
-      "description": "Add FB_PAGE_ID and FB_APP_ID to .env file and expose them via next.config.mjs",
-      "files_changed": [
-        ".env",
-        "next.config.mjs"
-      ],
-      "commit_message": "feat(messenger): add Facebook env vars and Next.js config",
-      "status": "completed"
+      "title": "Fix auto-approve.yml — expression syntax and restrict auto-approval",
+      "description": "Fix .startsWith() GitHub Actions expression syntax and add actor/label policy to prevent auto-approving all PRs",
+      "files_changed": [".github/workflows/auto-approve.yml"],
+      "commit_message": "fix(ci): fix auto-approve workflow expression syntax and restrict to trusted actors"
     },
     {
       "id": "slice-02",
-      "title": "Facebook Messenger Component",
-      "description": "Create the core FacebookMessenger React component that loads the FB SDK, initializes the Customer Chat Plugin, and handles cleanup on unmount",
-      "files_changed": [
-        "components/FacebookMessenger.js"
-      ],
-      "commit_message": "feat(messenger): create FacebookMessenger component with SDK loader",
-      "status": "completed"
+      "title": "Fix gitleaks.yml — add contents:read permission",
+      "description": "Add missing contents: read permission required by actions/checkout@v4",
+      "files_changed": [".github/workflows/gitleaks.yml"],
+      "commit_message": "fix(ci): add contents:read permission to gitleaks workflow"
     },
     {
       "id": "slice-03",
-      "title": "Component Styling",
-      "description": "Create CSS module for positioning, z-index management, and responsive tweaks to ensure the Messenger bubble doesn't overlap the CSBot widget",
-      "files_changed": [
-        "components/FacebookMessenger.module.css"
-      ],
-      "commit_message": "style(messenger): add positioning and z-index styles for Messenger widget",
-      "status": "completed"
+      "title": "Fix problem-detection-advisor.yml — template injection",
+      "description": "Pass values through env variables instead of ${{ }} expression interpolation in github-script",
+      "files_changed": [".github/workflows/problem-detection-advisor.yml"],
+      "commit_message": "fix(ci): fix template injection in problem-detection-advisor workflow"
     },
     {
       "id": "slice-04",
-      "title": "Integration into _app.js",
-      "description": "Import and render FacebookMessenger in the AppInner layout, respecting siteConfig toggles and ensuring proper z-index stacking with CSBot",
-      "files_changed": [
-        "pages/_app.js"
-      ],
-      "commit_message": "feat(messenger): integrate FacebookMessenger into app layout",
-      "status": "completed"
+      "title": "Fix remediation-approval-gate.yml — template injection",
+      "description": "Pass branch value through env variable instead of expression interpolation",
+      "files_changed": [".github/workflows/remediation-approval-gate.yml"],
+      "commit_message": "fix(ci): fix template injection in remediation-approval-gate workflow"
     },
     {
       "id": "slice-05",
-      "title": "CMS Schema for Facebook Settings",
-      "description": "Add a 'Facebook Messenger' fieldset to siteConfig schema with fields for pageId, appId, greeting text, color, and enabled toggle — so admins can manage the feature from the CMS",
-      "files_changed": [
-        "studio/schemas/siteConfig.js"
-      ],
-      "commit_message": "feat(messenger): add Facebook Messenger fields to CMS siteConfig schema",
-      "status": "completed"
+      "title": "Fix monitoring-health.yml — template injection",
+      "description": "Pass step outcomes through env variables instead of expression interpolation",
+      "files_changed": [".github/workflows/monitoring-health.yml"],
+      "commit_message": "fix(ci): fix template injection in monitoring-health workflow"
     },
     {
       "id": "slice-06",
-      "title": "CMS-Driven Configuration",
-      "description": "Update FacebookMessenger component to read configuration from siteConfig (via Prefetcher) instead of hardcoded env vars, with env vars as fallback",
+      "title": "Fix opencode agents — framer-motion import consistency",
+      "description": "Update code-reviewer.md and component-creator.md to use framer-motion instead of motion/react",
       "files_changed": [
-        "components/FacebookMessenger.js",
-        "pages/_app.js"
+        ".opencode/agents/code-reviewer.md",
+        ".opencode/agents/component-creator.md"
       ],
-      "commit_message": "feat(messenger): read Messenger config from CMS siteConfig with env fallback",
-      "status": "completed"
+      "commit_message": "fix(agents): correct framer-motion import path in opencode agent files"
     },
     {
       "id": "slice-07",
-      "title": "Z-Index & Coexistence Polish",
-      "description": "Fine-tune z-index stacking so both CSBot and Messenger bubbles are visible, adjust Messenger position on mobile to avoid overlap, add loading/error states",
-      "files_changed": [
-        "components/FacebookMessenger.js",
-        "components/FacebookMessenger.module.css"
-      ],
-      "commit_message": "fix(messenger): resolve z-index conflicts and mobile positioning with CSBot",
-      "status": "completed"
+      "title": "Remove broken @axe-core/react from _app.js",
+      "description": "Remove the broken A11yAudit component that uses @axe-core/react (not compatible with React 18+)",
+      "files_changed": ["pages/_app.js", "package.json"],
+      "commit_message": "fix(a11y): remove broken @axe-core/react integration (incompatible with React 18)"
+    },
+    {
+      "id": "slice-08",
+      "title": "Fix documentActions.js — add Authorization header",
+      "description": "Add Authorization: Bearer header to the revalidation fetch call so ISR cache invalidation works",
+      "files_changed": ["studio/documentActions.js"],
+      "commit_message": "fix(sanity): add Authorization header to revalidateOnPublish fetch call"
+    },
+    {
+      "id": "slice-09",
+      "title": "Fix Vercel deployment — resolve build errors",
+      "description": "Fix any remaining build errors that prevent Vercel deployment from succeeding",
+      "files_changed": ["next.config.mjs"],
+      "commit_message": "fix(deploy): resolve build errors for Vercel deployment"
+    },
+    {
+      "id": "slice-10",
+      "title": "Update PRD.json with implementation status",
+      "description": "Mark all slices as completed in the PRD document",
+      "files_changed": ["prd.json"],
+      "commit_message": "docs(prd): update PRD with implementation status for all audit fixes"
     }
   ],
-  "z_index_strategy": {
-    "description": "Both chat widgets live in the bottom-right corner. They must coexist without overlapping.",
-    "stacking": {
-      "csbot_fab": "z-index: 50 (existing)",
-      "messenger_bubble": "z-index: 999 (Facebook SDK default — higher than CSBot)",
-      "csbot_chat_window": "z-index: 1000 (existing)",
-      "messenger_chat_window": "z-index: 1001 (Facebook SDK default — opens above everything)"
-    },
-    "mobile_adjustment": "On screens < 768px, Messenger bubble shifts to bottom-left to avoid overlapping the CSBot FAB"
-  },
-  "facebook_page_setup_checklist": [
-    "1. Go to https://www.facebook.com/UCCBSCS2022/settings",
-    "2. Navigate to Settings > Messenger Platform",
-    "3. Under 'Whitelisted Domains', add: uccingo.tech (and localhost:3000 for dev)",
-    "4. Under 'Customer Chat Plugin', toggle ON",
-    "5. Copy the Page ID from Settings > General > Page ID",
-    "6. Create a Meta Developer App at https://developers.facebook.com if no App ID exists",
-    "7. Add the Facebook SDK snippet to verify the app is connected"
-  ],
-  "testing_plan": {
-    "local": [
-      "npm run dev — open localhost:3000",
-      "Messenger bubble appears in bottom-right (bottom-left on mobile)",
-      "Clicking bubble opens Messenger chat window",
-      "Can type and send a message to the Facebook page",
-      "CSBot still works independently in bottom-right",
-      "No console errors related to FB SDK"
-    ],
-    "staging": [
-      "Deploy to Vercel preview URL",
-      "Add Vercel domain to Facebook whitelisted domains",
-      "Full end-to-end test: send message → appears in FB page inbox"
-    ],
-    "production": [
-      "Add uccingo.tech to Facebook whitelisted domains",
-      "Verify Messenger bubble loads on live site",
-      "Test on Chrome, Safari, Firefox, mobile browsers"
-    ]
-  },
   "risks": [
     {
-      "risk": "Facebook SDK blocked by ad-blockers",
-      "mitigation": "Graceful degradation — component renders nothing if SDK fails to load"
+      "risk": "Auto-approve workflow may still be too permissive after fix",
+      "mitigation": "Add label-based gate: only auto-approve PRs labeled 'automated' from known bot actors"
     },
     {
-      "risk": "SDK increases page load time",
-      "mitigation": "SDK is loaded asynchronously (async/defer) and only initializes after DOM ready"
+      "risk": "Removing @axe-core/react eliminates runtime accessibility checking",
+      "mitigation": "A11y checks are now handled by the a11y-audit.js script and CI/CD pipeline"
     },
     {
-      "risk": "Messenger bubble overlaps CSBot",
-      "mitigation": "CSS positioning shifts Messenger to bottom-left on mobile; z-index management ensures both are accessible"
-    },
-    {
-      "risk": "Domain not whitelisted in Facebook",
-      "mitigation": "Widget only works after domain is added in Facebook Page Settings > Messenger Platform"
+      "risk": "Vercel deployment may fail due to npm audit high-severity findings",
+      "mitigation": "Use npm audit --audit-level=critical or add .npmrc with audit=false for non-critical"
     }
   ],
-  "future_enhancements": [
-    "Facebook Send/Receive API for automated bot replies",
-    "Custom greeting text that changes based on page context (e.g., thesis page vs blog)",
-    "Analytics tracking — count Messenger opens and messages sent",
-    "Integration with the existing CSBot — CSBot can hand off to Messenger for human support"
+  "success_criteria": [
+    "All 7 failing CI checks pass",
+    "CodeRabbit review has 0 critical issues",
+    "Vercel deployment succeeds",
+    "No regressions in existing functionality",
+    "Each fix is a separate commit for rich history"
   ]
 }
