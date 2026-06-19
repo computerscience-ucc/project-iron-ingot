@@ -34,12 +34,14 @@ jobs:
 
       - name: Rerun failed workflows
         uses: actions/github-script@v7
+        env:
+          BRANCH: ${{ steps.pr.outputs.branch }}
         with:
           script: |
             const workflows = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              branch: '${{ steps.pr.outputs.branch }}',
+              branch: process.env.BRANCH,
               event: 'pull_request',
               status: 'failure',
             });
