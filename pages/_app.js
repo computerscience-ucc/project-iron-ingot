@@ -4,15 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, useMemo, useRef } from "react";
-import React from "react";
 
-function A11yAudit() {
-  useEffect(() => {
-    if (process.env.NODE_ENV !== "development") return;
-    import("@axe-core/react").then((m) => m.default(React, 1000));
-  }, []);
-  return null;
-}
 import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { ThemeProvider } from "@material-tailwind/react";
@@ -816,7 +808,6 @@ export default function App(props) {
       <ThemeProvider>
         <PrefetcherWrapper>
           <SmoothScroll />
-          <A11yAudit />
           <AppInner {...props} />
         </PrefetcherWrapper>
       </ThemeProvider>
