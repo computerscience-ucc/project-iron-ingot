@@ -1,5 +1,3 @@
-import { StructureBuilder } from "sanity/structure";
-
 const defaultOrdering = { field: "_createdAt", direction: "desc" };
 
 export const deskStructure = (S) =>
