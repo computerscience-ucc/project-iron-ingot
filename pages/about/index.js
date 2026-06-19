@@ -287,7 +287,6 @@ const AboutPage = () => {
                         {hasAsterisk && (
                           <span className="mr-[0.35rem] text-[#EFEFEF] text-[12px] relative top-[0.5px]">
                             *
-                            
                           </span>
                         )}
                         {y}
@@ -441,33 +440,33 @@ const AboutPage = () => {
 
                   {/* Class Presidents */}
                   {council.classPresidents &&
-                    council.classPresidents.length > 0 && (
-                      <div className="flex flex-col mt-12">
-                        <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
-                          Class Presidents
-                        </h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
-                          {council.classPresidents.map((cp, idx) => (
-                            <OfficerCard
-                              key={idx}
-                              name={cp.name}
-                              role={cp.section}
-                              photo={cp.photo || "/mascot/grad-bot.png"}
-                              imageClassName={
-                                cp.photo ? "object-cover" : "object-contain p-[3rem] opacity-30"
-                              }
-                              className="w-full"
-                              onClick={() =>
-                                handlePersonClick({
-                                  name: cp.name,
-                                  subtitle: cp.section,
-                                })
-                              }
-                            />
-                          ))}
-                        </div>
+                     council.classPresidents.length > 0 && (
+                    <div className="flex flex-col mt-12">
+                      <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-[1.2rem]">
+                         Class Presidents
+                      </h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2.5rem]">
+                        {council.classPresidents.map((cp, idx) => (
+                          <OfficerCard
+                            key={idx}
+                            name={cp.name}
+                            role={cp.section}
+                            photo={cp.photo || "/mascot/grad-bot.png"}
+                            imageClassName={
+                              cp.photo ? "object-cover" : "object-contain p-[3rem] opacity-30"
+                            }
+                            className="w-full"
+                            onClick={() =>
+                              handlePersonClick({
+                                name: cp.name,
+                                subtitle: cp.section,
+                              })
+                            }
+                          />
+                        ))}
                       </div>
-                    )}
+                    </div>
+                  )}
                 </>
               )}
 

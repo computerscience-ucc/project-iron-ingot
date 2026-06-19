@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CgClose } from "react-icons/cg";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -34,10 +34,10 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
   const person = people[idx];
   const gradient = getGradient(person?.name);
 
-  const go = (d) => { 
-    setDir(d); 
-    setIdx((i) => (i + d + people.length) % people.length); 
-  };
+  const go = useCallback((d) => {
+    setDir(d);
+    setIdx((i) => (i + d + people.length) % people.length);
+  }, [people.length]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -47,7 +47,7 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, people.length]);
+  }, [onClose, people.length, go]);
 
   // body lock
   useEffect(() => {

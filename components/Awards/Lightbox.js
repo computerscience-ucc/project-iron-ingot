@@ -182,7 +182,7 @@ const Lightbox = ({ award, onClose }) => {
 
         {/* thumb strip */}
         {images.length > 1 && (
-          <div 
+          <div
             className="flex gap-2 px-4 py-3 overflow-x-auto bg-[#1A1A1A] border-t border-[#5B5B5B] border-dashed shrink-0 custom-scrollbar"
             data-lenis-prevent
           >

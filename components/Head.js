@@ -28,7 +28,7 @@ const Head = ({
     if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
     return "https://uccingo.tech";
   };
-  
+
   const siteUrl = cfg.siteUrl || getBaseUrl();
 
   const defaultOgImage = cfg.ogImage || "/branding/og-image.png";

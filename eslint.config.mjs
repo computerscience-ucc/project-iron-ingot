@@ -67,5 +67,12 @@ export default defineConfig([
     }
   },
 
+  {
+    files: ["components/ui/**/*.{js,jsx}"],
+    rules: {
+      "semi": "off",
+    },
+  },
+
   js.configs.recommended
 ]);

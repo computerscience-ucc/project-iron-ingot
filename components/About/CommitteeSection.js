@@ -34,7 +34,7 @@ const CommitteeSection = ({ committees }) => {
             <h3 className="text-[1.375rem] md:text-[1.5rem] lg:text-[1.6rem] font-semibold text-[#D1D1D1] leading-tight tracking-wide mb-[1.2rem]">
               {committee.committeeName.replace(/ committee/gi, "")}
             </h3>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-[0.8rem] gap-y-[1.1rem]">
               {committee.members?.map((member, mIdx) => (
                 <OfficerCard
