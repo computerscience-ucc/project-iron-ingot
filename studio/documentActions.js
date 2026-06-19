@@ -15,7 +15,10 @@ export function revalidateOnPublish(prev, context) {
 
     fetch(`${siteUrl}/api/revalidate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.SANITY_API_TOKEN || ""}`,
+      },
       body: JSON.stringify({ _type, slug }),
     }).catch((err) => console.error("[documentAction] Revalidation failed:", err));
   }
