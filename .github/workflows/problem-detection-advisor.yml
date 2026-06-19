@@ -30,37 +30,48 @@ jobs:
       - name: Find related PR
         uses: actions/github-script@v7
         id: pr
+        env:
+          BRANCH: ${{ steps.details.outputs.branch }}
         with:
           script: |
             const prs = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              head: '${{ steps.details.outputs.branch }}',
+              head: process.env.BRANCH,
             });
             return prs.data.length > 0 ? prs.data[0].number : null;
 
       - name: Create issue
         uses: actions/github-script@v7
         if: steps.pr.outputs.result == 'null'
+        env:
+          WORKFLOW_NAME: ${{ steps.details.outputs.name }}
+          WORKFLOW_URL: ${{ steps.details.outputs.url }}
+          WORKFLOW_BRANCH: ${{ steps.details.outputs.branch }}
+          WORKFLOW_COMMIT: ${{ steps.details.outputs.commit }}
         with:
           script: |
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `CI Failure: ${{ steps.details.outputs.name }}`,
-              body: `## Workflow Failure\n\n**Workflow:** ${{ steps.details.outputs.name }}\n**Run:** ${{ steps.details.outputs.url }}\n**Branch:** ${{ steps.details.outputs.branch }}\n**Commit:** ${{ steps.details.outputs.commit }}\n\nPlease investigate and fix the failure.`,
+              title: `CI Failure: ${process.env.WORKFLOW_NAME}`,
+              body: `## Workflow Failure\n\n**Workflow:** ${process.env.WORKFLOW_NAME}\n**Run:** ${process.env.WORKFLOW_URL}\n**Branch:** ${process.env.WORKFLOW_BRANCH}\n**Commit:** ${process.env.WORKFLOW_COMMIT}\n\nPlease investigate and fix the failure.`,
               labels: ['ci/cd', 'needs-triage'],
             });
 
       - name: Comment on PR
         uses: actions/github-script@v7
         if: steps.pr.outputs.result != 'null'
+        env:
+          PR_NUMBER: ${{ steps.pr.outputs.result }}
+          WORKFLOW_NAME: ${{ steps.details.outputs.name }}
+          WORKFLOW_URL: ${{ steps.details.outputs.url }}
         with:
           script: |
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: ${{ steps.pr.outputs.result }},
-              body: `## Workflow Failure\n\n**Workflow:** ${{ steps.details.outputs.name }}\n**Run:** ${{ steps.details.outputs.url }}\n\nPlease investigate and fix the failure.`,
+              issue_number: parseInt(process.env.PR_NUMBER),
+              body: `## Workflow Failure\n\n**Workflow:** ${process.env.WORKFLOW_NAME}\n**Run:** ${process.env.WORKFLOW_URL}\n\nPlease investigate and fix the failure.`,
             });
