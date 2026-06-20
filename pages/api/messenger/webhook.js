@@ -1,6 +1,8 @@
 // pages/api/messenger/webhook.js
 // Meta Messenger webhook — handles verification (GET) and incoming messages (POST)
+// Includes HMAC signature verification for security.
 
+import crypto from "crypto";
 import { addMessage } from "../../../lib/messenger/messageStore";
 
 export default async function handler(req, res) {
@@ -40,6 +42,32 @@ function handleVerification(req, res) {
 }
 
 /**
+ * Verify the X-Hub-Signature-256 header from Meta.
+ * This ensures the request actually came from Meta and not an impersonator.
+ *
+ * @param {string} rawBody - The raw request body as a string
+ * @param {string} signature - The X-Hub-Signature-256 header value
+ * @returns {boolean}
+ */
+function verifySignature(rawBody, signature) {
+  const appSecret = process.env.FB_APP_SECRET;
+  if (!appSecret) {
+    console.warn("[messenger/webhook] FB_APP_SECRET not set — skipping signature verification");
+    return true; // Allow if secret not configured (dev mode)
+  }
+
+  if (!signature) return false;
+
+  const expected = `sha256=${crypto.createHmac("sha256", appSecret).update(rawBody).digest("hex")}`;
+
+  try {
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Incoming Message Handler (POST)
  * Meta sends message payloads here when a user messages the page.
  * We must always return 200 OK within 20 seconds or Meta will retry.
@@ -61,6 +89,13 @@ function handleVerification(req, res) {
  */
 function handleIncomingMessage(req, res) {
   const body = req.body;
+  const signature = req.headers["x-hub-signature-256"];
+
+  // Verify the request is actually from Meta
+  if (!verifySignature(JSON.stringify(body), signature)) {
+    console.warn("[messenger/webhook] Invalid signature — rejecting request");
+    return res.status(403).json({ error: "Invalid signature" });
+  }
 
   if (body.object !== "page") {
     console.warn("[messenger/webhook] Not a page event:", body.object);
