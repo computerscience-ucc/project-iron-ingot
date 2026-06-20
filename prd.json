@@ -1,226 +1,75 @@
 {
-  "title": "Comprehensive Audit Fix — CI/CD Security, Agent Consistency, and Broken Features",
-  "version": "1.0.0",
-  "created": "2026-06-19",
-  "status": "in_progress",
-  "author": "UCC INGO Dev Team",
-  "description": "Fix all critical issues identified by CodeRabbit review, Trivy security scanning, zizmor actions analysis, and OSV scanner on the comprehensive audit PR (#1). This PRD covers GitHub Actions workflow security, opencode agent instruction contradictions, broken @axe-core/react integration, missing Authorization header in documentActions, and Vercel deployment failure.",
-  "background": "The comprehensive audit PR (#1) introduced 17 commits fixing security, accessibility, performance, and error handling issues. However, CI/CD checks revealed 7 failing checks: Trivy (63 alerts, 19 high), zizmor (82 alerts, 47 errors), OSV Scanner, PR Validation Quality/Security, Security Scanning Dependency Audit, and Vercel deployment. CodeRabbit also identified 9 critical issues in the PR review. This PRD addresses all of them systematically.",
-  "goals": [
-    "Fix all GitHub Actions workflow security vulnerabilities (template injection, missing permissions)",
-    "Resolve contradictory instructions in opencode agent files",
-    "Remove broken @axe-core/react integration that fails on React 18+",
-    "Fix revalidateOnPublish Authorization header missing issue",
-    "Pass all CI/CD checks (Trivy, zizmor, OSV, PR Validation)",
-    "Ensure Vercel deployment succeeds",
-    "Create individual commits for each fix for maximum commit history"
+  "document_metadata": {
+    "title": "Website to Facebook Messenger Custom Integration",
+    "project_manager": "Jhon Keneth Ryan B. Namias",
+    "version": "1.0.0",
+    "status": "Ready for Development"
+  },
+  "executive_summary": "Following the deprecation of the Meta Customer Chat Plugin in May 2024, this project outlines the creation of a custom, API-first web chat widget. The interface will sync two-way communication between website visitors and a Facebook Page Inbox utilizing the Meta Graph API.",
+  "access_prerequisites": [
+    "Manage access to the target Facebook Page",
+    "Active Meta Developer Account (developers.facebook.com)",
+    "Meta App created with the 'Messenger' product enabled",
+    "Generated Page Access Token (PAT) with 'pages_messaging' and 'pages_show_list' permissions"
   ],
-  "non_goals": [
-    "Migrating away from @material-tailwind/react (separate effort)",
-    "Upgrading to React 19 (separate effort)",
-    "Replacing framer-motion with motion (consolidation deferred)",
-    "Fixing all npm audit vulnerabilities (only critical ones addressed)"
+  "architecture_strategy": {
+    "frontend_client": "Custom floating chat UI built with React-TypeScript / Next.js for a seamless, branded user experience.",
+    "middleware_layer": "A NestJS backend or an n8n webhook workflow to securely store tokens, pass Meta's webhook verification, and route payloads.",
+    "external_service": "Meta Graph API (v19.0 or latest)"
+  },
+  "functional_requirements": [
+    "FR1: The system must render a toggleable floating chat window on the website.",
+    "FR2: The system must capture user text inputs and send them to the middleware.",
+    "FR3: The middleware must transmit outgoing messages to the Meta Graph API.",
+    "FR4: The system must receive and display real-time replies from the Facebook Page inbox via Meta Webhooks.",
+    "FR5: The client must handle guest user session IDs (e.g., via localStorage) to maintain conversation state without requiring a Facebook login.",
+    "FR6: The backend must strictly respond to Meta's 'hub.challenge' to validate the webhook connection."
   ],
-  "failing_ci_checks": [
+  "execution_milestones": [
     {
-      "name": "Trivy Filesystem Scan",
-      "status": "failing",
-      "alerts": 63,
-      "high_severity": 19,
-      "description": "Trivy found security vulnerabilities in dependencies and workflow files"
+      "phase": 1,
+      "name": "Meta Developer Environment Configuration",
+      "tasks": [
+        "Create a new Business App in the Meta Developer Console.",
+        "Add and configure the 'Messenger' product.",
+        "Link the managed Facebook Page to the application.",
+        "Generate the Page Access Token and save it to the middleware environment variables."
+      ]
     },
     {
-      "name": "zizmor Code Scanning",
-      "status": "failing",
-      "alerts": 82,
-      "errors": 47,
-      "description": "zizmor found GitHub Actions security issues including template injection, missing permissions"
+      "phase": 2,
+      "name": "Middleware & Webhook Construction",
+      "tasks": [
+        "Create a GET endpoint (NestJS or n8n) to handle Meta's initial webhook verification request (hub.mode, hub.verify_token, hub.challenge).",
+        "Configure the Webhook URL in the Meta Developer Console and subscribe to 'messages' fields.",
+        "Create a POST endpoint to receive asynchronous message payloads from Meta.",
+        "Create a secure internal API endpoint for the website frontend to trigger outgoing messages."
+      ]
     },
     {
-      "name": "OSV Scanner",
-      "status": "failing",
-      "description": "OSV found known vulnerabilities in dependencies"
+      "phase": 3,
+      "name": "Frontend Widget Engineering",
+      "tasks": [
+        "Develop the Next.js / React-TypeScript chat UI components (message bubbles, input field, toggle button).",
+        "Implement state management for the live conversation thread.",
+        "Connect the frontend input field to the internal middleware POST endpoint.",
+        "Implement a polling mechanism or WebSocket connection to fetch incoming replies from the middleware to the UI."
+      ]
     },
     {
-      "name": "PR Validation Quality Check",
-      "status": "failing",
-      "description": "Build or lint errors in the PR"
-    },
-    {
-      "name": "PR Validation Security Audit",
-      "status": "failing",
-      "description": "npm audit found high-severity vulnerabilities"
-    },
-    {
-      "name": "Security Scanning Dependency Audit",
-      "status": "failing",
-      "description": "Dependency audit failed"
-    },
-    {
-      "name": "Vercel Deployment",
-      "status": "failing",
-      "description": "Build failed during Vercel deployment"
+      "phase": 4,
+      "name": "Testing, Security & Deployment",
+      "tasks": [
+        "Ensure no Meta tokens or secrets are exposed in the client-side code.",
+        "Conduct end-to-end testing: Send a message from the website UI and reply from the Meta Business Suite inbox.",
+        "Handle API rate limits and standard error responses gracefully in the UI.",
+        "Deploy the middleware to production and embed the widget into the live website."
+      ]
     }
   ],
-  "coderabbit_critical_issues": [
-    {
-      "id": "CR-1",
-      "file": ".github/workflows/auto-approve.yml",
-      "line": "11-14",
-      "issue": "startsWith('main') uses JavaScript method syntax instead of GitHub Actions expression function syntax",
-      "fix": "Change to: !startsWith(github.event.check_suite.pull_requests[0].head.ref, 'main')"
-    },
-    {
-      "id": "CR-2",
-      "file": ".github/workflows/auto-approve.yml",
-      "line": "11-28",
-      "issue": "Auto-approve workflow can approve almost any successful PR, weakening human review",
-      "fix": "Add actor/label/path policy to restrict auto-approval to trusted automation PRs only"
-    },
-    {
-      "id": "CR-3",
-      "file": ".github/workflows/gitleaks.yml",
-      "line": "15-21",
-      "issue": "Missing contents: read permission for actions/checkout@v4",
-      "fix": "Add contents: read to the permissions block"
-    },
-    {
-      "id": "CR-4",
-      "file": ".github/workflows/problem-detection-advisor.yml",
-      "line": "51-52, 64-65",
-      "issue": "Template injection in github-script — ${{ }} expressions injected directly into JavaScript source",
-      "fix": "Pass values through env and read via process.env instead of expression interpolation"
-    },
-    {
-      "id": "CR-5",
-      "file": ".github/workflows/remediation-approval-gate.yml",
-      "line": "42",
-      "issue": "Template injection — branch value injected directly into JavaScript source",
-      "fix": "Pass branch via env variable and read via process.env.BRANCH"
-    },
-    {
-      "id": "CR-6",
-      "file": ".opencode/agents/code-reviewer.md",
-      "line": "53",
-      "issue": "Contradicts coding guidelines: says 'Always import motion from motion/react' but project uses framer-motion",
-      "fix": "Update to match project convention: import from 'framer-motion'"
-    },
-    {
-      "id": "CR-7",
-      "file": ".opencode/agents/component-creator.md",
-      "line": "32",
-      "issue": "Code example shows import from 'motion/react' but project uses 'framer-motion'",
-      "fix": "Update import path to 'framer-motion' in all agent examples"
-    },
-    {
-      "id": "CR-8",
-      "file": "pages/_app.js",
-      "line": "9-13",
-      "issue": "@axe-core/react is broken: missing ReactDOM arg, not React 18 compatible",
-      "fix": "Remove @axe-core/react integration entirely; use axe-playwright in CI/CD instead"
-    },
-    {
-      "id": "CR-9",
-      "file": "studio/documentActions.js",
-      "line": "16-19",
-      "issue": "revalidateOnPublish fetch missing Authorization header — all revalidation requests fail with 401",
-      "fix": "Add Authorization: Bearer ${process.env.SANITY_API_TOKEN} header to the fetch call"
-    }
-  ],
-  "implementation_slices": [
-    {
-      "id": "slice-01",
-      "title": "Fix auto-approve.yml — expression syntax and restrict auto-approval",
-      "description": "Fix .startsWith() GitHub Actions expression syntax and add actor/label policy to prevent auto-approving all PRs",
-      "files_changed": [".github/workflows/auto-approve.yml"],
-      "commit_message": "fix(ci): fix auto-approve workflow expression syntax and restrict to trusted actors"
-    },
-    {
-      "id": "slice-02",
-      "title": "Fix gitleaks.yml — add contents:read permission",
-      "description": "Add missing contents: read permission required by actions/checkout@v4",
-      "files_changed": [".github/workflows/gitleaks.yml"],
-      "commit_message": "fix(ci): add contents:read permission to gitleaks workflow"
-    },
-    {
-      "id": "slice-03",
-      "title": "Fix problem-detection-advisor.yml — template injection",
-      "description": "Pass values through env variables instead of ${{ }} expression interpolation in github-script",
-      "files_changed": [".github/workflows/problem-detection-advisor.yml"],
-      "commit_message": "fix(ci): fix template injection in problem-detection-advisor workflow"
-    },
-    {
-      "id": "slice-04",
-      "title": "Fix remediation-approval-gate.yml — template injection",
-      "description": "Pass branch value through env variable instead of expression interpolation",
-      "files_changed": [".github/workflows/remediation-approval-gate.yml"],
-      "commit_message": "fix(ci): fix template injection in remediation-approval-gate workflow"
-    },
-    {
-      "id": "slice-05",
-      "title": "Fix monitoring-health.yml — template injection",
-      "description": "Pass step outcomes through env variables instead of expression interpolation",
-      "files_changed": [".github/workflows/monitoring-health.yml"],
-      "commit_message": "fix(ci): fix template injection in monitoring-health workflow"
-    },
-    {
-      "id": "slice-06",
-      "title": "Fix opencode agents — framer-motion import consistency",
-      "description": "Update code-reviewer.md and component-creator.md to use framer-motion instead of motion/react",
-      "files_changed": [
-        ".opencode/agents/code-reviewer.md",
-        ".opencode/agents/component-creator.md"
-      ],
-      "commit_message": "fix(agents): correct framer-motion import path in opencode agent files"
-    },
-    {
-      "id": "slice-07",
-      "title": "Remove broken @axe-core/react from _app.js",
-      "description": "Remove the broken A11yAudit component that uses @axe-core/react (not compatible with React 18+)",
-      "files_changed": ["pages/_app.js", "package.json"],
-      "commit_message": "fix(a11y): remove broken @axe-core/react integration (incompatible with React 18)"
-    },
-    {
-      "id": "slice-08",
-      "title": "Fix documentActions.js — add Authorization header",
-      "description": "Add Authorization: Bearer header to the revalidation fetch call so ISR cache invalidation works",
-      "files_changed": ["studio/documentActions.js"],
-      "commit_message": "fix(sanity): add Authorization header to revalidateOnPublish fetch call"
-    },
-    {
-      "id": "slice-09",
-      "title": "Fix Vercel deployment — resolve build errors",
-      "description": "Fix any remaining build errors that prevent Vercel deployment from succeeding",
-      "files_changed": ["next.config.mjs"],
-      "commit_message": "fix(deploy): resolve build errors for Vercel deployment"
-    },
-    {
-      "id": "slice-10",
-      "title": "Update PRD.json with implementation status",
-      "description": "Mark all slices as completed in the PRD document",
-      "files_changed": ["prd.json"],
-      "commit_message": "docs(prd): update PRD with implementation status for all audit fixes"
-    }
-  ],
-  "risks": [
-    {
-      "risk": "Auto-approve workflow may still be too permissive after fix",
-      "mitigation": "Add label-based gate: only auto-approve PRs labeled 'automated' from known bot actors"
-    },
-    {
-      "risk": "Removing @axe-core/react eliminates runtime accessibility checking",
-      "mitigation": "A11y checks are now handled by the a11y-audit.js script and CI/CD pipeline"
-    },
-    {
-      "risk": "Vercel deployment may fail due to npm audit high-severity findings",
-      "mitigation": "Use npm audit --audit-level=critical or add .npmrc with audit=false for non-critical"
-    }
-  ],
-  "success_criteria": [
-    "All 7 failing CI checks pass",
-    "CodeRabbit review has 0 critical issues",
-    "Vercel deployment succeeds",
-    "No regressions in existing functionality",
-    "Each fix is a separate commit for rich history"
-  ]
+  "success_criteria": {
+    "two_way_sync": true,
+    "secure_tokens": true,
+    "native_plugin_dependency": false
+  }
 }
