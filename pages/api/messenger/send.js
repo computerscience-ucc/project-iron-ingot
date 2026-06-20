@@ -1,10 +1,32 @@
 // pages/api/messenger/send.js
 // Sends messages from the website frontend to the Facebook Page via Meta Graph API.
 // POST /api/messenger/send { senderId: string, text: string }
+// Includes per-session rate limiting (20 messages per minute).
 
 import { addMessage } from "../../../lib/messenger/messageStore";
 
 const GRAPH_API_URL = "https://graph.facebook.com/v21.0/me/messages";
+
+// Rate limiting: 20 messages per minute per session
+const RATE_WINDOW = 60 * 1000;
+const RATE_LIMIT = 20;
+const rateStore = new Map();
+
+function checkRateLimit(sessionId) {
+  const now = Date.now();
+  if (!rateStore.has(sessionId)) {
+    rateStore.set(sessionId, []);
+  }
+  const timestamps = rateStore.get(sessionId).filter((t) => now - t < RATE_WINDOW);
+  if (timestamps.length >= RATE_LIMIT) {
+    const oldest = timestamps[0];
+    const retryAfter = Math.ceil((RATE_WINDOW - (now - oldest)) / 1000);
+    return { allowed: false, retryAfter };
+  }
+  timestamps.push(now);
+  rateStore.set(sessionId, timestamps);
+  return { allowed: true };
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,6 +45,16 @@ export default async function handler(req, res) {
 
   if (text.length > 1000) {
     return res.status(400).json({ error: "Message too long (max 1000 characters)" });
+  }
+
+  // Rate limiting
+  const rl = checkRateLimit(senderId);
+  if (!rl.allowed) {
+    res.setHeader("Retry-After", String(rl.retryAfter));
+    return res.status(429).json({
+      error: `Rate limit exceeded. Please wait ${rl.retryAfter} seconds.`,
+      retryAfter: rl.retryAfter,
+    });
   }
 
   const accessToken = process.env.FB_PAGE_ACCESS_TOKEN;
