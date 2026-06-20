@@ -41,6 +41,7 @@ cd .. && npm run dev     # Start both front-end (localhost:3000) + CMS (localhos
 - **CMS**: Sanity Studio v3 — content editors manage data at `/studio`
 - **Data flow**: Content editors → Sanity Studio → Sanity API → Next.js (GROQ queries) → Website
 - **AI Chatbot**: Google Gemini API — provides thesis-aware Q&A via the ChatBot widget
+- **Facebook Messenger**: Custom API-first integration via Meta Graph API — two-way messaging between website visitors and Facebook Page Inbox
 - **Hosting**: Vercel (front-end) + Sanity Hosting (CMS) — separate deployments
 
 ## Common Maintenance Tasks
@@ -85,7 +86,7 @@ Set these environment variables in the Vercel dashboard:
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `gjvp776o` |
 | `NEXT_PUBLIC_SANITY_DATASET` | `production` |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | `2023-10-01` |
-| `GEMINI_API_KEY` | *(your Gemini API key)* |
+| `GEMINI_API_KEY` | _(your Gemini API key)_ |
 
 ### Deploying the CMS (Sanity Studio)
 
@@ -99,15 +100,39 @@ This deploys the CMS to a Sanity-managed URL. The first deploy will prompt you t
 ### Updating the AI Chatbot
 
 The chatbot uses Google Gemini. Files involved:
+
 - `components/ChatBot.js` — UI logic
 - `lib/sanity.js` (`buildSiteContext` function) — builds the AI context from CMS data
 - `pages/api/chat.js` — API route that calls Gemini
 
 To change the AI model or system prompt, edit the **Site Configuration** document in the Sanity CMS (Chatbot fieldset).
 
+### Facebook Messenger Integration
+
+The Messenger widget replaces the deprecated Meta Customer Chat Plugin (deprecated May 2024). It uses an API-first architecture:
+
+- `components/MessengerChat.js` — Floating chat widget UI (React)
+- `components/MessengerChat.module.css` — Widget styles
+- `components/messenger/MessageBubble.js` — Individual message bubble
+- `components/messenger/TypingIndicator.js` — Animated typing dots
+- `components/messenger/WelcomeMessage.js` — Empty state UI
+- `pages/api/messenger/webhook.js` — Meta webhook (verification + incoming messages)
+- `pages/api/messenger/send.js` — Send messages to Meta Graph API
+- `pages/api/messenger/messages.js` — Poll for incoming messages
+- `lib/messenger/messageStore.js` — In-memory message store
+- `lib/messenger/session.js` — Client-side session ID generator
+
+**Environment variables** (server-only, no `NEXT_PUBLIC_` prefix):
+
+- `FB_PAGE_ID` — Facebook Page ID
+- `FB_APP_SECRET` — Meta App Secret (for webhook signature verification)
+- `FB_VERIFY_TOKEN` — Custom verification token (set in Meta Developer Console)
+- `FB_PAGE_ACCESS_TOKEN` — Page Access Token with `pages_messaging` permission
+
 ## Sanity Studio v3 Migration Notes
 
 This project was migrated from Sanity v2 to v3 in June 2026. Key changes:
+
 - `sanity.json` → `sanity.config.js` + `sanity.cli.js`
 - All schemas use `defineType()` from the `sanity` package
 - Desk structure uses `sanity/structure` instead of `@sanity/desk-tool/structure-builder`
@@ -118,13 +143,16 @@ This project was migrated from Sanity v2 to v3 in June 2026. Key changes:
 
 ## Troubleshooting
 
-| Symptom | Cause | Fix |
-|---|---|---|
-| `rxjs.shareReplay is not a function` | Old rxjs v6 in root `node_modules` | Delete `../node_modules/rxjs` and reinstall |
-| Studio blank page / white screen | Schema has JS syntax error | Check Vite devtools console — look for the specific schema file |
-| ChatBot returns errors | Missing or expired Gemini API key | Update `GEMINI_API_KEY` in `.env` or Vercel dashboard |
-| Images not loading in prod | Vercel needs Sanity CDN whitelisted | Already configured in `next.config.mjs` — check `remotePatterns` |
-| `sanity start` not working | Using v2 command with v3 | Use `sanity dev` instead |
+| Symptom                              | Cause                                   | Fix                                                              |
+| ------------------------------------ | --------------------------------------- | ---------------------------------------------------------------- |
+| `rxjs.shareReplay is not a function` | Old rxjs v6 in root `node_modules`      | Delete `../node_modules/rxjs` and reinstall                      |
+| Studio blank page / white screen     | Schema has JS syntax error              | Check Vite devtools console — look for the specific schema file  |
+| ChatBot returns errors               | Missing or expired Gemini API key       | Update `GEMINI_API_KEY` in `.env` or Vercel dashboard            |
+| Images not loading in prod           | Vercel needs Sanity CDN whitelisted     | Already configured in `next.config.mjs` — check `remotePatterns` |
+| `sanity start` not working           | Using v2 command with v3                | Use `sanity dev` instead                                         |
+| Messenger not sending messages       | Missing or invalid FB_PAGE_ACCESS_TOKEN | Set the token in Vercel env vars                                 |
+| Webhook verification fails           | FB_VERIFY_TOKEN mismatch                | Ensure token matches in Meta Developer Console                   |
+| Messages not appearing in widget     | Polling endpoint not reachable          | Check CSP headers allow graph.facebook.com                       |
 
 ## Git Branch Strategy
 
@@ -135,13 +163,17 @@ This project was migrated from Sanity v2 to v3 in June 2026. Key changes:
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | Sanity project ID (`gjvp776o`) |
-| `NEXT_PUBLIC_SANITY_DATASET` | Yes | Dataset name (`production`) |
-| `NEXT_PUBLIC_SANITY_API_VERSION` | No | API date version |
-| `SANITY_API_TOKEN` | No | For private datasets (not needed for public) |
-| `GEMINI_API_KEY` | Yes | Google Gemini API key |
+| Variable                         | Required | Description                                        |
+| -------------------------------- | -------- | -------------------------------------------------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`  | Yes      | Sanity project ID (`gjvp776o`)                     |
+| `NEXT_PUBLIC_SANITY_DATASET`     | Yes      | Dataset name (`production`)                        |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | No       | API date version                                   |
+| `SANITY_API_TOKEN`               | No       | For private datasets (not needed for public)       |
+| `GEMINI_API_KEY`                 | Yes      | Google Gemini API key                              |
+| `FB_PAGE_ID`                     | Yes      | Facebook Page ID                                   |
+| `FB_APP_SECRET`                  | Yes      | Meta App Secret (webhook signature verification)   |
+| `FB_VERIFY_TOKEN`                | Yes      | Custom verification token (Meta Developer Console) |
+| `FB_PAGE_ACCESS_TOKEN`           | Yes      | Page Access Token with pages_messaging permission  |
 
 ## Key Contacts
 
@@ -151,4 +183,4 @@ This project was migrated from Sanity v2 to v3 in June 2026. Key changes:
 
 ---
 
-*Maintained by the UCC Computer Science Council. For questions, contact the current Dev Team lead or CS Council president.*
+_Maintained by the UCC Computer Science Council. For questions, contact the current Dev Team lead or CS Council president._
