@@ -9,7 +9,7 @@ import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { ThemeProvider } from "@material-tailwind/react";
 import ChatBot from "../components/ChatBot";
-import FacebookMessenger from "../components/FacebookMessenger";
+import MessengerChat from "../components/MessengerChat";
 import SearchModal from "../components/SearchModal";
 import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
 import SectionStripe from "@/components/SectionStripe";
@@ -36,28 +36,6 @@ const AppChatBot = () => {
   return !siteConfig || siteConfig.chatbotEnabled !== false ? (
     <ChatBot />
   ) : null;
-};
-
-const AppFacebookMessenger = () => {
-  const { siteConfig } = usePrefetcher();
-
-  // Wait for config if Prefetcher provides it
-  if (siteConfig && siteConfig.messengerEnabled === false) return null;
-
-  const pageId = siteConfig?.messengerPageId || process.env.NEXT_PUBLIC_FB_PAGE_ID;
-  const appId = siteConfig?.messengerAppId || process.env.NEXT_PUBLIC_FB_APP_ID;
-
-  if (!pageId) return null;
-
-  return (
-    <FacebookMessenger
-      pageId={pageId}
-      appId={appId}
-      color={siteConfig?.messengerColor}
-      greetingText={siteConfig?.messengerGreetingText}
-      loggedInGreeting={siteConfig?.messengerLoggedInGreeting}
-    />
-  );
 };
 
 function AppInner({ Component, pageProps }) {
@@ -793,8 +771,8 @@ function AppInner({ Component, pageProps }) {
         {/* Render ChatBot conditionally */}
         <AppChatBot />
 
-        {/* Render Facebook Messenger Customer Chat conditionally */}
-        <AppFacebookMessenger />
+        {/* Render Facebook Messenger Chat Widget */}
+        <MessengerChat />
 
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
