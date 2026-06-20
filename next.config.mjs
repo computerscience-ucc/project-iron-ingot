@@ -45,7 +45,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' https://cdn.sanity.io https://*.fbcdn.net https://platform-lookaside.fbsbx.com data: blob:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://*.sanity.io https://generativelanguage.googleapis.com https://www.facebook.com",
+              "connect-src 'self' https://*.sanity.io https://generativelanguage.googleapis.com https://www.facebook.com https://graph.facebook.com",
               "frame-src https://www.facebook.com https://*.facebook.com",
               "worker-src 'self' blob:",
             ].join("; "),
