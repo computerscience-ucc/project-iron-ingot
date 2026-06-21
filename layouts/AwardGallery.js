@@ -106,7 +106,7 @@ export default function AwardGallery() {
   // We use a scale factor to ensure the cards don't feel overwhelming and fit nicely.
   const layoutScaleFactor = isMobile ? 1.2 : isTablet ? 1.45 : 1.8;
   const baseCardWidth = containerWidth / layoutScaleFactor;
-  
+
   // Cap the card width to 640px on desktop to prevent it from getting too large.
   const cardWidth = !isMobile && !isTablet ? Math.min(baseCardWidth, 640) : baseCardWidth;
 
@@ -196,7 +196,6 @@ export default function AwardGallery() {
             alt="Award Bot"
             fill
             className="object-contain"
-            priority
           />
         </div>
       </div>

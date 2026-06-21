@@ -70,7 +70,6 @@ const Carousel = ({ awards }) => {
               fill
               style={{ objectFit: "cover" }}
               sizes="100vw"
-              priority
             />
             {/* gradient wrapper */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />

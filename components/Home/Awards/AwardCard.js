@@ -95,7 +95,6 @@ export default function AwardCard({
               fill
               className="object-cover"
               sizes="(max-width: 768px) 340px, (max-width: 1024px) 640px, 1000px"
-              priority={isCenter}
             />
           )}
 
