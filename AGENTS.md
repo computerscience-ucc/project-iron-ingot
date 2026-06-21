@@ -192,6 +192,88 @@ This project was migrated from Sanity v2 to v3 in June 2026. Key changes:
 - **Google AI Studio**: https://aistudio.google.com/app/apikey
 - **Vercel Dashboard**: https://vercel.com (ask the current CS Council president for access)
 
+## Skeleton Shimmer Animation System
+
+The website uses motion.dev-powered skeleton shimmer animations for loading states, replacing basic Tailwind `animate-pulse` with smooth, GPU-accelerated gradient sweeps.
+
+### Components
+
+| Component             | File                                             | Purpose                                                            |
+| --------------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
+| `SkeletonBox`         | `components/ui/SkeletonBox.js`                   | Core building block — dark placeholder with shimmer gradient sweep |
+| `SkeletonGrid`        | `components/ui/SkeletonGrid.js`                  | Staggered grid of skeleton cards with entrance animation           |
+| `LoadingOverlay`      | `components/ui/LoadingOverlay.js`                | Replaces copy-pasted spinners in card click-loading states         |
+| `SkeletonBlogCard`    | `components/ui/skeletons/SkeletonBlogCard.js`    | Pre-built skeleton matching BlogCard layout                        |
+| `SkeletonThesisCard`  | `components/ui/skeletons/SkeletonThesisCard.js`  | Pre-built skeleton matching ThesisCard layout                      |
+| `SkeletonGalleryCard` | `components/ui/skeletons/SkeletonGalleryCard.js` | Pre-built skeleton matching GalleryCard layout                     |
+| `SkeletonOfficerCard` | `components/ui/skeletons/SkeletonOfficerCard.js` | Pre-built skeleton matching OfficerCard layout                     |
+
+### Usage
+
+```jsx
+import SkeletonBox from "@/components/ui/SkeletonBox";
+import SkeletonGrid from "@/components/ui/SkeletonGrid";
+import LoadingOverlay from "@/components/ui/LoadingOverlay";
+
+// Basic shimmer box
+<SkeletonBox width="100%" height="1.2rem" borderRadius="4px" />
+
+// Staggered grid of skeletons
+<SkeletonGrid cardType="blog" count={6} />
+
+// Loading overlay for click-navigation
+{isLoading && <LoadingOverlay />}
+```
+
+### Animation Pattern
+
+The shimmer uses motion.dev's `animate` prop for GPU-accelerated gradient sweep:
+
+```jsx
+<motion.div
+  animate={{ x: ["-100%", "100%"] }}
+  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+  style={{
+    backgroundImage:
+      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 20%, rgba(255,255,255,0.15) 60%, transparent 100%)",
+  }}
+/>
+```
+
+### CSS Fallback
+
+A CSS-only shimmer is available for non-motion contexts:
+
+```css
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #242424;
+}
+
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+```
+
+### Guidelines
+
+- Use `SkeletonGrid` for listing pages (blog, thesis, gallery) during data fetch
+- Use `LoadingOverlay` for click-navigation loading states (replaces spinners)
+- Use `SkeletonBox` for custom skeleton layouts
+- All skeleton colors (#242424 base, white/20% shimmer) match the dark theme
+- Staggered entrance uses 0.1s delay between grid items
+
 ---
 
 _Maintained by the UCC Computer Science Council. For questions, contact the current Dev Team lead or CS Council president._
