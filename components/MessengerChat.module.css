@@ -1,0 +1,227 @@
+.chatContainer {
+  position: fixed;
+  bottom: 90px;
+  right: 100px;
+  width: 380px;
+  height: 520px;
+  background: #1a1a1a;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9998;
+  border: 1px solid #333;
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #0084ff;
+  color: white;
+  flex-shrink: 0;
+}
+
+.chatHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chatHeaderAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chatHeaderInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.chatHeaderTitle {
+  font-size: 14px;
+  font-weight: 600;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.chatHeaderStatus {
+  font-size: 11px;
+  opacity: 0.85;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.chatCloseBtn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+
+.chatCloseBtn:hover {
+  opacity: 1;
+}
+
+.chatMessages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scroll-behavior: smooth;
+}
+
+.chatMessages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 2px;
+}
+
+.chatInputArea {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #333;
+  background: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.chatInput {
+  flex: 1;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 20px;
+  padding: 10px 16px;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.chatInput:focus {
+  border-color: #0084ff;
+}
+
+.chatInput::placeholder {
+  color: #888;
+}
+
+.chatSendBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0084ff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.chatSendBtn:hover {
+  background: #0073e6;
+}
+
+.chatSendBtn:disabled {
+  background: #444;
+  cursor: not-allowed;
+}
+
+.toggleButton {
+  position: fixed;
+  bottom: 20px;
+  right: 100px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #0084ff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 132, 255, 0.4);
+  z-index: 9998;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.toggleButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 132, 255, 0.5);
+}
+
+.errorBanner {
+  padding: 8px 16px;
+  background: #ff3b30;
+  color: white;
+  font-size: 12px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.errorRetryBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.errorRetryBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile: full screen */
+@media (max-width: 480px) {
+  .chatContainer {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+  }
+
+  .toggleButton {
+    bottom: 16px;
+    right: 80px;
+  }
+}

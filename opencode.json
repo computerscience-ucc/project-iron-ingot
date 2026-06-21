@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "agent": {
+    "page-creator": {
+      "description": "Creates new Next.js pages with proper file-based routing, GROQ queries, Navbar links, and sitemap entries. Use when user says 'create a new page', 'add a page', 'new route'.",
+      "mode": "subagent"
+    },
+    "sanity-schema": {
+      "description": "Creates and edits Sanity CMS schema types using defineType(), fieldsets, validation. Use when user says 'new schema', 'content type', 'add field to schema', 'Sanity type'.",
+      "mode": "subagent"
+    },
+    "groq-writer": {
+      "description": "Writes and optimizes GROQ queries for Sanity data fetching. Use when user says 'write a GROQ query', 'fetch data from Sanity', 'query builder'.",
+      "mode": "subagent"
+    },
+    "component-creator": {
+      "description": "Creates React components following project conventions (CSS modules, framer-motion, shadcn/ui). Use when user says 'create component', 'new component', 'build a UI element'.",
+      "mode": "subagent"
+    },
+    "deploy-agent": {
+      "description": "Handles Vercel and Sanity deployments. Knows the project's deploy commands, env vars, and hosting setup. Use when user says 'deploy', 'publish', 'release'.",
+      "mode": "subagent"
+    },
+    "git-workflow": {
+      "description": "Manages git branch strategy, commit messages, and PR creation following project conventions. Use when user says 'commit', 'branch', 'push', 'pull request', 'PR'.",
+      "mode": "subagent"
+    },
+    "code-reviewer": {
+      "description": "Reviews code for consistency with UCC INGO project patterns, conventions, and best practices. Use when user says 'review', 'check my code', 'lint'.",
+      "mode": "subagent",
+      "permission": { "edit": "deny", "bash": "ask" }
+    }
+  }
+}

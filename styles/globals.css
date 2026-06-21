@@ -1,43 +1,408 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap");
+@import "tw-animate-css";
+@import "./base/_colors.css";
+@import "./layout/_containers.css";
+@import "./base/_typography.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CMS-driven CSS custom properties (defaults match original hardcoded values) ─── */
-:root {
-  --color-background: #0a0c10;
-  --color-button: #a50000;
-  --color-button-text: #ffffff;
-  --color-nav: #ffffff;
-  --color-header: #fe4c4c;
-  --color-theme: #d44694;
-  --color-scrollbar: #fae63a;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
 }
 
-* {
-  user-select: none;
+:root {
+  --font-sans: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+  font-family: var(--font-sans);
+  font-weight: 200;
+  letter-spacing: 0.34%;
+  color: var(--color-text);
 }
 
 body {
-  background: var(--color-background);
-  font-family: 'Quicksand', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
 }
 
-/* custom scrollbar */
-* {
-  scrollbar-width: auto;
-  scrollbar-color: #707070 var(--color-background);
+/* custom dashed borders */
+.border-dashed-long-h {
+  border-top: 1px dashed var(--color-border-dashed);
 }
-*::-webkit-scrollbar {
+
+.border-dashed-long-v {
+  border-left: 1px dashed var(--color-border-dashed);
+}
+
+.stripe-banner {
+  pointer-events: none;
+  background-color: #212121;
+  -webkit-mask-image: url("/stripe.svg");
+  mask-image: url("/stripe.svg");
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  -webkit-mask-size: 7px 7px;
+  mask-size: 7px 7px;
+}
+/* theme switch */
+.theme-switch {
+  width: 40px;
+  height: 24px;
+  background-color: #1d1d1d;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  padding: 0 3px;
+  border: 1px solid #333333;
+}
+
+.theme-switch:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .theme-switch:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.theme-switch-thumb {
+  width: 18px;
+  height: 18px;
+  background-color: #000000;
+  border-radius: 50%;
+  position: absolute;
+  left: 3px;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3a3a3a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .theme-switch-thumb {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .theme-switch-thumb {
+  transform: translateX(16px);
+}
+
+.theme-switch-icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* Nav Link Underline Effect */
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2.2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #ff5154;
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Navigation Menu Drawer Animation - Custom Fix */
+@keyframes navDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navDrawerOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Specific animation for centered content to preserve translateX(-50%) */
+@keyframes navContentIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes navContentOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
+[data-slot="navigation-menu-viewport"][data-state="open"] {
+  animation: navDrawerIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="navigation-menu-viewport"][data-state="closed"] {
+  animation: navDrawerOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="navigation-menu-content"][data-state="open"] {
+  animation: navContentIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="navigation-menu-content"][data-state="closed"] {
+  animation: navContentOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Lenis scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
   width: 5px;
 }
-*::-webkit-scrollbar-track {
-  background: #09090b;
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
 }
-*::-webkit-scrollbar-thumb {
-  background-color: var(--color-scrollbar);
-  border-radius: 10px;
-  border: 0px none #ffffff;
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+*:focus-visible {
+  outline: 2px solid #ff5154;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skeleton Shimmer - CSS fallback for non-motion contexts */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #242424;
+}
+
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 20%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+/* Hero Typewriter Effect */
+.typewriter-wrap {
+  overflow: hidden;
+}
+
+.typewriter-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 0.15em solid #ff5154;
+  width: 0;
+  animation:
+    typewriter-reveal 2.8s steps(31, end) 0.4s forwards,
+    typewriter-blink 0.7s step-end infinite;
+  text-shadow: 0 0 20px rgba(255, 81, 84, 0.15);
+}
+
+.typewriter-text br {
+  display: none;
+}
+
+@keyframes typewriter-reveal {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes typewriter-blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@media (min-width: 1024px) {
+  .typewriter-text {
+    animation:
+      typewriter-reveal 2.8s steps(31, end) 0.4s forwards,
+      typewriter-blink 0.7s step-end infinite;
+  }
+}
+
+@media (max-width: 1023px) {
+  .typewriter-text {
+    white-space: normal;
+    border-right: none;
+    animation: typewriter-reveal-mobile 1.5s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  .typewriter-text br {
+    display: block;
+  }
+}
+
+@keyframes typewriter-reveal-mobile {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-text {
+    animation: none;
+    width: auto;
+    border-right: none;
+    white-space: normal;
+    opacity: 1;
+  }
+}
+
+/* Officer Swiper Carousel */
+.officer-swiper {
+  overflow: hidden !important;
+}
+
+.officer-swiper .swiper-wrapper {
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+}
+
+.officer-swiper .swiper-slide {
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  overflow: hidden;
+}
+
+.officer-slide {
+  padding: 0;
+}
+
+.officer-slide .flex.flex-col {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.officer-swiper .swiper-button-next,
+.officer-swiper .swiper-button-prev {
+  display: none;
 }

@@ -36,9 +36,18 @@ export default defineConfig([
   },
 
   {
-    files: ["**/*.{js,mjs,cjs}"],
+    files: ["**/*.{js,jsx,mjs,cjs}"],
     plugins: { js },
     extends: ["js/recommended"]
+  },
+
+  {
+    files: ["__tests__/**/*.{js,jsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
   },
 
   {
@@ -56,6 +65,13 @@ export default defineConfig([
       "no-useless-constructor": 0,
       "no-loop-func": 0
     }
+  },
+
+  {
+    files: ["components/ui/**/*.{js,jsx}"],
+    rules: {
+      "semi": "off",
+    },
   },
 
   js.configs.recommended

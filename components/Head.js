@@ -7,7 +7,9 @@ const Head = ({
   keywords,
   ogImage,
   url,
-  type = "website"
+  type = "website",
+  jsonLd,
+  children
 }) => {
   const { siteConfig } = usePrefetcher();
   const cfg = siteConfig || {};
@@ -17,7 +19,18 @@ const Head = ({
   const siteTagline = cfg.siteTagline || "Your CS Information on the Go";
   const defaultDescription = cfg.siteDescription || "Your CS Information Board on the Go. Stay updated with BSCS program news, blogs, bulletins, and thesis projects.";
   const defaultKeywords = cfg.siteKeywords?.join(", ") || "BSCS, Computer Science, Information Board, Student Portal, Academic Blog, Thesis Projects, University Updates, Ingo, UCC, University of Caloocan City";
-  const siteUrl = cfg.siteUrl || "https://uccingo.tech";
+
+  // Vercel server-side variables for guaranteed absolute OG URLs during SSG/SSR
+  const getBaseUrl = () => {
+    if (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
+    if (process.env.NEXT_PUBLIC_VERCEL_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+    return "https://uccingo.tech";
+  };
+
+  const siteUrl = cfg.siteUrl || getBaseUrl();
+
   const defaultOgImage = cfg.ogImage || "/branding/og-image.png";
   const faviconUrl = cfg.logo || "/branding/logo.svg";
   const appleTouchIconUrl = cfg.appleTouchIcon || "/branding/og-image.png";
@@ -115,6 +128,14 @@ const Head = ({
           })
         }}
       />
+
+      {/* Page-specific JSON-LD */}
+      {jsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      )}
+
+      {/* Page Specific Tags (Preconnects, Scripts, etc.) */}
+      {children}
     </NextHead>
   );
 };

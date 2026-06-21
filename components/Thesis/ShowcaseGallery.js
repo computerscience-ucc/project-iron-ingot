@@ -19,23 +19,16 @@ const ShowcaseGallery = ({ images }) => {
   };
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0a0c10] shadow-xl">
+    <div className="relative">
       {/* header */}
-      <div className="px-4 py-2.5 border-b border-white/5 flex items-center gap-2 flex-wrap">
-        <svg className="w-3.5 h-3.5 text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span className="text-xs font-semibold text-gray-400 tracking-wide uppercase break-words leading-snug">
-          Project Showcase
-        </span>
-        <span className="text-[10px] text-gray-600 ml-auto shrink-0">
-          {idx + 1} / {images.length}
-        </span>
+      <div className="pt-0 pb-6">
+        <h3 className="text-[1.125rem] md:text-[1.25rem] font-semibold text-[#EFEFEF] tracking-normal leading-[1.3]">
+          Showcase
+        </h3>
       </div>
 
       {/* main image */}
-      <div className="relative bg-black overflow-hidden" style={{ height: "320px" }}>
+      <div className="relative overflow-hidden aspect-[16/10] md:aspect-video">
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={idx}
@@ -59,30 +52,37 @@ const ShowcaseGallery = ({ images }) => {
 
         {images.length > 1 && (
           <>
-            <button onClick={() => go(-1)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-black/60 hover:bg-black/90 text-white transition">
-              <CgChevronLeft size={18} />
+            <button onClick={() => go(-1)} aria-label="Previous image"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-[6px] rounded-[6px] bg-black/40 hover:bg-white/10 text-white transition-colors">
+              <CgChevronLeft size={20} />
             </button>
-            <button onClick={() => go(1)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-black/60 hover:bg-black/90 text-white transition">
-              <CgChevronRight size={18} />
+            <button onClick={() => go(1)} aria-label="Next image"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-[6px] rounded-[6px] bg-black/40 hover:bg-white/10 text-white transition-colors">
+              <CgChevronRight size={20} />
             </button>
           </>
         )}
       </div>
 
+      {/* Counter (Bottom Centered) */}
+      <div className="flex justify-center py-4">
+        <p className="text-[1rem] text-[#8C8C8C] font-normal leading-relaxed">
+          {idx + 1} / {images.length}
+        </p>
+      </div>
+
       {/* thumbnail strip */}
       {images.length > 1 && (
-        <div className="flex gap-1.5 px-3 py-2.5 overflow-x-auto bg-[#080a0e] border-t border-white/5">
+        <div className="flex gap-2 pb-4 overflow-x-auto">
           {images.map((img, i) => (
             <button
               key={i}
               onClick={() => { setDir(i > idx ? 1 : -1); setIdx(i); }}
-              className={`shrink-0 w-12 h-9 rounded-md overflow-hidden border-2 transition-all ${
-                i === idx ? "border-red-500 opacity-100" : "border-transparent opacity-35 hover:opacity-70"
+              className={`shrink-0 w-12 h-9 rounded-[4px] overflow-hidden border transition-all ${
+                i === idx ? "border-[#FF5154] opacity-100" : "border-transparent opacity-40 hover:opacity-100"
               }`}
             >
-              <Image src={img} width={48} height={36} style={{ objectFit: "cover" }} alt={`thumb-${i}`} />
+              <Image src={img} width={48} height={36} style={{ objectFit: "cover" }} alt={`Showcase thumbnail ${i + 1}`} />
             </button>
           ))}
         </div>

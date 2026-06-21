@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CgChevronLeft, CgChevronRight, CgClose } from "react-icons/cg";
+import { CgClose } from "react-icons/cg";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { preloadImage } from "../../lib/imageCache";
+import { getBlurPlaceholder } from "../../lib/imagePlaceholders";
 
 const GRADIENTS = [
   "from-rose-500/40 to-pink-600/30",
@@ -33,19 +36,47 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
   const person = people[idx];
   const gradient = getGradient(person?.name);
 
-  const go = (d) => { setDir(d); setIdx((i) => (i + d + people.length) % people.length); };
+  const go = useCallback((d) => {
+    setDir(d);
+    setIdx((i) => (i + d + people.length) % people.length);
+  }, [people.length]);
 
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") { setDir(1);  setIdx((i) => (i + 1 + people.length) % people.length); }
-      if (e.key === "ArrowLeft")  { setDir(-1); setIdx((i) => (i - 1 + people.length) % people.length); }
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "ArrowLeft")  go(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, people.length]);
+  }, [onClose, people.length, go]);
+
+  // body lock
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
+  // Preload current + adjacent images into cache
+  useEffect(() => {
+    if (!people?.length) return;
+    const toPreload = [
+      people[idx]?.photo,
+      people[(idx + 1) % people.length]?.photo,
+      people[(idx - 1 + people.length) % people.length]?.photo,
+    ].filter(Boolean);
+    toPreload.forEach((url) => preloadImage(url).catch(() => {}));
+  }, [idx, people]);
 
   if (!person) return null;
+
+  const handleDragEnd = (e, { offset, velocity }) => {
+    const swipe = Math.abs(offset.x) * Math.abs(velocity.x);
+    if (offset.x < -50 || swipe > 3000) go(1);
+    else if (offset.x > 50 || swipe > 3000) go(-1);
+  };
 
   return (
     <motion.div
@@ -53,83 +84,98 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-sm touch-none"
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative w-full max-w-lg bg-[#0e1015] rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+        transition={{ duration: 0.18, ease: "easeOut" }}
+        className="relative w-full max-w-lg bg-[#121212] border border-[#333] shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Corner Markers */}
+        <div className="absolute top-0 left-0 w-2 h-2 bg-[#FF5154] z-40" />
+        <div className="absolute top-0 right-0 w-2 h-2 bg-[#FF5154] z-40" />
+        <div className="absolute bottom-0 left-0 w-2 h-2 bg-[#FF5154] z-40" />
+        <div className="absolute bottom-0 right-0 w-2 h-2 bg-[#FF5154] z-40" />
+
         {/* close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
+          className="absolute top-3 right-3 z-30 w-9 h-9 md:w-11 md:h-11 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
           aria-label="Close"
         >
           <CgClose size={18} />
         </button>
 
-        {/* prev */}
-        {people.length > 1 && (
-          <button
-            onClick={(e) => { e.stopPropagation(); go(-1); }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-            aria-label="Previous"
-          >
-            <CgChevronLeft size={22} />
-          </button>
-        )}
+        {/* sliding wrapper */}
+        <div className="relative">
+          {/* prev/next buttons (centered on image) */}
+          <div className="absolute top-0 left-0 w-full aspect-square pointer-events-none z-30 flex items-center justify-between px-3">
+            {people.length > 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); go(-1); }}
+                className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
+                aria-label="Previous"
+              >
+                <ArrowLeft size={20} strokeWidth={2.5} />
+              </button>
+            )}
 
-        {/* next */}
-        {people.length > 1 && (
-          <button
-            onClick={(e) => { e.stopPropagation(); go(1); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/70 hover:bg-black text-white transition"
-            aria-label="Next"
-          >
-            <CgChevronRight size={22} />
-          </button>
-        )}
+            {people.length > 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); go(1); }}
+                className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 rounded-[6px] md:rounded-[8px] bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-all hover:bg-black/60"
+                aria-label="Next"
+              >
+                <ArrowRight size={20} strokeWidth={2.5} />
+              </button>
+            )}
+          </div>
 
-        {/* grid-stack wrapper: entering + exiting overlap in the same cell, no height doubling or FLIP */}
-        <div style={{ display: "grid", overflow: "hidden" }}>
-          <AnimatePresence custom={dir} initial={false}>
-            <motion.div
-              key={idx}
-              custom={dir}
-              variants={lightboxSlideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              style={{ gridArea: "1 / 1" }}
-            >
-              {person.photo ? (
-                <div className="w-full overflow-hidden bg-black flex items-center justify-center relative" style={{ height: "50vh", maxHeight: "70vh" }}>
-                  <Image src={person.photo} alt={person.name} fill style={{ objectFit: "contain" }} sizes="100vw" priority />
-                </div>
-              ) : (
-                <div
-                  className={`w-full flex items-center justify-center bg-gradient-to-br ${gradient}`}
-                  style={{ height: "400px" }}
-                >
-                  <span className="text-9xl font-bold opacity-70">{person.name?.charAt(0) || "?"}</span>
-                </div>
-              )}
-
-              <div className="p-5">
-                <p className="text-lg font-bold text-white">{person.name}</p>
-                <p className="text-sm text-header-color mt-1">{person.subtitle}</p>
-                {people.length > 1 && (
-                  <p className="text-[10px] text-white/20 mt-2">{idx + 1} / {people.length}</p>
+          <div style={{ display: "grid", overflow: "hidden" }}>
+            <AnimatePresence custom={dir} initial={false}>
+              <motion.div
+                key={idx}
+                custom={dir}
+                variants={lightboxSlideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                className="cursor-grab active:cursor-grabbing"
+                style={{ gridArea: "1 / 1" }}
+              >
+                {person.photo ? (
+                  <div className="w-full aspect-square overflow-hidden bg-[#1a1a1a] flex items-center justify-center relative border-b border-[#5B5B5B] border-dashed">
+                    <Image src={person.photo} alt={person.name} fill style={{ objectFit: "cover" }} sizes="100vw" priority draggable={false} placeholder="blur" blurDataURL={getBlurPlaceholder(person.photo)} />
+                  </div>
+                ) : (
+                  <div
+                    className={`w-full aspect-square flex items-center justify-center bg-gradient-to-br ${gradient} border-b border-[#5B5B5B] border-dashed`}
+                  >
+                    <span className="text-9xl font-bold opacity-70 select-none">{person.name?.charAt(0) || "?"}</span>
+                  </div>
                 )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+
+                <div className="p-4 sm:p-5 text-left">
+                  <h2 className="text-[1.1rem] sm:text-[1.25rem] font-semibold text-white tracking-tight leading-tight">{person.name}</h2>
+                  <p className="text-[0.8rem] sm:text-[0.9rem] text-[#8C8C8C] mt-1 font-normal tracking-tight">{person.subtitle}</p>
+                  {people.length > 1 && (
+                    <span className="inline-block mt-3.5 text-[10px] sm:text-[11px] text-[#8C8C8C] pointer-events-none uppercase tracking-widest leading-none font-medium opacity-60">
+                      {idx + 1} / {people.length}
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </motion.div>
     </motion.div>

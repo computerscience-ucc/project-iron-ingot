@@ -1,4 +1,6 @@
-const devTeam = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "devTeam",
   title: "Development Team",
@@ -103,6 +105,4 @@ const devTeam = {
       };
     },
   },
-};
-
-export default devTeam;
+});

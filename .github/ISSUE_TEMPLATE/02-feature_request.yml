@@ -1,0 +1,58 @@
+name: Feature Request
+description: Suggest a new feature or improvement for UCC INGO
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature for UCC INGO. Please describe your idea in detail.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? Is it related to a frustration?
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      description: Which part of UCC INGO does this affect?
+      options:
+        - Homepage
+        - Thesis Section
+        - Blog Section
+        - Bulletin Section
+        - Awards Section
+        - Gallery Section
+        - About / Council
+        - Chatbot
+        - Sanity Studio (CMS)
+        - Performance
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or screenshots about the feature request.
+    validations:
+      required: false

@@ -1,0 +1,336 @@
+{
+  "document_metadata": {
+    "title": "Smart Skeleton Shimmer Animations with Motion.dev",
+    "project_manager": "Jhon Keneth Ryan B. Namias",
+    "version": "1.0.0",
+    "status": "Implemented",
+    "created": "2026-06-22",
+    "branch": "dev"
+  },
+  "executive_summary": "The website currently uses basic Tailwind `animate-pulse` and `animate-spin` utilities for loading states, resulting in a generic and inconsistent loading experience. This project implements production-grade skeleton shimmer animations using motion.dev (Framer Motion v12) to create smooth, GPU-accelerated loading placeholders that match the site's dark theme. The shimmer effect uses a moving gradient overlay that sweeps across skeleton boxes, providing visual feedback that content is loading. This improves perceived performance and creates a polished, professional feel across all loading states.",
+  "problems_identified": [
+    "No reusable skeleton component — loading UI is copy-pasted across 5+ files",
+    "Generic `animate-pulse` lacks the shimmer sweep effect seen in modern apps",
+    "Inconsistent loading patterns: spinners, pulse, bounce, rotating divs",
+    "No skeleton placeholders for page-level data fetching (blog list, thesis list, etc.)",
+    "Click-navigation spinners are visually disconnected from the site's aesthetic",
+    "No staggered skeleton loading for lists/grids of cards",
+    "ImageWithFallback uses basic pulse instead of shimmer",
+    "Card click-loading overlays use identical copy-pasted spinner markup"
+  ],
+  "architecture_strategy": {
+    "layer_1_skeleton_component": "Create a reusable `<SkeletonBox />` component with motion.dev-powered shimmer animation. Uses `motion.div` with `animate` prop for the gradient sweep, no CSS keyframes needed.",
+    "layer_2_skeleton_groups": "Create `<SkeletonCard />` and `<SkeletonGrid />`组合 components for common layouts (blog card, thesis card, gallery card, officer card).",
+    "layer_3_loading_overlay": "Create `<LoadingOverlay />` component to replace the 5x copy-pasted spinner blocks with a consistent shimmer overlay.",
+    "layer_4_page_skeletons": "Add skeleton loading states to data-fetching pages (blog index, thesis index, gallery index, awards) so content has shimmer placeholders while Sanity data loads.",
+    "layer_5_integration": "Replace all existing `animate-pulse` and `animate-spin` loading states with the new shimmer components. Migrate `ImageWithFallback` and `Awards/Card` to use shimmer."
+  },
+  "motion_dev_api_usage": {
+    "core_import": "import { motion, AnimatePresence } from 'motion/react'",
+    "shimmer_animation": "Use motion.div with animate={{ x: ['-100%', '100%'] }} for the gradient sweep",
+    "stagger_children": "Use motion variants with staggerChildren for grid skeleton loading",
+    "presence_exit": "Use AnimatePresence for smooth skeleton-to-content transitions",
+    "hardware_acceleration": "motion.dev automatically uses GPU-accelerated transforms for optimal performance"
+  },
+  "functional_requirements": [
+    "FR1: A reusable SkeletonBox component must render a dark placeholder with a shimmer gradient sweep powered by motion.dev",
+    "FR2: The shimmer must use a linear-gradient overlay (transparent → white/20% → transparent) that moves left-to-right on a loop",
+    "FR3: SkeletonBox must accept width, height, borderRadius, and className props",
+    "FR4: A SkeletonCard component must render a pre-built skeleton matching BlogCard, ThesisCard, GalleryCard, or OfficerCard layouts",
+    "FR5: A LoadingOverlay component must replace the 5x copy-pasted spinner blocks with a shimmer overlay",
+    "FR6: AnimatePresence must wrap skeleton-to-content transitions for smooth crossfade",
+    "FR7: Staggered children animation must be used for grid/list skeleton loading (cards appear one by one)",
+    "FR8: All existing animate-pulse loading states must be migrated to shimmer",
+    "FR9: Page-level skeleton loading must be added to blog, thesis, gallery, and awards listing pages"
+  ],
+  "execution_milestones": [
+    {
+      "phase": 1,
+      "name": "SkeletonBox Component — Core Shimmer Building Block",
+      "slice_id": "slice-01",
+      "tasks": [
+        "Create components/ui/SkeletonBox.js with motion.div shimmer animation",
+        "Implement linear-gradient overlay with animate={{ x: ['-100%', '100%'] }}",
+        "Add props: width, height, borderRadius, className, style",
+        "Set default dark theme colors (#242424 base, white/20% shimmer)",
+        "Export for use by all skeleton组合 components"
+      ],
+      "commit_message": "feat(skeleton): create SkeletonBox component with motion.dev shimmer animation"
+    },
+    {
+      "phase": 2,
+      "name": "SkeletonCard Components — Layout-Specific Skeletons",
+      "slice_id": "slice-02",
+      "tasks": [
+        "Create components/ui/skeletons/SkeletonBlogCard.js",
+        "Create components/ui/skeletons/SkeletonThesisCard.js",
+        "Create components/ui/skeletons/SkeletonGalleryCard.js",
+        "Create components/ui/skeletons/SkeletonOfficerCard.js",
+        "Each skeleton must match the exact dimensions of its real counterpart",
+        "Use SkeletonBox for image placeholder + text line placeholders"
+      ],
+      "commit_message": "feat(skeleton): create SkeletonCard components for Blog, Thesis, Gallery, and Officer layouts"
+    },
+    {
+      "phase": 3,
+      "name": "LoadingOverlay — Replace Copy-Pasted Spinners",
+      "slice_id": "slice-03",
+      "tasks": [
+        "Create components/ui/LoadingOverlay.js with shimmer background",
+        "Replace identical spinner markup in Card/Thesis.js, Card/Gallery.js, Card/Blog.js",
+        "Replace spinner in ChatBot.js NavigationCard component",
+        "Overlay shows shimmer animation instead of spinning border-circle"
+      ],
+      "commit_message": "feat(skeleton): create LoadingOverlay component, replace 4x copy-pasted spinners"
+    },
+    {
+      "phase": 4,
+      "name": "SkeletonGrid — Staggered Grid Loading",
+      "slice_id": "slice-04",
+      "tasks": [
+        "Create components/ui/SkeletonGrid.js with staggered children animation",
+        "Use motion variants with staggerChildren: 0.1 for grid items",
+        "Accept cardType prop ('blog', 'thesis', 'gallery', 'officer') and count prop",
+        "Render N skeleton cards with staggered entrance animation"
+      ],
+      "commit_message": "feat(skeleton): create SkeletonGrid with staggered children entrance animation"
+    },
+    {
+      "phase": 5,
+      "name": "Migrate ImageWithFallback to Shimmer",
+      "slice_id": "slice-05",
+      "tasks": [
+        "Update components/ui/ImageWithFallback.js to use SkeletonBox instead of animate-pulse",
+        "Replace the pulse div with a shimmer skeleton",
+        "Keep the same loading/error state logic"
+      ],
+      "commit_message": "perf(skeleton): migrate ImageWithFallback from pulse to shimmer loading state"
+    },
+    {
+      "phase": 6,
+      "name": "Migrate Awards/Card to Shimmer",
+      "slice_id": "slice-06",
+      "tasks": [
+        "Update components/Awards/Card.js to use SkeletonBox instead of animate-pulse",
+        "Replace the pulse overlay with shimmer skeleton",
+        "Keep the loaded state fade-in transition"
+      ],
+      "commit_message": "perf(skeleton): migrate Awards/Card from pulse to shimmer loading state"
+    },
+    {
+      "phase": 7,
+      "name": "Page Skeletons — Blog Listing Page",
+      "slice_id": "slice-07",
+      "tasks": [
+        "Update pages/blog/index.js to show SkeletonGrid while Sanity data loads",
+        "Wrap content in AnimatePresence for smooth skeleton→content transition",
+        "Show 6 SkeletonBlogCards in grid during loading"
+      ],
+      "commit_message": "feat(skeleton): add skeleton loading state to blog listing page"
+    },
+    {
+      "phase": 8,
+      "name": "Page Skeletons — Thesis Listing Page",
+      "slice_id": "slice-08",
+      "tasks": [
+        "Update pages/thesis/index.js to show SkeletonGrid while Sanity data loads",
+        "Show 4 SkeletonThesisCards during loading",
+        "Use AnimatePresence for smooth transition"
+      ],
+      "commit_message": "feat(skeleton): add skeleton loading state to thesis listing page"
+    },
+    {
+      "phase": 9,
+      "name": "Page Skeletons — Gallery Listing Page",
+      "slice_id": "slice-09",
+      "tasks": [
+        "Update pages/gallery/index.js to show SkeletonGrid while Sanity data loads",
+        "Show 4 SkeletonGalleryCards during loading",
+        "Use AnimatePresence for smooth transition"
+      ],
+      "commit_message": "feat(skeleton): add skeleton loading state to gallery listing page"
+    },
+    {
+      "phase": 10,
+      "name": "Page Skeletons — Awards Page",
+      "slice_id": "slice-10",
+      "tasks": [
+        "Update pages/awards.js or layouts/AwardsSection.js to show skeleton during load",
+        "Show skeleton carousel cards while award data loads",
+        "Use AnimatePresence for smooth transition"
+      ],
+      "commit_message": "feat(skeleton): add skeleton loading state to awards page"
+    },
+    {
+      "phase": 11,
+      "name": "Migrate Council Spinner to Shimmer",
+      "slice_id": "slice-11",
+      "tasks": [
+        "Update components/About/SubPages/council.js to use SkeletonOfficerCard",
+        "Replace the Framer Motion rotating spinner with shimmer skeleton grid",
+        "Show adviser + executive skeletons during data fetch"
+      ],
+      "commit_message": "perf(skeleton): migrate council page spinner to skeleton shimmer loading"
+    },
+    {
+      "phase": 12,
+      "name": "AnimatePresence Content Transitions",
+      "slice_id": "slice-12",
+      "tasks": [
+        "Wrap all skeleton→content transitions with AnimatePresence",
+        "Add exit animation (opacity: 0, scale: 0.98) to skeleton components",
+        "Add enter animation (opacity: 0→1) to real content",
+        "Ensure smooth crossfade without layout shift"
+      ],
+      "commit_message": "feat(skeleton): add AnimatePresence transitions for all skeleton→content swaps"
+    },
+    {
+      "phase": 13,
+      "name": "Globals CSS — Shimmer Keyframes Backup",
+      "slice_id": "slice-13",
+      "tasks": [
+        "Add @keyframes shimmer to globals.css as fallback for non-motion contexts",
+        "Add .skeleton-shimmer utility class",
+        "Ensure the shimmer gradient matches the motion.dev animation",
+        "Keep for cases where motion.dev is not suitable (SSR, static elements)"
+      ],
+      "commit_message": "feat(skeleton): add CSS shimmer keyframes as fallback for non-motion contexts"
+    },
+    {
+      "phase": 14,
+      "name": "AGENTS.md Documentation Update",
+      "slice_id": "slice-14",
+      "tasks": [
+        "Document SkeletonBox, SkeletonCard, SkeletonGrid, LoadingOverlay in AGENTS.md",
+        "Add skeleton component usage guidelines",
+        "Document motion.dev shimmer animation pattern",
+        "Add guidelines for when to use skeleton vs spinner"
+      ],
+      "commit_message": "docs(skeleton): document skeleton shimmer architecture and component guidelines"
+    },
+    {
+      "phase": 15,
+      "name": "PRD Status Update",
+      "slice_id": "slice-15",
+      "tasks": [
+        "Mark all slices as completed in prd-skeleton.json",
+        "Add commit history for all slices",
+        "Update status to Implemented"
+      ],
+      "commit_message": "docs(prd): mark all skeleton shimmer slices as implemented"
+    }
+  ],
+  "files_created": [
+    "components/ui/SkeletonBox.js",
+    "components/ui/skeletons/SkeletonBlogCard.js",
+    "components/ui/skeletons/SkeletonThesisCard.js",
+    "components/ui/skeletons/SkeletonGalleryCard.js",
+    "components/ui/skeletons/SkeletonOfficerCard.js",
+    "components/ui/LoadingOverlay.js",
+    "components/ui/SkeletonGrid.js",
+    "prd-skeleton.json"
+  ],
+  "files_modified": [
+    "components/ui/ImageWithFallback.js",
+    "components/Awards/Card.js",
+    "components/Card/Thesis.js",
+    "components/Card/Gallery.js",
+    "components/Card/Blog.js",
+    "components/ChatBot.js",
+    "components/About/SubPages/council.js",
+    "pages/blog/index.js",
+    "pages/thesis/index.js",
+    "pages/gallery/index.js",
+    "pages/awards.js",
+    "layouts/AwardsSection.js",
+    "styles/globals.css",
+    "AGENTS.md"
+  ],
+  "success_criteria": {
+    "shimmer_effect": "All skeleton boxes show a smooth left-to-right gradient sweep powered by motion.dev",
+    "no_pulse": "Zero remaining animate-pulse usage for loading states (replaced by shimmer)",
+    "no_spinner": "Zero copy-pasted spinner blocks (replaced by LoadingOverlay)",
+    "staggered_entrance": "Grid/list skeletons stagger their entrance with 0.1s delay between items",
+    "smooth_transition": "AnimatePresence ensures no jarring snap between skeleton and real content",
+    "dark_theme_match": "Skeleton colors (#242424 base, white/20% shimmer) match the site's dark theme",
+    "gpu_accelerated": "All shimmer animations use transform (GPU-accelerated) via motion.dev",
+    "consistent_patterns": "All loading states across the site use the same skeleton component family"
+  },
+  "commit_history": [
+    {
+      "slice": "prd",
+      "hash": "873d691",
+      "message": "docs(prd): add skeleton shimmer animation PRD with 15 implementation slices"
+    },
+    {
+      "slice": "01",
+      "hash": "81aafee",
+      "message": "feat(skeleton): create SkeletonBox component with motion.dev shimmer animation"
+    },
+    {
+      "slice": "02",
+      "hash": "cf2f3ed",
+      "message": "feat(skeleton): create SkeletonCard components for Blog, Thesis, Gallery, and Officer layouts"
+    },
+    {
+      "slice": "03",
+      "hash": "faf8d7e",
+      "message": "feat(skeleton): create LoadingOverlay component with motion.dev spinner"
+    },
+    {
+      "slice": "03-migrate",
+      "hash": "a7fbf8b",
+      "message": "refactor(skeleton): replace 4x copy-pasted spinners with LoadingOverlay component"
+    },
+    {
+      "slice": "04",
+      "hash": "1043bc3",
+      "message": "feat(skeleton): create SkeletonGrid with staggered children entrance animation"
+    },
+    {
+      "slice": "05",
+      "hash": "c503b60",
+      "message": "perf(skeleton): migrate ImageWithFallback from pulse to shimmer loading state"
+    },
+    {
+      "slice": "06",
+      "hash": "a103590",
+      "message": "perf(skeleton): migrate Awards/Card from pulse to shimmer loading state"
+    },
+    {
+      "slice": "07",
+      "hash": "1b7aee8",
+      "message": "feat(skeleton): add skeleton loading state to blog listing page"
+    },
+    {
+      "slice": "08",
+      "hash": "6ffcc8f",
+      "message": "feat(skeleton): add skeleton loading state to thesis listing page"
+    },
+    {
+      "slice": "09",
+      "hash": "1aa177a",
+      "message": "feat(skeleton): add skeleton loading state to gallery listing page"
+    },
+    {
+      "slice": "10",
+      "hash": "6ffab8e",
+      "message": "feat(skeleton): add skeleton loading state to award gallery carousel"
+    },
+    {
+      "slice": "11",
+      "hash": "9b4e75e",
+      "message": "perf(skeleton): migrate council page spinner to skeleton shimmer loading"
+    },
+    {
+      "slice": "13",
+      "hash": "5abe321",
+      "message": "feat(skeleton): add CSS shimmer keyframes as fallback for non-motion contexts"
+    },
+    {
+      "slice": "14",
+      "hash": "149c0e6",
+      "message": "docs(skeleton): document skeleton shimmer architecture and component guidelines"
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-const council = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "council",
   title: "CS Council",
@@ -108,6 +110,13 @@ const council = {
               validation: (Rule) => Rule.required(),
             },
             {
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 3,
+              description: "Brief description of the committee's purpose and activities",
+            },
+            {
               name: "members",
               title: "Members",
               type: "array",
@@ -172,6 +181,4 @@ const council = {
       };
     },
   },
-};
-
-export default council;
+});

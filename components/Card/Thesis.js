@@ -1,86 +1,131 @@
-import { Card, CardBody, CardFooter, Chip } from "@material-tailwind/react";
-
 import Link from "next/link";
-import { _Transition_Card } from "../../lib/animations";
 import dayjs from "dayjs";
-import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
+import LoadingOverlay from "../ui/LoadingOverlay";
 
 const ThesisCard = ({ thesis }) => {
-  const { _id, _createdAt, authors, title, tags, slug, headerImage } = thesis;
+  const {
+    _createdAt,
+    authors,
+    title,
+    tags,
+    slug,
+    description,
+    owners,
+    headerImage,
+    academicYear,
+  } = thesis;
 
   const [isLoading, setIsLoading] = useState(false);
 
-  return (
-    <>
-      <Link href={`/thesis/${slug}`} scroll={false}>
-        <motion.div
-          key={_id}
-          variants={_Transition_Card}
-          initial="initial"
-          animate="animate"
-          className="relative"
-          whileHover={{ y: -5 }}
-          whileTap={{ scale: 0.95, y: -5 }}
-          onClick={() => setIsLoading(true)}
-        >
-          {/* Loading overlay */}
-          <AnimatePresence>
-            {isLoading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 rounded-xl bg-[#0f1218]/80 backdrop-blur-sm flex items-center justify-center"
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                  className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+  const { preloadSingle } = useImagePreloader([headerImage]);
 
-          <Card className="bg-[#0f1218] border border-[#0f1218] text-grey-100 cursor-pointer overflow-hidden group">
-            <motion.div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-              <div className="absolute inset-0 w-[90%] transition-all duration-200 group-hover:w-[100%] h-full bg-gradient-to-r from-[#0f1218] via-[#0f1218] to-transparent z-10" />
-              {headerImage && (
-                <Image
-                  className="absolute w-3/4 transition-all duration-200 h-full top-0 right-0 object-cover object-center -z-10 opacity-40 group-hover:scale-[0.95] rounded-xl group-hover:opacity-90"
-                  src={headerImage}
-                  alt={title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              )}
-            </motion.div>
-            <CardBody className="relative overflow-hidden">
-              <p className="z-10 text-sm text-grey-700">Thesis</p>
-              <p className="z-10 text-lg font-medium">{title}</p>
-              <p className="z-10 text-sm mt-3 text-grey-600 font-semibold">
-                {authors
-                  ?.map((author) => `${author.fullName.firstName} ${author.fullName.lastName}`)
-                  .join(", ")}
+  // Author string fallback
+  const displayAuthors =
+    owners ||
+    authors
+      ?.map((a) =>
+        `${a.fullName?.firstName || ""} ${a.fullName?.lastName || ""}`.trim(),
+      )
+      .join(", ") ||
+    "Unknown Author";
+
+  return (
+    <Link
+      href={`/thesis/${slug}`}
+      scroll={false}
+      onClick={() => setIsLoading(true)}
+      onMouseEnter={() => preloadSingle(headerImage)}
+      className="flex flex-col lg:flex-row gap-0 relative group cursor-pointer w-full min-h-fit lg:h-[168.75px] pb-0 lg:pb-0 overflow-hidden"
+    >
+      {/* Click-loading overlay */}
+      {isLoading && <LoadingOverlay />}
+
+      {/* Project Image / Placeholder */}
+      <div className="w-full lg:w-[300px] shrink-0 overflow-hidden relative bg-[#252525] aspect-video self-start lg:self-auto">
+        {headerImage ? (
+          <Image
+            src={headerImage}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 1024px) 100vw, 300px"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-[#333333]">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col px-0 lg:pl-6 lg:pr-4 pt-4 pb-0 lg:py-3 transition-colors duration-200 group-hover:bg-white/[0.02] min-h-fit">
+        <div className="flex items-start justify-between gap-4">
+          <p className="text-[1rem] md:text-[1.25rem] font-semibold tracking-normal text-[#EFEFEF] group-hover:text-white transition-colors leading-[1.3] line-clamp-1">
+            {title || "Untitled Project"}
+          </p>
+        </div>
+
+        <p className="text-[0.75rem] md:text-[0.875rem] text-[#8C8C8C] mt-1 leading-[1.4] font-medium line-clamp-1">
+          By {displayAuthors} on {dayjs(_createdAt).format("MMM DD, YYYY")}
+        </p>
+
+        {description &&
+          (() => {
+            const limit = 180;
+            if (description.length <= limit)
+              return (
+                <p className="text-[0.875rem] md:text-[1rem] text-[#8C8C8C] mt-1.5 md:mt-2 leading-normal font-normal line-clamp-2">
+                  {description}
+                </p>
+              );
+            const trimmed = description.slice(0, limit);
+            const lastSpace = trimmed.lastIndexOf(" ");
+            return (
+              <p className="text-[0.875rem] md:text-[1rem] text-[#8C8C8C] mt-1.5 md:mt-2 leading-normal font-normal line-clamp-2">
+                {trimmed.slice(0, lastSpace)}...
               </p>
-              <p className="z-10 text-sm text-grey-700">
-                {dayjs(_createdAt).format("MMM DD, YYYY")}
-              </p>
-            </CardBody>
-            {tags && tags.length > 0 && (
-              <CardFooter className="flex justify-end flex-wrap gap-2 text-grey-600">
-                {tags.map((tag, i) => (
-                  <div key={i}>
-                    <Chip className="bg-[#27292D]" value={tag} />
-                  </div>
-                ))}
-              </CardFooter>
-            )}
-          </Card>
-        </motion.div>
-      </Link>
-    </>
+            );
+          })()}
+
+        {/* Tags Container pushed to the bottom on desktop, spaced on mobile - Only show tags that fit on one line */}
+        <div className="flex flex-wrap overflow-hidden gap-2 mt-4 lg:mt-auto h-[26px]">
+          {academicYear && (
+            <span className="shrink-0 px-2 py-0.5 bg-[#F02E31] text-[#EFEFEF] text-[0.8rem] font-sans font-medium tracking-wide whitespace-nowrap">
+              {academicYear}
+            </span>
+          )}
+          {tags &&
+            tags.length > 0 &&
+            tags.slice(0, 4).map((tag, i) => (
+              <span
+                key={i}
+                className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap"
+              >
+                {tag}
+              </span>
+            ))}
+          {tags && tags.length > 4 && (
+            <span className="px-2 py-0.5 bg-[#333333] text-[#EFEFEF] text-[0.8rem] font-sans font-medium uppercase tracking-wide whitespace-nowrap">
+              +{tags.length - 4} more
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 };
 

@@ -1,0 +1,66 @@
+name: CI/CD Issue
+description: Report a problem with CI/CD pipelines or deployment
+title: "[CI/CD]: "
+labels: ["ci/cd", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report issues with GitHub Actions workflows, Vercel deployment, or Sanity Studio deployment.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of the CI/CD pipeline is affected?
+      options:
+        - GitHub Actions (build/lint)
+        - GitHub Actions (security scanning)
+        - Vercel Deployment
+        - Sanity Studio Deployment
+        - Dependabot
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where is this issue occurring?
+      options:
+        - Production (main branch)
+        - Staging (PR branch)
+        - Local development
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Workflow Logs
+      description: Paste relevant workflow logs or error messages.
+      render: shell
+    validations:
+      required: false
+  - type: input
+    id: run-id
+    attributes:
+      label: Workflow Run ID
+      description: If applicable, provide the GitHub Actions run ID.
+      placeholder: "1234567890"
+    validations:
+      required: false
+  - type: input
+    id: commit-sha
+    attributes:
+      label: Commit SHA
+      description: The commit that triggered the workflow.
+      placeholder: "abc123def456"
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the issue in detail.
+    validations:
+      required: true

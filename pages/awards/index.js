@@ -1,57 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  CgArrowUp,
-  CgArrowDown,
-} from "react-icons/cg";
 import Head from "../../components/Head";
-import TopGradient from "../../components/TopGradient";
 import { _Transition_Page } from "../../lib/animations";
 import { client } from "../../lib/sanity";
-import YearPill from "../../components/YearPill";
 import Card from "../../components/Awards/Card";
 import Lightbox from "../../components/Awards/Lightbox";
-
-// ─────────────────────────────────────
-// Sanity GROQ query
-// ─────────────────────────────────────
-const QUERY = `
-  *[_type == 'award'] | order(academicYear desc, dateAwarded desc) {
-    _id,
-    "title": awardTitle,
-    "slug": slug.current,
-    "headerImage": headerImage.asset->url,
-    "images": awardImages[].asset->url,
-    "category": awardCategory,
-    "badges": awardBadges,
-    "description": awardDescription,
-    academicYear,
-    dateAwarded,
-    tags
-  }
-`;
+import { AWARDS_LIST_QUERY } from "../../lib/groq/awards";
 
 // ─────────────────────────────────────
 // Year pill
 // ─────────────────────────────────────
 
-// ─────────────────────────────────────
-// Main page
-// ─────────────────────────────────────
-const Awards = () => {
-  const [awards, setAwards] = useState([]);
-  const [loading, setLoading] = useState(true);
+export async function getStaticProps() {
+  try {
+    const awards = await client.fetch(AWARDS_LIST_QUERY);
+    return {
+      props: { initialAwards: awards || [] },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.error("Error fetching awards list:", error);
+    return { props: { initialAwards: [] }, revalidate: 10 };
+  }
+}
+
+const Awards = ({ initialAwards }) => {
+  const [awards] = useState(initialAwards);
   const [selectedYear, setSelectedYear] = useState("All");
   const [sortAsc, setSortAsc] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    setLoading(true);
-    client.fetch(QUERY).then((data) => {
-      setAwards(data || []);
-      setLoading(false);
-    });
-  }, []);
+    if (router.query.id && awards.length > 0) {
+      const award = awards.find((a) => a._id === router.query.id);
+      if (award) setLightbox(award);
+    }
+  }, [awards, router.query.id]);
 
   // Unique years derived from data
   const years = useMemo(() => {
@@ -71,7 +57,6 @@ const Awards = () => {
 
   return (
     <>
-      <TopGradient colorLeft="#fd0101" colorRight="#a50000" />
       <Head
         title="Awards | Ingo"
         description="Celebrating excellence in the BSCS Program"
@@ -90,68 +75,76 @@ const Awards = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="py-36 z-10"
+        className="max-w-[1200px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[2rem] pb-[4rem] z-10 min-h-screen relative"
       >
         {/* Header */}
-        <div className="flex flex-col gap-1.5 mt-16 mb-8">
-          <p className="text-4xl font-semibold">Achievements &amp; Awards Gallery</p>
-          <p className="text-lg text-gray-400">Celebrating excellence in the BSCS Program</p>
+        <div className="flex flex-col gap-3 justify-center mt-8 mb-6 text-left">
+          <h1 className="text-[1.6rem] md:text-[1.8rem] lg:text-[2rem] text-[#ffffff] font-semibold tracking-normal">
+            Achievements &amp; Awards Gallery
+          </h1>
+          <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal max-w-[600px]">
+            Celebrating the milestones, breakthroughs, and outstanding achievements of
+            our BSCS students as they redefine excellence in technology.
+          </p>
         </div>
 
         {/* Controls bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 md:mb-10">
           {/* Year pills */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-1 flex-1">
-            {years.map((y) => (
-              <YearPill
-                key={y}
-                year={y}
-                selected={selectedYear === y}
-                onClick={() => setSelectedYear(y)}
-              />
-            ))}
+          <div className="flex flex-wrap items-center gap-2">
+            {years.map((y) => {
+              const isActive = selectedYear === y;
+              return (
+                <button
+                  key={y}
+                  onClick={() => setSelectedYear(y)}
+                  className={`px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                    isActive
+                      ? "bg-[#EA2B2E] text-white"
+                      : "bg-[#2A2A2A] text-[#EFEFEF] hover:bg-[#202020]"
+                  }`}
+                >
+                  {y}
+                </button>
+              );
+            })}
           </div>
 
           {/* Sort toggle */}
           {awards.length > 0 && (
-            <button
-              onClick={() => setSortAsc((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-400 border border-gray-700 hover:border-gray-500 hover:text-gray-200 transition-all shrink-0"
-            >
-              {sortAsc ? <CgArrowUp size={14} /> : <CgArrowDown size={14} />}
-              {sortAsc ? "Oldest first" : "Newest first"}
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0 relative z-10">
+              <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
+                Sort by:
+              </span>
+              <button
+                onClick={() => setSortAsc((v) => !v)}
+                className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
+              >
+                <span>{sortAsc ? "Oldest" : "Latest"}</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className={`transition-transform ${sortAsc ? "rotate-180" : ""}`}>
+                  <path
+                    d="M1 1L5 5L9 1"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           )}
         </div>
 
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="break-inside-avoid rounded-2xl bg-[#13151b] animate-pulse mb-6"
-                style={{ height: `${180 + (i % 3) * 60}px` }}
-              />
-            ))}
-          </div>
-        )}
-
         {/* Empty state */}
-        {!loading && filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-gray-500 gap-3">
-            <svg className="w-10 h-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-            </svg>
-            <p className="text-sm">
-              No awards found{selectedYear !== "All" ? ` for ${selectedYear}` : ""}.
-            </p>
+        {filtered.length === 0 && (
+          <div className="text-[#8C8C8C] text-[1rem] font-normal leading-normal py-10 text-center border-b border-dashed border-[#2F2F2F]">
+            No awards found{selectedYear !== "All" ? ` for ${selectedYear}` : ""}.
           </div>
         )}
 
-        {/* Masonry grid */}
-        {!loading && filtered.length > 0 && (
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
+        {/* Masonry-like Columns */}
+        {filtered.length > 0 && (
+          <div className="columns-2 lg:columns-4 gap-4 space-y-4">
             {filtered.map((award) => (
               <Card
                 key={award._id}

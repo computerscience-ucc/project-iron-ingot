@@ -1,0 +1,16 @@
+:root {
+	--container-max-width: 1920px;
+	--container-width: 96.4%;
+}
+
+@media (max-width: 768px) {
+	:root {
+		--container-width: 90%;
+	}
+}
+
+.section-container {
+	max-width: var(--container-max-width);
+	width: var(--container-width);
+	margin-inline: auto;
+}

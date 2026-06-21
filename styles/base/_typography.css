@@ -1,0 +1,31 @@
+@font-face {
+	font-family: 'GeistPixel Square';
+	src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'GeistPixel Line';
+	src: url('/fonts/GeistPixel-Line.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Advine-Pixel';
+	src: url('/fonts/Advine-Pixel.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Minecraft';
+	src: url('/fonts/Minecraft.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}

@@ -1,207 +1,374 @@
 import { useEffect, useMemo, useState } from "react";
-import { CgArrowDown, CgArrowUp, CgChevronRight, CgClose, CgSearch } from "react-icons/cg";
-
 import Head from "../../components/Head";
-import Link from "next/link";
-import Image from "next/image";
-import TopGradient from "../../components/TopGradient";
+import GalleryCard from "../../components/Card/Gallery";
 import { _Transition_Page } from "../../lib/animations";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefetcher } from "../../components/Prefetcher";
-import dayjs from "dayjs";
+import Pagination from "../../components/Pagination";
+import { client } from "../../lib/sanity";
+import { GALLERY_LIST_QUERY } from "../../lib/groq/gallery";
+import SkeletonGrid from "../../components/ui/SkeletonGrid";
 
 const ALL = "All";
+const ITEMS_PER_PAGE = 10;
 
-const GalleryPage = () => {
+export async function getStaticProps() {
+  try {
+    const gallery = await client.fetch(GALLERY_LIST_QUERY);
+    return { props: { initialGallery: gallery || [] }, revalidate: 10 };
+  } catch (error) {
+    console.error("Error fetching gallery:", error);
+    return { props: { initialGallery: [] }, revalidate: 10 };
+  }
+}
+
+export default function GalleryPage({ initialGallery }) {
   const { gallery } = usePrefetcher();
-  const [projectList, setProjectList] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedTag, setSelectedTag] = useState(ALL);
-  const [sortAsc, setSortAsc] = useState(false);
+  const [projectList, setProjectList] = useState(initialGallery);
+  const [selectedYear, setSelectedYear] = useState(ALL);
+  const [selectedCategory, setSelectedCategory] = useState(ALL);
+  const [sortLatest, setSortLatest] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  const [isYearOpen, setIsYearOpen] = useState(true);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   useEffect(() => {
-    setProjectList(gallery || []);
+    setCurrentPage(1);
+  }, [selectedYear, selectedCategory, sortLatest]);
+
+  useEffect(() => {
+    if (gallery?.length > 0) {
+      setProjectList(gallery);
+      setIsInitialLoad(false);
+    }
   }, [gallery]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (initialGallery?.length > 0) {
+      setIsInitialLoad(false);
+    }
+  }, [initialGallery]);
 
-  const availableTags = useMemo(() => {
-    const tags = new Set();
-    projectList.forEach((project) => {
-      (project.tags || []).forEach((tag) => {
-        if (tag) tags.add(tag);
-      });
-    });
-    return [ALL, ...Array.from(tags).sort((a, b) => a.localeCompare(b))];
+  // Extract unique years dynamically based on provided projects
+  const years = useMemo(() => {
+    const list = [
+      ...new Set(projectList.map((t) => {
+        const d = t.projectDate || t._createdAt;
+        return d ? new Date(d).getFullYear().toString() : "Unknown";
+      })),
+    ].sort().reverse();
+    return [ALL, ...list];
   }, [projectList]);
 
-  const filteredProjects = useMemo(() => {
-    const q = searchValue.trim().toLowerCase();
-    let list = selectedTag === ALL
-      ? projectList
-      : projectList.filter((project) => (project.tags || []).includes(selectedTag));
-
-    if (q) {
-      list = list.filter((project) => {
-        const titleMatch = (project.title || "").toLowerCase().includes(q);
-        const personMatch = (project.personName || "").toLowerCase().includes(q);
-        const tagMatch = (project.tags || []).some((tag) =>
-          (tag || "").toLowerCase().includes(q)
-        );
-        return titleMatch || personMatch || tagMatch;
+  // 1. Filter the base list by Year first to determine available categories
+  const listFilteredByYear = useMemo(() => {
+    let list = projectList;
+    if (selectedYear !== ALL) {
+      list = list.filter((t) => {
+        const d = t.projectDate || t._createdAt;
+        const year = d ? new Date(d).getFullYear().toString() : "Unknown";
+        return year === selectedYear;
       });
+    }
+    return list;
+  }, [projectList, selectedYear]);
+
+  // 2. Extract unique tags dynamically based on the year
+  const categories = useMemo(() => {
+    const counts = {};
+    listFilteredByYear.forEach((t) => {
+      (t.tags || []).forEach((tag) => {
+        const key = tag.toLowerCase();
+        counts[key] = (counts[key] || 0) + 1;
+      });
+    });
+    const sorted = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+    const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    const result = sorted.map(capitalize);
+    return [ALL, ...result];
+  }, [listFilteredByYear]);
+
+  // 3. Safety: Reset selected category if it's no longer present in the dynamic list
+  useEffect(() => {
+    if (selectedCategory === ALL) return;
+    if (!categories.includes(selectedCategory)) {
+      setSelectedCategory(ALL);
+    }
+  }, [categories, selectedCategory]);
+
+  const filteredList = useMemo(() => {
+    let list = listFilteredByYear;
+    if (selectedCategory !== ALL) {
+      list = list.filter((t) =>
+        (t.tags || []).some(
+          (tag) => tag.toLowerCase() === selectedCategory.toLowerCase(),
+        ),
+      );
     }
 
     return [...list].sort((a, b) => {
-      const diff = new Date(a.projectDate || a._createdAt) - new Date(b.projectDate || b._createdAt);
-      return sortAsc ? diff : -diff;
+      const dateA = new Date(a.projectDate || a._createdAt);
+      const dateB = new Date(b.projectDate || b._createdAt);
+      const diff = dateB - dateA;
+      return sortLatest ? diff : -diff;
     });
-  }, [projectList, searchValue, selectedTag, sortAsc]);
+  }, [listFilteredByYear, selectedCategory, sortLatest]);
+
+  const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
+  const displayList = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredList.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredList, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+
+  const renderFilters = () => (
+    <div className="flex flex-col gap-[1.5rem] w-full">
+      {/* Year Filter */}
+      <div className="flex flex-col gap-1.5">
+        <div
+          className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
+          onClick={() => setIsYearOpen(!isYearOpen)}
+        >
+          <span>Year</span>
+          <svg
+            width="10" height="6" viewBox="0 0 10 6" fill="none"
+            className={`transition-transform duration-200 ${isYearOpen ? "" : "rotate-180"}`}
+          >
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <AnimatePresence>
+          {isYearOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col">
+                {years.map((y) => {
+                  const isActive = selectedYear === y;
+                  return (
+                    <button
+                      key={y}
+                      onClick={() => setSelectedYear(y)}
+                      className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                        isActive
+                          ? "bg-[#EA2B2E] text-white"
+                          : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
+                    >
+                      {y}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex flex-col gap-1.5">
+        <div
+          className="flex items-center gap-1.5 text-[#8C8C8C] text-[0.875rem] font-normal cursor-pointer hover:text-white transition-colors pl-2 select-none"
+          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+        >
+          <span>Category</span>
+          <svg
+            width="10" height="6" viewBox="0 0 10 6" fill="none"
+            className={`transition-transform duration-200 ${isCategoryOpen ? "" : "rotate-180"}`}
+          >
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <AnimatePresence>
+          {isCategoryOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="flex flex-col">
+                {categories.map((c) => {
+                  const isActive = selectedCategory === c;
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => setSelectedCategory(c)}
+                      className={`text-left px-3 py-1.5 rounded-[4px] text-[0.875rem] font-normal leading-normal transition-colors ${
+                        isActive
+                          ? "bg-[#2A2A2A] text-white"
+                          : "text-[#EFEFEF] hover:bg-[#202020]"
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
 
   return (
     <>
-      <TopGradient colorLeft={"#fd0101"} colorRight={"#a50000"} />
       <Head
         title="Gallery of Projects | Ingo"
-        description="Browse student and alumni project outputs, watch demos, and visit their work links."
+        description="Search projects, open each profile, and watch project outputs."
         url="/gallery"
       />
+
       <motion.main
         variants={_Transition_Page}
         initial="initial"
         animate="animate"
         exit="exit"
-        className="py-36 z-10 min-h-screen"
+        className="max-w-[1440px] w-[var(--container-width)] md:w-[80%] mx-auto pt-[4rem] pb-[12rem] z-10 min-h-screen relative"
       >
-        <div className="flex flex-col gap-2 justify-center mt-16">
-          <p className="text-4xl font-semibold">Gallery of Projects</p>
-          <p className="text-lg font-semibold text-white/60">
-            Search projects, open each profile, and watch project outputs.
-          </p>
-        </div>
+        {/* Full-height dashed borders sticking to the cards container */}
+        <div className="absolute left-[calc(240px+4rem)] top-0 bottom-0 w-px border-l border-dashed border-[#2F2F2F] hidden md:block" />
+        <div className="absolute right-0 top-0 bottom-0 w-px border-r border-dashed border-[#2F2F2F] hidden md:block" />
 
-        <div className="mt-10 relative max-w-md">
-          <CgSearch
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none"
-          />
-          <input
-            type="text"
-            placeholder="Search by title, person, or tag..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-full pl-9 pr-9 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/25 transition-colors"
-          />
-          {searchValue && (
-            <button
-              onClick={() => setSearchValue("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
-            >
-              <CgClose size={14} />
-            </button>
-          )}
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] md:gap-[4rem] min-h-full">
+          {/* Sidebar */}
+          <aside className="flex flex-col w-full relative lg:sticky lg:top-[4rem] h-fit pr-4 md:pr-0 pb-4 md:pb-0 z-20">
+            <h1 className="text-[1.6rem] md:text-[1.8rem] lg:text-[2rem] text-[#ffffff] font-semibold mb-4 tracking-normal leading-tight">
+              Gallery of Projects
+            </h1>
+            <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal mb-4 md:mb-10 max-w-[95%]">
+              Search projects, open each profile, and watch project outputs.
+            </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <div className="relative">
-            <select
-              value={selectedTag}
-              onChange={(e) => setSelectedTag(e.target.value)}
-              className="appearance-none bg-white/5 border border-white/10 rounded-full pl-4 pr-10 py-2 text-sm text-white focus:outline-none focus:border-white/25 transition-colors"
-            >
-              {availableTags.map((tag) => (
-                <option key={tag} value={tag} className="bg-[#0A0C10] text-white">
-                  {tag === ALL ? "All Tags" : tag}
-                </option>
-              ))}
-            </select>
-            <CgArrowDown
-              size={14}
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/50"
+            {/* Desktop Filters */}
+            <div className="hidden md:block">
+              {renderFilters()}
+            </div>
+          </aside>
+
+          {/* Main Content Area */}
+          <section className="flex flex-col w-full relative min-h-full">
+            <div className="flex items-center justify-between md:justify-end mb-[1rem] mt-0 md:mt-2 w-full relative z-30">
+
+              {/* Mobile Filter Button & Dropdown */}
+              <div className="relative md:hidden">
+                <button
+                  onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+                  className={`flex items-center gap-2 text-[0.875rem] font-normal text-[#EFEFEF] hover:text-white transition-colors border border-[#2F2F2F] px-4 py-2 rounded-[4px] ${
+                    isMobileFilterOpen ? "bg-[#252525]" : "bg-[#1A1A1A]"
+                  }`}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                  </svg>
+                  <span>Filter</span>
+                </button>
+
+                <AnimatePresence>
+                  {isMobileFilterOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-[calc(100%+0.5rem)] left-0 w-[260px] bg-[#181818] border border-[#2F2F2F] rounded-[8px] pt-2 pb-4 px-4 shadow-xl z-50 overflow-y-auto max-h-[60vh] flex flex-col items-start"
+                    >
+                      {/* Close button */}
+                      <button
+                        onClick={() => setIsMobileFilterOpen(false)}
+                        className="self-end text-[#8C8C8C] hover:text-white mb-0.5 p-1 -mr-1"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M13 1L1 13M1 1l12 12" />
+                        </svg>
+                      </button>
+
+                      {renderFilters()}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Sort By Container */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[0.875rem] text-[#8C8C8C] font-normal leading-normal">
+                  Sort by:
+                </span>
+                <button
+                  onClick={() => setSortLatest(!sortLatest)}
+                  className="flex items-center gap-4 pl-0 pr-3 py-1 text-[0.875rem] text-[#EFEFEF] font-normal leading-normal hover:text-white transition-colors"
+                >
+                  <span>{sortLatest ? "Latest" : "Oldest"}</span>
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path
+                      d="M1 1L5 5L9 1"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${selectedYear}-${selectedCategory}-${sortLatest}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col gap-8 lg:gap-[1.5rem]"
+              >
+                {isInitialLoad ? (
+                  <SkeletonGrid cardType="gallery" count={4} />
+                ) : displayList.length === 0 ? (
+                  <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
+                    No projects found.
+                  </p>
+                ) : (
+                  displayList.map((project, i) => {
+                    const globalIndex = (currentPage - 1) * ITEMS_PER_PAGE + i;
+                    return <GalleryCard key={project._id || i} project={project} index={globalIndex} />;
+                  })
+                )}
+              </motion.div>
+            </AnimatePresence>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
             />
-          </div>
-
-          <button
-            onClick={() => setSortAsc((v) => !v)}
-            className="ml-auto flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors border border-white/10 rounded-full px-3 py-1.5"
-          >
-            {sortAsc ? <CgArrowUp size={14} /> : <CgArrowDown size={14} />}
-            {sortAsc ? "Oldest first" : "Newest first"}
-          </button>
-        </div>
-
-        <div className="mt-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${selectedTag}-${sortAsc}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
-            >
-              {filteredProjects.length > 0 ? (
-                <div className="divide-y divide-white/10 border border-white/10 rounded-2xl overflow-hidden bg-white/[0.02]">
-                  {filteredProjects.map((project, index) => (
-                    <Link
-                      key={project._id || index}
-                      href={`/gallery/${project.slug}`}
-                      scroll={false}
-                      className="flex items-center gap-4 px-4 py-4 hover:bg-white/[0.03] transition-colors">
-
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/15 bg-[#171a20] shrink-0">
-                        {project.profilePicture ? (
-                          <Image
-                            src={project.profilePicture}
-                            alt={project.personName}
-                            fill
-                            style={{ objectFit: "cover" }}
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                          />
-                        ) : (
-                          <span className="w-full h-full flex items-center justify-center text-sm text-white/50 font-semibold">
-                            {(project.personName || "?").charAt(0).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-lg font-semibold truncate">{project.title}</p>
-                        <p className="text-sm text-white/60 truncate">{project.personName}</p>
-                        <div className="flex flex-wrap gap-2 mt-1.5">
-                          {(project.tags || []).map((tag, tagIndex) => (
-                            <span
-                              key={tagIndex}
-                              className="px-2 py-0.5 rounded-full text-[11px] bg-[#27292D] text-white/80"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-xs text-white/40">
-                          {dayjs(project.projectDate || project._createdAt).format("MMM D, YYYY")}
-                        </p>
-                        <span className="inline-flex items-center mt-1 text-sm text-white/60">
-                          View <CgChevronRight className="ml-1" size={14} />
-                        </span>
-                      </div>
-
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-white/40 text-lg">
-                  No projects found{searchValue ? ` for "${searchValue}"` : selectedTag !== ALL ? ` in ${selectedTag}` : ""}.
-                </p>
-              )}
-            </motion.div>
-          </AnimatePresence>
+          </section>
         </div>
       </motion.main>
     </>
   );
-};
-
-export default GalleryPage;
+}

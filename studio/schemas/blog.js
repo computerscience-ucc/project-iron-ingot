@@ -1,18 +1,41 @@
-const blog = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "blog",
   title: "Blog",
+  groups: [
+    { name: "basic", title: "Basic Info" },
+    { name: "authors", title: "Authors" },
+    { name: "metadata", title: "Metadata" },
+    { name: "content", title: "Content" },
+  ],
+  initialValue: {
+    academicYear: "2025-2026",
+  },
+  orderings: [
+    { title: "Newest First", name: "createdDesc", by: [{ field: "_createdAt", direction: "desc" }] },
+  ],
   fields: [
+    {
+      title: "Blog Header Image",
+      name: "headerImage",
+      type: "image",
+      group: "basic",
+      options: { hotspot: true },
+    },
     {
       title: "Blog Title",
       name: "blogTitle",
       type: "string",
+      group: "basic",
       validation: Rule => Rule.required(),
     },
     {
       title: "Slug",
       name: "slug",
       type: "slug",
+      group: "basic",
       validation: Rule => Rule.required(),
       options: {
         source: "blogTitle",
@@ -23,14 +46,11 @@ const blog = {
       title: "Blog Author",
       name: "blogAuthor",
       type: "array",
+      group: "authors",
       of: [
         {
           type: "reference",
-          to: [
-            {
-              type: "author",
-            },
-          ],
+          to: [{ type: "author" }],
         },
       ],
     },
@@ -38,6 +58,7 @@ const blog = {
       title: "Academic Year",
       name: "academicYear",
       type: "string",
+      group: "metadata",
       description: "e.g. 2024-2025",
       options: {
         list: [
@@ -55,31 +76,26 @@ const blog = {
       name: "tags",
       title: "Tags",
       type: "array",
-      description: "Enter searcheable keywords for the blog",
-      of: [
-        {
-          type: "string",
-        },
-      ],
+      group: "metadata",
+      description: "Enter searchable keywords for the blog",
+      of: [{ type: "string" }],
     },
     {
       name: "blogContent",
       title: "Blog Content",
       type: "array",
+      group: "content",
       validation: Rule => Rule.required(),
       of: [
-        {
-          type: "block",
-        },
-        {
-          type: "image",
-          options: {
-            hotspot: true,
-          },
-        },
+        { type: "block" },
+        { type: "image", options: { hotspot: true } },
       ],
     },
   ],
-};
-
-export default blog;
+  preview: {
+    select: { title: "blogTitle", subtitle: "academicYear", media: "headerImage" },
+    prepare({ title, subtitle, media }) {
+      return { title: title || "Untitled Blog", subtitle: subtitle || "", media };
+    },
+  },
+});

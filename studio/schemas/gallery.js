@@ -1,18 +1,30 @@
-const gallery = {
+import { defineType } from "sanity";
+
+export default defineType({
   type: "document",
   name: "gallery",
   title: "Gallery of Works",
+  groups: [
+    { name: "basic", title: "Basic Info" },
+    { name: "details", title: "Details" },
+    { name: "links", title: "Links" },
+  ],
+  orderings: [
+    { title: "Project Date (Newest)", name: "dateDesc", by: [{ field: "projectDate", direction: "desc" }] },
+  ],
   fields: [
     {
       title: "Project Title",
       name: "projectTitle",
       type: "string",
+      group: "basic",
       validation: Rule => Rule.required(),
     },
     {
       title: "Slug",
       name: "slug",
       type: "slug",
+      group: "basic",
       validation: Rule => Rule.required(),
       options: {
         source: "projectTitle",
@@ -23,6 +35,7 @@ const gallery = {
       title: "Who is this person?",
       name: "personName",
       type: "string",
+      group: "basic",
       description: "Student or alumni behind this work.",
       validation: Rule => Rule.required(),
     },
@@ -30,24 +43,31 @@ const gallery = {
       title: "Profile Picture",
       name: "profilePicture",
       type: "image",
+      group: "basic",
       description: "Upload a profile image for this person.",
-      options: {
-        hotspot: true,
-      },
+      options: { hotspot: true },
     },
     {
       title: "Date",
       name: "projectDate",
       type: "date",
+      group: "details",
       validation: Rule => Rule.required(),
-      options: {
-        dateFormat: "MMMM D, YYYY",
-      },
+      options: { dateFormat: "MMMM D, YYYY" },
+    },
+    {
+      name: "tags",
+      title: "Search Tags",
+      type: "array",
+      group: "details",
+      description: "Search keywords like Automation, C programming, etc.",
+      of: [{ type: "string" }],
     },
     {
       title: "YouTube Embed Link",
       name: "youtubeEmbedLink",
       type: "url",
+      group: "links",
       description: "Paste the YouTube video link for the project demo/output.",
       validation: Rule => Rule.required().uri({ scheme: ["http", "https"] }),
     },
@@ -55,20 +75,15 @@ const gallery = {
       title: "GitHub URL",
       name: "githubUrl",
       type: "url",
+      group: "links",
       validation: Rule => Rule.required().uri({ scheme: ["http", "https"] }),
     },
     {
       title: "LinkedIn Profile",
       name: "linkedinProfile",
       type: "url",
+      group: "links",
       validation: Rule => Rule.required().uri({ scheme: ["http", "https"] }),
-    },
-    {
-      name: "tags",
-      title: "Search Tags",
-      type: "array",
-      description: "Search keywords like Automation, C programming, etc.",
-      of: [{ type: "string" }],
     },
   ],
   preview: {
@@ -78,6 +93,4 @@ const gallery = {
       media: "profilePicture",
     },
   },
-};
-
-export default gallery;
+});

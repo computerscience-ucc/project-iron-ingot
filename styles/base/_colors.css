@@ -1,0 +1,104 @@
+:root {
+    /* base colors */
+    --color-black: #000000;
+    --color-white: #EFEFEF;
+    --color-debug: red;
+    --logo-invert: 1;
+
+    /* accents */
+    --color-accent-blue: #7892c1;
+    --color-accent-cyan: #b8d6d9;
+
+    /* default / dark mode */
+    --color-primary: #181818;
+    --color-bg: var(--color-primary);
+    --color-bg-secondary: #1a1a1a;
+    --color-bg-surface: rgba(255, 255, 255, 0.02);
+    --color-bg-surface-hover: rgba(255, 255, 255, 0.05);
+
+    --color-text: var(--color-white);
+    --color-text-muted: #888888;
+    --color-text-inv: var(--color-black);
+
+    --color-border: #363636;
+    --color-border-muted: #444444;
+    --color-border-soft: rgba(255, 255, 255, 0.1);
+    --color-border-dashed: #2A2A2A;
+    --color-border-vivid: rgba(255, 255, 255, 0.2);
+
+    --color-overlay-02: rgba(255, 255, 255, 0.02);
+    --color-overlay-05: rgba(255, 255, 255, 0.05);
+    --color-overlay-06: rgba(255, 255, 255, 0.06);
+    --color-overlay-10: rgba(255, 255, 255, 0.1);
+    --color-overlay-15: rgba(255, 255, 255, 0.12);
+    --color-overlay-20: rgba(255, 255, 255, 0.2);
+    --color-overlay-40: rgba(255, 255, 255, 0.4);
+    --color-overlay-60: rgba(255, 255, 255, 0.6);
+
+    /* backwards compat for old names if needed, but we should refactor */
+    --color-white-a02: var(--color-overlay-02);
+    --color-white-a05: var(--color-overlay-05);
+    --color-white-a06: var(--color-overlay-06);
+    --color-white-a10: var(--color-overlay-10);
+    --color-white-a20: var(--color-overlay-20);
+    --color-white-a40: var(--color-overlay-40);
+    --color-white-a60: var(--color-overlay-60);
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+        --color-primary: #ffffff;
+        --color-bg: #f5f5f5;
+        --color-bg-secondary: #e8e8e8;
+        --color-bg-surface: rgba(0, 0, 0, 0.02);
+        --color-bg-surface-hover: rgba(0, 0, 0, 0.05);
+
+        --color-text: #080807;
+        --color-text-muted: #737373;
+        --color-text-inv: var(--color-white);
+
+        --color-border: #dcdcdc;
+        --color-border-muted: #cccccc;
+        --color-border-soft: rgba(0, 0, 0, 0.06);
+        --color-border-vivid: rgba(0, 0, 0, 0.1);
+        --logo-invert: 0;
+
+        --color-overlay-02: rgba(0, 0, 0, 0.02);
+        --color-overlay-05: rgba(0, 0, 0, 0.05);
+        --color-overlay-06: rgba(0, 0, 0, 0.06);
+        --color-overlay-10: rgba(0, 0, 0, 0.1);
+        --color-overlay-20: rgba(0, 0, 0, 0.2);
+        --color-overlay-40: rgba(0, 0, 0, 0.4);
+        --color-overlay-60: rgba(0, 0, 0, 0.6);
+    }
+}
+
+:root[data-theme="light"] {
+    --color-accent-blue: #676767;
+    --color-accent-cyan: #080807;
+
+    --color-primary: #f5f5f5;
+    --color-bg: #f5f5f5;
+    --color-bg-secondary: #e8e8e8;
+    --color-bg-surface: rgba(0, 0, 0, 0.02);
+    --color-bg-surface-hover: rgba(0, 0, 0, 0.05);
+
+    --color-text: #080807;
+    --color-text-muted: #737373;
+    --color-text-inv: var(--color-white);
+
+    --color-border: #dcdcdc;
+    --color-border-muted: #cccccc;
+    --color-border-soft: rgba(0, 0, 0, 0.06);
+    --color-border-vivid: rgba(0, 0, 0, 0.1);
+    --logo-invert: 0;
+
+    --color-overlay-02: rgba(0, 0, 0, 0.02);
+    --color-overlay-05: rgba(0, 0, 0, 0.05);
+    --color-overlay-06: rgba(0, 0, 0, 0.06);
+    --color-overlay-10: rgba(0, 0, 0, 0.1);
+    --color-overlay-15: rgba(0, 0, 0, 0.2);
+    --color-overlay-20: rgba(0, 0, 0, 0.3);
+    --color-overlay-40: rgba(0, 0, 0, 0.4);
+    --color-overlay-60: rgba(0, 0, 0, 0.6);
+}

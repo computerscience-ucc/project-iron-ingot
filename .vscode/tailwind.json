@@ -1,0 +1,22 @@
+{
+  "atDirectives": [
+    {
+      "name": "@tailwind"
+    },
+    {
+      "name": "@apply"
+    },
+    {
+      "name": "@layer"
+    },
+    {
+      "name": "@variants"
+    },
+    {
+      "name": "@responsive"
+    },
+    {
+      "name": "@screen"
+    }
+  ]
+}

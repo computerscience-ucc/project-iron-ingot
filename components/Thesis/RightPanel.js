@@ -12,22 +12,26 @@ const RightPanel = ({ model3d, showcase }) => {
   if (!hasModel && !hasImages) return null;
 
   return (
-    <div className="sticky top-24 flex flex-col gap-2">
+    <div className="flex flex-col">
       {/* tab bar */}
       {hasBoth && (
-        <div className="flex gap-1 p-1 bg-[#0a0c10] rounded-xl border border-white/5">
-          {[{ id: "model", label: "3D Model", icon: "⬡" }, { id: "images", label: "Showcase", icon: "⊞" }].map((t) => (
+        <div className="flex items-center bg-[#202020] rounded-[6px] p-1 gap-1 h-fit w-fit relative mb-2">
+          {[{ id: "model", label: "3D Model" }, { id: "images", label: "Showcase" }].map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                tab === t.id
-                  ? "bg-red-600/90 text-white shadow-sm"
-                  : "text-gray-500 hover:text-gray-300"
+              className={`relative px-5 py-1.5 rounded-[4px] text-[0.875rem] transition-colors ${
+                tab === t.id ? "text-white" : "text-[#8C8C8C] hover:text-[#EFEFEF]"
               }`}
             >
-              <span className="text-[10px] leading-none">{t.icon}</span>
-              {t.label}
+              {tab === t.id && (
+                <motion.div
+                  layoutId="activeRightTab"
+                  className="absolute inset-0 bg-[#333333] rounded-[4px] z-0"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10 font-medium whitespace-nowrap">{t.label}</span>
             </button>
           ))}
         </div>

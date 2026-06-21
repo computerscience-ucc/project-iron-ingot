@@ -1,0 +1,50 @@
+import { defineConfig } from "sanity";
+import { deskTool } from "sanity/desk";
+import { visionTool } from "@sanity/vision";
+import { presentationTool } from "sanity/presentation";
+import { schemaTypes } from "./schemas/schema";
+import { deskStructure } from "./deskStructure";
+import { revalidateOnPublish } from "./documentActions";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://uccingo.tech";
+
+const resolveProductionUrl = (doc) => {
+  const type = doc._type;
+  const slug = doc?.slug?.current;
+
+  const routes = {
+    blog: slug && `/blog/${slug}`,
+    bulletin: slug && `/bulletin/${slug}`,
+    thesis: slug && `/thesis/${slug}`,
+    award: slug && `/awards/${slug}`,
+    gallery: slug && `/gallery/${slug}`,
+    council: "/council",
+    devTeam: "/about",
+    heroCarousel: "/",
+  };
+
+  const path = routes[type];
+  return path ? `${siteUrl}${path}` : undefined;
+};
+
+export default defineConfig({
+  name: "ucc-project-ingo-back-end",
+  title: "UCC INGO - Content Studio",
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.SANITY_STUDIO_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET,
+  plugins: [
+    deskTool({ structure: deskStructure }),
+    visionTool(),
+    presentationTool({
+      previewUrl: {
+        origin: process.env.SANITY_STUDIO_PREVIEW_URL || siteUrl,
+        preview: "/",
+      },
+    }),
+  ],
+  schema: { types: schemaTypes },
+  document: {
+    productionUrl: async (prev, context) => resolveProductionUrl(context.document),
+    actions: [revalidateOnPublish],
+  },
+});

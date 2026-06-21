@@ -1,0 +1,66 @@
+name: Security Alert
+description: Report a security vulnerability or concern (non-critical only)
+title: "[Security]: "
+labels: ["security", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **For critical vulnerabilities, do NOT open a public issue.**
+        Email: ucc.computersciencecouncil@gmail.com
+
+        Use this template for non-critical security concerns only.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Security Issue Type
+      description: What type of security issue is this?
+      options:
+        - Dependency vulnerability
+        - Outdated package
+        - Configuration issue
+        - Documentation gap
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this issue?
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical (email instead)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the security concern.
+    validations:
+      required: true
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected Components
+      description: Which parts of the application are affected?
+    validations:
+      required: false
+  - type: textarea
+    id: remediation
+    attributes:
+      label: Suggested Remediation
+      description: If you have suggestions for fixing this issue, describe them here.
+    validations:
+      required: false
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Add any relevant links, CVEs, or documentation.
+    validations:
+      required: false

@@ -1,0 +1,401 @@
+{
+  "document_metadata": {
+    "title": "Website to Facebook Messenger Custom Integration",
+    "project_manager": "Jhon Keneth Ryan B. Namias",
+    "version": "2.0.0",
+    "status": "Implemented",
+    "created": "2026-06-21",
+    "completed": "2026-06-21",
+    "branch": "dev"
+  },
+  "executive_summary": "Meta deprecated the native Customer Chat Plugin in May 2024. This project builds a custom, API-first chat widget that bridges website visitors to the Facebook Page Inbox via the Meta Graph API. The architecture uses Next.js API routes as middleware and a React frontend widget, replacing the old SDK-based FacebookMessenger.js component entirely.",
+  "access_prerequisites": [
+    "Manage access to the target Facebook Page",
+    "Active Meta Developer Account (developers.facebook.com)",
+    "Meta App created with the 'Messenger' product enabled",
+    "Generated Page Access Token (PAT) with 'pages_messaging' and 'pages_show_list' permissions",
+    "Webhook subscription URL pointing to production /api/messenger/webhook"
+  ],
+  "architecture_strategy": {
+    "frontend_client": "Custom floating chat UI component (React/Next.js) replacing the deprecated FacebookMessenger.js SDK widget.",
+    "middleware_layer": "Next.js API routes at pages/api/messenger/ — handles webhook verification, incoming messages from Meta, and outgoing messages from the frontend.",
+    "external_service": "Meta Graph API v21.0 (Messenger Platform)",
+    "data_flow": "Visitor types message → Frontend POST /api/messenger/send → Middleware forwards to Graph API → Meta delivers to Page Inbox → Page admin replies → Meta POST /api/messenger/webhook → Middleware stores in memory → Frontend polls /api/messenger/messages → UI displays reply"
+  },
+  "functional_requirements": [
+    "FR1: The system must render a toggleable floating chat window on the website (replacing old FacebookMessenger.js).",
+    "FR2: The system must capture user text inputs and send them to the middleware via POST /api/messenger/send.",
+    "FR3: The middleware must transmit outgoing messages to the Meta Graph API using the Page Access Token.",
+    "FR4: The system must receive and display real-time replies from the Facebook Page inbox via Meta Webhooks (POST /api/messenger/webhook).",
+    "FR5: The client must handle guest user session IDs via localStorage to maintain conversation state without requiring a Facebook login.",
+    "FR6: The backend must respond to Meta's 'hub.challenge' to validate the webhook connection (GET /api/messenger/webhook).",
+    "FR7: The system must store recent messages in-memory (server-side) keyed by sender PSID for polling.",
+    "FR8: The frontend must poll GET /api/messenger/messages?senderId=X every 3 seconds for new messages.",
+    "FR9: The UI must show message timestamps, typing indicators, and send status.",
+    "FR10: Environment variables FB_PAGE_ID, FB_APP_SECRET, FB_VERIFY_TOKEN, and FB_PAGE_ACCESS_TOKEN must be server-only (no NEXT_PUBLIC_ prefix)."
+  ],
+  "execution_milestones": [
+    {
+      "phase": 1,
+      "name": "Environment & Configuration Setup",
+      "slice_id": "slice-01",
+      "tasks": [
+        "Add new server-only env vars to .env.example (FB_PAGE_ID, FB_APP_SECRET, FB_VERIFY_TOKEN, FB_PAGE_ACCESS_TOKEN).",
+        "Remove old NEXT_PUBLIC_FB_PAGE_ID and NEXT_PUBLIC_FB_APP_ID from .env.example.",
+        "Update AGENTS.md with Messenger integration notes."
+      ],
+      "commit_message": "feat(messenger): add environment variables for Meta Graph API integration"
+    },
+    {
+      "phase": 2,
+      "name": "Webhook Verification Endpoint",
+      "slice_id": "slice-02",
+      "tasks": [
+        "Create pages/api/messenger/ directory structure.",
+        "Create pages/api/messenger/webhook.js with GET handler for hub.challenge verification.",
+        "Validate hub.verify_token against FB_VERIFY_TOKEN env var.",
+        "Return hub.challenge on success, 403 on mismatch."
+      ],
+      "commit_message": "feat(messenger): create webhook verification endpoint (GET /api/messenger/webhook)"
+    },
+    {
+      "phase": 3,
+      "name": "Incoming Webhook Handler",
+      "slice_id": "slice-03",
+      "tasks": [
+        "Add POST handler to pages/api/messenger/webhook.js for incoming messages.",
+        "Parse Meta's webhook payload (entry[].messaging[].message).",
+        "Store messages in an in-memory Map keyed by sender PSID.",
+        "Handle message echoes and delivery confirmations gracefully."
+      ],
+      "commit_message": "feat(messenger): implement incoming webhook POST handler for message reception"
+    },
+    {
+      "phase": 4,
+      "name": "In-Memory Message Store",
+      "slice_id": "slice-04",
+      "tasks": [
+        "Create lib/messenger/messageStore.js — a singleton in-memory store.",
+        "Implement addMessage(senderId, message), getMessages(senderId, since), and cleanup logic.",
+        "Auto-expire messages older than 24 hours to prevent memory leaks.",
+        "Export store for use by webhook and send endpoints."
+      ],
+      "commit_message": "feat(messenger): create in-memory message store for conversation state"
+    },
+    {
+      "phase": 5,
+      "name": "Send Message Endpoint",
+      "slice_id": "slice-05",
+      "tasks": [
+        "Create pages/api/messenger/send.js — POST endpoint for frontend to send messages.",
+        "Accept { senderId, text } from frontend body.",
+        "Forward message to Meta Graph API: POST graph.facebook.com/v21.0/me/messages.",
+        "Use FB_PAGE_ACCESS_TOKEN in Authorization header.",
+        "Store outgoing message in messageStore for polling.",
+        "Return success/error to frontend."
+      ],
+      "commit_message": "feat(messenger): create send message endpoint (POST /api/messenger/send)"
+    },
+    {
+      "phase": 6,
+      "name": "Messages Polling Endpoint",
+      "slice_id": "slice-06",
+      "tasks": [
+        "Create pages/api/messenger/messages.js — GET endpoint for frontend polling.",
+        "Accept ?senderId=X&since=timestamp query params.",
+        "Return messages from messageStore filtered by sender and time.",
+        "Return empty array if no new messages."
+      ],
+      "commit_message": "feat(messenger): create messages polling endpoint (GET /api/messenger/messages)"
+    },
+    {
+      "phase": 7,
+      "name": "Session ID Generator Utility",
+      "slice_id": "slice-07",
+      "tasks": [
+        "Create lib/messenger/session.js — generates and persists unique session IDs.",
+        "Use crypto.randomUUID() for new sessions.",
+        "Store session ID in localStorage under 'messenger_session_id'.",
+        "Export getSessionId() for use by the frontend widget."
+      ],
+      "commit_message": "feat(messenger): create client-side session ID generator with localStorage"
+    },
+    {
+      "phase": 8,
+      "name": "Chat Widget UI Component",
+      "slice_id": "slice-08",
+      "tasks": [
+        "Create components/MessengerChat.js — the main floating chat widget.",
+        "Build toggle button (Messenger icon) fixed to bottom-right.",
+        "Build chat window with header, message list, and input field.",
+        "Use framer-motion for open/close animations.",
+        "Style with CSS modules (MessengerChat.module.css)."
+      ],
+      "commit_message": "feat(messenger): build floating chat widget UI component"
+    },
+    {
+      "phase": 9,
+      "name": "Chat Widget Message Bubbles",
+      "slice_id": "slice-09",
+      "tasks": [
+        "Create components/messenger/MessageBubble.js — individual message component.",
+        "Differentiate user messages (right-aligned, blue) vs page messages (left-aligned, gray).",
+        "Show timestamp below each message.",
+        "Handle text wrapping and max-width constraints."
+      ],
+      "commit_message": "feat(messenger): create message bubble component with user/page styling"
+    },
+    {
+      "phase": 10,
+      "name": "Chat Widget State Management",
+      "slice_id": "slice-10",
+      "tasks": [
+        "Implement useState for messages array, input text, isOpen toggle, and isLoading.",
+        "On mount, generate/load session ID from localStorage.",
+        "On send: POST to /api/messenger/send, append message to local state.",
+        "Implement polling (useEffect + setInterval) every 3s to GET /api/messenger/messages.",
+        "Merge new messages from polling into local state without duplicates."
+      ],
+      "commit_message": "feat(messenger): implement chat widget state management and polling"
+    },
+    {
+      "phase": 11,
+      "name": "Chat Widget Integration in _app.js",
+      "slice_id": "slice-11",
+      "tasks": [
+        "Replace old <AppFacebookMessenger /> in pages/_app.js with new <MessengerChat />.",
+        "Remove import of old FacebookMessenger component.",
+        "Import new MessengerChat component.",
+        "Pass FB_PAGE_ID from env as prop if needed for identification."
+      ],
+      "commit_message": "feat(messenger): integrate new MessengerChat widget in _app.js"
+    },
+    {
+      "phase": 12,
+      "name": "Remove Deprecated FacebookMessenger Component",
+      "slice_id": "slice-12",
+      "tasks": [
+        "Delete components/FacebookMessenger.js (old SDK-based widget).",
+        "Delete components/FacebookMessenger.module.css.",
+        "Remove any remaining references to the old component.",
+        "Clean up env vars NEXT_PUBLIC_FB_PAGE_ID and NEXT_PUBLIC_FB_APP_ID."
+      ],
+      "commit_message": "refactor(messenger): remove deprecated SDK-based FacebookMessenger component"
+    },
+    {
+      "phase": 13,
+      "name": "Typing Indicator Component",
+      "slice_id": "slice-13",
+      "tasks": [
+        "Create components/messenger/TypingIndicator.js — animated dots shown when page is typing.",
+        "Show after user sends a message, hide when reply arrives.",
+        "Use CSS animation for three bouncing dots."
+      ],
+      "commit_message": "feat(messenger): add typing indicator component"
+    },
+    {
+      "phase": 14,
+      "name": "Empty State & Welcome Message",
+      "slice_id": "slice-14",
+      "tasks": [
+        "Create components/messenger/WelcomeMessage.js — shown when chat is first opened.",
+        "Display configurable greeting text and page name.",
+        "Show 'Send us a message to get started' prompt.",
+        "Auto-hide after first message is sent."
+      ],
+      "commit_message": "feat(messenger): add welcome message and empty state UI"
+    },
+    {
+      "phase": 15,
+      "name": "Error Handling & Retry Logic",
+      "slice_id": "slice-15",
+      "tasks": [
+        "Add error state to MessengerChat widget.",
+        "Show error banner if /api/messenger/send fails.",
+        "Implement retry button that re-sends the last failed message.",
+        "Handle network disconnections gracefully.",
+        "Add rate limit handling (429 responses)."
+      ],
+      "commit_message": "feat(messenger): add error handling and retry logic to chat widget"
+    },
+    {
+      "phase": 16,
+      "name": "Mobile Responsive Design",
+      "slice_id": "slice-16",
+      "tasks": [
+        "Update MessengerChat.module.css for mobile breakpoints.",
+        "On mobile: chat window takes full width/height.",
+        "Toggle button repositioned for thumb accessibility.",
+        "Ensure keyboard input doesn't break layout on mobile."
+      ],
+      "commit_message": "feat(messenger): optimize chat widget for mobile responsiveness"
+    },
+    {
+      "phase": 17,
+      "name": "Security Hardening",
+      "slice_id": "slice-17",
+      "tasks": [
+        "Verify no FB tokens are exposed in NEXT_PUBLIC_ vars.",
+        "Add HMAC signature verification for incoming webhook payloads from Meta.",
+        "Validate Content-Type header on webhook POST.",
+        "Add CORS restrictions to messenger API routes.",
+        "Ensure message content is sanitized before display (XSS prevention)."
+      ],
+      "commit_message": "security(messenger): add webhook signature verification and XSS protection"
+    },
+    {
+      "phase": 18,
+      "name": "Rate Limiting for Messenger Endpoints",
+      "slice_id": "slice-18",
+      "tasks": [
+        "Add per-IP rate limiting to /api/messenger/send (reuse pattern from chat.js).",
+        "Limit to 20 messages per minute per session.",
+        "Add rate limit headers in response.",
+        "Show rate limit warning in UI when approaching limit."
+      ],
+      "commit_message": "feat(messenger): add rate limiting to send message endpoint"
+    },
+    {
+      "phase": 19,
+      "name": "Content Security Policy Update",
+      "slice_id": "slice-19",
+      "tasks": [
+        "Update next.config.mjs CSP headers to allow Meta Graph API connections.",
+        "Add graph.facebook.com to connect-src directive.",
+        "Add webhook domain to img-src if needed for profile pictures."
+      ],
+      "commit_message": "fix(messenger): update CSP headers for Meta Graph API connectivity"
+    },
+    {
+      "phase": 20,
+      "name": "AGENTS.md & Documentation Update",
+      "slice_id": "slice-20",
+      "tasks": [
+        "Update AGENTS.md with Messenger integration architecture.",
+        "Document the new API routes and their requirements.",
+        "Add troubleshooting section for common Meta API issues.",
+        "Update environment variables documentation."
+      ],
+      "commit_message": "docs(messenger): update AGENTS.md with Messenger integration architecture"
+    },
+    {
+      "phase": 21,
+      "name": "Final PRD Update & Status",
+      "slice_id": "slice-21",
+      "tasks": [
+        "Mark all slices as completed in prd.json.",
+        "Add implementation status and commit hashes.",
+        "Update version to 2.0.0 status to 'Implemented'."
+      ],
+      "commit_message": "docs(prd): mark all Messenger integration slices as implemented"
+    }
+  ],
+  "files_created": [
+    "pages/api/messenger/webhook.js",
+    "pages/api/messenger/send.js",
+    "pages/api/messenger/messages.js",
+    "lib/messenger/messageStore.js",
+    "lib/messenger/session.js",
+    "components/MessengerChat.js",
+    "components/MessengerChat.module.css",
+    "components/messenger/MessageBubble.js",
+    "components/messenger/TypingIndicator.js",
+    "components/messenger/WelcomeMessage.js"
+  ],
+  "files_modified": [
+    "pages/_app.js",
+    ".env.example",
+    "next.config.mjs",
+    "AGENTS.md",
+    "prd.json"
+  ],
+  "files_deleted": [
+    "components/FacebookMessenger.js",
+    "components/FacebookMessenger.module.css"
+  ],
+  "success_criteria": {
+    "two_way_sync": true,
+    "secure_tokens": true,
+    "native_plugin_dependency": false,
+    "mobile_responsive": true,
+    "rate_limited": true,
+    "xss_protected": true
+  },
+  "commit_history": [
+    {
+      "slice": "slice-01",
+      "hash": "dc56b26",
+      "message": "feat(messenger): add environment variables for Meta Graph API integration"
+    },
+    {
+      "slice": "slice-02",
+      "hash": "02c5523",
+      "message": "feat(messenger): create webhook verification endpoint (GET /api/messenger/webhook)"
+    },
+    {
+      "slice": "slice-03",
+      "hash": "11f46dd",
+      "message": "feat(messenger): implement incoming webhook POST handler for message reception"
+    },
+    {
+      "slice": "slice-04",
+      "hash": "af9743a",
+      "message": "feat(messenger): create in-memory message store for conversation state"
+    },
+    {
+      "slice": "slice-05",
+      "hash": "2326a25",
+      "message": "feat(messenger): create send message endpoint (POST /api/messenger/send)"
+    },
+    {
+      "slice": "slice-06",
+      "hash": "a2094ce",
+      "message": "feat(messenger): create messages polling endpoint (GET /api/messenger/messages)"
+    },
+    {
+      "slice": "slice-07",
+      "hash": "ac24a50",
+      "message": "feat(messenger): create client-side session ID generator with localStorage"
+    },
+    {
+      "slice": "slice-08",
+      "hash": "a419712",
+      "message": "feat(messenger): build floating chat widget UI component"
+    },
+    {
+      "slice": "slice-09,13,14",
+      "hash": "8f239f4",
+      "message": "feat(messenger): add message bubble, typing indicator, and welcome components"
+    },
+    {
+      "slice": "slice-11",
+      "hash": "aee8263",
+      "message": "feat(messenger): integrate new MessengerChat widget in _app.js"
+    },
+    {
+      "slice": "slice-12",
+      "hash": "22a6104",
+      "message": "refactor(messenger): remove deprecated SDK-based FacebookMessenger component"
+    },
+    {
+      "slice": "slice-17",
+      "hash": "99e67eb",
+      "message": "security(messenger): add webhook signature verification and XSS protection"
+    },
+    {
+      "slice": "slice-18",
+      "hash": "5c530ad",
+      "message": "feat(messenger): add rate limiting to send message endpoint"
+    },
+    {
+      "slice": "slice-19",
+      "hash": "9580d60",
+      "message": "fix(messenger): update CSP headers for Meta Graph API connectivity"
+    },
+    {
+      "slice": "slice-20",
+      "hash": "ba9af33",
+      "message": "docs(messenger): update AGENTS.md with Messenger integration architecture"
+    }
+  ]
+}

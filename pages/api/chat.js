@@ -5,6 +5,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildSiteContext, fetchAllTheses } from "../../lib/sanity";
 import { fetchSiteConfig } from "../../lib/siteConfig";
+import { createCache } from "../../lib/cache";
 
 // ────────────────────────────────────────────────────────────
 // Rate limiting & IP protection
@@ -21,14 +22,13 @@ const BAN_DURATION     = 60 * 60 * 1000; // 1-hour ban
 const MIN_MSG_INTERVAL = 3 * 1000;        // minimum ms between any two messages per IP
 const MAX_MSG_LENGTH   = 600;             // hard cap on inbound message character length
 
-/** Extract best-guess client IP from the request */
+/** Extract client IP from the request (trusted header only) */
 function getClientIp(req) {
-  return (
-    (req.headers["x-forwarded-for"] || "").split(",")[0].trim() ||
-    req.headers["x-real-ip"] ||
-    req.socket?.remoteAddress ||
-    "unknown"
-  );
+  const forwarded = req.headers["x-forwarded-for"];
+  if (forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  return req.socket?.remoteAddress || "unknown";
 }
 
 /**
@@ -108,24 +108,22 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-// Cache site context for 5 minutes to avoid hitting Sanity on every message
-let cachedContext = null;
-let cachedTheses = null;
-let cacheTimestamp = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const chatCache = createCache();
+const CACHE_KEY_CONTEXT = "siteContext";
+const CACHE_KEY_THESES = "theses";
 
 async function getSiteData() {
-  const now = Date.now();
-  if (cachedContext && now - cacheTimestamp < CACHE_TTL) {
+  const cachedContext = chatCache.get(CACHE_KEY_CONTEXT);
+  const cachedTheses = chatCache.get(CACHE_KEY_THESES);
+  if (cachedContext && cachedTheses) {
     return { context: cachedContext, theses: cachedTheses };
   }
   const [context, theses] = await Promise.all([
     buildSiteContext(),
     fetchAllTheses(),
   ]);
-  cachedContext = context;
-  cachedTheses = theses;
-  cacheTimestamp = now;
+  chatCache.set(CACHE_KEY_CONTEXT, context);
+  chatCache.set(CACHE_KEY_THESES, theses);
   return { context, theses };
 }
 
@@ -179,6 +177,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  if (req.headers["content-type"] !== "application/json") {
+    return res.status(415).json({ error: "Unsupported Media Type. Use application/json." });
+  }
+
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+
   // ── Honeypot check – bots fill hidden fields, real users never do ──
   const { message, history, quickAction, _hp } = req.body || {};
   if (typeof _hp === "string" && _hp.trim().length > 0) {
@@ -205,7 +210,13 @@ export default async function handler(req, res) {
   }
 
   // Fetch site config from Sanity — API key and model can be managed in the CMS
-  const siteConfig = await fetchSiteConfig();
+  let siteConfig;
+  try {
+    siteConfig = await fetchSiteConfig();
+  } catch (configError) {
+    console.error("[chat] Failed to fetch site config:", configError);
+    siteConfig = null;
+  }
 
   // Check if chatbot is disabled from the CMS
   if (siteConfig && siteConfig.chatbotEnabled === false) {
@@ -248,22 +259,26 @@ export default async function handler(req, res) {
     // Build chat history from previous messages.
     // Gemini requires the first entry to be role 'user', so skip any
     // leading bot/model messages (e.g. the initial greeting).
+    // Limit history to prevent prompt injection via oversized payloads.
+    const MAX_HISTORY_TURNS = 10;
     const chatHistory = [];
     if (history && Array.isArray(history)) {
       let seenUser = false;
-      history.forEach((msg) => {
-        if (msg.role === "user") {
+      const sliced = history.slice(-MAX_HISTORY_TURNS * 2);
+      sliced.forEach((msg) => {
+        if (msg.role === "user" && typeof msg.text === "string" && msg.text.length <= MAX_MSG_LENGTH) {
           seenUser = true;
           chatHistory.push({ role: "user", parts: [{ text: msg.text }] });
-        } else if (msg.role === "bot" && seenUser) {
+        } else if (msg.role === "bot" && seenUser && typeof msg.text === "string" && msg.text.length <= MAX_MSG_LENGTH * 3) {
           chatHistory.push({ role: "model", parts: [{ text: msg.text }] });
         }
       });
     }
 
     // For quick actions, prepend a context hint so Gemini knows what the user wants
+    const VALID_ACTIONS = ["browse-thesis", "search-thesis", "about-ingo", "recent-updates"];
     let userMessage = message;
-    if (quickAction) {
+    if (quickAction && VALID_ACTIONS.includes(quickAction)) {
       const quickActionPrompts = {
         "browse-thesis": "The user wants to browse thesis projects. Give them a helpful overview of available theses. List some notable ones with their titles and tags. Keep it concise.",
         "search-thesis": `The user is asking about thesis projects. Their specific question is: "${message}". Answer based on the thesis data available.`,

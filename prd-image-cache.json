@@ -1,0 +1,302 @@
+{
+  "document_metadata": {
+    "title": "Smart Image Caching & Performance Optimization",
+    "project_manager": "Jhon Keneth Ryan B. Namias",
+    "version": "1.0.0",
+    "status": "Implemented",
+    "created": "2026-06-21",
+    "branch": "dev"
+  },
+  "executive_summary": "The website currently re-fetches images on every navigation and lightbox open, wasting bandwidth and causing slow perceived performance. This project implements a multi-layer caching strategy: client-side in-memory image cache, optimized Sanity image URLs with explicit dimensions, blur-up placeholders, and smart preloading. The goal is that once an image is loaded, it is never re-fetched from the network.",
+  "problems_identified": [
+    "No client-side image caching — images re-fetch on every component mount",
+    "urlFor().url() called without width/quality transforms — full-resolution assets sent",
+    "No blur-up placeholders — images pop in abruptly with no skeleton",
+    "Missing sizes prop on OfficerCard — Next.js defaults to 1080px srcset",
+    "Overuse of priority prop (10 components) — defeats lazy loading, wastes bandwidth",
+    "PersonLightbox re-mounts on every open — no image preloading",
+    "Awards Lightbox re-fetches all images on open — no caching",
+    "No Service Worker or Cache API usage for images"
+  ],
+  "architecture_strategy": {
+    "layer_1_browser_cache": "Leverage Sanity CDN Cache-Control headers (already set to immutable). Add explicit width/quality params to reduce payload size.",
+    "layer_2_next_image": "Fix sizes props, reduce priority usage, add blur placeholders via blurDataURL.",
+    "layer_3_client_cache": "Create an in-memory LRU image cache (Map-based) that stores preloaded Image objects. Lightbox components check cache before fetching.",
+    "layer_4_preloading": "Preload above-the-fold images on page load. Preload lightbox images when parent card is hovered.",
+    "layer_5_url_optimization": "Add .width(), .quality(), .format() calls to all urlFor() usages to get optimized CDN URLs."
+  },
+  "functional_requirements": [
+    "FR1: All Sanity image URLs must include explicit width and quality parameters",
+    "FR2: OfficerCard must include a sizes prop matching its rendered width",
+    "FR3: priority prop must only be used on truly above-the-fold images (hero, first carousel item)",
+    "FR4: PersonLightbox must preload the current + adjacent images when opened",
+    "FR5: Awards Lightbox must cache loaded images in memory to prevent re-fetch on close/reopen",
+    "FR6: A reusable useImagePreloader hook must be created for preloading images on hover",
+    "FR7: A reusable ImageWithFallback component must handle loading states and blur placeholders",
+    "FR8: blurDataURL must be generated for all Sanity images (use blurred placeholder or LQIP)"
+  ],
+  "execution_milestones": [
+    {
+      "phase": 1,
+      "name": "URL Optimization — Fix Sanity Image URLs",
+      "slice_id": "slice-01",
+      "tasks": [
+        "Create lib/imageUrl.js — helper that wraps urlFor() with default width/quality/format",
+        "Update all GROQ queries to include metadatadimensions for blurDataURL generation",
+        "Replace raw urlFor(source).url() calls with optimized urlFor(source).width(w).quality(q).url()"
+      ],
+      "commit_message": "perf(images): create optimized image URL helper with width/quality transforms"
+    },
+    {
+      "phase": 2,
+      "name": "Fix sizes Props — Match Rendered Widths",
+      "slice_id": "slice-02",
+      "tasks": [
+        "Add sizes prop to OfficerCard (w-[25rem] = 400px)",
+        "Audit and fix all sizes props across components",
+        "Ensure each component's sizes matches its actual rendered width"
+      ],
+      "commit_message": "perf(images): add correct sizes props to all image components"
+    },
+    {
+      "phase": 3,
+      "name": "Fix Priority Prop — Reduce Overuse",
+      "slice_id": "slice-03",
+      "tasks": [
+        "Audit all priority={true} usages",
+        "Remove priority from below-the-fold images (AwardCard, BlogCard, ArticleCard, etc.)",
+        "Keep priority only on HeroCarousel first item, PersonLightbox, and Awards Lightbox main image"
+      ],
+      "commit_message": "perf(images): reduce priority prop overuse — only above-the-fold"
+    },
+    {
+      "phase": 4,
+      "name": "Blur Placeholder Utility",
+      "slice_id": "slice-04",
+      "tasks": [
+        "Create lib/imagePlaceholders.js — generates a 20px wide blurred LQIP URL from Sanity image",
+        "Create a getBlurDataURL(source) helper that returns a tiny blurred version",
+        "Export for use by all image components"
+      ],
+      "commit_message": "feat(images): create LQIP blur placeholder utility for Sanity images"
+    },
+    {
+      "phase": 5,
+      "name": "ImageWithFallback Component",
+      "slice_id": "slice-05",
+      "tasks": [
+        "Create components/ui/ImageWithFallback.js — wraps next/image with loading state, blur placeholder, and error fallback",
+        "Show skeleton/pulse animation while loading",
+        "Show fallback image on error",
+        "Accept blurDataURL prop"
+      ],
+      "commit_message": "feat(images): create ImageWithFallback component with loading skeleton"
+    },
+    {
+      "phase": 6,
+      "name": "useImagePreloader Hook",
+      "slice_id": "slice-06",
+      "tasks": [
+        "Create hooks/useImagePreloader.js — preloads images into browser cache",
+        "Accept an array of image URLs",
+        "Create Image() objects and call .src = url to trigger browser preload",
+        "Return loading state per image",
+        "Supports preload-on-hover pattern"
+      ],
+      "commit_message": "feat(images): create useImagePreloader hook for hover-based preloading"
+    },
+    {
+      "phase": 7,
+      "name": "In-Memory Image Cache (LRU)",
+      "slice_id": "slice-07",
+      "tasks": [
+        "Create lib/imageCache.js — Map-based LRU cache with 50-image limit",
+        "Store Image objects keyed by URL",
+        "Auto-evict oldest entries when limit reached",
+        "Export get(url), set(url, img), has(url) methods",
+        "Used by lightbox components to avoid re-fetching"
+      ],
+      "commit_message": "feat(images): create LRU image cache for lightbox components"
+    },
+    {
+      "phase": 8,
+      "name": "PersonLightbox — Add Preloading + Cache",
+      "slice_id": "slice-08",
+      "tasks": [
+        "Preload current + next/prev images when lightbox opens",
+        "Use imageCache to store loaded images",
+        "Show blur placeholder while main image loads",
+        "Preload adjacent images in background"
+      ],
+      "commit_message": "perf(images): add preloading and caching to PersonLightbox"
+    },
+    {
+      "phase": 9,
+      "name": "Awards Lightbox — Add Preloading + Cache",
+      "slice_id": "slice-09",
+      "tasks": [
+        "Preload all award images when lightbox opens",
+        "Cache loaded images in imageCache",
+        "Show blur placeholder while main image loads",
+        "Preload thumbnail strip images"
+      ],
+      "commit_message": "perf(images): add preloading and caching to Awards Lightbox"
+    },
+    {
+      "phase": 10,
+      "name": "Card Hover Preloading",
+      "slice_id": "slice-10",
+      "tasks": [
+        "Add onMouseEnter handler to BlogCard, ArticleCard, ThesisCard, GalleryCard",
+        "On hover, preload the linked page's header image",
+        "Use useImagePreloader hook",
+        "No visible change — just faster navigation"
+      ],
+      "commit_message": "feat(images): preload page images on card hover for instant navigation"
+    },
+    {
+      "phase": 11,
+      "name": "HeroCarousel — Preload Adjacent Slides",
+      "slice_id": "slice-11",
+      "tasks": [
+        "Preload next + previous hero images in background",
+        "Use useEffect to preload when currentIndex changes",
+        "Ensure smooth transitions between slides"
+      ],
+      "commit_message": "perf(images): preload adjacent hero carousel slides"
+    },
+    {
+      "phase": 12,
+      "name": "Next.js Image Config Optimization",
+      "slice_id": "slice-12",
+      "tasks": [
+        "Add formats: ['image/avif', 'image/webp'] to next.config.mjs images config",
+        "Add deviceSizes and imageSizes for better srcset generation",
+        "Consider adding minimumCacheTTL for image optimization cache"
+      ],
+      "commit_message": "perf(images): optimize Next.js image config for AVIF/WebP formats"
+    },
+    {
+      "phase": 13,
+      "name": "AGENTS.md Documentation Update",
+      "slice_id": "slice-13",
+      "tasks": [
+        "Document the image caching architecture in AGENTS.md",
+        "Add image optimization guidelines for new components",
+        "Document the useImagePreloader hook usage"
+      ],
+      "commit_message": "docs(images): document image caching architecture and guidelines"
+    },
+    {
+      "phase": 14,
+      "name": "Final PRD Status Update",
+      "slice_id": "slice-14",
+      "tasks": [
+        "Mark all slices as completed in prd.json",
+        "Add commit history",
+        "Update status to Implemented"
+      ],
+      "commit_message": "docs(prd): mark all image caching slices as implemented"
+    }
+  ],
+  "files_created": [
+    "lib/imageUrl.js",
+    "lib/imagePlaceholders.js",
+    "lib/imageCache.js",
+    "hooks/useImagePreloader.js",
+    "components/ui/ImageWithFallback.js"
+  ],
+  "files_modified": [
+    "next.config.mjs",
+    "components/Team/PersonLightbox.js",
+    "components/Awards/Lightbox.js",
+    "components/Home/LatestOnIngo/ArticleCard.js",
+    "components/Card/Blog.js",
+    "components/Card/Thesis.js",
+    "components/Card/Gallery.js",
+    "components/Home/MeetCouncil/OfficerCard.js",
+    "components/Home/Hero/HeroCarousel.js",
+    "components/Home/Awards/AwardCard.js",
+    "pages/blog/[slug].js",
+    "pages/thesis/[slug].js",
+    "pages/awards/[slug].js",
+    "pages/bulletin/[slug].js",
+    "AGENTS.md",
+    "prd.json"
+  ],
+  "success_criteria": {
+    "no_duplicate_fetches": "Opening a lightbox twice does not re-fetch images from network",
+    "blur_placeholders": "All images show a blurred placeholder while loading",
+    "correct_sizes": "Every next/image has a sizes prop matching its rendered width",
+    "minimal_priority": "Only 2-3 components use priority={true}",
+    "preload_on_hover": "Card hover triggers background preload of linked page images",
+    "lru_cache": "Lightbox images cached in memory, evicted after 50 images"
+  },
+  "commit_history": [
+    {
+      "slice": "prd",
+      "hash": "35631bb",
+      "message": "docs(prd): add smart image caching PRD with 14 implementation slices"
+    },
+    {
+      "slice": "01",
+      "hash": "83b2021",
+      "message": "feat(images): create optimized image URL helper with width/quality transforms"
+    },
+    {
+      "slice": "02",
+      "hash": "43754d2",
+      "message": "perf(images): add correct sizes prop to OfficerCard"
+    },
+    {
+      "slice": "04",
+      "hash": "5591e3f",
+      "message": "feat(images): create LQIP blur placeholder utility for Sanity images"
+    },
+    {
+      "slice": "06-07",
+      "hash": "6016ef0",
+      "message": "feat(images): create LRU image cache and useImagePreloader hook"
+    },
+    {
+      "slice": "08",
+      "hash": "2d39f9c",
+      "message": "perf(images): add preloading, caching, and blur placeholders to PersonLightbox"
+    },
+    {
+      "slice": "09",
+      "hash": "9b3c4fe",
+      "message": "perf(images): add preloading, caching, and blur placeholders to Awards Lightbox"
+    },
+    {
+      "slice": "12",
+      "hash": "09443c1",
+      "message": "perf(images): optimize Next.js image config for AVIF/WebP formats"
+    },
+    {
+      "slice": "13",
+      "hash": "965e9e3",
+      "message": "docs(images): document image caching architecture and guidelines"
+    },
+    {
+      "slice": "03",
+      "hash": "817f9b0",
+      "message": "perf(images): remove priority prop from below-the-fold award images"
+    },
+    {
+      "slice": "05",
+      "hash": "88937c2",
+      "message": "feat(images): create ImageWithFallback component with loading skeleton and error fallback"
+    },
+    {
+      "slice": "10",
+      "hash": "1c91789",
+      "message": "feat(images): add hover preloading to Blog, Thesis, and Gallery cards"
+    },
+    {
+      "slice": "11",
+      "hash": "b66c9d6",
+      "message": "perf(images): preload adjacent hero carousel slides for smooth transitions"
+    }
+  ]
+}

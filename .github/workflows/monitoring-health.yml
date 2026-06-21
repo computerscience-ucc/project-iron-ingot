@@ -1,0 +1,49 @@
+name: Monitoring Health
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check main site
+        uses: actions/http-request@v1
+        id: site
+        with:
+          url: ${{ vars.SITE_URL || 'https://uccingo.tech' }}
+          method: GET
+          timeout: 30000
+        continue-on-error: true
+
+      - name: Check chat endpoint
+        uses: actions/http-request@v1
+        id: chat
+        with:
+          url: ${{ vars.SITE_URL || 'https://uccingo.tech' }}/api/chat
+          method: GET
+          timeout: 30000
+        continue-on-error: true
+
+      - name: Create issue on failure
+        uses: actions/github-script@v7
+        if: steps.site.outcome == 'failure' || steps.chat.outcome == 'failure'
+        env:
+          SITE_OUTCOME: ${{ steps.site.outcome }}
+          CHAT_OUTCOME: ${{ steps.chat.outcome }}
+        with:
+          script: |
+            const failures = [];
+            if (process.env.SITE_OUTCOME === 'failure') failures.push('Main site');
+            if (process.env.CHAT_OUTCOME === 'failure') failures.push('Chat endpoint');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Health Check Failure: ${failures.join(', ')}`,
+              body: `## Health Check Failure\n\n**Failed components:**\n${failures.map(f => `- ${f}`).join('\n')}\n\n**Timestamp:** ${new Date().toISOString()}\n\nPlease investigate and resolve the issue.`,
+              labels: ['monitoring', 'needs-triage'],
+            });
