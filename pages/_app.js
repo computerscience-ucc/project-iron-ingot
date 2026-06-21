@@ -225,8 +225,8 @@ function AppInner({ Component, pageProps }) {
                 height={32}
                 priority
               />
-              <span className="whitespace-nowrap font-sans font-semibold text-[1rem] md:text-[1.1rem] lg:text-[1.2rem] tracking-normal text-[var(--color-text)]">
-                uccingo
+              <span className="whitespace-nowrap font-minecraft text-[1rem] md:text-[1.1rem] lg:text-[1.2rem] tracking-normal text-[var(--color-text)] select-none">
+                UCCINGO
               </span>
             </Link>
 

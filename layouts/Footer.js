@@ -47,8 +47,8 @@ export default function Footer() {
                 width={32}
                 height={32}
               />
-              <span className="font-sans font-semibold text-[1.25rem] md:text-[1.45rem] tracking-normal text-white">
-                uccingo
+              <span className="font-minecraft text-[1.25rem] md:text-[1.45rem] tracking-normal text-white select-none">
+                UCCINGO
               </span>
             </Link>
           </div>
