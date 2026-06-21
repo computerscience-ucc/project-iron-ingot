@@ -30,6 +30,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import ProgressBar from "@/components/ProgressBar";
 
 const AppChatBot = () => {
   const { siteConfig } = usePrefetcher();
@@ -124,6 +125,7 @@ function AppInner({ Component, pageProps }) {
 
   return (
     <>
+      <ProgressBar />
       <div className="app-root overflow-x-clip">
         {/* Mobile Backdrop Overlay - Dim background when menu is open */}
         <AnimatePresence>
