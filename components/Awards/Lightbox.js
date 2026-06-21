@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CgClose, CgChevronLeft, CgChevronRight } from "react-icons/cg";
 import Image from "next/image";
+import { preloadImage } from "../../lib/imageCache";
+import { getBlurPlaceholder } from "../../lib/imagePlaceholders";
 
 const formatDescription = (text) => {
   if (!text) return null;
@@ -84,6 +86,14 @@ const Lightbox = ({ award, onClose }) => {
     };
   }, []);
 
+  // Preload all award images into cache on open
+  useEffect(() => {
+    if (!images?.length) return;
+    images.forEach((img) => {
+      if (img?.url) preloadImage(img.url).catch(() => {});
+    });
+  }, [images]);
+
   const slideVariants = {
     enter: (d) => ({ x: d > 0 ? 50 : -50, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -150,6 +160,8 @@ const Lightbox = ({ award, onClose }) => {
                 style={{ objectFit: "contain" }}
                 sizes="100vw"
                 priority
+                placeholder="blur"
+                blurDataURL={getBlurPlaceholder(images[imgIndex])}
               />
             </motion.div>
           </AnimatePresence>
