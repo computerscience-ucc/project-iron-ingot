@@ -257,6 +257,9 @@ const buildCouncilPeople = (council) => {
 };
 
 // ─── Main Page Component ───────────────────────
+import SkeletonOfficerCard from "../../ui/skeletons/SkeletonOfficerCard";
+import SkeletonBox from "../../ui/SkeletonBox";
+
 const Page_Council = () => {
   const [councils, setCouncils] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -305,12 +308,15 @@ const Page_Council = () => {
         <p className="text-2xl font-semibold">Computer Science Council</p>
 
         {loading ? (
-          <div className="mt-16 flex justify-center">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 border-2 border-header-color border-t-transparent rounded-full"
-            />
+          <div className="mt-16 flex flex-col items-center gap-8">
+            <SkeletonBox width="200px" height="2rem" borderRadius="4px" />
+            <div className="flex flex-col items-center">
+              <SkeletonOfficerCard />
+            </div>
+            <div className="flex gap-6">
+              <SkeletonOfficerCard />
+              <SkeletonOfficerCard />
+            </div>
           </div>
         ) : (
           <>
