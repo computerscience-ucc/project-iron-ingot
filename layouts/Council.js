@@ -165,28 +165,6 @@ export default function Council() {
               </div>
             </div>
 
-            {/* Officers Column */}
-            <div className="flex flex-col flex-1">
-              <div className="flex items-center mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
-                <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
-                  Officers
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-[1.5rem] gap-y-[2rem]">
-                {officersList.map((officer, idx) => (
-                  <div key={idx}>
-                    <OfficerCard
-                      name={officer.name}
-                      role={officer.role}
-                      photo={officer.photo}
-                      className="w-full"
-                      onClick={() => handlePersonClick({ name: officer.name, photo: officer.photo, subtitle: officer.role })}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
