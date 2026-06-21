@@ -26,6 +26,7 @@ export default function OfficerCard({
             src={photo}
             alt={name}
             fill
+            sizes="(max-width: 768px) 138px, (max-width: 1024px) 184px, 400px"
             className={imageClassName || "object-cover"}
           />
         )}
