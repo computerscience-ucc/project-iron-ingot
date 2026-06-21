@@ -2,6 +2,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { useState } from "react";
 import Image from "next/image";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 const ThesisCard = ({ thesis }) => {
   const {
@@ -18,6 +19,8 @@ const ThesisCard = ({ thesis }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const { preloadSingle } = useImagePreloader([headerImage]);
+
   // Author string fallback
   const displayAuthors =
     owners ||
@@ -33,6 +36,7 @@ const ThesisCard = ({ thesis }) => {
       href={`/thesis/${slug}`}
       scroll={false}
       onClick={() => setIsLoading(true)}
+      onMouseEnter={() => preloadSingle(headerImage)}
       className="flex flex-col lg:flex-row gap-0 relative group cursor-pointer w-full min-h-fit lg:h-[168.75px] pb-0 lg:pb-0 overflow-hidden"
     >
       {/* Click-loading overlay */}

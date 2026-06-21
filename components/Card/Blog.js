@@ -2,6 +2,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { useState } from "react";
 import Image from "next/image";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 const BLOG_PLACEHOLDER_COUNT = 6;
 
@@ -11,6 +12,9 @@ const BlogCard = ({ blog, index }) => {
   const placeholderImage = `/placeholders/blog/${(index % BLOG_PLACEHOLDER_COUNT) + 1}.png`;
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const imageSrc = headerImage || placeholderImage;
+  const { preloadSingle } = useImagePreloader([imageSrc]);
 
   // Author string fallback
   const displayAuthors =
@@ -27,6 +31,7 @@ const BlogCard = ({ blog, index }) => {
       href={`/blog/${slug}`}
       scroll={false}
       onClick={() => setIsLoading(true)}
+      onMouseEnter={() => preloadSingle(imageSrc)}
       className="flex flex-col gap-0 relative group cursor-pointer w-full min-h-fit overflow-hidden"
     >
       {/* Click-loading overlay */}

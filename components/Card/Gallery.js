@@ -2,6 +2,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { useState } from "react";
 import Image from "next/image";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 const GALLERY_PLACEHOLDER_COUNT = 5;
 
@@ -22,6 +23,9 @@ const GalleryCard = ({ project, index = 0 }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const imageSrc = headerImage || placeholderImage;
+  const { preloadSingle } = useImagePreloader([imageSrc]);
+
   // Fallback for image
   const displayImage = headerImage;
 
@@ -36,6 +40,7 @@ const GalleryCard = ({ project, index = 0 }) => {
       href={`/gallery/${slug}`}
       scroll={false}
       onClick={() => setIsLoading(true)}
+      onMouseEnter={() => preloadSingle(imageSrc)}
       className="flex flex-col lg:flex-row gap-0 relative group cursor-pointer w-full min-h-fit lg:h-[168.75px] pb-0 lg:pb-0 overflow-hidden"
     >
       {/* Click-loading overlay */}
