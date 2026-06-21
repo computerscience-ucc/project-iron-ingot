@@ -3,7 +3,7 @@
     "title": "Smart Image Caching & Performance Optimization",
     "project_manager": "Jhon Keneth Ryan B. Namias",
     "version": "1.0.0",
-    "status": "Ready for Development",
+    "status": "Partially Implemented",
     "created": "2026-06-21",
     "branch": "dev"
   },
@@ -231,5 +231,52 @@
     "minimal_priority": "Only 2-3 components use priority={true}",
     "preload_on_hover": "Card hover triggers background preload of linked page images",
     "lru_cache": "Lightbox images cached in memory, evicted after 50 images"
-  }
+  },
+  "commit_history": [
+    {
+      "slice": "prd",
+      "hash": "35631bb",
+      "message": "docs(prd): add smart image caching PRD with 14 implementation slices"
+    },
+    {
+      "slice": "01",
+      "hash": "83b2021",
+      "message": "feat(images): create optimized image URL helper with width/quality transforms"
+    },
+    {
+      "slice": "02",
+      "hash": "43754d2",
+      "message": "perf(images): add correct sizes prop to OfficerCard"
+    },
+    {
+      "slice": "04",
+      "hash": "5591e3f",
+      "message": "feat(images): create LQIP blur placeholder utility for Sanity images"
+    },
+    {
+      "slice": "06-07",
+      "hash": "6016ef0",
+      "message": "feat(images): create LRU image cache and useImagePreloader hook"
+    },
+    {
+      "slice": "08",
+      "hash": "2d39f9c",
+      "message": "perf(images): add preloading, caching, and blur placeholders to PersonLightbox"
+    },
+    {
+      "slice": "09",
+      "hash": "9b3c4fe",
+      "message": "perf(images): add preloading, caching, and blur placeholders to Awards Lightbox"
+    },
+    {
+      "slice": "12",
+      "hash": "09443c1",
+      "message": "perf(images): optimize Next.js image config for AVIF/WebP formats"
+    },
+    {
+      "slice": "13",
+      "hash": "965e9e3",
+      "message": "docs(images): document image caching architecture and guidelines"
+    }
+  ]
 }
