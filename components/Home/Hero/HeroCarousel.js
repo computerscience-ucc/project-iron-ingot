@@ -145,31 +145,30 @@ export default function HeroCarousel() {
       </div>
 
       {/* Pagination Indicators */}
-      <div className="absolute bottom-6 flex items-center justify-center gap-[0.4rem] z-20 pointer-events-auto">
+      <div className="absolute bottom-4 md:bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 md:gap-2.5 z-20 pointer-events-auto">
         {images.map((_, index) => {
-          const dist = Math.abs(index - currentIndex);
-          const isActive = dist === 0;
+          const isActive = index === currentIndex;
 
           return (
             <motion.button
               key={index}
-              layout
               initial={false}
               animate={{
-                width: isActive ? 64 : dist === 1 ? 32 : dist === 2 ? 24 : 16,
-                backgroundColor: isActive
-                  ? "rgba(255, 255, 255, 0.95)"
-                  : "rgba(100, 100, 100, 0.35)",
+                width: isActive ? 28 : 8,
+                opacity: isActive ? 1 : 0.4,
               }}
               transition={{
-                width: { type: "spring", stiffness: 300, damping: 20 },
-                backgroundColor: { duration: 0.2 },
+                width: { type: "spring", stiffness: 400, damping: 28 },
+                opacity: { duration: 0.25 },
               }}
               onClick={() => {
                 setDirection(index > currentIndex ? 1 : -1);
                 setCurrentIndex(index);
               }}
-              className="h-1.5 rounded-full backdrop-blur-md focus:outline-none py-3.5 box-content"
+              className="h-2 rounded-full focus:outline-none"
+              style={{
+                backgroundColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 255, 255, 0.5)",
+              }}
               aria-label={`Go to slide ${index + 1}`}
             />
           );
