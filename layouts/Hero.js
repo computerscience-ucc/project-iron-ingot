@@ -6,77 +6,6 @@ import { motion, AnimatePresence } from "motion/react";
 import HeroCarousel from "@/components/Home/Hero/HeroCarousel";
 import { useState, useEffect } from "react";
 
-const fullText = "Your CS Information on the Go!";
-
-function TypewriterText() {
-  const [displayed, setDisplayed] = useState(0);
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setStarted(true), 600);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-    if (displayed >= fullText.length) return;
-    const delay = displayed === 0 ? 100 : 45 + Math.random() * 25;
-    const timer = setTimeout(() => setDisplayed((p) => p + 1), delay);
-    return () => clearTimeout(timer);
-  }, [displayed, started]);
-
-  const renderText = () => {
-    const chars = fullText.split("");
-    let normalBuf = "";
-    const parts = [];
-
-    const flush = () => {
-      if (normalBuf) {
-        parts.push(<span key={`n${parts.length}`}>{normalBuf}</span>);
-        normalBuf = "";
-      }
-    };
-
-    for (let i = 0; i < chars.length; i++) {
-      const ch = chars[i];
-      if (i === displayed) break;
-
-      if (ch === "I" && i === 5 && chars[i + 1] === "n") {
-        flush();
-        parts.push(
-          <span key={"m1"} className="font-minecraft text-[#FF5154] font-normal">
-            In
-          </span>
-        );
-        i++;
-        continue;
-      }
-      if (ch === "G" && i === 22 && chars[i + 1] === "o") {
-        flush();
-        parts.push(
-          <span key={"m2"} className="font-minecraft text-[#FF5154] font-normal">
-            Go
-          </span>
-        );
-        i++;
-        continue;
-      }
-      normalBuf += ch;
-    }
-    flush();
-    return parts;
-  };
-
-  return (
-    <span className="inline">
-      {renderText()}
-      {started && displayed < fullText.length && (
-        <span className="inline-block w-[2px] h-[1em] bg-[#FF5154] ml-[1px] align-middle animate-pulse" />
-      )}
-    </span>
-  );
-}
-
 export default function Hero() {
   const mascots = [
     { src: "welcome-bot.png", size: "w-[140px] h-[140px] md:w-[180px] md:h-[180px]" },
@@ -175,9 +104,19 @@ export default function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-[1.7rem] md:text-[2.4rem] lg:text-[2.9rem] text-center lg:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] mb-2 mt-[-0.5rem] lg:mt-0 min-h-[1.2em]">
-            <TypewriterText />
-          </h1>
+          <div className="typewriter-wrap">
+            <h1 className="typewriter-text text-[1.7rem] md:text-[2.4rem] lg:text-[2.9rem] text-center lg:text-left font-bold text-[var(--color-text)] leading-[1.1] tracking-[0.34%] mb-2 mt-[-0.5rem] lg:mt-0">
+              Your CS{" "}
+              <span className="font-minecraft text-[#FF5154] font-normal">
+                In
+              </span>
+              formation <br className="lg:hidden" /> on the{" "}
+              <span className="font-minecraft text-[#FF5154] font-normal">
+                Go
+              </span>
+              !
+            </h1>
+          </div>
 
           {/* Description */}
           <p className="text-[#EFEFEF] text-sm md:text-[1rem] max-w-[40ch] leading-normal mb-6 font-normal text-center lg:text-left mx-auto lg:mx-0">
