@@ -1,6 +1,9 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Keyboard } from "swiper/modules";
+import "swiper/css";
 import { client } from "@/lib/sanity";
 import OfficerCard from "../components/Home/MeetCouncil/OfficerCard";
 import CouncilParallaxText from "../components/Home/MeetCouncil/CouncilParallaxText";
@@ -31,11 +34,19 @@ const ALL_COUNCILS_QUERY = `
   }
 `;
 
+const AUTOPLAY_INTERVAL = 5000;
+
 export default function Council() {
   const [councils, setCouncils] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [lightbox, setLightbox] = useState(null);
-  const [officerIndex, setOfficerIndex] = useState(0);
+  const [countdown, setCountdown] = useState(5);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const swiperRef = useRef(null);
+  const autoplayTimerRef = useRef(null);
+  const countdownTimerRef = useRef(null);
+  const resumeTimerRef = useRef(null);
 
   useEffect(() => {
     client.fetch(ALL_COUNCILS_QUERY).then((data) => {
@@ -78,20 +89,76 @@ export default function Council() {
     setLightbox({ people: allPeople, index: idx >= 0 ? idx : 0 });
   };
 
-  useEffect(() => {
-    if (officersList.length <= 1) return;
-    const interval = setInterval(() => {
-      setOfficerIndex((prev) => (prev + 1) % officersList.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [officersList.length]);
+  const clearAllTimers = useCallback(() => {
+    clearInterval(autoplayTimerRef.current);
+    clearInterval(countdownTimerRef.current);
+    clearTimeout(resumeTimerRef.current);
+  }, []);
 
-  const officersPerPage = 3;
-  const totalPages = Math.ceil(officersList.length / officersPerPage);
-  const currentOfficers = officersList.slice(
-    officerIndex * officersPerPage,
-    officerIndex * officersPerPage + officersPerPage
-  );
+  const startAutoplay = useCallback(() => {
+    clearAllTimers();
+    setCountdown(Math.ceil(AUTOPLAY_INTERVAL / 1000));
+    setIsPaused(false);
+
+    const startTime = Date.now();
+    countdownTimerRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const secsLeft = Math.max(0, Math.ceil((AUTOPLAY_INTERVAL - elapsed) / 1000));
+      setCountdown(secsLeft);
+    }, 100);
+
+    autoplayTimerRef.current = setInterval(() => {
+      if (swiperRef.current) {
+        swiperRef.current.slideNext();
+      }
+      clearInterval(autoplayTimerRef.current);
+      clearInterval(countdownTimerRef.current);
+      startAutoplay();
+    }, AUTOPLAY_INTERVAL);
+  }, [clearAllTimers]);
+
+  const pauseAutoplay = useCallback(() => {
+    setIsPaused(true);
+    clearAllTimers();
+  }, [clearAllTimers]);
+
+  const resumeAutoplay = useCallback(() => {
+    clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      startAutoplay();
+    }, AUTOPLAY_INTERVAL);
+  }, [startAutoplay]);
+
+  const handleInteractionStart = useCallback(() => {
+    pauseAutoplay();
+  }, [pauseAutoplay]);
+
+  const handleInteractionEnd = useCallback(() => {
+    resumeAutoplay();
+  }, [resumeAutoplay]);
+
+  const swiperGoNext = useCallback(() => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+    pauseAutoplay();
+    resumeAutoplay();
+  }, [pauseAutoplay, resumeAutoplay]);
+
+  const swiperGoPrev = useCallback(() => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+    pauseAutoplay();
+    resumeAutoplay();
+  }, [pauseAutoplay, resumeAutoplay]);
+
+  useEffect(() => {
+    if (officersList.length > 1) {
+      startAutoplay();
+    }
+    return clearAllTimers;
+  }, [officersList.length, startAutoplay, clearAllTimers]);
 
   return (
     <div className="w-full">
@@ -161,70 +228,105 @@ export default function Council() {
         <section className="relative section-container px-0 md:px-12 lg:mt-6 lg:px-[6rem] mt-8 md:mt-12 lg:mt-[3.4rem] mb-6 md:mb-8 lg:mb-[2rem] font-sans">
           <div className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-[4rem]">
             {/* Executive Column - LEFT */}
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 min-w-0">
               <div className="flex items-center mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
                 <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
                   Executive
                 </h3>
               </div>
-              <div className="grid grid-cols-2 lg:flex gap-4 md:gap-6 lg:gap-[1.5rem]">
+              <div className="grid grid-cols-2 gap-4 md:gap-6 lg:gap-[1.5rem]">
                 {executives.map((exec, idx) => (
                   <OfficerCard
                     key={idx}
                     name={exec.name}
                     role={exec.role}
                     photo={exec.photo}
-                    className="w-full lg:min-w-[20rem] lg:w-[20rem]"
+                    className="w-full"
                     onClick={() => handlePersonClick({ name: exec.name, photo: exec.photo, subtitle: exec.role })}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Officers Column - RIGHT with Carousel */}
-            <div className="flex flex-col flex-1">
+            {/* Officers Column - RIGHT with Swiper Carousel */}
+            <div className="flex flex-col flex-1 min-w-0">
               <div className="flex items-center justify-between mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
                 <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
                   Officers
                 </h3>
-                {officersList.length > officersPerPage && (
+                {officersList.length > 2 && (
                   <div className="flex items-center gap-2">
-                    {Array.from({ length: totalPages }).map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setOfficerIndex(i)}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          officerIndex === i ? "bg-[#EA2B2E] w-6" : "bg-[#444] hover:bg-[#666]"
-                        }`}
-                        aria-label={`Go to page ${i + 1}`}
-                      />
-                    ))}
+                    <button
+                      onClick={swiperGoPrev}
+                      className="w-8 h-8 flex items-center justify-center rounded bg-[#333] text-white hover:bg-[#FF5154] transition-colors"
+                      aria-label="Previous officer"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={swiperGoNext}
+                      className="w-8 h-8 flex items-center justify-center rounded bg-[#FF5154] text-white hover:bg-[#EA2B2E] transition-colors"
+                      aria-label="Next officer"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
                   </div>
                 )}
               </div>
 
-              <div className="relative overflow-hidden min-h-[280px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={officerIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
-                  >
-                    {currentOfficers.map((officer, idx) => (
-                      <OfficerCard
-                        key={`${officerIndex}-${idx}`}
-                        name={officer.name}
-                        role={officer.role}
-                        photo={officer.photo}
-                        className="w-full"
+              {/* Swiper Carousel */}
+              <div className="relative overflow-hidden">
+                <Swiper
+                  modules={[Keyboard]}
+                  spaceBetween={24}
+                  slidesPerView={2}
+                  centeredSlides={false}
+                  loop={officersList.length > 2}
+                  keyboard={{ enabled: true }}
+                  speed={600}
+                  allowTouchMove={true}
+                  watchOverflow={true}
+                  onTouchStart={handleInteractionStart}
+                  onTouchEnd={handleInteractionEnd}
+                  onSwiper={(swiper) => { swiperRef.current = swiper; }}
+                  className="officer-swiper"
+                  breakpoints={{
+                    0: { slidesPerView: 1, spaceBetween: 16 },
+                    768: { slidesPerView: 2, spaceBetween: 24 },
+                  }}
+                >
+                  {officersList.map((officer, idx) => (
+                    <SwiperSlide key={`officer-${idx}`}>
+                      <div
+                        className="officer-slide cursor-pointer"
                         onClick={() => handlePersonClick({ name: officer.name, photo: officer.photo, subtitle: officer.role })}
+                      >
+                        <OfficerCard
+                          name={officer.name}
+                          role={officer.role}
+                          photo={officer.photo}
+                          className="w-full lg:min-w-0 lg:w-auto"
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                {/* Progress Bar */}
+                {officersList.length > 2 && (
+                  <div className="mt-3 px-1">
+                    <div className="w-full h-[2px] bg-[#222] rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#EA2B2E] to-[#FF5154] rounded-full transition-all duration-100 ease-linear"
+                        style={{ width: isPaused ? "0%" : `${((AUTOPLAY_INTERVAL / 1000 - countdown) / (AUTOPLAY_INTERVAL / 1000)) * 100}%` }}
                       />
-                    ))}
-                  </motion.div>
-                </AnimatePresence>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

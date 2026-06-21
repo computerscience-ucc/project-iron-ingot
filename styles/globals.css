@@ -378,3 +378,31 @@ html.lenis body {
     opacity: 1;
   }
 }
+
+/* Officer Swiper Carousel */
+.officer-swiper {
+  overflow: hidden !important;
+}
+
+.officer-swiper .swiper-wrapper {
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+}
+
+.officer-swiper .swiper-slide {
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  overflow: hidden;
+}
+
+.officer-slide {
+  padding: 0;
+}
+
+.officer-slide .flex.flex-col {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.officer-swiper .swiper-button-next,
+.officer-swiper .swiper-button-prev {
+  display: none;
+}
