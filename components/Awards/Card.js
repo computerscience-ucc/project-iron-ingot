@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import SkeletonBox from "../ui/SkeletonBox";
 
 const Card = ({ award, onClick }) => {
   const [loaded, setLoaded] = useState(false);
@@ -29,7 +30,9 @@ const Card = ({ award, onClick }) => {
           }}
         >
           {!loaded && (
-            <div className="absolute inset-0 z-10 bg-[#262626] opacity-50 animate-pulse" />
+            <div className="absolute inset-0 z-10 opacity-50">
+              <SkeletonBox width="100%" height="100%" borderRadius="0" />
+            </div>
           )}
           <Image
             src={award.headerImage.url}
