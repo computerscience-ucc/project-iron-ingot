@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { motion } from "motion/react";
 
 export default function ArticleCard({
   row,
@@ -21,14 +22,20 @@ export default function ArticleCard({
       onMouseEnter={() => setHoveredCard("article")}
       onMouseLeave={() => setHoveredCard(null)}
     >
-      <div className="p-4 pb-6 md:p-6 md:pb-8 lg:p-[1.8rem] lg:pb-8 text-left">
+      <motion.div
+        key={row.articleTitle}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="p-4 pb-6 md:p-6 md:pb-8 lg:p-[1.8rem] lg:pb-8 text-left"
+      >
         <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide mb-2">
           {row.articleTitle}
         </h3>
         <p className="text-[#8C8C8C] text-sm md:text-[1rem] lg:text-[1.1rem] leading-tight font-normal">
           {row.articleAuthor}
         </p>
-      </div>
+      </motion.div>
 
       <div
         className={`flex-1 relative overflow-hidden border-t border-[#2A2A2A] min-h-[200px] md:min-h-[250px] lg:min-h-0 ${row.articleBg || "bg-[#242424]"}`}

@@ -5,9 +5,10 @@ import BlogCard from "../components/Home/LatestOnIngo/BlogCard";
 import ArticleCard from "../components/Home/LatestOnIngo/ArticleCard";
 import LatestOnCursor from "../components/Home/LatestOnIngo/LatestOnCursor";
 
-export default function LatestOnIngo({ blog, thesis, bulletin }) {
+export default function LatestOnIngo({ blog, thesis, theses, bulletin }) {
   const [hoveredCard, setHoveredCard] = useState(null); // 'blog' | 'article' | null
   const [isCursorHidden, setIsCursorHidden] = useState(false);
+  const [thesisIndex, setThesisIndex] = useState(0);
 
   useEffect(() => {
     let timer;
@@ -35,6 +36,22 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
+  // Auto-cycle through theses every 3 seconds
+  useEffect(() => {
+    const thesisList = theses?.length ? theses : [thesis];
+    if (thesisList.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setThesisIndex((prev) => (prev + 1) % thesisList.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [theses, thesis]);
+
+  // Get current thesis from the cycle
+  const thesisList = theses?.length ? theses : [thesis];
+  const currentThesis = thesisList[thesisIndex] || thesis;
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const options = { month: "short", day: "numeric", year: "numeric" };
@@ -59,22 +76,22 @@ export default function LatestOnIngo({ blog, thesis, bulletin }) {
     },
     {
       id: 2,
-      articleHref: `/thesis/${thesis?.slug || ""}`,
+      articleHref: `/thesis/${currentThesis?.slug || ""}`,
       blogHref: "/thesis",
       blogImage: "/mascot/thesis-bot.png",
       blogAlt: "Thesis Bot",
       blogTitle: "Thesis Showcase",
       blogDesc:
         "Explore the latest senior research projects and innovations from our BSCS candidates.",
-      articleTitle: thesis?.title || "CyKlas",
-      articleAuthor: `By ${thesis?.authors?.map((m) => `${m.fullName.firstName} ${m.fullName.lastName}`).join(", ") || "BSCS Candidates"} on ${formatDate(thesis?._createdAt) || "Jul 27, 2022"}`,
-      articleTags: thesis?.tags?.slice(0, 3) || [
+      articleTitle: currentThesis?.title || "CyKlas",
+      articleAuthor: `By ${currentThesis?.authors?.map((m) => `${m.fullName.firstName} ${m.fullName.lastName}`).join(", ") || "BSCS Candidates"} on ${formatDate(currentThesis?._createdAt) || "Jul 27, 2022"}`,
+      articleTags: currentThesis?.tags?.slice(0, 3) || [
         "WEBSITE",
         "E-LEARNING",
         "EDUCATION",
       ],
       articleBg: "bg-[#181818]",
-      articleImage: thesis?.headerImage || null,
+      articleImage: currentThesis?.headerImage || null,
     },
     {
       id: 3,

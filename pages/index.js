@@ -34,6 +34,7 @@ export default function Home() {
       <LatestOnIngo
         blog={blogs?.[0]}
         thesis={thesis?.[0]}
+        theses={thesis}
         bulletin={bulletins?.[0]}
       />
       <SectionStripe className="mt-[5rem]" />
