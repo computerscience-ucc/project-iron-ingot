@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CgClose } from "react-icons/cg";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { preloadImage } from "../../lib/imageCache";
+import { getBlurPlaceholder } from "../../lib/imagePlaceholders";
 
 const GRADIENTS = [
   "from-rose-500/40 to-pink-600/30",
@@ -56,6 +58,17 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
       document.body.style.overflow = "unset";
     };
   }, []);
+
+  // Preload current + adjacent images into cache
+  useEffect(() => {
+    if (!people?.length) return;
+    const toPreload = [
+      people[idx]?.photo,
+      people[(idx + 1) % people.length]?.photo,
+      people[(idx - 1 + people.length) % people.length]?.photo,
+    ].filter(Boolean);
+    toPreload.forEach((url) => preloadImage(url).catch(() => {}));
+  }, [idx, people]);
 
   if (!person) return null;
 
@@ -140,8 +153,8 @@ const PersonLightbox = ({ people, initialIndex, onClose }) => {
                 style={{ gridArea: "1 / 1" }}
               >
                 {person.photo ? (
-                  <div className="w-full aspect-square overflow-hidden bg-black flex items-center justify-center relative border-b border-[#5B5B5B] border-dashed">
-                    <Image src={person.photo} alt={person.name} fill style={{ objectFit: "cover" }} sizes="100vw" priority draggable={false} />
+                  <div className="w-full aspect-square overflow-hidden bg-[#1a1a1a] flex items-center justify-center relative border-b border-[#5B5B5B] border-dashed">
+                    <Image src={person.photo} alt={person.name} fill style={{ objectFit: "cover" }} sizes="100vw" priority draggable={false} placeholder="blur" blurDataURL={getBlurPlaceholder(person.photo)} />
                   </div>
                 ) : (
                   <div
