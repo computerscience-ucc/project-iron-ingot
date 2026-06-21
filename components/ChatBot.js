@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import { usePrefetcher } from "./Prefetcher";
 import Image from "next/image";
+import LoadingOverlay from "./ui/LoadingOverlay";
 
 // Character-scanner inline parser — reliably handles **bold**, *italic*, `code`
 function parseInline(text) {
@@ -324,11 +325,7 @@ const ChatThesisCard = ({ card, onNavigate }) => {
       className="flex flex-col h-full mt-2 relative rounded-lg border border-[#2A2A2A] bg-[#252525] hover:bg-[#2A2A2A] transition-all group cursor-pointer overflow-hidden"
     >
       {/* Click-loading overlay */}
-      {navigating && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#181818]/80 rounded-lg">
-          <div className="w-6 h-6 border-2 border-[#EFEFEF]/80 border-t-transparent rounded-full animate-spin" />
-        </div>
-      )}
+      {navigating && <LoadingOverlay className="rounded-lg" />}
       {/* Banner image */}
       {card.headerImage && (
         <div className="relative w-full h-24 overflow-hidden">

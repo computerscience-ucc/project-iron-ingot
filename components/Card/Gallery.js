@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import Image from "next/image";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import LoadingOverlay from "../ui/LoadingOverlay";
 
 const GALLERY_PLACEHOLDER_COUNT = 5;
 
@@ -44,11 +45,7 @@ const GalleryCard = ({ project, index = 0 }) => {
       className="flex flex-col lg:flex-row gap-0 relative group cursor-pointer w-full min-h-fit lg:h-[168.75px] pb-0 lg:pb-0 overflow-hidden"
     >
       {/* Click-loading overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#181818]/80">
-          <div className="w-6 h-6 border-2 border-[#EFEFEF]/80 border-t-transparent rounded-full animate-spin" />
-        </div>
-      )}
+      {isLoading && <LoadingOverlay />}
 
       {/* Project Image / Placeholder */}
       <div className="w-full lg:w-[300px] shrink-0 overflow-hidden relative bg-[#252525] aspect-video self-start lg:self-auto">

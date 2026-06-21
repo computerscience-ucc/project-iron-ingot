@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import Image from "next/image";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import LoadingOverlay from "../ui/LoadingOverlay";
 
 const BLOG_PLACEHOLDER_COUNT = 6;
 
@@ -35,11 +36,7 @@ const BlogCard = ({ blog, index }) => {
       className="flex flex-col gap-0 relative group cursor-pointer w-full min-h-fit overflow-hidden"
     >
       {/* Click-loading overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#181818]/80">
-          <div className="w-6 h-6 border-2 border-[#EFEFEF]/80 border-t-transparent rounded-full animate-spin" />
-        </div>
-      )}
+      {isLoading && <LoadingOverlay />}
 
       {/* Project Image / Placeholder */}
       <div className="w-full shrink-0 overflow-hidden relative bg-[#252525] aspect-video">
