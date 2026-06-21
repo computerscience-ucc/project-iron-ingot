@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { client } from "../../lib/sanity";
 import { THESIS_LIST_QUERY } from "../../lib/groq/thesis";
 import Pagination from "../../components/Pagination";
+import SkeletonGrid from "../../components/ui/SkeletonGrid";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
@@ -31,6 +32,7 @@ export default function Thesis({ initialThesis }) {
   const [selectedCategory, setSelectedCategory] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [isYearOpen, setIsYearOpen] = useState(true);
   const [isDepartmentOpen, setIsDepartmentOpen] = useState(false);
@@ -44,8 +46,17 @@ export default function Thesis({ initialThesis }) {
   const departments = [ALL, "BSCS", "BSEMC", "BSIT", "BSIS", "Other"];
 
   useEffect(() => {
-    if (thesis?.length > 0) setThesisList(thesis);
+    if (thesis?.length > 0) {
+      setThesisList(thesis);
+      setIsInitialLoad(false);
+    }
   }, [thesis]);
+
+  useEffect(() => {
+    if (initialThesis?.length > 0) {
+      setIsInitialLoad(false);
+    }
+  }, [initialThesis]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -416,7 +427,9 @@ export default function Thesis({ initialThesis }) {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col gap-8 lg:gap-[1.5rem]"
               >
-                {displayList.length === 0 ? (
+                {isInitialLoad ? (
+                  <SkeletonGrid cardType="thesis" count={4} />
+                ) : displayList.length === 0 ? (
                   <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
                     No thesis projects found.
                   </p>
