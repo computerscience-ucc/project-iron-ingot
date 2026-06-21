@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, ArrowRight } from "@geist-ui/icons";
+import { preloadImage } from "@/lib/imageCache";
 
 const images = [
   "/samples/team2.png",
@@ -18,6 +19,13 @@ export default function HeroCarousel() {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const nextIdx = (currentIndex + 1) % images.length;
+    const prevIdx = (currentIndex - 1 + images.length) % images.length;
+    preloadImage(images[nextIdx]).catch(() => {});
+    preloadImage(images[prevIdx]).catch(() => {});
+  }, [currentIndex]);
 
   const slideVariants = {
     initial: (dir) => ({
