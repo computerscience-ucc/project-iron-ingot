@@ -7,6 +7,7 @@ import { usePrefetcher } from "../../components/Prefetcher";
 import Pagination from "../../components/Pagination";
 import { client } from "../../lib/sanity";
 import { GALLERY_LIST_QUERY } from "../../lib/groq/gallery";
+import SkeletonGrid from "../../components/ui/SkeletonGrid";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
@@ -28,6 +29,7 @@ export default function GalleryPage({ initialGallery }) {
   const [selectedCategory, setSelectedCategory] = useState(ALL);
   const [sortLatest, setSortLatest] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [isYearOpen, setIsYearOpen] = useState(true);
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -38,8 +40,17 @@ export default function GalleryPage({ initialGallery }) {
   }, [selectedYear, selectedCategory, sortLatest]);
 
   useEffect(() => {
-    if (gallery?.length > 0) setProjectList(gallery);
+    if (gallery?.length > 0) {
+      setProjectList(gallery);
+      setIsInitialLoad(false);
+    }
   }, [gallery]);
+
+  useEffect(() => {
+    if (initialGallery?.length > 0) {
+      setIsInitialLoad(false);
+    }
+  }, [initialGallery]);
 
   // Extract unique years dynamically based on provided projects
   const years = useMemo(() => {
@@ -335,7 +346,9 @@ export default function GalleryPage({ initialGallery }) {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col gap-8 lg:gap-[1.5rem]"
               >
-                {displayList.length === 0 ? (
+                {isInitialLoad ? (
+                  <SkeletonGrid cardType="gallery" count={4} />
+                ) : displayList.length === 0 ? (
                   <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
                     No projects found.
                   </p>
