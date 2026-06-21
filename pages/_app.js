@@ -9,7 +9,7 @@ import { PrefetcherWrapper, usePrefetcher } from "../components/Prefetcher";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { ThemeProvider } from "@material-tailwind/react";
 import ChatBot from "../components/ChatBot";
-import MessengerChat from "../components/MessengerChat";
+// import MessengerChat from "../components/MessengerChat"; // Hidden — re-enable when ready to go live
 import SearchModal from "../components/SearchModal";
 import { SiDiscord, SiFacebook, SiGithub } from "react-icons/si";
 import SectionStripe from "@/components/SectionStripe";
@@ -771,8 +771,8 @@ function AppInner({ Component, pageProps }) {
         {/* Render ChatBot conditionally */}
         <AppChatBot />
 
-        {/* Render Facebook Messenger Chat Widget */}
-        <MessengerChat />
+        {/* Render Facebook Messenger Chat Widget (hidden — re-enable when ready) */}
+        {/* <MessengerChat /> */}
 
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
