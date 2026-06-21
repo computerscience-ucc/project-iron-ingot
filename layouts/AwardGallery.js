@@ -6,6 +6,7 @@ import { client } from "../lib/sanity";
 import AwardCard from "../components/Home/Awards/AwardCard";
 import AwardCursor from "../components/Home/Awards/AwardCursor";
 import AwardRay from "../components/Home/Awards/AwardRay";
+import SkeletonBox from "../components/ui/SkeletonBox";
 
 const AWARDS_QUERY = `
   *[_type == 'award' && defined(headerImage)] | order(academicYear desc, dateAwarded desc) [0...10] {
@@ -30,6 +31,7 @@ export default function AwardGallery() {
   const [isCursorHidden, setIsCursorHidden] = useState(false);
   const [isRayVisible, setIsRayVisible] = useState(true);
   const [isSwitching, setIsSwitching] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(1024);
@@ -68,6 +70,9 @@ export default function AwardGallery() {
           setActiveIndex(hackIndex);
         }
       }
+      setIsLoading(false);
+    }).catch(() => {
+      setIsLoading(false);
     });
   }, []);
 
@@ -220,7 +225,13 @@ export default function AwardGallery() {
           dragElastic={0.15}
           onDragEnd={handleDragEnd}
         >
-          {awards.map((award, i) => {
+          {isLoading ? (
+            <div className="flex gap-4 items-center justify-center">
+              <SkeletonBox width="280px" height={`${cardHeight}px`} borderRadius="8px" />
+              <SkeletonBox width="320px" height={`${cardHeight}px`} borderRadius="8px" />
+              <SkeletonBox width="280px" height={`${cardHeight}px`} borderRadius="8px" />
+            </div>
+          ) : awards.map((award, i) => {
             const position = getPosition(i);
             if (!position) return null;
             return (
