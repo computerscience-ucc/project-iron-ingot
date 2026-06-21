@@ -1,7 +1,7 @@
 .chatContainer {
   position: fixed;
   bottom: 90px;
-  right: 20px;
+  right: 100px;
   width: 380px;
   height: 520px;
   background: #1a1a1a;
@@ -160,7 +160,7 @@
 .toggleButton {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: 100px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -222,6 +222,6 @@
 
   .toggleButton {
     bottom: 16px;
-    right: 16px;
+    right: 80px;
   }
 }
