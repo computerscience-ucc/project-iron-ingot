@@ -129,6 +129,17 @@ The Messenger widget replaces the deprecated Meta Customer Chat Plugin (deprecat
 - `FB_VERIFY_TOKEN` — Custom verification token (set in Meta Developer Console)
 - `FB_PAGE_ACCESS_TOKEN` — Page Access Token with `pages_messaging` permission
 
+### Smart Image Caching
+
+The website uses a multi-layer image caching strategy to prevent redundant network requests:
+
+- `lib/imageUrl.js` — Optimized Sanity image URL builder with width/quality/format transforms
+- `lib/imagePlaceholders.js` — LQIP blur placeholder generator for instant blur-up effect
+- `lib/imageCache.js` — LRU in-memory cache (50 images max) for lightbox components
+- `hooks/useImagePreloader.js` — React hook for preload-on-hover patterns
+
+**When adding new images**, use `getOptimizedUrl()` from `lib/imageUrl.js` instead of raw `urlFor().url()`. Always add `sizes` prop and `placeholder="blur"` with `blurDataURL` from `getBlurPlaceholder()`.
+
 ## Sanity Studio v3 Migration Notes
 
 This project was migrated from Sanity v2 to v3 in June 2026. Key changes:
