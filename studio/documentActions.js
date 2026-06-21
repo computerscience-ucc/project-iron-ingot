@@ -9,19 +9,24 @@ function getSlug(document) {
 }
 
 export function revalidateOnPublish(prev, context) {
-  if (context.transition === "publish" || context.transition === "unpublish") {
-    const { _type } = context.document;
-    const slug = getSlug(context.document);
+  return {
+    ...prev,
+    onHandle: () => {
+      if (context?.document) {
+        const { _type } = context.document;
+        const slug = getSlug(context.document);
 
-    fetch(`${siteUrl}/api/revalidate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.SANITY_API_TOKEN || ""}`,
-      },
-      body: JSON.stringify({ _type, slug }),
-    }).catch((err) => console.error("[documentAction] Revalidation failed:", err));
-  }
+        fetch(`${siteUrl}/api/revalidate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.SANITY_API_TOKEN || ""}`,
+          },
+          body: JSON.stringify({ _type, slug }),
+        }).catch((err) => console.error("[documentAction] Revalidation failed:", err));
+      }
 
-  return prev;
+      prev.onHandle();
+    },
+  };
 }
