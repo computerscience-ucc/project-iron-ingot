@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
+import SkeletonBox from "./SkeletonBox";
 
 export default function ImageWithFallback({
   src,
@@ -18,7 +19,9 @@ export default function ImageWithFallback({
   return (
     <div className={`relative ${fill ? "absolute inset-0" : ""} ${className || ""}`}>
       {isLoading && !hasError && (
-        <div className="absolute inset-0 bg-[#242424] animate-pulse rounded" />
+        <div className="absolute inset-0 rounded overflow-hidden">
+          <SkeletonBox width="100%" height="100%" borderRadius="0" />
+        </div>
       )}
       <Image
         src={imgSrc}
