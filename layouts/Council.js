@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { client } from "@/lib/sanity";
 import OfficerCard from "../components/Home/MeetCouncil/OfficerCard";
 import CouncilParallaxText from "../components/Home/MeetCouncil/CouncilParallaxText";
@@ -35,6 +35,7 @@ export default function Council() {
   const [councils, setCouncils] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [lightbox, setLightbox] = useState(null);
+  const [officerIndex, setOfficerIndex] = useState(0);
 
   useEffect(() => {
     client.fetch(ALL_COUNCILS_QUERY).then((data) => {
@@ -76,6 +77,21 @@ export default function Council() {
     const idx = allPeople.findIndex((p) => p.name === person.name && p.subtitle === person.subtitle);
     setLightbox({ people: allPeople, index: idx >= 0 ? idx : 0 });
   };
+
+  useEffect(() => {
+    if (officersList.length <= 1) return;
+    const interval = setInterval(() => {
+      setOfficerIndex((prev) => (prev + 1) % officersList.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [officersList.length]);
+
+  const officersPerPage = 3;
+  const totalPages = Math.ceil(officersList.length / officersPerPage);
+  const currentOfficers = officersList.slice(
+    officerIndex * officersPerPage,
+    officerIndex * officersPerPage + officersPerPage
+  );
 
   return (
     <div className="w-full">
@@ -141,11 +157,11 @@ export default function Council() {
           </div>
         </section>
 
-        {/* Officers Section */}
+        {/* Executive + Officers Section */}
         <section className="relative section-container px-0 md:px-12 lg:mt-6 lg:px-[6rem] mt-8 md:mt-12 lg:mt-[3.4rem] mb-6 md:mb-8 lg:mb-[2rem] font-sans">
-          <div className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-[6rem]">
-            {/* Executive Column */}
-            <div className="flex flex-col">
+          <div className="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-[4rem]">
+            {/* Executive Column - LEFT */}
+            <div className="flex flex-col flex-1">
               <div className="flex items-center mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
                 <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
                   Executive
@@ -158,13 +174,59 @@ export default function Council() {
                     name={exec.name}
                     role={exec.role}
                     photo={exec.photo}
-                    className="w-full lg:min-w-[25rem] lg:w-[25rem]"
+                    className="w-full lg:min-w-[20rem] lg:w-[20rem]"
                     onClick={() => handlePersonClick({ name: exec.name, photo: exec.photo, subtitle: exec.role })}
                   />
                 ))}
               </div>
             </div>
 
+            {/* Officers Column - RIGHT with Carousel */}
+            <div className="flex flex-col flex-1">
+              <div className="flex items-center justify-between mb-4 md:mb-4 lg:mb-[2rem] h-[40px] md:h-[48px] lg:h-[40px]">
+                <h3 className="text-xl md:text-2xl lg:text-[1.6rem] font-semibold text-white leading-tight tracking-wide">
+                  Officers
+                </h3>
+                {officersList.length > officersPerPage && (
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setOfficerIndex(i)}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          officerIndex === i ? "bg-[#EA2B2E] w-6" : "bg-[#444] hover:bg-[#666]"
+                        }`}
+                        aria-label={`Go to page ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="relative overflow-hidden min-h-[280px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={officerIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+                  >
+                    {currentOfficers.map((officer, idx) => (
+                      <OfficerCard
+                        key={`${officerIndex}-${idx}`}
+                        name={officer.name}
+                        role={officer.role}
+                        photo={officer.photo}
+                        className="w-full"
+                        onClick={() => handlePersonClick({ name: officer.name, photo: officer.photo, subtitle: officer.role })}
+                      />
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </section>
 
