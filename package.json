@@ -12,7 +12,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky",
-    "a11y": "node scripts/a11y-audit.js"
+    "a11y": "node scripts/a11y-audit.js",
+    "og": "node scripts/generate-og.js"
   },
   "lint-staged": {
     "*.{js,jsx}": [
