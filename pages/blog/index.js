@@ -7,6 +7,7 @@ import { usePrefetcher } from "../../components/Prefetcher";
 import Pagination from "../../components/Pagination";
 import { client } from "../../lib/sanity";
 import { BLOG_LIST_QUERY } from "../../lib/groq/blog";
+import SkeletonGrid from "../../components/ui/SkeletonGrid";
 
 const ALL = "All";
 const ITEMS_PER_PAGE = 10;
@@ -33,14 +34,24 @@ export default function BlogPage({ initialBlogs }) {
   const [sortLatest, setSortLatest] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [isYearOpen, setIsYearOpen] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedYear, sortLatest]);
 
   useEffect(() => {
-    if (blogs?.length > 0) setBlogList(blogs);
+    if (blogs?.length > 0) {
+      setBlogList(blogs);
+      setIsInitialLoad(false);
+    }
   }, [blogs]);
+
+  useEffect(() => {
+    if (initialBlogs?.length > 0) {
+      setIsInitialLoad(false);
+    }
+  }, [initialBlogs]);
 
   const years = useMemo(() => getYears(blogList), [blogList]);
 
@@ -242,7 +253,9 @@ export default function BlogPage({ initialBlogs }) {
                 transition={{ duration: 0.2 }}
                 className="flex flex-col"
               >
-                {rows.length === 0 ? (
+                {isInitialLoad ? (
+                  <SkeletonGrid cardType="blog" count={4} />
+                ) : rows.length === 0 ? (
                   <p className="text-[1rem] text-[#8C8C8C] font-normal leading-normal text-center w-full py-10">
                     No blog posts found.
                   </p>
