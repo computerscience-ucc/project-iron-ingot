@@ -16,16 +16,18 @@ function getYouTubeEmbedUrl(url) {
   if (!url) return null;
   try {
     const parsed = new URL(url);
-    if (parsed.hostname.includes("youtu.be")) {
+    const host = parsed.hostname.toLowerCase();
+    const isYouTube = host === "youtube.com" || host === "www.youtube.com" || host === "youtu.be";
+    if (!isYouTube) return null;
+
+    if (host === "youtu.be") {
       const id = parsed.pathname.replace("/", "");
       return id ? `https://www.youtube-nocookie.com/embed/${id}` : null;
     }
-    if (parsed.hostname.includes("youtube.com")) {
-      const id = parsed.searchParams.get("v");
-      if (id) return `https://www.youtube-nocookie.com/embed/${id}`;
-      if (parsed.pathname.startsWith("/embed/")) {
-        return `https://www.youtube-nocookie.com${parsed.pathname}`;
-      }
+    const id = parsed.searchParams.get("v");
+    if (id) return `https://www.youtube-nocookie.com/embed/${id}`;
+    if (parsed.pathname.startsWith("/embed/")) {
+      return `https://www.youtube-nocookie.com${parsed.pathname}`;
     }
   } catch {
     return null;

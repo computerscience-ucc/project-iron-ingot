@@ -37,8 +37,13 @@ function handleVerification(req, res) {
     return res.status(403).json({ error: "Invalid verify token" });
   }
 
+  const safeChallenge = String(challenge).replace(/[^0-9]/g, "");
+  if (!safeChallenge) {
+    return res.status(400).json({ error: "Invalid challenge" });
+  }
+
   console.log("[messenger/webhook] Webhook verified successfully");
-  return res.status(200).send(challenge);
+  return res.status(200).send(safeChallenge);
 }
 
 /**
