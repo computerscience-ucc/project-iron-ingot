@@ -30,7 +30,7 @@
 | **GitHub** | [github.com/computerscience-ucc/project-iron-ingot](https://github.com/computerscience-ucc/project-iron-ingot) | Source code repository |
 | **CS Council FB** | [facebook.com/UCCBSCS2022](https://www.facebook.com/UCCBSCS2022) | Official CS Council page |
 | **CS Council Email** | [ucc.computersciencecouncil@gmail.com](mailto:ucc.computersciencecouncil@gmail.com) | Contact the CS Council |
-| **UCC Website** | [ucc-caloocan.edu.ph](https://www.ucc-caloocan.edu.ph) | University of Caloocan City |
+| **UCC Website** | [ucc-caloocan.edu.ph](https://ucc-caloocan.edu.ph) | University of Caloocan City |
 | **Google AI Studio** | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) | Get Gemini API key for chatbot |
 
 ---

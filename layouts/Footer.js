@@ -17,7 +17,7 @@ const footerLinks = {
     { label: "TNC of the North", href: "https://facebook.com/TNCoftheNorthOfficial" },
   ],
   External: [
-    { label: "UCC Website", href: "https://www.ucc-caloocan.edu.ph" },
+    { label: "UCC Website", href: "https://ucc-caloocan.edu.ph" },
     { label: "UCC Alumnus", href: "https://ucc-alumnus.vercel.app" },
   ],
 };
